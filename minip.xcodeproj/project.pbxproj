@@ -20,9 +20,6 @@
 		2B6D0E4A2A6223B4005BFEB9 /* PanModal in Frameworks */ = {isa = PBXBuildFile; productRef = 2B6D0E492A6223B4005BFEB9 /* PanModal */; };
 		2B6D0E4C2A623D93005BFEB9 /* ImagePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6D0E4B2A623D93005BFEB9 /* ImagePreviewViewController.swift */; };
 		2B6D0E4E2A624382005BFEB9 /* UIView++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6D0E4D2A624382005BFEB9 /* UIView++.swift */; };
-		2B88840F2A5E3AD7004EE341 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B88840E2A5E3AD7004EE341 /* libz.tbd */; };
-		2B8884112A5E3ADF004EE341 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B8884102A5E3ADF004EE341 /* libsqlite3.tbd */; };
-		2B8884162A5E3C05004EE341 /* PyTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8884152A5E3C05004EE341 /* PyTestView.swift */; };
 		2B8DC8BA2A5FAC4B002D5288 /* VSCodeDarkTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8DC8B92A5FAC4B002D5288 /* VSCodeDarkTheme.swift */; };
 		2B8F0B802A58585500D9359F /* HXPhotoPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 2B8F0B7F2A58585500D9359F /* HXPhotoPicker */; };
 		2B8F0B832A5858EF00D9359F /* ImagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8F0B822A5858EF00D9359F /* ImagePreview.swift */; };
@@ -69,8 +66,6 @@
 		2B9DC2002A5E8E400061FAB8 /* TreeSitterYAML in Frameworks */ = {isa = PBXBuildFile; productRef = 2B9DC1FF2A5E8E400061FAB8 /* TreeSitterYAML */; };
 		2B9DC2022A5E8E400061FAB8 /* TreeSitterYAMLQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 2B9DC2012A5E8E400061FAB8 /* TreeSitterYAMLQueries */; };
 		2B9DC2042A5E8E400061FAB8 /* TreeSitterYAMLRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 2B9DC2032A5E8E400061FAB8 /* TreeSitterYAMLRunestone */; };
-		2B9DC2062A5EA86C0061FAB8 /* Python.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B9DC2052A5EA86B0061FAB8 /* Python.xcframework */; };
-		2B9DC20B2A5EA9000061FAB8 /* Python in Resources */ = {isa = PBXBuildFile; fileRef = 2B9DC20A2A5EA9000061FAB8 /* Python */; };
 		2BB91FF42A4FDE9E00D4BE3C /* _MiniPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB91FF32A4FDE9E00D4BE3C /* _MiniPageViewController.swift */; };
 		2BB9201A2A52FED000D4BE3C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB920192A52FED000D4BE3C /* HomeView.swift */; };
 		2BB9201C2A52FEF900D4BE3C /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB9201B2A52FEF900D4BE3C /* HomeViewModel.swift */; };
@@ -1688,7 +1683,6 @@
 		2B8880C52A5E3972004EE341 /* runpy.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = runpy.py; sourceTree = "<group>"; };
 		2B88840E2A5E3AD7004EE341 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		2B8884102A5E3ADF004EE341 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
-		2B8884152A5E3C05004EE341 /* PyTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PyTestView.swift; sourceTree = "<group>"; };
 		2B8DC8B92A5FAC4B002D5288 /* VSCodeDarkTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSCodeDarkTheme.swift; sourceTree = "<group>"; };
 		2B8F0B822A5858EF00D9359F /* ImagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreview.swift; sourceTree = "<group>"; };
 		2B8F0B942A597C4800D9359F /* Color++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color++.swift"; sourceTree = "<group>"; };
@@ -1702,7 +1696,6 @@
 		2B9CF4202A5A638D00BD2C7F /* EditorDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorDocument.swift; sourceTree = "<group>"; };
 		2B9CF4232A5A6A6100BD2C7F /* FileBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserView.swift; sourceTree = "<group>"; };
 		2B9DC2052A5EA86B0061FAB8 /* Python.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Python.xcframework; path = "../../Downloads/Python-Apple-support-3.11-b1/dist/py311/Python.xcframework"; sourceTree = "<group>"; };
-		2B9DC20A2A5EA9000061FAB8 /* Python */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Python; sourceTree = "<group>"; };
 		2B9DC20D2A5EAC660061FAB8 /* lib-dynload */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lib-dynload"; path = "minip/Python/python-stdlib/lib-dynload"; sourceTree = "<group>"; };
 		2BB91FF32A4FDE9E00D4BE3C /* _MiniPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _MiniPageViewController.swift; sourceTree = "<group>"; };
 		2BB920192A52FED000D4BE3C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -1731,7 +1724,6 @@
 				2B9DC1D22A5E8E400061FAB8 /* TreeSitterHTMLRunestone in Frameworks */,
 				2B6D0E4A2A6223B4005BFEB9 /* PanModal in Frameworks */,
 				2B9DC1FC2A5E8E400061FAB8 /* TreeSitterTypeScriptQueries in Frameworks */,
-				2B8884112A5E3ADF004EE341 /* libsqlite3.tbd in Frameworks */,
 				2B9DC1F02A5E8E400061FAB8 /* TreeSitterSCSSQueries in Frameworks */,
 				2B9DC1E02A5E8E400061FAB8 /* TreeSitterLanguagesCommon in Frameworks */,
 				2B9DC1EA2A5E8E400061FAB8 /* TreeSitterPythonQueries in Frameworks */,
@@ -1739,7 +1731,6 @@
 				2B1B32C42A61358B00DA573F /* Alamofire in Frameworks */,
 				2B9DC1D42A5E8E400061FAB8 /* TreeSitterJSON in Frameworks */,
 				2B9DC1D02A5E8E400061FAB8 /* TreeSitterHTMLQueries in Frameworks */,
-				2B88840F2A5E3AD7004EE341 /* libz.tbd in Frameworks */,
 				2B8F0B922A597C1E00D9359F /* PKHUD in Frameworks */,
 				2BC331B42A62D47700441447 /* SwiftLMDB in Frameworks */,
 				2B9DC2042A5E8E400061FAB8 /* TreeSitterYAMLRunestone in Frameworks */,
@@ -1755,7 +1746,6 @@
 				2B9DC2002A5E8E400061FAB8 /* TreeSitterYAML in Frameworks */,
 				2B9DC1C42A5E8E400061FAB8 /* TreeSitterCSSQueries in Frameworks */,
 				2B9DC1CC2A5E8E400061FAB8 /* TreeSitterCommentRunestone in Frameworks */,
-				2B9DC2062A5EA86C0061FAB8 /* Python.xcframework in Frameworks */,
 				2B9DC1DA2A5E8E400061FAB8 /* TreeSitterJavaScript in Frameworks */,
 				2B9DC1C82A5E8E400061FAB8 /* TreeSitterComment in Frameworks */,
 				2B9DC1FE2A5E8E400061FAB8 /* TreeSitterTypeScriptRunestone in Frameworks */,
@@ -4164,7 +4154,6 @@
 				2B8F0B822A5858EF00D9359F /* ImagePreview.swift */,
 				2BD9B1AB2A5BD4E600036AFD /* CodeEditorV2.swift */,
 				2B917FD92A5D5AF7002DC170 /* JSCoreTestView.swift */,
-				2B8884152A5E3C05004EE341 /* PyTestView.swift */,
 			);
 			path = TestViews;
 			sourceTree = "<group>";
@@ -4294,7 +4283,6 @@
 			children = (
 				2B1B32D52A61783800DA573F /* DataStore */,
 				2B1B32BA2A60E6EA00DA573F /* ObjC */,
-				2B9DC20A2A5EA9000061FAB8 /* Python */,
 				2B8F0B932A597C3700D9359F /* Extension */,
 				2B8F0B812A5858D800D9359F /* TestViews */,
 				2B9B579E2A57D5B5002E9D57 /* Info.plist */,
@@ -4330,7 +4318,6 @@
 				48DF6B95288D32C800D523C1 /* Sources */,
 				48DF6B96288D32C800D523C1 /* Frameworks */,
 				48DF6B97288D32C800D523C1 /* Resources */,
-				2B1B32B92A60DEB300DA573F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -4439,7 +4426,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B9DC20B2A5EA9000061FAB8 /* Python in Resources */,
 				48DF6BA4288D32CA00D523C1 /* Preview Assets.xcassets in Resources */,
 				2BEEA85E288FABF1006095DC /* static in Resources */,
 				48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */,
@@ -4447,26 +4433,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		2B1B32B92A60DEB300DA573F /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "set -e\necho \"Signing as $EXPANDED_CODE_SIGN_IDENTITY_NAME ($EXPANDED_CODE_SIGN_IDENTITY)\"\nfind \"$CODESIGNING_FOLDER_PATH/Python/python-stdlib/lib-dynload\" -name \"*.so\" -exec /usr/bin/codesign --force --sign \"$EXPANDED_CODE_SIGN_IDENTITY\" -o runtime --timestamp=none --preserve-metadata=identifier,entitlements,flags --generate-entitlement-der {} \\;\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		48DF6B95288D32C800D523C1 /* Sources */ = {
@@ -4501,7 +4467,6 @@
 				2B8F0B832A5858EF00D9359F /* ImagePreview.swift in Sources */,
 				2B1B32D12A6163A100DA573F /* ImportProjectFromFileView.swift in Sources */,
 				48DF6B9D288D32C800D523C1 /* minipApp.swift in Sources */,
-				2B8884162A5E3C05004EE341 /* PyTestView.swift in Sources */,
 				2B1B32D72A61784600DA573F /* Defaults.swift in Sources */,
 				2B1B32BD2A60E70E00DA573F /* PythonOut.m in Sources */,
 				2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */,

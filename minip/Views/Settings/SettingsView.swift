@@ -35,15 +35,12 @@ struct CodeView: View {
             ZStack {
                 if selectedLanguage == 0 {
                     JSCoreTestView()
-                } else if selectedLanguage == 1 {
-                    PyTestView()
                 }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Picker("What is your favorite language?", selection: $selectedLanguage) {
                         Text("js").tag(0)
-                        Text("py").tag(1)
                     }
                     .pickerStyle(.segmented)
                 }

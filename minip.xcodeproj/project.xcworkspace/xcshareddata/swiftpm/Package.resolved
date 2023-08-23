@@ -28,15 +28,6 @@
       }
     },
     {
-      "identity" : "hxphotopicker",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SilenceLove/HXPhotoPicker.git",
-      "state" : {
-        "revision" : "4f570c9184aff4697d41f07de002f9f88c9d9ea7",
-        "version" : "4.0.3"
-      }
-    },
-    {
       "identity" : "keyboardtoolbar",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/simonbs/KeyboardToolbar",

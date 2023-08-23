@@ -284,7 +284,7 @@ class FileBrowserPageViewModel: ObservableObject {
         
         for content in contents {
             var isDirectory: ObjCBool = false
-            if fileManager.fileExists(atPath: content.path(), isDirectory: &isDirectory) {
+            if fileManager.fileExists(atPath: content.path(percentEncoded: false), isDirectory: &isDirectory) {
                 if isDirectory.boolValue {
                     folders.append(content)
                 } else {

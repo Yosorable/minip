@@ -36,7 +36,6 @@ struct HomeView: View {
                         .foregroundColor(.primary)
                     Menu {
                         Button {
-//                            importType = 0
                             ShowNotImplement()
                             
                         } label: {
@@ -86,30 +85,6 @@ struct HomeView: View {
                 }
             )
         }
-        .fullScreenCover(item: $viewModel.selectedApp) { item in
-            let _ = {
-                _pathManager.openedApp = item
-            }()
-            NavigationStack(path: $_pathManager.path) {
-                MiniPageView(appInfo: item, closeApp: closeApp)
-                    .navigationDestination(for: String.self) { target in
-                        MiniPageView(appInfo: item, page: target, closeApp: closeApp)
-                    }
-            }.tint({
-                if let hexColor = item.tintColor {
-                    return Color(hex: hexColor) ?? .accentColor
-                }
-                return .accentColor
-            }())
-            .preferredColorScheme({
-                if item.colorScheme == "light" {
-                    return .light
-                } else if item.colorScheme == "dark" {
-                    return .dark
-                }
-                return .none
-            }())
-        }
     }
     
     @State var test = false
@@ -136,7 +111,7 @@ struct AppListItemView: View {
             .foregroundColor(.secondary)
             .cornerRadius(10)
             .frame(width: 60, height: 60)
-            .shadow(radius: 5)
+            .shadow(radius: 2)
         HStack {
             if let iconURL = viewModel.getAppIconURL(appId: appInfo.appId) {
                 if iconURL.scheme == "file", let img = UIImage(contentsOfFile: iconURL.path()) {
@@ -146,7 +121,7 @@ struct AppListItemView: View {
                         .frame(width: 60, height: 60)
                         .clipped()
                         .cornerRadius(10)
-                        .shadow(radius: 5)
+                        .shadow(radius: 2)
                 } else if iconURL.scheme == "http" || iconURL.scheme == "https" {
                     KFImage(iconURL)
                         .resizable()
@@ -186,7 +161,17 @@ struct AppListItemView: View {
         }
         .background {
             Button {
-                viewModel.selectedApp = appInfo
+                let app = appInfo
+                                            
+                let vc = UINavigationController(rootViewController: MiniPageViewController(app: app))
+                if app.colorScheme == "dark" {
+                    vc.overrideUserInterfaceStyle = .dark
+                } else if app.colorScheme == "light" {
+                    vc.overrideUserInterfaceStyle = .light
+                }
+                vc.modalPresentationStyle = .fullScreen
+                pathManager.openedApp = app
+                GetTopViewController()?.present(vc, animated: true)
             } label: {
                 EmptyView()
             }
@@ -207,11 +192,5 @@ struct AppListItemView: View {
             }
             
         }
-    }
-}
-
-extension Int: Identifiable {
-    public var id: Int {
-        self
     }
 }

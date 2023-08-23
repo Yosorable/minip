@@ -172,7 +172,6 @@ func GetTopViewController(controller: UIViewController? = GetKeyWindowUIViewCont
     return controller
 }
 
-
 // image preview
 
 func PreviewImage(url: URL? = nil) {

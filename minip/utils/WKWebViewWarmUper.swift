@@ -57,7 +57,7 @@ public class WarmUper<Object: WarmUpable> {
 
 extension WKWebView: WarmUpable {
     public func warmUp() {
-//        loadHTMLString("", baseURL: nil)
+        //        loadHTMLString("", baseURL: nil)
     }
 }
 
@@ -67,11 +67,20 @@ public extension WarmUper where Object == WKWebView {
         let cfg = WKWebViewConfiguration()
         cfg.mediaTypesRequiringUserActionForPlayback = []
         cfg.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
+        cfg.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
         cfg.allowsInlineMediaPlayback = true
         
         let res = WKWebView(frame: .zero, configuration: cfg)
+        
         res.isOpaque = false
         res.scrollView.contentInsetAdjustmentBehavior = .always
+        
         return res
     })
+}
+
+class FWKWebView: WKWebView {
+    override var safeAreaInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
 }

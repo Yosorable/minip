@@ -9,6 +9,8 @@ import SwiftUI
 
 @main
 struct minipApp: App {
+    init() {
+    }
     var body: some Scene {
         WindowGroup {
             TabView {

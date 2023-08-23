@@ -32,7 +32,7 @@ class HomeViewModel: ObservableObject {
             let decoder = JSONDecoder()
             fileURLs.forEach { ele in
                 let infoURL = ele.appendingPathComponent("info", conformingTo: .json)
-                if ele.lastPathComponent != ".Trash" && fileManager.fileExists(atPath: infoURL.path()) {
+                if ele.lastPathComponent != ".Trash" && fileManager.fileExists(atPath: infoURL.path(percentEncoded: false)) {
                     do {
                         let data = try Data(contentsOf: infoURL, options: .mappedIfSafe)
                         let appDetail = try? decoder.decode(AppInfo.self, from: data)

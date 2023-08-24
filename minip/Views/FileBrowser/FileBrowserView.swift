@@ -26,104 +26,163 @@ struct FileBrowserPageView: View {
     init(path: String) {
         viewModel = FileBrowserPageViewModel(path: path)
     }
+    
+    var list: some View {
+        if #available(iOS 15.0, *) {
+            return List {
+                ForEach(viewModel.files, id: \.id) { ele in
+                    if ele.isFolder {
+                        folderItem(ele: ele)
+                    } else {
+                        fileItem(ele: ele)
+                    }
+                }
+            }
+            .refreshable {
+                viewModel.fetchFiles()
+            }
+        } else {
+            return List {
+                ForEach(viewModel.files, id: \.id) { ele in
+                    if ele.isFolder {
+                        folderItem(ele: ele)
+                    } else {
+                        fileItem(ele: ele)
+                    }
+                }
+            }
+            .onAppear {
+                viewModel.fetchFiles()
+            }
+        }
+    }
+    
     var body: some View {
-        List {
-            ForEach(viewModel.files, id: \.id) { ele in
-                if ele.isFolder {
-                    folderItem(ele: ele)
-                } else {
-                    fileItem(ele: ele)
-                }
+        list
+            .navigationTitle(Text(viewModel.path == "/" ? "Files" : (viewModel.path.splitPolyfill(separator: "/").last ?? "")))
+            .fullScreenCover(item: $viewModel.selectFile) { item in
+                EditorView(fileInfo: item)
             }
-        }
-        .refreshable {
-            viewModel.fetchFiles()
-        }
-        .navigationTitle(Text(viewModel.path == "/" ? "Files" : (viewModel.path.splitPolyfill(separator: "/").last ?? "")))
-        .fullScreenCover(item: $viewModel.selectFile) { item in
-            EditorView(fileInfo: item)
-        }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                if viewModel.path == "/.Trash" {
-                    Button {
-                        cleanTrash()
-                    } label: {
-                        Text("Clean")
-                            .foregroundColor(.red)
-                    }
-                } else if !viewModel.path.contains("/.Trash") {
-                    Menu {
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if viewModel.path == "/.Trash" {
                         Button {
-                            createFile()
+                            cleanTrash()
                         } label: {
-                            Label("Create file", systemImage: "doc")
+                            Text("Clean")
+                                .foregroundColor(.red)
                         }
-                        Button {
-                            createFolder()
+                    } else if !viewModel.path.contains("/.Trash") {
+                        Menu {
+                            Button {
+                                createFile()
+                            } label: {
+                                Label("Create file", systemImage: "doc")
+                            }
+                            Button {
+                                createFolder()
+                            } label: {
+                                Label("Create folder", systemImage: "folder")
+                            }
                         } label: {
-                            Label("Create folder", systemImage: "folder")
+                            Image(systemName: "plus.app.fill")
                         }
-                    } label: {
-                        Image(systemName: "plus.app.fill")
                     }
                 }
             }
-            
-        }
     }
     
     func fileItem(ele: FileInfo) -> some View {
-        HStack {
-            Image(systemName: FileManager.isImage(url: ele.url) ? "photo" : "doc")
-                .font(.title2)
-                .foregroundColor(.secondary)
-                .frame(width: 35, height: 35)
-            Text(ele.fileName)
-            Spacer()
-        }
-        .contentShape(Rectangle())
-        .onTapGesture {
-            viewModel.selectFile = ele
-        }
-        .swipeActions {
-            Button {
-                deleteFile(url: ele.url)
-            } label: {
-                Text("Delete")
+        if #available(iOS 15.0, *) {
+            return HStack {
+                Image(systemName: FileManager.isImage(url: ele.url) ? "photo" : "doc")
+                    .font(.title2)
+                    .foregroundColor(.secondary)
+                    .frame(width: 35, height: 35)
+                Text(ele.fileName)
+                Spacer()
             }
-            .tint(.red)
+            .swipeActions {
+                Button {
+                    deleteFile(url: ele.url)
+                } label: {
+                    Text("Delete")
+                }
+                .tint(.red)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                viewModel.selectFile = ele
+            }
+        } else {
+            // todo: 支持滑动删除
+            return HStack {
+                Image(systemName: FileManager.isImage(url: ele.url) ? "photo" : "doc")
+                    .font(.title2)
+                    .foregroundColor(.secondary)
+                    .frame(width: 35, height: 35)
+                Text(ele.fileName)
+                Spacer()
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                viewModel.selectFile = ele
+            }
         }
     }
+
     
     func folderItem(ele: FileInfo) -> some View {
-        NavigationLink {
-            LazyView {
-                FileBrowserPageView(path: "\(viewModel.path == "/" ? "" : viewModel.path)/\(ele.fileName)")
-            }
-        } label: {
-            HStack {
-                if viewModel.path == "/" && ele.fileName == ".Trash" {
-                    Image(systemName: "trash")
-                        .font(.title2)
-                        .foregroundColor(.secondary)
-                        .frame(width: 35, height: 35)
-                } else {
-                    Image(systemName: "folder")
-                        .font(.title2)
-                        .foregroundColor(.secondary)
-                        .frame(width: 35, height: 35)
+        if #available(iOS 15.0, *) {
+            return NavigationLink {
+                LazyView {
+                    FileBrowserPageView(path: "\(viewModel.path == "/" ? "" : viewModel.path)/\(ele.fileName)")
                 }
-                Text(ele.fileName)
-            }
-        }
-        .swipeActions {
-            Button {
-                deleteFolder(url: ele.url)
             } label: {
-                Text("Delete")
+                HStack {
+                    if viewModel.path == "/" && ele.fileName == ".Trash" {
+                        Image(systemName: "trash")
+                            .font(.title2)
+                            .foregroundColor(.secondary)
+                            .frame(width: 35, height: 35)
+                    } else {
+                        Image(systemName: "folder")
+                            .font(.title2)
+                            .foregroundColor(.secondary)
+                            .frame(width: 35, height: 35)
+                    }
+                    Text(ele.fileName)
+                }
+                .swipeActions {
+                    Button {
+                        deleteFolder(url: ele.url)
+                    } label: {
+                        Text("Delete")
+                    }
+                    .tint(.red)
+                }
             }
-            .tint(.red)
+        } else {
+            return NavigationLink {
+                LazyView {
+                    FileBrowserPageView(path: "\(viewModel.path == "/" ? "" : viewModel.path)/\(ele.fileName)")
+                }
+            } label: {
+                HStack {
+                    if viewModel.path == "/" && ele.fileName == ".Trash" {
+                        Image(systemName: "trash")
+                            .font(.title2)
+                            .foregroundColor(.secondary)
+                            .frame(width: 35, height: 35)
+                    } else {
+                        Image(systemName: "folder")
+                            .font(.title2)
+                            .foregroundColor(.secondary)
+                            .frame(width: 35, height: 35)
+                    }
+                    Text(ele.fileName)
+                }
+            }
         }
     }
     

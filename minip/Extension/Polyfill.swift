@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension URL {
     func appendingPolyfill(path: String) -> URL {
@@ -28,5 +29,16 @@ extension URL {
 extension String {
     func splitPolyfill(separator: String) -> [String] {
         return self.components(separatedBy: separator)
+    }
+}
+
+extension EnvironmentValues {
+    var dismissPolyfill: () -> Void {
+        if #available(iOS 15.0, *) {
+            return { self.dismiss() }
+        } else {
+            
+            return { presentationMode.wrappedValue.dismiss() }
+        }
     }
 }

@@ -12,7 +12,7 @@ import ZipArchive
 import Defaults
 
 struct DownloadProjectView: View {
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismissPolyfill) var dismiss
     
     var onSuccess: (()->Void)?
     
@@ -45,10 +45,15 @@ struct DownloadProjectView: View {
             Section {
                 HStack {
                     Text("URL")
-                    TextField(text: $downURL) {
-                        Text("Please enter the url")
+                    if #available(iOS 15.0, *) {
+                        TextField(text: $downURL) {
+                            Text("Please enter the url")
+                        }
+                        .disabled(downloading)
+                    } else {
+                        TextField("", text: $downURL)
+                            .disabled(downloading)
                     }
-                    .disabled(downloading)
                 }
             } footer: {
                 HStack {
@@ -59,10 +64,16 @@ struct DownloadProjectView: View {
             
             Section {
                 Text("Filename")
-                TextField(text: $downFilename) {
-                    Text("Please enter filename (not required)")
+                
+                if #available(iOS 15.0, *) {
+                    TextField(text: $downFilename) {
+                        Text("Please enter filename (not required)")
+                    }
+                    .disabled(downloading)
+                } else {
+                    TextField("Please enter filename (not required)", text: $downURL)
+                        .disabled(downloading)
                 }
-                .disabled(downloading)
             } footer: {
                 Text("The downloaded file name will use the last url component item, if some error occurs, this text will be used (if it is empty, \"default.zip\" will be used).")
             }
@@ -72,17 +83,31 @@ struct DownloadProjectView: View {
             }
             if downloading || uncompressing {
                 Section {
-                    Button(role: .destructive, action: {
-                        downloadReq?.cancel()
-                        downloading = false
-                    }, label: {
-                        HStack{
-                            Spacer()
-                            Text("Cancel")
-                            Spacer()
+                    if #available(iOS 15.0, *) {
+                        Button(role: .destructive, action: {
+                            downloadReq?.cancel()
+                            downloading = false
+                        }, label: {
+                            HStack{
+                                Spacer()
+                                Text("Cancel")
+                                Spacer()
+                            }
+                        })
+                        .disabled(uncompressing)
+                    } else {
+                        Button {
+                            downloadReq?.cancel()
+                            downloading = false
+                        } label: {
+                            HStack{
+                                Spacer()
+                                Text("Cancel")
+                                    .foregroundColor(.red)
+                                Spacer()
+                            }
                         }
-                    })
-                    .disabled(uncompressing)
+                    }
                 } header: {
                     HStack {
                         Spacer()
@@ -117,7 +142,13 @@ struct DownloadProjectView: View {
                 }
             }
         }
-        .alert(isPresented: $showAlert, error: ErrorMsg(errorDescription: alertMsg)) {}
+        .onChange(of: showAlert, perform: {newValue in
+            if newValue {
+                let alert = UIAlertController(title: "Error", message: alertMsg, preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                GetTopViewController()?.present(alert, animated: true, completion: nil)
+            }
+        })
     }
     
     func downloadFile() {

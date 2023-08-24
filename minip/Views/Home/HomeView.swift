@@ -53,21 +53,39 @@ struct HomeView: View {
             )
         }
     }
-    
+    func list() -> some View {
+        if #available(iOS 15.0, *) {
+            return List {
+                ForEach(viewModel.apps, id: \.appId) { ele in
+                    AppListItemView(appInfo: ele)
+                        .environmentObject(viewModel)
+                }
+                .onMove { from, to in
+                    viewModel.apps.move(fromOffsets: from, toOffset: to)
+                    Defaults[.appSortList].move(fromOffsets: from, toOffset: to)
+                }
+            }
+            .refreshable {
+                viewModel.loadAppInfos()
+            }
+        } else {
+            return List {
+                ForEach(viewModel.apps, id: \.appId) { ele in
+                    AppListItemView(appInfo: ele)
+                        .environmentObject(viewModel)
+                }
+                .onMove { from, to in
+                    viewModel.apps.move(fromOffsets: from, toOffset: to)
+                    Defaults[.appSortList].move(fromOffsets: from, toOffset: to)
+                }
+            }
+            .onAppear {
+                viewModel.loadAppInfos()
+            }
+        }
+    }
     var content: some View {
-        List {
-            ForEach(viewModel.apps, id: \.appId) { ele in
-                AppListItemView(appInfo: ele)
-                    .environmentObject(viewModel)
-            }
-            .onMove { from, to in
-                viewModel.apps.move(fromOffsets: from, toOffset: to)
-                Defaults[.appSortList].move(fromOffsets: from, toOffset: to)
-            }
-        }
-        .refreshable {
-            viewModel.loadAppInfos()
-        }
+        list()
         .navigationTitle(Text("Projects"))
         .toolbar {
             EditButton()
@@ -100,14 +118,14 @@ struct HomeView: View {
 struct AppListItemView: View {
     @EnvironmentObject var viewModel: HomeViewModel
     var appInfo: AppInfo
-    var body: some View {
-        
+    
+    var content: some View {
         let noIconView  = Rectangle()
             .foregroundColor(.secondary)
             .cornerRadius(10)
             .frame(width: 60, height: 60)
             .shadow(radius: 2)
-        HStack {
+        return HStack {
             if let iconURL = viewModel.getAppIconURL(appId: appInfo.appId) {
                 if iconURL.scheme == "file", let img = UIImage(contentsOfFile: iconURL.path) {
                     Image(uiImage: img)
@@ -152,38 +170,59 @@ struct AppListItemView: View {
             Spacer()
             
         }
-        .background {
-            Button {
-                let app = appInfo
-                                            
-                let vc = UINavigationController(rootViewController: MiniPageViewController(app: app))
-                if app.colorScheme == "dark" {
-                    vc.overrideUserInterfaceStyle = .dark
-                } else if app.colorScheme == "light" {
-                    vc.overrideUserInterfaceStyle = .light
+    }
+    var body: some View {
+        if #available(iOS 15.0, *) {
+            content
+                .background {
+                    Button {
+                        let app = appInfo
+                        
+                        let vc = UINavigationController(rootViewController: MiniPageViewController(app: app))
+                        if app.colorScheme == "dark" {
+                            vc.overrideUserInterfaceStyle = .dark
+                        } else if app.colorScheme == "light" {
+                            vc.overrideUserInterfaceStyle = .light
+                        }
+                        vc.modalPresentationStyle = .fullScreen
+                        pathManager.openedApp = app
+                        GetTopViewController()?.present(vc, animated: true)
+                    } label: {
+                        EmptyView()
+                    }
                 }
-                vc.modalPresentationStyle = .fullScreen
-                pathManager.openedApp = app
-                GetTopViewController()?.present(vc, animated: true)
-            } label: {
-                EmptyView()
-            }
-        }
-        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-            Button  {
-                viewModel.showDeleteAlert = true
-                viewModel.deleteApp = appInfo
-            } label: {
-                Text("Delete")
-            }
-            .tint(.red)
-            
-            Button {
-                
-            } label: {
-                Text("Settings")
-            }
-            
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button  {
+                        viewModel.showDeleteAlert = true
+                        viewModel.deleteApp = appInfo
+                    } label: {
+                        Text("Delete")
+                    }
+                    .tint(.red)
+                    
+                    Button {
+                        
+                    } label: {
+                        Text("Settings")
+                    }
+                    
+                }
+        } else {
+            content
+                .onTapGesture {
+                    let app = appInfo
+                    
+                    let vc = UINavigationController(rootViewController: MiniPageViewController(app: app))
+                    if app.colorScheme == "dark" {
+                        vc.overrideUserInterfaceStyle = .dark
+                    } else if app.colorScheme == "light" {
+                        vc.overrideUserInterfaceStyle = .light
+                    }
+                    vc.modalPresentationStyle = .fullScreen
+                    pathManager.openedApp = app
+                    GetTopViewController()?.present(vc, animated: true)
+                }
+            // todo: 滑动功能
         }
     }
 }

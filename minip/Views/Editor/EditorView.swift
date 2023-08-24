@@ -16,7 +16,7 @@ import TreeSitterJavaScriptRunestone
 import TreeSitterPythonRunestone
 
 struct EditorView: View {
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismissPolyfill) var dismiss
     
     @State var text: String
     @State var originText: String

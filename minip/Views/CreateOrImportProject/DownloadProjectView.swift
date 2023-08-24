@@ -29,85 +29,95 @@ struct DownloadProjectView: View {
     @State var downloadReq: DownloadRequest? = nil
     
     var body: some View {
-        NavigationStack {
-            List {
-                Section {
-                    HStack {
-                        Text("URL")
-                        TextField(text: $downURL) {
-                            Text("Please enter the url")
-                        }
-                        .disabled(downloading)
-                    }
-                } footer: {
-                    HStack {
-                        Text("only support zip file")
-                            .foregroundColor(.secondary)
-                    }
-                }
-                
-                Section {
-                    Text("Filename")
-                    TextField(text: $downFilename) {
-                        Text("Please enter filename (not required)")
+        if #available(iOS 16.0, *) {
+            NavigationStack {
+                content
+            }
+        } else {
+            NavigationView {
+                content
+            }
+        }
+    }
+    
+    var content: some View {
+        List {
+            Section {
+                HStack {
+                    Text("URL")
+                    TextField(text: $downURL) {
+                        Text("Please enter the url")
                     }
                     .disabled(downloading)
-                } footer: {
-                    Text("The downloaded file name will use the last url component item, if some error occurs, this text will be used (if it is empty, \"default.zip\" will be used).")
                 }
-                
-                Section {} footer: {
-                    Text("Download files are stored at tmp directory in documents. You need to manually delete them.")
+            } footer: {
+                HStack {
+                    Text("only support zip file")
+                        .foregroundColor(.secondary)
                 }
-                if downloading || uncompressing {
-                    Section {
-                        Button(role: .destructive, action: {
-                            downloadReq?.cancel()
-                            downloading = false
-                        }, label: {
-                            HStack{
-                                Spacer()
-                                Text("Cancel")
-                                Spacer()
-                            }
-                        })
-                        .disabled(uncompressing)
-                    } header: {
-                        HStack {
+            }
+            
+            Section {
+                Text("Filename")
+                TextField(text: $downFilename) {
+                    Text("Please enter filename (not required)")
+                }
+                .disabled(downloading)
+            } footer: {
+                Text("The downloaded file name will use the last url component item, if some error occurs, this text will be used (if it is empty, \"default.zip\" will be used).")
+            }
+            
+            Section {} footer: {
+                Text("Download files are stored at tmp directory in documents. You need to manually delete them.")
+            }
+            if downloading || uncompressing {
+                Section {
+                    Button(role: .destructive, action: {
+                        downloadReq?.cancel()
+                        downloading = false
+                    }, label: {
+                        HStack{
                             Spacer()
-                            if downloading {
-                                Text("Downloading")
-                            } else if uncompressing {
-                                Text("Uncompressing")
-                            }
-                            Text("...")
+                            Text("Cancel")
                             Spacer()
                         }
+                    })
+                    .disabled(uncompressing)
+                } header: {
+                    HStack {
+                        Spacer()
+                        if downloading {
+                            Text("Downloading")
+                        } else if uncompressing {
+                            Text("Uncompressing")
+                        }
+                        Text("...")
+                        Spacer()
                     }
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(Text("Load from web"))
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Text("Cancel")
-                    }
-                    .disabled(downloading || uncompressing)
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        downloadFile()
-                    } label: {
-                        Text("Download")
-                            .disabled(downloading || downURL.isEmpty || uncompressing)
-                    }
-                }
-            }
-            .alert(isPresented: $showAlert, error: ErrorMsg(errorDescription: alertMsg)) {}
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(Text("Load from web"))
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Cancel")
+                }
+                .disabled(downloading || uncompressing)
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    downloadFile()
+                } label: {
+                    Text("Download")
+                        .disabled(downloading || downURL.isEmpty || uncompressing)
+                }
+            }
+        }
+        .alert(isPresented: $showAlert, error: ErrorMsg(errorDescription: alertMsg)) {}
     }
     
     func downloadFile() {
@@ -121,7 +131,7 @@ struct DownloadProjectView: View {
         let destination: (URL, HTTPURLResponse) -> (URL, DownloadRequest.Options) = { tmpURL, res in
             let pathComponent = res.suggestedFilename ?? "default.zip"
             
-            let finalPath = docURL.appending(path: "tmp").appendingPathComponent(pathComponent)
+            let finalPath = docURL.appendingPolyfill(path: "tmp").appendingPathComponent(pathComponent)
             return (finalPath, [.createIntermediateDirectories, .removePreviousFile])
         }
         downloadReq = AF.download(downurl, to: destination)

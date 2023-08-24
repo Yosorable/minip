@@ -94,7 +94,9 @@ class CodeEditorV2Controller: UIViewController {
         // Set the line-height to 130%
         textView.lineHeightMultiplier = 1.3
         
-        textView.isFindInteractionEnabled = true
+        if #available(iOS 16.0, *) {
+            textView.isFindInteractionEnabled = true
+        }
         textView.alwaysBounceVertical = true
         
         // keyboard
@@ -287,7 +289,11 @@ private extension CodeEditorV2Controller {
             ]),
             KeyboardToolGroup(items: [
                 KeyboardToolGroupItem(style: .secondary, representativeTool: BlockKeyboardTool(symbolName: "magnifyingglass") { [weak self] in
-                    self?.textView?.findInteraction?.presentFindNavigator(showingReplace: false)
+                    if #available(iOS 16.0, *) {
+                        self?.textView?.findInteraction?.presentFindNavigator(showingReplace: false)
+                    } else {
+                        // todo: 显示不支持，或者移除
+                    }
                 }),
                 KeyboardToolGroupItem(style: .secondary, representativeTool: BlockKeyboardTool(symbolName: "keyboard.chevron.compact.down") { [weak self] in
                     self?.textView?.resignFirstResponder()

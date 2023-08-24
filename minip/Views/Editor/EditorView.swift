@@ -49,44 +49,54 @@ struct EditorView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                if notTextFile {
-                    Text("not a text file")
-                } else if readFileError {
-                    Text("readFileError")
-                } else {
-                    CodeEditorV2View(contentString: $text, language: {
-                        guard let ext = fileInfo.fileName.split(separator: ".").last else {
-                            return .html
-                        }
-                        return SourceCodeTypeV2[String(ext)] ?? .html
-                    }())
-                    .edgesIgnoringSafeArea(.all)
+        if #available(iOS 16.0, *) {
+            NavigationStack {
+                content
+            }
+        } else {
+            NavigationView {
+                content
+            }
+        }
+    }
+    
+    var content: some View {
+        ZStack {
+            if notTextFile {
+                Text("not a text file")
+            } else if readFileError {
+                Text("readFileError")
+            } else {
+                CodeEditorV2View(contentString: $text, language: {
+                    guard let ext = fileInfo.fileName.split(separator: ".").last else {
+                        return .html
+                    }
+                    return SourceCodeTypeV2[String(ext)] ?? .html
+                }())
+                .edgesIgnoringSafeArea(.all)
+            }
+        }
+        .navigationTitle(Text(fileInfo.fileName))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark")
                 }
             }
-            .navigationTitle(Text(fileInfo.fileName))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    do {
+                        try text.write(to: fileInfo.url, atomically: true, encoding: .utf8)
+                        originText = text
+                    } catch {
                     }
+                } label: {
+                    Text("Save")
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        do {
-                            try text.write(to: fileInfo.url, atomically: true, encoding: .utf8)
-                            originText = text
-                        } catch {
-                        }
-                    } label: {
-                        Text("Save")
-                    }
-                    .disabled(originText == text)
-                }
+                .disabled(originText == text)
             }
         }
     }

@@ -121,7 +121,7 @@ end - start123
                 .navigationBarTitleDisplayMode(.inline)
             
             
-                .navigationDestination(isPresented: $showRes) {
+                .sheet(isPresented: $showRes) {
                     resultView()
                         .toolbar {
                             ToolbarItem(placement: .navigationBarTrailing) {
@@ -235,7 +235,7 @@ end - start123
                 moduleName = jsName.replacingOccurrences(of: ".js", with: "")
             }
             //            let path = Bundle.main.path(forResource: moduleName, ofType: "js") ?? ""
-            let path = entryFolder?.appending(component: moduleName).path ?? "unknown"
+            let path = entryFolder?.appendingPolyfill(component: moduleName).path ?? "unknown"
             
             let moduleContent = try? String(contentsOfFile: path, encoding: .utf8)
             // 模仿 nodejs 的 require 实现原理

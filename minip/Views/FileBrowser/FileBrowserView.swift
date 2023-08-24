@@ -9,8 +9,14 @@ import SwiftUI
 
 struct FileBrowserView: View {
     var body: some View {
-        NavigationStack {
-            FileBrowserPageView(path: "/")
+        if #available(iOS 16.0, *) {
+            NavigationStack {
+                FileBrowserPageView(path: "/")
+            }
+        } else {
+            NavigationView {
+                FileBrowserPageView(path: "/")
+            }
         }
     }
 }
@@ -24,77 +30,29 @@ struct FileBrowserPageView: View {
         List {
             ForEach(viewModel.files, id: \.id) { ele in
                 if ele.isFolder {
-                    NavigationLink {
-                        LazyView {
-                            FileBrowserPageView(path: "\(viewModel.path == "/" ? "" : viewModel.path)/\(ele.fileName)")
-                        }
-                    } label: {
-                        HStack {
-                            if viewModel.path == "/" && ele.fileName == ".Trash" {
-                                Image(systemName: "trash")
-                                    .font(.title2)
-                                    .foregroundColor(.secondary)
-                                    .frame(width: 35, height: 35)
-                            } else {
-                                Image(systemName: "folder")
-                                    .font(.title2)
-                                    .foregroundColor(.secondary)
-                                    .frame(width: 35, height: 35)
-                            }
-                            Text(ele.fileName)
-                        }
-                    }
-                    .swipeActions {
-                        Button {
-                            deleteFolder(url: ele.url)
-                        } label: {
-                            Text("Delete")
-                        }
-                        .tint(.red)
-                    }
+                    folderItem(ele: ele)
                 } else {
-                    HStack {
-                        Image(systemName: FileManager.isImage(url: ele.url) ? "photo" : "doc")
-                            .font(.title2)
-                            .foregroundColor(.secondary)
-                            .frame(width: 35, height: 35)
-                        Text(ele.fileName)
-                        Spacer()
-                    }
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        viewModel.selectFile = ele
-                    }
-                    .swipeActions {
-                        Button {
-                            deleteFile(url: ele.url)
-                        } label: {
-                            Text("Delete")
-                        }
-                        .tint(.red)
-                    }
+                    fileItem(ele: ele)
                 }
             }
         }
         .refreshable {
             viewModel.fetchFiles()
         }
-        .navigationTitle(Text(viewModel.path == "/" ? "Files" : (viewModel.path.split(separator: "/").last ?? "")))
+        .navigationTitle(Text(viewModel.path == "/" ? "Files" : (viewModel.path.splitPolyfill(separator: "/").last ?? "")))
         .fullScreenCover(item: $viewModel.selectFile) { item in
             EditorView(fileInfo: item)
         }
         .toolbar {
-            if viewModel.path == "/.Trash" {
-                ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                if viewModel.path == "/.Trash" {
                     Button {
                         cleanTrash()
                     } label: {
                         Text("Clean")
                             .foregroundColor(.red)
                     }
-                }
-            } else if !viewModel.path.contains("/.Trash") {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                } else if !viewModel.path.contains("/.Trash") {
                     Menu {
                         Button {
                             createFile()
@@ -111,9 +69,63 @@ struct FileBrowserPageView: View {
                     }
                 }
             }
+            
         }
     }
     
+    func fileItem(ele: FileInfo) -> some View {
+        HStack {
+            Image(systemName: FileManager.isImage(url: ele.url) ? "photo" : "doc")
+                .font(.title2)
+                .foregroundColor(.secondary)
+                .frame(width: 35, height: 35)
+            Text(ele.fileName)
+            Spacer()
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            viewModel.selectFile = ele
+        }
+        .swipeActions {
+            Button {
+                deleteFile(url: ele.url)
+            } label: {
+                Text("Delete")
+            }
+            .tint(.red)
+        }
+    }
+    
+    func folderItem(ele: FileInfo) -> some View {
+        NavigationLink {
+            LazyView {
+                FileBrowserPageView(path: "\(viewModel.path == "/" ? "" : viewModel.path)/\(ele.fileName)")
+            }
+        } label: {
+            HStack {
+                if viewModel.path == "/" && ele.fileName == ".Trash" {
+                    Image(systemName: "trash")
+                        .font(.title2)
+                        .foregroundColor(.secondary)
+                        .frame(width: 35, height: 35)
+                } else {
+                    Image(systemName: "folder")
+                        .font(.title2)
+                        .foregroundColor(.secondary)
+                        .frame(width: 35, height: 35)
+                }
+                Text(ele.fileName)
+            }
+        }
+        .swipeActions {
+            Button {
+                deleteFolder(url: ele.url)
+            } label: {
+                Text("Delete")
+            }
+            .tint(.red)
+        }
+    }
     
     func cleanTrash() {
         let alertController = UIAlertController(title: "Confirm", message: "Are you sure to clean the trash ?", preferredStyle: .alert)
@@ -143,8 +155,8 @@ struct FileBrowserPageView: View {
             }
             
             let fileManager = FileManager.default
-            let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appending(path: viewModel.path)
-            let newFileURL = folderURL.appending(component: fileName)
+            let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: viewModel.path)
+            let newFileURL = folderURL.appendingPolyfill(component: fileName)
             
             if !fileManager.fileExists(atPath: newFileURL.path) {
                 if fileManager.createFile(atPath: newFileURL.path, contents: nil) {
@@ -174,8 +186,8 @@ struct FileBrowserPageView: View {
             }
             
             let fileManager = FileManager.default
-            let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appending(path: viewModel.path)
-            let newFileURL = folderURL.appending(component: fileName)
+            let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: viewModel.path)
+            let newFileURL = folderURL.appendingPolyfill(component: fileName)
             
             if !fileManager.fileExists(atPath: newFileURL.path) {
                 do {
@@ -259,7 +271,7 @@ class FileBrowserPageViewModel: ObservableObject {
     func fetchFiles() {
         print("fetch files")
         let fileManager = FileManager.default
-        let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appending(path: path)
+        let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: path)
         var res = [FileInfo]()
         do {
             let (folderURLs, fileURLs) = try getFilesAndFolders(in: folderURL)

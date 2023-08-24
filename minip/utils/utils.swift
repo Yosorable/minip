@@ -112,7 +112,7 @@ func ShowSimpleError(err: Error? = nil) {
 
 func CleanTrashAsync(onComplete: (()->Void)? = nil, onError: ((Error)->Void)? = nil) {
     DispatchQueue.global().async {
-        let trashURL =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appending(path: ".Trash")
+        let trashURL =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: ".Trash")
         
         do {
             let fileURLs = try FileManager.default.contentsOfDirectory(at: trashURL, includingPropertiesForKeys: nil)

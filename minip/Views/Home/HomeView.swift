@@ -15,45 +15,13 @@ struct HomeView: View {
     @State var importType: Int? = nil
     var body: some View {
         ZStack {
-            NavigationStack {
-                List {
-                    ForEach(viewModel.apps, id: \.appId) { ele in
-                        AppListItemView(appInfo: ele)
-                            .environmentObject(viewModel)
-                    }
-                    .onMove { from, to in
-                        viewModel.apps.move(fromOffsets: from, toOffset: to)
-                        Defaults[.appSortList].move(fromOffsets: from, toOffset: to)
-                    }
+            if #available(iOS 16.0, *) {
+                NavigationStack {
+                    content
                 }
-                .refreshable {
-                    viewModel.loadAppInfos()
-                }
-                .navigationTitle(Text("Projects"))
-                .toolbar {
-                    EditButton()
-                        .foregroundColor(.primary)
-                    Menu {
-                        Button {
-                            ShowNotImplement()
-                            
-                        } label: {
-                            Label("Create new project", systemImage: "folder.badge.plus")
-                        }
-                        Button {
-                            importType = 1
-                        } label: {
-                            Label("Load from web", systemImage: "network")
-                        }
-                        Button {
-                            importType = 2
-                        } label: {
-                            Label("Load from file", systemImage: "folder")
-                        }
-                    } label: {
-                        Image(systemName: "plus.square")
-                            .foregroundColor(.primary)
-                    }
+            } else {
+                NavigationView {
+                    content
                 }
             }
         }
@@ -83,6 +51,48 @@ struct HomeView: View {
                     viewModel.deleteApp = nil
                 }
             )
+        }
+    }
+    
+    var content: some View {
+        List {
+            ForEach(viewModel.apps, id: \.appId) { ele in
+                AppListItemView(appInfo: ele)
+                    .environmentObject(viewModel)
+            }
+            .onMove { from, to in
+                viewModel.apps.move(fromOffsets: from, toOffset: to)
+                Defaults[.appSortList].move(fromOffsets: from, toOffset: to)
+            }
+        }
+        .refreshable {
+            viewModel.loadAppInfos()
+        }
+        .navigationTitle(Text("Projects"))
+        .toolbar {
+            EditButton()
+                .foregroundColor(.primary)
+            Menu {
+                Button {
+                    ShowNotImplement()
+                    
+                } label: {
+                    Label("Create new project", systemImage: "folder.badge.plus")
+                }
+                Button {
+                    importType = 1
+                } label: {
+                    Label("Load from web", systemImage: "network")
+                }
+                Button {
+                    importType = 2
+                } label: {
+                    Label("Load from file", systemImage: "folder")
+                }
+            } label: {
+                Image(systemName: "plus.square")
+                    .foregroundColor(.primary)
+            }
         }
     }
 }

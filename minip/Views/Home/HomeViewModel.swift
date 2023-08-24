@@ -27,8 +27,6 @@ class HomeViewModel: ObservableObject {
         var tmpApps: [AppInfo] = []
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let test = documentsURL.appending(component: "测试.txt")
-        print(test.path, test.path)
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
             let decoder = JSONDecoder()
@@ -96,7 +94,7 @@ class HomeViewModel: ObservableObject {
             if icon.starts(with: "http://") || icon.starts(with: "https://") {
                 return URL(string: icon)
             }
-            return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appending(path: ele.name).appending(path: icon)
+            return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPolyfill(path: ele.name).appendingPolyfill(path: icon)
         }
         return nil
     }

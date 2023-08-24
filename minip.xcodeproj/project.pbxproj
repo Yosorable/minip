@@ -75,6 +75,7 @@
 		2BEEA861288FACA5006095DC /* WKWebViewJavascriptBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 2BEEA860288FACA5006095DC /* WKWebViewJavascriptBridge */; };
 		487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 487E38922A8FBA48003464D7 /* Kingfisher */; };
 		487E38972A8FBD29003464D7 /* Int++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487E38962A8FBD29003464D7 /* Int++.swift */; };
+		48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C385AC2A978520006BEE35 /* Polyfill.swift */; };
 		48DF6B9D288D32C800D523C1 /* minipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF6B9C288D32C800D523C1 /* minipApp.swift */; };
 		48DF6B9F288D32C800D523C1 /* PathManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF6B9E288D32C800D523C1 /* PathManager.swift */; };
 		48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA0288D32CA00D523C1 /* Assets.xcassets */; };
@@ -108,6 +109,7 @@
 		2BD9B1D82A5C426700036AFD /* EditorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTheme.swift; sourceTree = "<group>"; };
 		2BD9B1DA2A5C428700036AFD /* HighlightName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightName.swift; sourceTree = "<group>"; };
 		487E38962A8FBD29003464D7 /* Int++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int++.swift"; sourceTree = "<group>"; };
+		48C385AC2A978520006BEE35 /* Polyfill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polyfill.swift; sourceTree = "<group>"; };
 		48DF6B99288D32C800D523C1 /* minip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DF6B9C288D32C800D523C1 /* minipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = minipApp.swift; sourceTree = "<group>"; };
 		48DF6B9E288D32C800D523C1 /* PathManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathManager.swift; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 				2B1B32C02A6132FD00DA573F /* FileManager++.swift */,
 				2B6D0E4D2A624382005BFEB9 /* UIView++.swift */,
 				487E38962A8FBD29003464D7 /* Int++.swift */,
+				48C385AC2A978520006BEE35 /* Polyfill.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -501,6 +504,7 @@
 				2B9B579A2A56399B002E9D57 /* utils.swift in Sources */,
 				2BD9B1AC2A5BD4E600036AFD /* CodeEditorV2.swift in Sources */,
 				2BB9201A2A52FED000D4BE3C /* HomeView.swift in Sources */,
+				48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */,
 				487E38972A8FBD29003464D7 /* Int++.swift in Sources */,
 				48DF6B9F288D32C800D523C1 /* PathManager.swift in Sources */,
 				2B9003C32A81FEB400ED360D /* LazyView.swift in Sources */,
@@ -659,7 +663,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -697,7 +701,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

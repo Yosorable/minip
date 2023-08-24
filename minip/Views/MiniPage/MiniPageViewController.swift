@@ -54,7 +54,7 @@ class MiniPageViewController: UIViewController {
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
         
-        let url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appending(path: "\(app.name)/\(page)")
+        let url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
         webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
         self.pageURL = url
         
@@ -140,7 +140,7 @@ class MiniPageViewController: UIViewController {
             
             let fileManager = FileManager.default
             let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let appDirURL = documentsURL.appending(path: app.name)
+            let appDirURL = documentsURL.appendingPolyfill(path: app.name)
             var targetFileURL: URL
             if fileName.isEmpty || !fileName.hasPrefix("/") {
                 targetFileURL = pageURL.deletingLastPathComponent().appendingPathComponent(fileName)
@@ -148,7 +148,7 @@ class MiniPageViewController: UIViewController {
                 targetFileURL = appDirURL.appendingPathComponent(fileName)
             }
             
-            guard let f = targetFileURL.path.split(separator: documentsURL.lastPathComponent).last else {
+            guard let f = targetFileURL.path.splitPolyfill(separator: documentsURL.lastPathComponent).last else {
                 callback?(false)
                 return
             }
@@ -172,7 +172,7 @@ class MiniPageViewController: UIViewController {
             
             let fileManager = FileManager.default
             let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let appDirURL = documentsURL.appending(path: app.name)
+            let appDirURL = documentsURL.appendingPolyfill(path: app.name)
             var targetFileURL: URL
             if fileName.isEmpty || !fileName.hasPrefix("/") {
                 targetFileURL = pageURL.deletingLastPathComponent().appendingPathComponent(fileName)
@@ -180,7 +180,7 @@ class MiniPageViewController: UIViewController {
                 targetFileURL = appDirURL.appendingPathComponent(fileName)
             }
             
-            guard let f = targetFileURL.path.split(separator: documentsURL.lastPathComponent).last else {
+            guard let f = targetFileURL.path.splitPolyfill(separator: documentsURL.lastPathComponent).last else {
                 callback?([UInt8]())
                 return
             }
@@ -195,19 +195,19 @@ class MiniPageViewController: UIViewController {
             }
             let fileManager = FileManager.default
             let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let appDirURL = documentsURL.appending(path: app.name)
+            let appDirURL = documentsURL.appendingPolyfill(path: app.name)
             var dir: URL
             if path.isEmpty || !path.hasPrefix("/") {
-                dir = pageURL.deletingLastPathComponent().appending(path: path)
+                dir = pageURL.deletingLastPathComponent().appendingPolyfill(path: path)
             } else {
-                dir = appDirURL.appending(path: path)
+                dir = appDirURL.appendingPolyfill(path: path)
             }
             
             do {
                 let fileURLs = try fileManager.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)
                 var res = [String]()
                 fileURLs.forEach { ele in
-                    guard let f = ele.path.split(separator: app.name).last else {
+                    guard let f = ele.path.splitPolyfill(separator: app.name).last else {
                         return
                     }
                     res.append(String(f))
@@ -388,7 +388,7 @@ class AppDetailViewController: UIViewController {
             if icon.starts(with: "http://") || icon.starts(with: "https://") {
                 iconURL = URL(string: icon)
             } else {
-                iconURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appending(path: appInfo.name).appending(path: icon)
+                iconURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPolyfill(path: appInfo.name).appendingPolyfill(path: icon)
             }
         }
 

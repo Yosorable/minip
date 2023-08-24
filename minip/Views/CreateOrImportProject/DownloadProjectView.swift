@@ -137,7 +137,7 @@ struct DownloadProjectView: View {
                     return
                 } else if let tmpUrl = resp.fileURL {
                     uncompressing = true
-                    HUD.flash(.labeledSuccess(title: nil, subtitle: "Downloaded success, uncompressing"), delay: 1, completion: { _ in
+                    HUD.flash(.labeledSuccess(title: nil, subtitle: "Downloaded success, uncompressing"), delay: 0.5, completion: { _ in
                         unCompress(file: tmpUrl)
                         uncompressing = false
                         Defaults[.lastDownloadedURL] = downURL
@@ -153,7 +153,7 @@ struct DownloadProjectView: View {
     func unCompress(file: URL) {
         let dest = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         if SSZipArchive.unzipFile(atPath: file.path(), toDestination: dest.path()) {
-            HUD.flash(.labeledSuccess(title: nil, subtitle: "Success"), delay: 1, completion: { _ in
+            HUD.flash(.labeledSuccess(title: nil, subtitle: "Success"), delay: 0.5, completion: { _ in
                 dismiss()
                 onSuccess?()
             })

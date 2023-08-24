@@ -19,6 +19,7 @@ extension UIView {
         self.isUserInteractionEnabled = true
         
     }
+
     @objc func handleTap(_ sender: TapGestureRecognizer) {
         sender.action!()
     }

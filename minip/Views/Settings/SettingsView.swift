@@ -29,7 +29,7 @@ struct SettingsView: View {
                     let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
                     let dateFrom = Date(timeIntervalSince1970: 0)
                     WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: dateFrom) {
-                        HUD.show(.labeledSuccess(title: nil, subtitle: "clear success"))
+                        HUD.flash(.labeledSuccess(title: nil, subtitle: "clear success"), delay: 1)
                     }
                     
                 } label: {
@@ -44,11 +44,8 @@ struct SettingsView: View {
 struct CodeView: View {
     @State var selectedLanguage = 0
     var body: some View {
-        //        NavigationStack {
         ZStack {
             JSCoreTestView()
         }
-        //        }
-        
     }
 }

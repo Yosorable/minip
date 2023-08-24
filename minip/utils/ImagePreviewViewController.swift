@@ -9,64 +9,7 @@ import UIKit
 import Kingfisher
 import Photos
 
-class ImagePreviewViewController: UIViewController, UIScrollViewDelegate
-{
-    var scrollView: UIScrollView!
-    var imageView: UIImageView!
-    
-    override func viewDidLoad()
-    {
-        super.viewDidLoad()
-        
-        self.navigationController?.isNavigationBarHidden = true
-        
-        scrollView = UIScrollView()
-        scrollView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
-        scrollView.minimumZoomScale=1
-        scrollView.maximumZoomScale=3
-        //        scrollV.bounces=false
-        scrollView.delegate=self
-        self.view.addSubview(scrollView)
-        
-        
-        imageView = UIImageView()
-        let url = URL(string: "https://lmg.jj20.com/up/allimg/4k/s/02/2109250006343S5-0-lp.jpg")
-        imageView.kf.setImage(with: url)
-        imageView.frame = scrollView.bounds
-        imageView.contentMode = .scaleAspectFit
-        
-        scrollView.addSubview(imageView)
-        view.backgroundColor = .black.withAlphaComponent(0.7)
-        
-        
-        view.addTapGesture { [weak self] in
-            self?.dismiss(animated: false)
-        }
-    }
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return imageView
-    }
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        scrollToCenter()
-    }
-    
-    func scrollToCenter() {
-        let contentSize = scrollView.contentSize
-        let bounds = scrollView.bounds
-        let centerOffset = CGPoint(
-            x: contentSize.width > bounds.width ? (contentSize.width / 2) - (bounds.width / 2) : 0,
-            y: contentSize.height > bounds.height ? (contentSize.height / 2) - (bounds.height / 2) : 0
-        )
-        
-        scrollView.contentOffset = centerOffset
-    }
-}
-
-
-
-// ----
-
-class ViewController5: UIViewController {
+class ImagePreviewViewController: UIViewController {
     var imageView: ZoomImageView!
     var imageURL: URL?
     

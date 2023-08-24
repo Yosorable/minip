@@ -11,7 +11,6 @@ import Defaults
 
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
-    @StateObject var _pathManager = pathManager
     
     @State var importType: Int? = nil
     var body: some View {
@@ -86,20 +85,6 @@ struct HomeView: View {
             )
         }
     }
-    
-    @State var test = false
-    
-    func closeApp() {
-        let appId = viewModel.selectedApp?.appId
-        viewModel.selectedApp = nil
-        _pathManager.path = []
-        _pathManager.appTmpStore.removeAll()
-        guard let appId = appId else {
-            return
-        }
-        KVStoreManager.shared.removeDB(dbName: appId)
-    }
-    
 }
 
 struct AppListItemView: View {

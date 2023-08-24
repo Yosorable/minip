@@ -44,9 +44,6 @@ class HomeViewModel: ObservableObject {
                     }
                 }
             }
-            if tmpApps.count == 0 {
-                try fileManager.createDirectory(at: documentsURL.appendingPathComponent("test"), withIntermediateDirectories: false)
-            }
         } catch let error {
             print("\(error.localizedDescription)")
         }

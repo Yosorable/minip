@@ -115,7 +115,7 @@ func CleanTrashAsync(onComplete: (()->Void)? = nil, onError: ((Error)->Void)? = 
         let trashURL =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appending(path: ".Trash")
         
         do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(at: trashURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            let fileURLs = try FileManager.default.contentsOfDirectory(at: trashURL, includingPropertiesForKeys: nil)
             for fileURL in fileURLs {
                 try FileManager.default.removeItem(at: fileURL)
             }
@@ -179,7 +179,7 @@ func PreviewImage(url: URL? = nil) {
         return
     }
     let tvc = GetTopViewController()
-    let vc = ViewController5(imageURL: url)
+    let vc = ImagePreviewViewController(imageURL: url)
     //        let vc = ImagePreviewViewController()
     vc.modalPresentationStyle = .overCurrentContext
     vc.modalTransitionStyle = .crossDissolve

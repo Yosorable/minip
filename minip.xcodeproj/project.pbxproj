@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B1B32BD2A60E70E00DA573F /* PythonOut.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B1B32BC2A60E70E00DA573F /* PythonOut.m */; };
 		2B1B32C12A6132FD00DA573F /* FileManager++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B1B32C02A6132FD00DA573F /* FileManager++.swift */; };
 		2B1B32C42A61358B00DA573F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 2B1B32C32A61358B00DA573F /* Alamofire */; };
 		2B1B32C72A6135D300DA573F /* DownloadProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B1B32C62A6135D300DA573F /* DownloadProjectView.swift */; };
@@ -22,16 +21,13 @@
 		2B6D0E4C2A623D93005BFEB9 /* ImagePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6D0E4B2A623D93005BFEB9 /* ImagePreviewViewController.swift */; };
 		2B6D0E4E2A624382005BFEB9 /* UIView++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6D0E4D2A624382005BFEB9 /* UIView++.swift */; };
 		2B8DC8BA2A5FAC4B002D5288 /* VSCodeDarkTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8DC8B92A5FAC4B002D5288 /* VSCodeDarkTheme.swift */; };
-		2B8F0B832A5858EF00D9359F /* ImagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8F0B822A5858EF00D9359F /* ImagePreview.swift */; };
 		2B8F0B922A597C1E00D9359F /* PKHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 2B8F0B912A597C1E00D9359F /* PKHUD */; };
 		2B8F0B952A597C4800D9359F /* Color++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8F0B942A597C4800D9359F /* Color++.swift */; };
 		2B9003C32A81FEB400ED360D /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9003C22A81FEB400ED360D /* LazyView.swift */; };
 		2B917FDA2A5D5AF7002DC170 /* JSCoreTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B917FD92A5D5AF7002DC170 /* JSCoreTestView.swift */; };
-		2B917FDC2A5D9C61002DC170 /* JSContext++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B917FDB2A5D9C61002DC170 /* JSContext++.swift */; };
 		2B9B579A2A56399B002E9D57 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9B57992A56399B002E9D57 /* utils.swift */; };
 		2B9B579D2A57D0CE002E9D57 /* WKWebViewWarmUper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9B579C2A57D0CE002E9D57 /* WKWebViewWarmUper.swift */; };
 		2B9CF4122A5A55A100BD2C7F /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9CF4112A5A55A100BD2C7F /* EditorView.swift */; };
-		2B9CF4212A5A638D00BD2C7F /* EditorDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9CF4202A5A638D00BD2C7F /* EditorDocument.swift */; };
 		2B9CF4242A5A6A6100BD2C7F /* FileBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9CF4232A5A6A6100BD2C7F /* FileBrowserView.swift */; };
 		2B9DC1C22A5E8E400061FAB8 /* TreeSitterCSS in Frameworks */ = {isa = PBXBuildFile; productRef = 2B9DC1C12A5E8E400061FAB8 /* TreeSitterCSS */; };
 		2B9DC1C42A5E8E400061FAB8 /* TreeSitterCSSQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 2B9DC1C32A5E8E400061FAB8 /* TreeSitterCSSQueries */; };
@@ -86,8 +82,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2B1B32BC2A60E70E00DA573F /* PythonOut.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PythonOut.m; sourceTree = "<group>"; };
-		2B1B32BE2A60E82D00DA573F /* PythonOut.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PythonOut.h; sourceTree = "<group>"; };
 		2B1B32BF2A60ED8F00DA573F /* minip-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "minip-Bridging-Header.h"; sourceTree = "<group>"; };
 		2B1B32C02A6132FD00DA573F /* FileManager++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager++.swift"; sourceTree = "<group>"; };
 		2B1B32C62A6135D300DA573F /* DownloadProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProjectView.swift; sourceTree = "<group>"; };
@@ -99,16 +93,13 @@
 		2B6D0E4B2A623D93005BFEB9 /* ImagePreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewViewController.swift; sourceTree = "<group>"; };
 		2B6D0E4D2A624382005BFEB9 /* UIView++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView++.swift"; sourceTree = "<group>"; };
 		2B8DC8B92A5FAC4B002D5288 /* VSCodeDarkTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSCodeDarkTheme.swift; sourceTree = "<group>"; };
-		2B8F0B822A5858EF00D9359F /* ImagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreview.swift; sourceTree = "<group>"; };
 		2B8F0B942A597C4800D9359F /* Color++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color++.swift"; sourceTree = "<group>"; };
 		2B9003C22A81FEB400ED360D /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
 		2B917FD92A5D5AF7002DC170 /* JSCoreTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSCoreTestView.swift; sourceTree = "<group>"; };
-		2B917FDB2A5D9C61002DC170 /* JSContext++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSContext++.swift"; sourceTree = "<group>"; };
 		2B9B57992A56399B002E9D57 /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		2B9B579C2A57D0CE002E9D57 /* WKWebViewWarmUper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WKWebViewWarmUper.swift; sourceTree = "<group>"; };
 		2B9B579E2A57D5B5002E9D57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2B9CF4112A5A55A100BD2C7F /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
-		2B9CF4202A5A638D00BD2C7F /* EditorDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorDocument.swift; sourceTree = "<group>"; };
 		2B9CF4232A5A6A6100BD2C7F /* FileBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserView.swift; sourceTree = "<group>"; };
 		2BB920192A52FED000D4BE3C /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		2BB9201B2A52FEF900D4BE3C /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
@@ -183,8 +174,6 @@
 			isa = PBXGroup;
 			children = (
 				2B1B32BF2A60ED8F00DA573F /* minip-Bridging-Header.h */,
-				2B1B32BC2A60E70E00DA573F /* PythonOut.m */,
-				2B1B32BE2A60E82D00DA573F /* PythonOut.h */,
 			);
 			path = ObjC;
 			sourceTree = "<group>";
@@ -219,7 +208,6 @@
 		2B8F0B812A5858D800D9359F /* TestViews */ = {
 			isa = PBXGroup;
 			children = (
-				2B8F0B822A5858EF00D9359F /* ImagePreview.swift */,
 				2BD9B1AB2A5BD4E600036AFD /* CodeEditorV2.swift */,
 				2B917FD92A5D5AF7002DC170 /* JSCoreTestView.swift */,
 			);
@@ -230,7 +218,6 @@
 			isa = PBXGroup;
 			children = (
 				2B8F0B942A597C4800D9359F /* Color++.swift */,
-				2B917FDB2A5D9C61002DC170 /* JSContext++.swift */,
 				2B1B32C02A6132FD00DA573F /* FileManager++.swift */,
 				2B6D0E4D2A624382005BFEB9 /* UIView++.swift */,
 				487E38962A8FBD29003464D7 /* Int++.swift */,
@@ -268,7 +255,6 @@
 			children = (
 				2BD9B1D72A5C424F00036AFD /* Themes */,
 				2B9CF4112A5A55A100BD2C7F /* EditorView.swift */,
-				2B9CF4202A5A638D00BD2C7F /* EditorDocument.swift */,
 			);
 			path = Editor;
 			sourceTree = "<group>";
@@ -510,7 +496,6 @@
 				2BC331B62A62D48C00441447 /* LMDB.swift in Sources */,
 				2B6D0E4C2A623D93005BFEB9 /* ImagePreviewViewController.swift in Sources */,
 				2B9B579D2A57D0CE002E9D57 /* WKWebViewWarmUper.swift in Sources */,
-				2B9CF4212A5A638D00BD2C7F /* EditorDocument.swift in Sources */,
 				2B9CF4242A5A6A6100BD2C7F /* FileBrowserView.swift in Sources */,
 				2B1B32C72A6135D300DA573F /* DownloadProjectView.swift in Sources */,
 				2B9B579A2A56399B002E9D57 /* utils.swift in Sources */,
@@ -520,18 +505,15 @@
 				48DF6B9F288D32C800D523C1 /* PathManager.swift in Sources */,
 				2B9003C32A81FEB400ED360D /* LazyView.swift in Sources */,
 				2B9CF4122A5A55A100BD2C7F /* EditorView.swift in Sources */,
-				2B917FDC2A5D9C61002DC170 /* JSContext++.swift in Sources */,
 				2B1B32C12A6132FD00DA573F /* FileManager++.swift in Sources */,
 				2BB9201C2A52FEF900D4BE3C /* HomeViewModel.swift in Sources */,
 				2B8F0B952A597C4800D9359F /* Color++.swift in Sources */,
 				2B6D0E4E2A624382005BFEB9 /* UIView++.swift in Sources */,
 				2BD9B1D92A5C426700036AFD /* EditorTheme.swift in Sources */,
 				2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */,
-				2B8F0B832A5858EF00D9359F /* ImagePreview.swift in Sources */,
 				2B1B32D12A6163A100DA573F /* ImportProjectFromFileView.swift in Sources */,
 				48DF6B9D288D32C800D523C1 /* minipApp.swift in Sources */,
 				2B1B32D72A61784600DA573F /* Defaults.swift in Sources */,
-				2B1B32BD2A60E70E00DA573F /* PythonOut.m in Sources */,
 				2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -682,7 +664,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -720,7 +702,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

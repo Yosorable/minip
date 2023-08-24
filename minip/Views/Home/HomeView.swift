@@ -114,9 +114,7 @@ struct AppListItemView: View {
                         .frame(width: 60, height: 60)
                         .clipped()
                         .cornerRadius(10)
-                        .background {
-                            noIconView
-                        }
+                        .shadow(radius: 2)
                 } else {
                     noIconView
                 }

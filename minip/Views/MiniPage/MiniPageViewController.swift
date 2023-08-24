@@ -399,7 +399,7 @@ class AppDetailViewController: UIViewController {
                         .foregroundColor(.secondary)
                         .cornerRadius(10)
                         .frame(width: 60, height: 60)
-                        .shadow(radius: 5)
+                        .shadow(radius: 2)
                     VStack {
                         if let iconURL = iconURL {
                             if iconURL.scheme == "file", let img = UIImage(contentsOfFile: iconURL.path()) {
@@ -409,7 +409,7 @@ class AppDetailViewController: UIViewController {
                                     .frame(width: 60, height: 60)
                                     .clipped()
                                     .cornerRadius(10)
-                                    .shadow(radius: 5)
+                                    .shadow(radius: 2)
                             } else if iconURL.scheme == "http" || iconURL.scheme == "https" {
                                 KFImage(iconURL)
                                     .resizable()
@@ -417,9 +417,7 @@ class AppDetailViewController: UIViewController {
                                     .frame(width: 60, height: 60)
                                     .clipped()
                                     .cornerRadius(10)
-                                    .background {
-                                        noIconView
-                                    }
+                                    .shadow(radius: 2)
                             } else {
                                 noIconView
                             }

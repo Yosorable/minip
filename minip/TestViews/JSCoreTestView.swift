@@ -29,15 +29,15 @@ end - start123
     
     let fileURL = playgroundPath.appendingPathComponent("test.js")
     
-    let (exist, isFolder) = fileOrFolderExists(path: playgroundPath.path())
+    let (exist, isFolder) = fileOrFolderExists(path: playgroundPath.path)
     if !exist {
-        mkdir(path: playgroundPath.path())
-        touch(path: fileURL.path(), content: defaultRes.data(using: .utf8))
+        mkdir(path: playgroundPath.path)
+        touch(path: fileURL.path, content: defaultRes.data(using: .utf8))
         return defaultRes
     } else if isFolder {
-        let (e, isF) = fileOrFolderExists(path: fileURL.path())
+        let (e, isF) = fileOrFolderExists(path: fileURL.path)
         if !e {
-            touch(path: fileURL.path(), content: defaultRes.data(using: .utf8))
+            touch(path: fileURL.path, content: defaultRes.data(using: .utf8))
             return defaultRes
         } else if !isF {
             return cat(url: fileURL)
@@ -235,7 +235,7 @@ end - start123
                 moduleName = jsName.replacingOccurrences(of: ".js", with: "")
             }
             //            let path = Bundle.main.path(forResource: moduleName, ofType: "js") ?? ""
-            let path = entryFolder?.appending(component: moduleName).path() ?? "unknown"
+            let path = entryFolder?.appending(component: moduleName).path ?? "unknown"
             
             let moduleContent = try? String(contentsOfFile: path, encoding: .utf8)
             // 模仿 nodejs 的 require 实现原理

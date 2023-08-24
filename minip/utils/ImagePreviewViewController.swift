@@ -35,7 +35,7 @@ class ImagePreviewViewController: UIViewController {
         imageView.maximumZoomScale = 5
         if let url = imageURL {
             if url.scheme == "file" {
-                imageView.image = UIImage(contentsOfFile: url.path())
+                imageView.image = UIImage(contentsOfFile: url.path)
             } else {
                 imageView.setWebImage(url: url)
             }

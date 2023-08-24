@@ -31,7 +31,7 @@ struct EditorView: View {
     
     init(fileInfo: FileInfo) {
         self.fileInfo = fileInfo
-        guard let fileData = FileManager.default.contents(atPath: fileInfo.url.path()) else {
+        guard let fileData = FileManager.default.contents(atPath: fileInfo.url.path) else {
             readFileError = true
             _text = State(initialValue: "")
             _originText = State(initialValue: "")

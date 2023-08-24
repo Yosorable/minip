@@ -146,8 +146,8 @@ struct FileBrowserPageView: View {
             let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appending(path: viewModel.path)
             let newFileURL = folderURL.appending(component: fileName)
             
-            if !fileManager.fileExists(atPath: newFileURL.path()) {
-                if fileManager.createFile(atPath: newFileURL.path(), contents: nil) {
+            if !fileManager.fileExists(atPath: newFileURL.path) {
+                if fileManager.createFile(atPath: newFileURL.path, contents: nil) {
                     ShowSimpleSuccess(msg: "Created success")
                     viewModel.fetchFiles()
                 } else {
@@ -177,7 +177,7 @@ struct FileBrowserPageView: View {
             let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appending(path: viewModel.path)
             let newFileURL = folderURL.appending(component: fileName)
             
-            if !fileManager.fileExists(atPath: newFileURL.path()) {
+            if !fileManager.fileExists(atPath: newFileURL.path) {
                 do {
                     try fileManager.createDirectory(at: newFileURL, withIntermediateDirectories: false)
                     ShowSimpleSuccess(msg: "Created success")
@@ -284,7 +284,7 @@ class FileBrowserPageViewModel: ObservableObject {
         
         for content in contents {
             var isDirectory: ObjCBool = false
-            if fileManager.fileExists(atPath: content.path(percentEncoded: false), isDirectory: &isDirectory) {
+            if fileManager.fileExists(atPath: content.path, isDirectory: &isDirectory) {
                 if isDirectory.boolValue {
                     folders.append(content)
                 } else {

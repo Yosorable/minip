@@ -40,14 +40,14 @@ struct FileImporterView: UIViewControllerRepresentable {
         }
 
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-            guard let path = urls.first?.path() else {
+            guard let path = urls.first?.path else {
                 HUD.flash(.labeledError(title: "", subtitle: "Path error"), delay: 1)
                 return
             }
             HUD.flash(.labeledProgress(title: nil, subtitle: "Loading"), delay: .infinity)
             let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             DispatchQueue.global().async {
-                if SSZipArchive.unzipFile(atPath: path, toDestination: docURL.path()) {
+                if SSZipArchive.unzipFile(atPath: path, toDestination: docURL.path) {
                     DispatchQueue.main.async { [self] in
                         HUD.flash(.labeledSuccess(title: nil, subtitle: "Success"), delay: 1)
                         self.parent.onSuccess?()

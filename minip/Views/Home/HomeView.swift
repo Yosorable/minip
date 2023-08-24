@@ -99,7 +99,7 @@ struct AppListItemView: View {
             .shadow(radius: 2)
         HStack {
             if let iconURL = viewModel.getAppIconURL(appId: appInfo.appId) {
-                if iconURL.scheme == "file", let img = UIImage(contentsOfFile: iconURL.path()) {
+                if iconURL.scheme == "file", let img = UIImage(contentsOfFile: iconURL.path) {
                     Image(uiImage: img)
                         .resizable()
                         .aspectRatio(contentMode: .fill)

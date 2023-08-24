@@ -148,7 +148,7 @@ class MiniPageViewController: UIViewController {
                 targetFileURL = appDirURL.appendingPathComponent(fileName)
             }
             
-            guard let f = targetFileURL.path(percentEncoded: false).split(separator: documentsURL.lastPathComponent).last else {
+            guard let f = targetFileURL.path.split(separator: documentsURL.lastPathComponent).last else {
                 callback?(false)
                 return
             }
@@ -180,7 +180,7 @@ class MiniPageViewController: UIViewController {
                 targetFileURL = appDirURL.appendingPathComponent(fileName)
             }
             
-            guard let f = targetFileURL.path(percentEncoded: false).split(separator: documentsURL.lastPathComponent).last else {
+            guard let f = targetFileURL.path.split(separator: documentsURL.lastPathComponent).last else {
                 callback?([UInt8]())
                 return
             }
@@ -207,7 +207,7 @@ class MiniPageViewController: UIViewController {
                 let fileURLs = try fileManager.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)
                 var res = [String]()
                 fileURLs.forEach { ele in
-                    guard let f = ele.path(percentEncoded: false).split(separator: app.name).last else {
+                    guard let f = ele.path.split(separator: app.name).last else {
                         return
                     }
                     res.append(String(f))
@@ -402,7 +402,7 @@ class AppDetailViewController: UIViewController {
                         .shadow(radius: 2)
                     VStack {
                         if let iconURL = iconURL {
-                            if iconURL.scheme == "file", let img = UIImage(contentsOfFile: iconURL.path()) {
+                            if iconURL.scheme == "file", let img = UIImage(contentsOfFile: iconURL.path) {
                                 Image(uiImage: img)
                                     .resizable()
                                     .aspectRatio(contentMode: .fill)

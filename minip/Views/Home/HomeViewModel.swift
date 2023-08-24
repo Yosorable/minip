@@ -27,12 +27,14 @@ class HomeViewModel: ObservableObject {
         var tmpApps: [AppInfo] = []
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let test = documentsURL.appending(component: "测试.txt")
+        print(test.path, test.path)
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
             let decoder = JSONDecoder()
             fileURLs.forEach { ele in
                 let infoURL = ele.appendingPathComponent("info", conformingTo: .json)
-                if ele.lastPathComponent != ".Trash" && fileManager.fileExists(atPath: infoURL.path(percentEncoded: false)) {
+                if ele.lastPathComponent != ".Trash" && fileManager.fileExists(atPath: infoURL.path) {
                     do {
                         let data = try Data(contentsOf: infoURL, options: .mappedIfSafe)
                         let appDetail = try? decoder.decode(AppInfo.self, from: data)

@@ -88,28 +88,31 @@ struct HomeView: View {
         list()
         .navigationTitle(Text("Projects"))
         .toolbar {
-            EditButton()
-                .foregroundColor(.primary)
-            Menu {
-                Button {
-                    ShowNotImplement()
-                    
-                } label: {
-                    Label("Create new project", systemImage: "folder.badge.plus")
-                }
-                Button {
-                    importType = 1
-                } label: {
-                    Label("Load from web", systemImage: "network")
-                }
-                Button {
-                    importType = 2
-                } label: {
-                    Label("Load from file", systemImage: "folder")
-                }
-            } label: {
-                Image(systemName: "plus.square")
+            ToolbarItem(placement: .navigationBarTrailing) {
+                EditButton()
                     .foregroundColor(.primary)
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    Button {
+                        ShowNotImplement()
+                    } label: {
+                        Label("Create new project", systemImage: "folder.badge.plus")
+                    }
+                    Button {
+                        importType = 1
+                    } label: {
+                        Label("Load from web", systemImage: "network")
+                    }
+                    Button {
+                        importType = 2
+                    } label: {
+                        Label("Load from file", systemImage: "folder")
+                    }
+                } label: {
+                    Image(systemName: "plus.square")
+                        .foregroundColor(.primary)
+                }
             }
         }
     }

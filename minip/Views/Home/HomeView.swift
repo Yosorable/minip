@@ -11,6 +11,7 @@ import Defaults
 
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
+    @State var mode: EditMode = .inactive
     
     @State var importType: Int? = nil
     var body: some View {
@@ -25,6 +26,7 @@ struct HomeView: View {
                 }
             }
         }
+        .environment(\.editMode, $mode)
         .fullScreenCover(item: $importType) { item in
             switch item {
             case 1:
@@ -78,6 +80,9 @@ struct HomeView: View {
                     viewModel.apps.move(fromOffsets: from, toOffset: to)
                     Defaults[.appSortList].move(fromOffsets: from, toOffset: to)
                 }
+                .onDelete { item in
+                    print(item)
+                }
             }
             .onAppear {
                 viewModel.loadAppInfos()
@@ -120,6 +125,7 @@ struct HomeView: View {
 
 struct AppListItemView: View {
     @EnvironmentObject var viewModel: HomeViewModel
+    @Environment(\.editMode) var editMode: Binding<EditMode>?
     var appInfo: AppInfo
     
     var content: some View {
@@ -179,6 +185,9 @@ struct AppListItemView: View {
             content
                 .background {
                     Button {
+                        if editMode?.wrappedValue == .active {
+                            return
+                        }
                         let app = appInfo
                         
                         let vc = UINavigationController(rootViewController: MiniPageViewController(app: app))
@@ -213,6 +222,9 @@ struct AppListItemView: View {
         } else {
             content
                 .onTapGesture {
+                    if editMode?.wrappedValue == .active {
+                        return
+                    }
                     let app = appInfo
                     
                     let vc = UINavigationController(rootViewController: MiniPageViewController(app: app))

@@ -31,11 +31,17 @@ struct HomeView: View {
             switch item {
             case 1:
                 DownloadProjectView(onSuccess: {
-                    viewModel.loadAppInfos()
+                    // iOS 14 onAppear刷新
+                    if #available(iOS 15.0, *) {
+                        viewModel.loadAppInfos()
+                    }
                 })
             case 2:
                 ImportProjectFromFileView(onSuccess: {
-                    viewModel.loadAppInfos()
+                    // iOS 14 onAppear刷新
+                    if #available(iOS 15.0, *) {
+                        viewModel.loadAppInfos()
+                    }
                 })
             default:
                 EmptyView()

@@ -71,7 +71,7 @@ struct DownloadProjectView: View {
                     }
                     .disabled(downloading)
                 } else {
-                    TextField("Please enter filename (not required)", text: $downURL)
+                    TextField("Please enter filename (not required)", text: $downFilename)
                         .disabled(downloading)
                 }
             } footer: {

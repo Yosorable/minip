@@ -40,8 +40,7 @@ class MiniPageViewController: UIViewController {
         webview = WKWebViewWarmUper.shared.dequeue()
         bridge = WKWebViewJavascriptBridge(webView: webview)
         register()
-        
-        webview.scrollView.contentInsetAdjustmentBehavior = .always
+
         self.view = webview
         
         if let bc = app.backgroundColor {
@@ -84,6 +83,23 @@ class MiniPageViewController: UIViewController {
 
         } else {
             navigationController?.setNavigationBarHidden(true, animated: false)
+        }
+        setNavigationBarInTabbar()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        setNavigationBarInTabbar()
+        print("appear \(title ?? "")")
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        print("disappear \(title ?? "")")
+    }
+
+    func setNavigationBarInTabbar() {
+        if let tabc = tabBarController {
+            tabc.title = title
+            tabc.navigationItem.rightBarButtonItems = navigationItem.rightBarButtonItems
         }
     }
     

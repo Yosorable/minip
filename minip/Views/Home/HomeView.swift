@@ -97,35 +97,35 @@ struct HomeView: View {
     }
     var content: some View {
         list()
-        .navigationTitle(Text("Projects"))
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                EditButton()
-                    .foregroundColor(.primary)
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Menu {
-                    Button {
-                        ShowNotImplement()
-                    } label: {
-                        Label("Create new project", systemImage: "folder.badge.plus")
-                    }
-                    Button {
-                        importType = 1
-                    } label: {
-                        Label("Load from web", systemImage: "network")
-                    }
-                    Button {
-                        importType = 2
-                    } label: {
-                        Label("Load from file", systemImage: "folder")
-                    }
-                } label: {
-                    Image(systemName: "plus.square")
+            .navigationTitle(Text("Projects"))
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    EditButton()
                         .foregroundColor(.primary)
                 }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Button {
+                            ShowNotImplement()
+                        } label: {
+                            Label("Create new project", systemImage: "folder.badge.plus")
+                        }
+                        Button {
+                            importType = 1
+                        } label: {
+                            Label("Load from web", systemImage: "network")
+                        }
+                        Button {
+                            importType = 2
+                        } label: {
+                            Label("Load from file", systemImage: "folder")
+                        }
+                    } label: {
+                        Image(systemName: "plus.square")
+                            .foregroundColor(.primary)
+                    }
+                }
             }
-        }
     }
 }
 
@@ -195,8 +195,30 @@ struct AppListItemView: View {
                             return
                         }
                         let app = appInfo
+
+                        var vc: UINavigationController
                         
-                        let vc = UINavigationController(rootViewController: MiniPageViewController(app: app))
+                        if let tabs = app.tabs, tabs.count > 0 {
+                            let tabc = UITabBarController()
+
+                            var pages = [UIViewController]()
+                            for (idx, ele) in tabs.enumerated() {
+                                let page = MiniPageViewController(app: app, page: ele.path, title: ele.title)
+                                page.tabBarItem = UITabBarItem(title: ele.title, image: UIImage(systemName: ele.systemImage), tag: idx)
+                                pages.append(page)
+                            }
+                            tabc.viewControllers = pages
+
+                            vc = UINavigationController(rootViewController: tabc)
+
+                            if let tc = app.tintColor {
+                                vc.navigationBar.tintColor = UIColor(hex: tc)
+                                tabc.tabBar.tintColor = UIColor(hex: tc)
+                            }
+                        } else {
+                            vc = UINavigationController(rootViewController: MiniPageViewController(app: app))
+                        }
+
                         if app.colorScheme == "dark" {
                             vc.overrideUserInterfaceStyle = .dark
                         } else if app.colorScheme == "light" {

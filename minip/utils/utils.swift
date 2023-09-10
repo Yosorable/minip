@@ -180,13 +180,14 @@ func PreviewImage(url: URL? = nil) {
     }
     let tvc = GetTopViewController()
     let vc = ImagePreviewViewController(imageURL: url)
-    //        let vc = ImagePreviewViewController()
     vc.modalPresentationStyle = .overCurrentContext
     vc.modalTransitionStyle = .crossDissolve
-    
-    tvc?.present(vc, animated: true)
-        
-    
+
+    if let tabc = tvc?.navigationController {
+        tabc.present(vc, animated: true)
+    } else {
+        tvc?.present(vc, animated: true)
+    }
 }
 
 // sound

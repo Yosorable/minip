@@ -111,6 +111,7 @@ struct AppInfo: Hashable, Identifiable, Codable {
     var displayMode: String? // multiple-webview, signle-webview(default)
     var homepage: String
     var pages: [PageConfig]?
+    var tabs: [TabConfig]?
     var navigationBarStatus: String? // display, hidden(default)
     var colorScheme: String? // dark, light (default auto)
     
@@ -130,5 +131,11 @@ struct AppInfo: Hashable, Identifiable, Codable {
         // override
         var backgroundColor: String?
         var navigationBarColor: String?
+    }
+
+    struct TabConfig: Hashable, Codable {
+        var path: String
+        var title: String
+        var systemImage: String
     }
 }

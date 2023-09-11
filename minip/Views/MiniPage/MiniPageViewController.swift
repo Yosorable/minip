@@ -12,6 +12,7 @@ import PKHUD
 import PanModal
 import SwiftUI
 import Kingfisher
+import SafariServices
 
 class MiniPageViewController: UIViewController {
     var webview: WKWebView!
@@ -140,6 +141,21 @@ class MiniPageViewController: UIViewController {
             callback?(false)
         }
         
+        bridge.register(handlerName: "openWeb") { [weak self] (parameters, callback) in
+            guard let urlStr = parameters?["url"] as? String else {
+                callback?(false)
+                return
+            }
+
+            guard let url = URL(string: urlStr) else {
+                callback?(false)
+                return
+            }
+            let safariVC = SFSafariViewController(url: url)
+            self?.present(safariVC, animated: true)
+            callback?(true)
+        }
+
         // file
         // todo: 性能差
         bridge.register(handlerName: "writeFile") { [weak self] (parameters, callback) in

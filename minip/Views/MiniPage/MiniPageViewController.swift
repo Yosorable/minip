@@ -13,6 +13,8 @@ import PanModal
 import SwiftUI
 import Kingfisher
 import SafariServices
+import AVKit
+import AVFoundation
 
 class MiniPageViewController: UIViewController {
     var webview: WKWebView!
@@ -153,6 +155,27 @@ class MiniPageViewController: UIViewController {
             }
             let safariVC = SFSafariViewController(url: url)
             self?.present(safariVC, animated: true)
+            callback?(true)
+        }
+
+        // video
+        bridge.register(handlerName: "playVideo") { [weak self] (parameters, callback) in
+            guard let urlStr = parameters?["url"] as? String else {
+                callback?(false)
+                return
+            }
+
+            guard let url = URL(string: urlStr) else {
+                callback?(false)
+                return
+            }
+
+            let player = AVPlayer(url: url)
+            let playerViewController = AVPlayerViewController()
+            playerViewController.player = player
+            self?.present(playerViewController, animated: true) {
+                playerViewController.player?.play()
+            }
             callback?(true)
         }
 

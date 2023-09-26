@@ -73,11 +73,13 @@
 		2BD9B1D92A5C426700036AFD /* EditorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD9B1D82A5C426700036AFD /* EditorTheme.swift */; };
 		2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD9B1DA2A5C428700036AFD /* HighlightName.swift */; };
 		2BEEA861288FACA5006095DC /* WKWebViewJavascriptBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 2BEEA860288FACA5006095DC /* WKWebViewJavascriptBridge */; };
+		482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */; };
 		487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 487E38922A8FBA48003464D7 /* Kingfisher */; };
 		487E38972A8FBD29003464D7 /* Int++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487E38962A8FBD29003464D7 /* Int++.swift */; };
+		488DDFF52ABEEAEE00BAB280 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */; };
+		488DDFF72ABEF81400BAB280 /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488DDFF62ABEF81400BAB280 /* String++.swift */; };
 		48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C385AC2A978520006BEE35 /* Polyfill.swift */; };
 		48DF6B9D288D32C800D523C1 /* minipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF6B9C288D32C800D523C1 /* minipApp.swift */; };
-		48DF6B9F288D32C800D523C1 /* PathManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF6B9E288D32C800D523C1 /* PathManager.swift */; };
 		48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA0288D32CA00D523C1 /* Assets.xcassets */; };
 		48DF6BA4288D32CA00D523C1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -108,11 +110,13 @@
 		2BD9B1AB2A5BD4E600036AFD /* CodeEditorV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeEditorV2.swift; sourceTree = "<group>"; };
 		2BD9B1D82A5C426700036AFD /* EditorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTheme.swift; sourceTree = "<group>"; };
 		2BD9B1DA2A5C428700036AFD /* HighlightName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightName.swift; sourceTree = "<group>"; };
+		482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppManager.swift; sourceTree = "<group>"; };
 		487E38962A8FBD29003464D7 /* Int++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int++.swift"; sourceTree = "<group>"; };
+		488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		488DDFF62ABEF81400BAB280 /* String++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String++.swift"; sourceTree = "<group>"; };
 		48C385AC2A978520006BEE35 /* Polyfill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polyfill.swift; sourceTree = "<group>"; };
 		48DF6B99288D32C800D523C1 /* minip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DF6B9C288D32C800D523C1 /* minipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = minipApp.swift; sourceTree = "<group>"; };
-		48DF6B9E288D32C800D523C1 /* PathManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathManager.swift; sourceTree = "<group>"; };
 		48DF6BA0288D32CA00D523C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -224,6 +228,7 @@
 				2B6D0E4D2A624382005BFEB9 /* UIView++.swift */,
 				487E38962A8FBD29003464D7 /* Int++.swift */,
 				48C385AC2A978520006BEE35 /* Polyfill.swift */,
+				488DDFF62ABEF81400BAB280 /* String++.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -346,8 +351,9 @@
 				2B8F0B812A5858D800D9359F /* TestViews */,
 				2B9B57982A563986002E9D57 /* utils */,
 				2BB920172A52FEB800D4BE3C /* Views */,
+				488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */,
 				48DF6B9C288D32C800D523C1 /* minipApp.swift */,
-				48DF6B9E288D32C800D523C1 /* PathManager.swift */,
+				482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */,
 				48DF6BA0288D32CA00D523C1 /* Assets.xcassets */,
 				48DF6BA2288D32CA00D523C1 /* Preview Content */,
 			);
@@ -496,7 +502,9 @@
 				2B917FDA2A5D5AF7002DC170 /* JSCoreTestView.swift in Sources */,
 				2B8DC8BA2A5FAC4B002D5288 /* VSCodeDarkTheme.swift in Sources */,
 				2B1B32CF2A61633000DA573F /* FilePickerView.swift in Sources */,
+				488DDFF52ABEEAEE00BAB280 /* AppDelegate.swift in Sources */,
 				2BC331B62A62D48C00441447 /* LMDB.swift in Sources */,
+				482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */,
 				2B6D0E4C2A623D93005BFEB9 /* ImagePreviewViewController.swift in Sources */,
 				2B9B579D2A57D0CE002E9D57 /* WKWebViewWarmUper.swift in Sources */,
 				2B9CF4242A5A6A6100BD2C7F /* FileBrowserView.swift in Sources */,
@@ -506,7 +514,6 @@
 				2BB9201A2A52FED000D4BE3C /* HomeView.swift in Sources */,
 				48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */,
 				487E38972A8FBD29003464D7 /* Int++.swift in Sources */,
-				48DF6B9F288D32C800D523C1 /* PathManager.swift in Sources */,
 				2B9003C32A81FEB400ED360D /* LazyView.swift in Sources */,
 				2B9CF4122A5A55A100BD2C7F /* EditorView.swift in Sources */,
 				2B1B32C12A6132FD00DA573F /* FileManager++.swift in Sources */,
@@ -515,6 +522,7 @@
 				2B6D0E4E2A624382005BFEB9 /* UIView++.swift in Sources */,
 				2BD9B1D92A5C426700036AFD /* EditorTheme.swift in Sources */,
 				2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */,
+				488DDFF72ABEF81400BAB280 /* String++.swift in Sources */,
 				2B1B32D12A6163A100DA573F /* ImportProjectFromFileView.swift in Sources */,
 				48DF6B9D288D32C800D523C1 /* minipApp.swift in Sources */,
 				2B1B32D72A61784600DA573F /* Defaults.swift in Sources */,
@@ -657,7 +665,6 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Attempt to save pictures to album";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Request access album";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -695,7 +702,6 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Attempt to save pictures to album";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Request access album";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

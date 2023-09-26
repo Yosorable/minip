@@ -109,10 +109,7 @@ class MiniPageViewController: UIViewController {
     @objc
     func close() {
         self.dismiss(animated: true)
-        let appId = app.appId
-        pathManager.path = []
-        pathManager.appTmpStore.removeAll()
-        KVStoreManager.shared.removeDB(dbName: appId)
+        MiniAppManager.shared.clearOpenedApp()
     }
     
     @objc
@@ -130,7 +127,7 @@ class MiniPageViewController: UIViewController {
             let _newPage = parameters?["page"] as? String
             let title = parameters?["title"] as? String
             if let newPage = _newPage {
-                pathManager.path.append(RouteParameter(path: newPage, title: title))
+                MiniAppManager.shared.path.append(RouteParameter(path: newPage, title: title))
                 guard let app = self?.app  else {
                     callback?(false)
                     return
@@ -347,7 +344,7 @@ class MiniPageViewController: UIViewController {
                 callback?(false)
                 return
             }
-            pathManager.appTmpStore[key] = val
+            MiniAppManager.shared.appTmpStore[key] = val
             callback?(true)
         }
         bridge.register(handlerName: "getMemStore") { (parameters, callback) in
@@ -355,7 +352,7 @@ class MiniPageViewController: UIViewController {
                 callback?(nil)
                 return
             }
-            let val = pathManager.appTmpStore[key]
+            let val = MiniAppManager.shared.appTmpStore[key]
             callback?(val)
         }
         bridge.register(handlerName: "delMemStore") { (parameters, callback) in
@@ -363,7 +360,7 @@ class MiniPageViewController: UIViewController {
                 callback?(nil)
                 return
             }
-            pathManager.appTmpStore.removeValue(forKey: key)
+            MiniAppManager.shared.appTmpStore.removeValue(forKey: key)
             callback?(true)
         }
         
@@ -373,7 +370,7 @@ class MiniPageViewController: UIViewController {
                 callback?(false)
                 return
             }
-            guard let appId = pathManager.openedApp?.appId else {
+            guard let appId = MiniAppManager.shared.openedApp?.appId else {
                 callback?(false)
                 return
             }
@@ -391,7 +388,7 @@ class MiniPageViewController: UIViewController {
                 callback?(nil)
                 return
             }
-            guard let appId = pathManager.openedApp?.appId else {
+            guard let appId = MiniAppManager.shared.openedApp?.appId else {
                 callback?(nil)
                 return
             }
@@ -409,7 +406,7 @@ class MiniPageViewController: UIViewController {
                 callback?(nil)
                 return
             }
-            guard let appId = pathManager.openedApp?.appId else {
+            guard let appId = MiniAppManager.shared.openedApp?.appId else {
                 callback?(nil)
                 return
             }

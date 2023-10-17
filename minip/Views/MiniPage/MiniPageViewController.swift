@@ -23,6 +23,7 @@ class MiniPageViewController: UIViewController {
     var page: String
     var _title: String?
     var pageURL: URL?
+    var refreshControl: UIRefreshControl?
     
     init(app: AppInfo, page: String? = nil, title: String? = nil) {
         self.app = app
@@ -90,13 +91,18 @@ class MiniPageViewController: UIViewController {
         setNavigationBarInTabbar()
     }
 
+    @objc
+    func refreshWebView(_ sender: UIRefreshControl) {
+        webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"refreshView\"))")
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         setNavigationBarInTabbar()
-        print("appear \(title ?? "")")
+        webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"viewDidAppear\"))")
     }
 
     override func viewDidDisappear(_ animated: Bool) {
-        print("disappear \(title ?? "")")
+        webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"viewDidDisappear\"))")
     }
 
     func setNavigationBarInTabbar() {
@@ -106,6 +112,16 @@ class MiniPageViewController: UIViewController {
         }
     }
     
+    func addRefreshControl() {
+        guard refreshControl == nil else {
+            return
+        }
+        refreshControl = UIRefreshControl()
+        refreshControl!.addTarget(self, action: #selector(refreshWebView(_:)), for: UIControl.Event.valueChanged)
+        webview.scrollView.addSubview(refreshControl!)
+        webview.scrollView.bounces = true
+    }
+
     @objc
     func close() {
         self.dismiss(animated: true)
@@ -114,7 +130,9 @@ class MiniPageViewController: UIViewController {
     
     @objc
     func showAppDetail() {
-        self.presentPanModal(AppDetailViewController(appInfo: app))
+        self.presentPanModal(AppDetailViewController(appInfo: app, reloadPageFunc: {
+            self.webview.reload()
+        }))
     }
     
     func register() {
@@ -152,6 +170,33 @@ class MiniPageViewController: UIViewController {
             }
             let safariVC = SFSafariViewController(url: url)
             self?.present(safariVC, animated: true)
+            callback?(true)
+        }
+
+        // refresh
+        bridge.register(handlerName: "enableRefreshControl") { [weak self] (parameters, callback) in
+            self?.addRefreshControl()
+            callback?(true)
+        }
+
+        bridge.register(handlerName: "disableRefreshControl") { [weak self] (parameters, callback) in
+            guard let rf = self?.refreshControl else {
+                callback?(true)
+                return
+            }
+            self?.refreshControl?.endRefreshing()
+            self?.refreshControl = nil
+            rf.removeFromSuperview()
+            callback?(true)
+        }
+
+        bridge.register(handlerName: "startRefresh") { [weak self] (parameters, callback) in
+            self?.refreshControl?.beginRefreshing()
+            callback?(true)
+        }
+
+        bridge.register(handlerName: "endRefresh") { [weak self] (parameters, callback) in
+            self?.refreshControl?.endRefreshing()
             callback?(true)
         }
 
@@ -424,8 +469,10 @@ class MiniPageViewController: UIViewController {
 
 class AppDetailViewController: UIViewController {
     var appInfo: AppInfo
-    init(appInfo: AppInfo) {
+    var reloadPageFunc: (()->Void)?
+    init(appInfo: AppInfo, reloadPageFunc: (()->Void)? = nil) {
         self.appInfo = appInfo
+        self.reloadPageFunc = reloadPageFunc
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -510,6 +557,17 @@ class AppDetailViewController: UIViewController {
                         .foregroundColor(.secondary)
                     }
                     .padding(.top, 3)
+                    HStack {
+                        Button {
+                            self.dismiss(animated: true, completion: self.reloadPageFunc)
+                        } label: {
+                            VStack {
+                                Image(systemName: "arrow.triangle.2.circlepath")
+                                Text("Reload")
+                            }
+                        }
+                    }
+                    .padding(.top, 8)
                     Spacer()
                 }
                 .padding(.horizontal, 20)

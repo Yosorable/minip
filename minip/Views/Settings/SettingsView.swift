@@ -8,6 +8,7 @@
 import SwiftUI
 import WebKit
 import PKHUD
+import Kingfisher
 
 struct SettingsView: View {
     var body: some View {
@@ -45,6 +46,15 @@ struct SettingsView: View {
                 
             } label: {
                 Text("clear wkwebview cache")
+            }
+
+            Button {
+                KingfisherManager.shared.cache.clearDiskCache(completion: {
+                    KingfisherManager.shared.cache.clearMemoryCache()
+                    HUD.flash(.labeledSuccess(title: nil, subtitle: "clear success"), delay: 1)
+                })
+            } label: {
+                Text("clear kf image cache")
             }
         }
         .navigationTitle(Text("Settings"))

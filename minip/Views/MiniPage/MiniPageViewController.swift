@@ -17,7 +17,7 @@ import AVKit
 import AVFoundation
 
 class MiniPageViewController: UIViewController {
-    var webview: WKWebView!
+    var webview: MWebView!
     var bridge: WKWebViewJavascriptBridge!
     var app: AppInfo
     var page: String
@@ -37,11 +37,14 @@ class MiniPageViewController: UIViewController {
     }
     
     deinit {
-        print("deinit")
+        if webview != nil {
+            MWebViewPool.shared.recycleReusedWebView(self.webview)
+            print("recycle")
+        }
     }
     
     override func viewDidLoad() {
-        webview = WKWebViewWarmUper.shared.dequeue()
+        webview = MWebViewPool.shared.getReusedWebView(forHolder: self)
         bridge = WKWebViewJavascriptBridge(webView: webview)
         register()
 

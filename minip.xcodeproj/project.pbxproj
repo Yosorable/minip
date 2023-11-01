@@ -26,7 +26,6 @@
 		2B9003C32A81FEB400ED360D /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9003C22A81FEB400ED360D /* LazyView.swift */; };
 		2B917FDA2A5D5AF7002DC170 /* JSCoreTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B917FD92A5D5AF7002DC170 /* JSCoreTestView.swift */; };
 		2B9B579A2A56399B002E9D57 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9B57992A56399B002E9D57 /* utils.swift */; };
-		2B9B579D2A57D0CE002E9D57 /* WKWebViewWarmUper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9B579C2A57D0CE002E9D57 /* WKWebViewWarmUper.swift */; };
 		2B9CF4122A5A55A100BD2C7F /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9CF4112A5A55A100BD2C7F /* EditorView.swift */; };
 		2B9CF4242A5A6A6100BD2C7F /* FileBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9CF4232A5A6A6100BD2C7F /* FileBrowserView.swift */; };
 		2B9DC1C22A5E8E400061FAB8 /* TreeSitterCSS in Frameworks */ = {isa = PBXBuildFile; productRef = 2B9DC1C12A5E8E400061FAB8 /* TreeSitterCSS */; };
@@ -73,6 +72,8 @@
 		2BD9B1D92A5C426700036AFD /* EditorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD9B1D82A5C426700036AFD /* EditorTheme.swift */; };
 		2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD9B1DA2A5C428700036AFD /* HighlightName.swift */; };
 		2BEEA861288FACA5006095DC /* WKWebViewJavascriptBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 2BEEA860288FACA5006095DC /* WKWebViewJavascriptBridge */; };
+		48248BC22AF1F4D0001097CC /* MWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC12AF1F4D0001097CC /* MWebView.swift */; };
+		48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC32AF1F6C1001097CC /* MWebViewPool.swift */; };
 		482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */; };
 		487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 487E38922A8FBA48003464D7 /* Kingfisher */; };
 		487E38972A8FBD29003464D7 /* Int++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487E38962A8FBD29003464D7 /* Int++.swift */; };
@@ -100,7 +101,6 @@
 		2B9003C22A81FEB400ED360D /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
 		2B917FD92A5D5AF7002DC170 /* JSCoreTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSCoreTestView.swift; sourceTree = "<group>"; };
 		2B9B57992A56399B002E9D57 /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
-		2B9B579C2A57D0CE002E9D57 /* WKWebViewWarmUper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WKWebViewWarmUper.swift; sourceTree = "<group>"; };
 		2B9B579E2A57D5B5002E9D57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2B9CF4112A5A55A100BD2C7F /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
 		2B9CF4232A5A6A6100BD2C7F /* FileBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserView.swift; sourceTree = "<group>"; };
@@ -110,6 +110,8 @@
 		2BD9B1AB2A5BD4E600036AFD /* CodeEditorV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeEditorV2.swift; sourceTree = "<group>"; };
 		2BD9B1D82A5C426700036AFD /* EditorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTheme.swift; sourceTree = "<group>"; };
 		2BD9B1DA2A5C428700036AFD /* HighlightName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightName.swift; sourceTree = "<group>"; };
+		48248BC12AF1F4D0001097CC /* MWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWebView.swift; sourceTree = "<group>"; };
+		48248BC32AF1F6C1001097CC /* MWebViewPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWebViewPool.swift; sourceTree = "<group>"; };
 		482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppManager.swift; sourceTree = "<group>"; };
 		487E38962A8FBD29003464D7 /* Int++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int++.swift"; sourceTree = "<group>"; };
 		488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -252,7 +254,6 @@
 			isa = PBXGroup;
 			children = (
 				2B9B57992A56399B002E9D57 /* utils.swift */,
-				2B9B579C2A57D0CE002E9D57 /* WKWebViewWarmUper.swift */,
 				2B6D0E4B2A623D93005BFEB9 /* ImagePreviewViewController.swift */,
 			);
 			path = utils;
@@ -324,6 +325,15 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
+		48248BC02AF1F4B2001097CC /* MWebView */ = {
+			isa = PBXGroup;
+			children = (
+				48248BC12AF1F4D0001097CC /* MWebView.swift */,
+				48248BC32AF1F6C1001097CC /* MWebViewPool.swift */,
+			);
+			path = MWebView;
+			sourceTree = "<group>";
+		};
 		48DF6B90288D32C800D523C1 = {
 			isa = PBXGroup;
 			children = (
@@ -344,6 +354,7 @@
 		48DF6B9B288D32C800D523C1 /* minip */ = {
 			isa = PBXGroup;
 			children = (
+				48248BC02AF1F4B2001097CC /* MWebView */,
 				2B9B579E2A57D5B5002E9D57 /* Info.plist */,
 				2B1B32D52A61783800DA573F /* DataStore */,
 				2B1B32BA2A60E6EA00DA573F /* ObjC */,
@@ -506,13 +517,14 @@
 				2BC331B62A62D48C00441447 /* LMDB.swift in Sources */,
 				482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */,
 				2B6D0E4C2A623D93005BFEB9 /* ImagePreviewViewController.swift in Sources */,
-				2B9B579D2A57D0CE002E9D57 /* WKWebViewWarmUper.swift in Sources */,
 				2B9CF4242A5A6A6100BD2C7F /* FileBrowserView.swift in Sources */,
 				2B1B32C72A6135D300DA573F /* DownloadProjectView.swift in Sources */,
 				2B9B579A2A56399B002E9D57 /* utils.swift in Sources */,
 				2BD9B1AC2A5BD4E600036AFD /* CodeEditorV2.swift in Sources */,
+				48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */,
 				2BB9201A2A52FED000D4BE3C /* HomeView.swift in Sources */,
 				48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */,
+				48248BC22AF1F4D0001097CC /* MWebView.swift in Sources */,
 				487E38972A8FBD29003464D7 /* Int++.swift in Sources */,
 				2B9003C32A81FEB400ED360D /* LazyView.swift in Sources */,
 				2B9CF4122A5A55A100BD2C7F /* EditorView.swift in Sources */,
@@ -656,7 +668,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2023101701;
+				CURRENT_PROJECT_VERSION = 2023110101;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
@@ -675,7 +687,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.4;
+				MARKETING_VERSION = 0.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -693,7 +705,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2023101701;
+				CURRENT_PROJECT_VERSION = 2023110101;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
@@ -712,7 +724,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.4;
+				MARKETING_VERSION = 0.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

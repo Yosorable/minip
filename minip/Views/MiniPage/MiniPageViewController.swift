@@ -38,6 +38,10 @@ class MiniPageViewController: UIViewController {
     
     deinit {
         if webview != nil {
+            self.refreshControl?.endRefreshing()
+            self.refreshControl?.removeFromSuperview()
+            self.refreshControl = nil
+            self.webview.tintColor = .systemBlue
             MWebViewPool.shared.recycleReusedWebView(self.webview)
             print("recycle")
         }
@@ -74,6 +78,10 @@ class MiniPageViewController: UIViewController {
             webview.tintColor = UIColor(hex: tc)
         }
         
+        if self.app.disableSwipeBackGesture == true {
+            self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        }
+
         if showNav {
             navigationItem.rightBarButtonItems = [
                 UIBarButtonItem(

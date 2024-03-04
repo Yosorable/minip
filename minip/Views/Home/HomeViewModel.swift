@@ -59,6 +59,7 @@ struct AppInfo: Hashable, Identifiable, Codable {
     var tabs: [TabConfig]?
     var navigationBarStatus: String? // display, hidden(default)
     var colorScheme: String? // dark, light (default auto)
+    var disableSwipeBackGesture: Bool?
     
     // can be override in PageConfig
     var backgroundColor: String? // hex string

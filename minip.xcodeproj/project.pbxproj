@@ -83,6 +83,7 @@
 		48DF6B9D288D32C800D523C1 /* minipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF6B9C288D32C800D523C1 /* minipApp.swift */; };
 		48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA0288D32CA00D523C1 /* Assets.xcassets */; };
 		48DF6BA4288D32CA00D523C1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */; };
+		48FB5A052B95CD9400D2DFCC /* UIViewController++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FB5A042B95CD9400D2DFCC /* UIViewController++.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -121,6 +122,7 @@
 		48DF6B9C288D32C800D523C1 /* minipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = minipApp.swift; sourceTree = "<group>"; };
 		48DF6BA0288D32CA00D523C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		48FB5A042B95CD9400D2DFCC /* UIViewController++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController++.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -231,6 +233,7 @@
 				487E38962A8FBD29003464D7 /* Int++.swift */,
 				48C385AC2A978520006BEE35 /* Polyfill.swift */,
 				488DDFF62ABEF81400BAB280 /* String++.swift */,
+				48FB5A042B95CD9400D2DFCC /* UIViewController++.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -521,6 +524,7 @@
 				2B1B32C72A6135D300DA573F /* DownloadProjectView.swift in Sources */,
 				2B9B579A2A56399B002E9D57 /* utils.swift in Sources */,
 				2BD9B1AC2A5BD4E600036AFD /* CodeEditorV2.swift in Sources */,
+				48FB5A052B95CD9400D2DFCC /* UIViewController++.swift in Sources */,
 				48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */,
 				2BB9201A2A52FED000D4BE3C /* HomeView.swift in Sources */,
 				48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */,

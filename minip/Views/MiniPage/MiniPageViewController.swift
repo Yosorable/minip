@@ -100,6 +100,23 @@ class MiniPageViewController: UIViewController {
             navigationController?.setNavigationBarHidden(true, animated: false)
         }
         setNavigationBarInTabbar()
+        adaptColorScheme()
+    }
+
+    // color scheme change event
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        adaptColorScheme()
+    }
+
+    // wkwebview的scrollview的滚动条颜色有问题（html里面的没问题），需要手动设置
+    func adaptColorScheme() {
+        if self.isDarkMode {
+            self.webview.scrollView.indicatorStyle = .white
+        } else {
+            self.webview.scrollView.indicatorStyle = .black
+        }
     }
 
     @objc

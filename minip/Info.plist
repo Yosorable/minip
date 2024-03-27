@@ -2,6 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Attempt to save pictures to album</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Request access album</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Take video</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Take photo</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

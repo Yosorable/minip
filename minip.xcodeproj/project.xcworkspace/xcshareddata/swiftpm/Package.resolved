@@ -107,6 +107,15 @@
         "revision" : "38e0ce0598e06b034271f296a8e15b149c91aa19",
         "version" : "2.4.3"
       }
+    },
+    {
+      "identity" : "zlphotobrowser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/longitachi/ZLPhotoBrowser.git",
+      "state" : {
+        "revision" : "aa6c78e39ca8142e01f33304de05ad6a6be430ff",
+        "version" : "4.4.8"
+      }
     }
   ],
   "version" : 2

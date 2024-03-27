@@ -9,6 +9,8 @@ import SwiftUI
 import WebKit
 import PKHUD
 import Kingfisher
+import AVKit
+import Alamofire
 
 struct SettingsView: View {
     var body: some View {

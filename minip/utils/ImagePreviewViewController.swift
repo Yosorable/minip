@@ -77,6 +77,16 @@ class ImagePreviewViewController: UIViewController {
                     }
                 }
             }))
+            if let tintColor = MiniAppManager.shared.openedApp?.tintColor {
+                alertController.view.tintColor = UIColor(hex: tintColor)
+            }
+            if let colorScheme = MiniAppManager.shared.openedApp?.colorScheme {
+                if colorScheme == "dark" {
+                    alertController.overrideUserInterfaceStyle = .dark
+                } else if colorScheme == "light" {
+                    alertController.overrideUserInterfaceStyle = .light
+                }
+            }
             present(alertController, animated: true)
         }
     }

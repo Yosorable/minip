@@ -24,6 +24,19 @@ class AppDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     override func viewDidLoad() {
+        
+        if let colorScheme = MiniAppManager.shared.openedApp?.colorScheme {
+            if colorScheme == "dark" {
+                overrideUserInterfaceStyle = .dark
+            } else if colorScheme == "light" {
+                overrideUserInterfaceStyle = .light
+            }
+        }
+        
+        if let tintColor = MiniAppManager.shared.openedApp?.tintColor {
+            view.tintColor = UIColor(hex: tintColor)
+        }
+        
         panModalSetNeedsLayoutUpdate()
 
         var iconURL: URL?

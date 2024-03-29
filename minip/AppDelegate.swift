@@ -47,12 +47,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
             return false
         }
 
-        // minip://open/{appId}
+        // minip://open/{appId | appName}
         if host == "open" {
-            guard let appId = components.path?.deletingPrefixSuffix("/") else {
+            guard let appIdOrName = components.path?.deletingPrefixSuffix("/") else {
                 return false
             }
-            if MiniAppManager.shared.openedApp?.appId == appId {
+            if MiniAppManager.shared.openedApp?.appId == appIdOrName || MiniAppManager.shared.openedApp?.name == appIdOrName {
                 return true
             }
             if MiniAppManager.shared.openedApp != nil {
@@ -63,7 +63,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
             var foundApp: AppInfo?
 
             for ele in MiniAppManager.shared.getAppInfos() {
-                if ele.appId == appId {
+                if ele.appId == appIdOrName || ele.name == appIdOrName {
                     foundApp = ele
                     break
                 }
@@ -73,7 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
                 return false
             }
 
-            MiniAppManager.shared.openMiniApp(app: app, rc: window?.rootViewController)
+            MiniAppManager.shared.openMiniApp(app: app, rc: window?.rootViewController, animated: false)
         }
 
         return false

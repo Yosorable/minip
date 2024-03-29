@@ -29,7 +29,7 @@ class MiniAppManager {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
             let decoder = JSONDecoder()
             fileURLs.forEach { ele in
-                let infoURL = ele.appendingPathComponent("info", conformingTo: .json)
+                let infoURL = ele.appendingPathComponent("app", conformingTo: .json)
                 if ele.lastPathComponent != ".Trash" && fileManager.fileExists(atPath: infoURL.path) {
                     do {
                         let data = try Data(contentsOf: infoURL, options: .mappedIfSafe)
@@ -73,7 +73,6 @@ class MiniAppManager {
         if newSortList != appIdSortList {
             Defaults[.appSortList] = newSortList
         }
-        
         return tmpApps
     }
     
@@ -87,7 +86,7 @@ class MiniAppManager {
         }
     }
     
-    func openMiniApp(app: AppInfo, rc: UIViewController? = nil) {
+    func openMiniApp(app: AppInfo, rc: UIViewController? = nil, animated: Bool = true) {
         var vc: UINavigationController
 
         if let tabs = app.tabs, tabs.count > 0 {
@@ -119,9 +118,9 @@ class MiniAppManager {
         vc.modalPresentationStyle = .fullScreen
         MiniAppManager.shared.openedApp = app
         if let rc = rc {
-            rc.present(vc, animated: true)
+            rc.present(vc, animated: animated)
         } else {
-            GetTopViewController()?.present(vc, animated: true)
+            GetTopViewController()?.present(vc, animated: animated)
         }
     }
 }

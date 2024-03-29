@@ -42,6 +42,7 @@ class MiniPageViewController: UIViewController {
             self.refreshControl?.removeFromSuperview()
             self.refreshControl = nil
             self.webview.tintColor = .systemBlue
+            self.webview.scrollView.contentInsetAdjustmentBehavior = .always
             MWebViewPool.shared.recycleReusedWebView(self.webview)
             print("recycle")
         }
@@ -83,23 +84,32 @@ class MiniPageViewController: UIViewController {
         }
 
         if showNav {
-            let closebtn = UIButton.init(type: .custom)
-            closebtn.setImage(UIImage(named: "close-icon"), for: .normal)
-            closebtn.addTarget(self, action: #selector(close), for: .touchUpInside)
+//            let closebtn = UIButton.init(type: .custom)
+//            closebtn.setImage(UIImage(named: "close-icon"), for: .normal)
+//            closebtn.addTarget(self, action: #selector(close), for: .touchUpInside)
+//            
+//            let morebtn = UIButton.init(type: .custom)
+//            morebtn.setImage(UIImage(named: "more-icon"), for: .normal)
+//            morebtn.addTarget(self, action: #selector(showAppDetail), for: .touchUpInside)
+//            
+//            let stackview = UIStackView.init(arrangedSubviews: [morebtn, closebtn])
+//            stackview.distribution = .equalSpacing
+//            stackview.axis = .horizontal
+//            stackview.alignment = .center
+//            stackview.spacing = 0
+//            
+//            let rightBarButton = UIBarButtonItem(customView: stackview)
+//            self.navigationItem.rightBarButtonItem = rightBarButton
+//            rightBarButton.tintColor = view.tintColor
             
-            let morebtn = UIButton.init(type: .custom)
-            morebtn.setImage(UIImage(named: "more-icon"), for: .normal)
-            morebtn.addTarget(self, action: #selector(showAppDetail), for: .touchUpInside)
-            
-            let stackview = UIStackView.init(arrangedSubviews: [morebtn, closebtn])
-            stackview.distribution = .equalSpacing
-            stackview.axis = .horizontal
-            stackview.alignment = .center
-            stackview.spacing = 0
-            
-            let rightBarButton = UIBarButtonItem(customView: stackview)
-            self.navigationItem.rightBarButtonItem = rightBarButton
-            rightBarButton.tintColor = view.tintColor
+            navigationItem.rightBarButtonItems = [
+                UIBarButtonItem(
+                    image: UIImage(systemName: "xmark"), style: .done, target: self, action: #selector(close)
+                ),
+                UIBarButtonItem(
+                    image: UIImage(systemName: "ellipsis"), style: .done, target: self, action: #selector(showAppDetail)
+                )
+            ]
             
             if let nc = app.navigationBarColor {
                 navigationController?.navigationBar.barTintColor = UIColor(hex: nc)
@@ -107,6 +117,7 @@ class MiniPageViewController: UIViewController {
 
         } else {
             navigationController?.setNavigationBarHidden(true, animated: false)
+            webview.scrollView.contentInsetAdjustmentBehavior = .never
         }
         setNavigationBarInTabbar()
         adaptColorScheme()

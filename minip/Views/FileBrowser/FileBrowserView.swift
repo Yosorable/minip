@@ -100,6 +100,8 @@ struct FileBrowserPageView: View {
                     .foregroundColor(.secondary)
                     .frame(width: 35, height: 35)
                 Text(ele.fileName)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
                 Spacer()
             }
             .swipeActions {
@@ -122,6 +124,8 @@ struct FileBrowserPageView: View {
                     .foregroundColor(.secondary)
                     .frame(width: 35, height: 35)
                 Text(ele.fileName)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
                 Spacer()
             }
             .contentShape(Rectangle())
@@ -152,6 +156,8 @@ struct FileBrowserPageView: View {
                             .frame(width: 35, height: 35)
                     }
                     Text(ele.fileName)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
                 }
                 .swipeActions {
                     Button {
@@ -181,6 +187,8 @@ struct FileBrowserPageView: View {
                             .frame(width: 35, height: 35)
                     }
                     Text(ele.fileName)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
                 }
             }
         }

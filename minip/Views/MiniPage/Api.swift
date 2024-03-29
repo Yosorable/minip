@@ -13,12 +13,30 @@ import PKHUD
 import ZLPhotoBrowser
 import SwiftUI
 
+struct AlertAction: Codable {
+    var title: String?
+    var style: String?
+    var key: String // 回调参数
+}
+
+struct AlertConfig: Codable {
+    var title: String?
+    var message: String?
+    var preferredStyle: String?
+    var actions: [AlertAction]
+}
 
 extension MiniPageViewController {
     func register() {
         // navigate
         bridge.register(handlerName: "close") { [weak self] (parameters, callback) in
-            self?.dismiss(animated: true)
+            self?.close()
+            callback?(true)
+        }
+        
+        bridge.register(handlerName: "showAppDetail") { [weak self] (parameters, callback) in
+            self?.showAppDetail()
+            callback?(true)
         }
         
         bridge.register(handlerName: "navigateTo") { [weak self] (parameters, callback) in
@@ -342,6 +360,50 @@ extension MiniPageViewController {
                 print(error.localizedDescription)
                 callback?(false)
             }
+        }
+        
+        bridge.register(handlerName: "getSafeAreaInsets") { (parameters, callback) in
+            var res = ["top": 0.0, "left": 0.0, "bottom": 0.0, "right": 0.0]
+            guard let insets = UIApplication.shared.windows.first?.safeAreaInsets else {
+                callback?(res)
+                return
+            }
+            res["top"] = insets.top
+            res["left"] = insets.left
+            res["bottom"] = insets.bottom
+            res["right"] = insets.right
+            callback?(res)
+        }
+        
+        
+        bridge.register(handlerName: "alert") { (params, callback) in
+            guard let cfg = (params?["config"] as? String)?.data(using: .utf8) else {
+                callback?(nil)
+                return
+            }
+            let decoder = JSONDecoder()
+            guard let config = try? decoder.decode(AlertConfig.self, from: cfg) else {
+                callback?(nil)
+                return
+            }
+            let alert = UIAlertController(title: config.title, message: config.message, preferredStyle: config.preferredStyle == "actionSheet" ? .actionSheet : .alert)
+            config.actions.forEach { act in
+                var style = UIAlertAction.Style.default
+                if act.style == "cancel" {
+                    style = .cancel
+                } else if act.style == "destructive" {
+                    style = .destructive
+                }
+                alert.addAction(UIAlertAction(title: act.title, style: style) { _ in
+                    callback?(act.key)
+                })
+            }
+            alert.view.tintColor = self.view.tintColor
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+        bridge.register(handlerName: "shortShake") { _, _ in
+            ShortShake()
         }
         
         // 以下为测试api

@@ -180,6 +180,6 @@ class MiniPageViewController: UIViewController {
     func showAppDetail() {
         self.presentPanModal(AppDetailViewController(appInfo: app, reloadPageFunc: {
             self.webview.reload()
-        }))
+        }, parentVC: self))
     }
 }

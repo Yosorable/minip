@@ -87,6 +87,11 @@ class ImagePreviewViewController: UIViewController {
                     alertController.overrideUserInterfaceStyle = .light
                 }
             }
+            
+            if let ppc = alertController.popoverPresentationController {
+                ppc.sourceView = self.view
+                ppc.sourceRect = CGRectMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0, 1.0, 1.0)
+            }
             present(alertController, animated: true)
         }
     }

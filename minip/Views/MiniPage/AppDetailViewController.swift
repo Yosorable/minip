@@ -14,9 +14,11 @@ import Kingfisher
 class AppDetailViewController: UIViewController {
     var appInfo: AppInfo
     var reloadPageFunc: (()->Void)?
-    init(appInfo: AppInfo, reloadPageFunc: (()->Void)? = nil) {
+    var parentVC: UIViewController
+    init(appInfo: AppInfo, reloadPageFunc: (()->Void)? = nil, parentVC: UIViewController) {
         self.appInfo = appInfo
         self.reloadPageFunc = reloadPageFunc
+        self.parentVC = parentVC
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -114,20 +116,53 @@ class AppDetailViewController: UIViewController {
                         .foregroundColor(.secondary)
                     }
                     .padding(.top, 3)
-                    HStack {
-                        Button {
-                            self.dismiss(animated: true, completion: self.reloadPageFunc)
-                        } label: {
-                            VStack {
-                                Image(systemName: "arrow.triangle.2.circlepath")
-                                Text("Reload")
+                    
+                    ScrollView(.horizontal) {
+                        HStack(spacing: 10) {
+                            Button {
+                                self.dismiss(animated: true, completion: self.reloadPageFunc)
+                            } label: {
+                                VStack {
+                                    Image(systemName: "arrow.triangle.2.circlepath").font(.system(size: 30))
+                                        .frame(width: 55, height: 55)
+                                        .background(Color("BlockButtonBackground", bundle: nil))
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    Text("Reload")
+                                        .font(.caption)
+                                }
+                            }
+                            Button {
+                                self.dismiss(animated: true, completion: nil)
+                                let vc = UIHostingController(
+                                    rootView:
+                                        VStack{
+                                            Text("App \"\(MiniAppManager.shared.openedApp?.name ?? "")\" Settings")
+                                            Button {
+                                                self.parentVC.navigationController?.popViewController(animated: true)
+                                            } label: {
+                                                Text("Back")
+                                            }
+                                        }
+                                )
+                                vc.title = "Settings"
+                                self.parentVC.navigationController?.pushViewController(vc, animated: true)
+                                
+                            } label: {
+                                VStack {
+                                    Image(systemName: "gear").font(.system(size: 30))
+                                        .frame(width: 55, height: 55)
+                                        .background(Color("BlockButtonBackground", bundle: nil))
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    Text("Settings")
+                                        .font(.caption)
+                                }
                             }
                         }
+                        .padding(.horizontal, 20)
                     }
                     .padding(.top, 8)
                     Spacer()
                 }
-                .padding(.horizontal, 20)
         ).view
         guard let subview = subview else {
             return

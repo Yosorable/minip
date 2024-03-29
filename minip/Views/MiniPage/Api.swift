@@ -12,6 +12,7 @@ import AVKit
 import PKHUD
 import ZLPhotoBrowser
 import SwiftUI
+import LocalAuthentication
 
 struct AlertAction: Codable {
     var title: String?
@@ -399,11 +400,40 @@ extension MiniPageViewController {
                 })
             }
             alert.view.tintColor = self.view.tintColor
+            
+            if let ppc = alert.popoverPresentationController {
+                ppc.sourceView = self.view
+                ppc.sourceRect = CGRectMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0, 1.0, 1.0)
+            }
             self.present(alert, animated: true, completion: nil)
         }
         
         bridge.register(handlerName: "shortShake") { _, _ in
             ShortShake()
+        }
+        
+        // device
+        bridge.register(handlerName: "localAuthentication") { (_, callback) in
+            let context = LAContext()
+            var error: NSError?
+            
+            if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+                let reason = "Identify yourself!"
+                
+                context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
+                    success, authenticationError in
+                    
+                    DispatchQueue.main.async {
+                        if success {
+                            callback?(true)
+                        } else {
+                            callback?(false)
+                        }
+                    }
+                }
+            } else {
+                callback?(nil)
+            }
         }
         
         // 以下为测试api

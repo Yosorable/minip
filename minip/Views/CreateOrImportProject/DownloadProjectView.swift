@@ -168,7 +168,7 @@ struct DownloadProjectView: View {
         downloadReq = AF.download(downurl, to: destination)
             .downloadProgress { progress in
                 downProgress = progress
-                print("\(progress.fractionCompleted)")
+                logger.debug("[downloadFile] \(progress.fractionCompleted)")
             }
             .response(completionHandler: { resp in
                 downloading = false

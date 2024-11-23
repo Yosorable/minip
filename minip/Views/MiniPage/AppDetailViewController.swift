@@ -14,10 +14,12 @@ import Kingfisher
 class AppDetailViewController: UIViewController {
     var appInfo: AppInfo
     var reloadPageFunc: (()->Void)?
+    var closeFunc: (()->Void)?
     var parentVC: UIViewController
-    init(appInfo: AppInfo, reloadPageFunc: (()->Void)? = nil, parentVC: UIViewController) {
+    init(appInfo: AppInfo, reloadPageFunc: (()->Void)? = nil, closeFunc: (()->Void)? = nil, parentVC: UIViewController) {
         self.appInfo = appInfo
         self.reloadPageFunc = reloadPageFunc
+        self.closeFunc = closeFunc
         self.parentVC = parentVC
         super.init(nibName: nil, bundle: nil)
     }
@@ -120,18 +122,6 @@ class AppDetailViewController: UIViewController {
                     ScrollView(.horizontal) {
                         HStack(spacing: 10) {
                             Button {
-                                self.dismiss(animated: true, completion: self.reloadPageFunc)
-                            } label: {
-                                VStack {
-                                    Image(systemName: "arrow.triangle.2.circlepath").font(.system(size: 30))
-                                        .frame(width: 55, height: 55)
-                                        .background(Color("BlockButtonBackground", bundle: nil))
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    Text("Reload")
-                                        .font(.caption)
-                                }
-                            }
-                            Button {
                                 self.dismiss(animated: true, completion: nil)
                                 let vc = UIHostingController(
                                     rootView:
@@ -144,6 +134,8 @@ class AppDetailViewController: UIViewController {
                                             }
                                         }
                                 )
+                                vc.view.tintColor = self.view.tintColor
+
                                 vc.title = "Settings"
                                 self.parentVC.navigationController?.pushViewController(vc, animated: true)
                                 
@@ -155,6 +147,35 @@ class AppDetailViewController: UIViewController {
                                         .clipShape(RoundedRectangle(cornerRadius: 10))
                                     Text("Settings")
                                         .font(.caption)
+                                }
+                            }
+                            
+                            Button {
+                                self.dismiss(animated: true, completion: self.reloadPageFunc)
+                            } label: {
+                                VStack {
+                                    Image(systemName: "arrow.triangle.2.circlepath").font(.system(size: 30))
+                                        .frame(width: 55, height: 55)
+                                        .background(Color("BlockButtonBackground", bundle: nil))
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    Text("Reload")
+                                        .font(.caption)
+                                }
+                            }
+                            
+                            if let cls = self.closeFunc {
+                                Button {
+                                    self.dismiss(animated: true, completion: cls)
+                                    cls()
+                                } label: {
+                                    VStack {
+                                        Image(systemName: "xmark").font(.system(size: 30))
+                                            .frame(width: 55, height: 55)
+                                            .background(Color("BlockButtonBackground", bundle: nil))
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                        Text("Close")
+                                            .font(.caption)
+                                    }
                                 }
                             }
                         }

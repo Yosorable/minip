@@ -14,6 +14,7 @@ protocol MWebViewProtocol: AnyObject {
 
 public class MWebView: WKWebView {
     weak var holderObject: AnyObject?
+    var id: Int?
 
     static func defaultConfiguration() -> WKWebViewConfiguration {
         let config = WKWebViewConfiguration()
@@ -27,6 +28,7 @@ public class MWebView: WKWebView {
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
         config.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
         config.allowsInlineMediaPlayback = true
+//        config.preferences.isTextInteractionEnabled = false
 
         return config
     }
@@ -62,6 +64,7 @@ extension MWebView: MWebViewPoolProtocol {
 
     /// 被回收
     func webviewWillEnterPool() {
+        id = nil
         holderObject = nil
         scrollView.delegate = nil
         stopLoading()

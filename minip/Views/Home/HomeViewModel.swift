@@ -45,7 +45,7 @@ class HomeViewModel: ObservableObject {
     }
 }
 
-struct AppInfo: Hashable, Identifiable, Codable {
+struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     var name: String
     var appId: String
     var author: String?
@@ -55,7 +55,8 @@ struct AppInfo: Hashable, Identifiable, Codable {
     var description: String?
     var displayMode: String? // multiple-webview, signle-webview(default)
     var homepage: String
-    var pages: [PageConfig]?
+    var title: String? // homepage title
+    var pages: [PageConfig]? // unuse
     var tabs: [TabConfig]?
     var navigationBarStatus: String? // display, hidden(default)
     var colorScheme: String? // dark, light (default auto)
@@ -65,6 +66,9 @@ struct AppInfo: Hashable, Identifiable, Codable {
     var backgroundColor: String? // hex string
     var navigationBarColor: String?
     var tintColor: String? // hex string
+    
+    // web server
+    var webServerEnabled: Bool?
     
     var id: String {
         return appId

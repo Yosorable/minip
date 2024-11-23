@@ -9,6 +9,8 @@ import Foundation
 import PKHUD
 import UIKit
 import AudioToolbox
+import os.log
+import ZLPhotoBrowser
 
 func WriteToFile(data: Data, fileName: String) -> Bool {
     // get path of directory
@@ -18,13 +20,13 @@ func WriteToFile(data: Data, fileName: String) -> Bool {
     // create file url
     let fileurl =  directory.appendingPathComponent(fileName)
     
-    print("file uri: \(fileurl)")
+    logger.debug("[WriteToFile] file uri: \(fileurl)")
     
     do{
         try data.write(to: fileurl, options: .atomic)
         return true
     }catch {
-        print("Unable to write in new file.")
+        logger.error("[WriteToFile] Unable to write in new file.")
         return false
     }
 }
@@ -179,6 +181,34 @@ func PreviewImage(url: URL? = nil) {
         return
     }
     let tvc = GetTopViewController()
+    
+//    let videoSuffixs = ["mp4", "mov", "avi", "rmvb", "rm", "flv", "3gp", "wmv", "vob", "dat", "m4v", "f4v", "mkv"] // and more suffix
+//    let vc = ZLImagePreviewController(datas: [url], index: 0, showSelectBtn: false, showBottomView: false) { url -> ZLURLType in
+//        if let sf = url.absoluteString.split(separator: ".").last, videoSuffixs.contains(String(sf)) {
+//            return .video
+//        } else {
+//            return .image
+//        }
+//    } urlImageLoader: { url, imageView, progress, loadFinish in
+//        // Demo used Kingfisher.
+//        imageView.kf.setImage(with: url) { receivedSize, totalSize in
+//            let percent = (CGFloat(receivedSize) / CGFloat(totalSize))
+//            progress(percent)
+//        } completionHandler: { _ in
+//            loadFinish()
+//        }
+//    }
+//
+//    
+//    vc.doneBlock = { datas in
+//        // your code
+//    }
+//
+//    vc.modalPresentationStyle = .fullScreen
+//    tvc?.showDetailViewController(vc, sender: nil)
+    
+    
+    
     let vc = ImagePreviewViewController(imageURL: url)
     vc.modalPresentationStyle = .overCurrentContext
     vc.modalTransitionStyle = .crossDissolve

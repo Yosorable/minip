@@ -57,6 +57,12 @@ extension MiniPageViewController {
             callback?(false)
         }
         
+        bridge.register(handlerName: "navigateBack") { [weak self] (_, _) in
+            if (self?.navigationController?.topViewController == self) {
+                self?.navigationController?.popViewController(animated: true)
+            }
+        }
+        
         bridge.register(handlerName: "openWeb") { [weak self] (parameters, callback) in
             guard let urlStr = parameters?["url"] as? String else {
                 callback?(false)
@@ -210,7 +216,7 @@ extension MiniPageViewController {
                 }
                 callback?(res)
             } catch let error {
-                print("listFiles error: \(error.localizedDescription)")
+                logger.error("[register] listFiles error: \(error.localizedDescription)")
                 callback?([String]())
             }
         }
@@ -308,8 +314,8 @@ extension MiniPageViewController {
             callback?(true)
         }
         
-        // persent data
-        bridge.register(handlerName: "setKVStore") { (parameters, callback) in
+        // persisent data
+        bridge.register(handlerName: "setKVStore") { [weak self] (parameters, callback) in
             guard let key = parameters?["key"] as? String, let val = parameters?["val"] as? String else {
                 callback?(false)
                 return
@@ -321,8 +327,32 @@ extension MiniPageViewController {
             do {
                 try KVStoreManager.shared.getDB(dbName: appId)?.put(value: val, forKey: key)
                 callback?(true)
+                // observed data
+                if let wids = MiniAppManager.shared.obseredData[key], let that = self {
+                    var waitToSendWIDs = [Int]()
+                    wids.forEach {id in
+                        if id == that.webview.id {
+                            return
+                        }
+                        waitToSendWIDs.append(id)
+                    }
+                    var data = [String: String]()
+                    data["key"] = key
+                    data["value"] = val
+                    
+                    let encoder = JSONEncoder()
+                    let dataStr = String(data: try! encoder.encode(data))!
+
+                    MWebViewPool.shared.visiableWebViewSet.forEach { wv in
+                        if (waitToSendWIDs.contains(wv.id!)) {
+                            wv.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"observedDataChanged\", {\"detail\": \(dataStr)}))")
+                        }
+                    }
+                }
+                
+                
             } catch let error {
-                print(error.localizedDescription)
+                logger.error("[register] \(error.localizedDescription)")
                 callback?(false)
             }
         }
@@ -340,12 +370,12 @@ extension MiniPageViewController {
                 let res = try KVStoreManager.shared.getDB(dbName: appId)?.get(type: String.self, forKey: key)
                 callback?(res)
             } catch let error {
-                print(error.localizedDescription)
+                logger.error("[register] \(error.localizedDescription)")
                 callback?(nil)
             }
         }
         
-        bridge.register(handlerName: "delKVStore") { (parameters, callback) in
+        bridge.register(handlerName: "delKVStore") { [weak self] (parameters, callback) in
             guard let key = parameters?["key"] as? String else {
                 callback?(nil)
                 return
@@ -357,8 +387,30 @@ extension MiniPageViewController {
             do {
                 try KVStoreManager.shared.getDB(dbName: appId)?.deleteValue(forKey: key)
                 callback?(true)
+                
+                if let wids = MiniAppManager.shared.obseredData[key], let that = self {
+                    var waitToSendWIDs = [Int]()
+                    wids.forEach {id in
+                        if id == that.webview.id {
+                            return
+                        }
+                        waitToSendWIDs.append(id)
+                    }
+                    var data = [String: String?]()
+                    data["key"] = key
+                    data["value"] = nil
+                    
+                    let encoder = JSONEncoder()
+                    let dataStr = String(data: try! encoder.encode(data))!
+
+                    MWebViewPool.shared.visiableWebViewSet.forEach { wv in
+                        if (waitToSendWIDs.contains(wv.id!)) {
+                            wv.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"observedDataChanged\", {\"detail\": \(dataStr)}))")
+                        }
+                    }
+                }
             } catch let error {
-                print(error.localizedDescription)
+                logger.error("[register] \(error.localizedDescription)")
                 callback?(false)
             }
         }
@@ -376,8 +428,11 @@ extension MiniPageViewController {
             callback?(res)
         }
         
-        
-        bridge.register(handlerName: "alert") { (params, callback) in
+        bridge.register(handlerName: "alert") { [weak self] (params, callback) in
+            if self == nil {
+                callback?(nil)
+                return
+            }
             guard let cfg = (params?["config"] as? String)?.data(using: .utf8) else {
                 callback?(nil)
                 return
@@ -399,17 +454,26 @@ extension MiniPageViewController {
                     callback?(act.key)
                 })
             }
-            alert.view.tintColor = self.view.tintColor
+            alert.view.tintColor = self!.view.tintColor
             
             if let ppc = alert.popoverPresentationController {
-                ppc.sourceView = self.view
-                ppc.sourceRect = CGRectMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0, 1.0, 1.0)
+                ppc.sourceView = self!.view
+                ppc.sourceRect = CGRectMake(self!.view.bounds.size.width / 2.0, self!.view.bounds.size.height / 2.0, 1.0, 1.0)
             }
-            self.present(alert, animated: true, completion: nil)
+            self!.present(alert, animated: true, completion: nil)
         }
-        
-        bridge.register(handlerName: "shortShake") { _, _ in
-            ShortShake()
+
+        bridge.register(handlerName: "shortShake") { params, _ in
+            let type = params?["type"] as? String
+            var generator = UIImpactFeedbackGenerator(style: .medium)
+            if type == "light" {
+                generator = UIImpactFeedbackGenerator(style: .light)
+            } else if type == "medium" {
+                generator = UIImpactFeedbackGenerator(style: .medium)
+            } else if type == "heavy" {
+                generator = UIImpactFeedbackGenerator(style: .heavy)
+            }
+            generator.impactOccurred()
         }
         
         // device
@@ -436,8 +500,73 @@ extension MiniPageViewController {
             }
         }
         
+        bridge.register(handlerName: "setObservableData") { [weak self] (params, callback) in
+            logger.debug("[register] setObservableData")
+            guard let key = params?["key"] as? String else {
+                callback?(nil)
+                return
+            }
+            let initValue = (params?["initValue"] as? String) ?? ""
+            
+            guard let appId = MiniAppManager.shared.openedApp?.appId else {
+                callback?(false)
+                return
+            }
+            
+            do {
+                let res = try KVStoreManager.shared.getDB(dbName: appId)?.get(type: String.self, forKey: key)
+                if let res = res {
+                    callback?(res)
+                } else {
+                    try KVStoreManager.shared.getDB(dbName: appId)?.put(value: initValue, forKey: key)
+                    callback?(initValue)
+                }
+                
+                let wid = self?.webview.id!
+                if MiniAppManager.shared.obseredData[key] == nil {
+                    MiniAppManager.shared.obseredData[key] = Set<Int>()
+                }
+                MiniAppManager.shared.obseredData[key]?.insert(wid!)
+            } catch let error {
+                logger.error("[register] \(error.localizedDescription)")
+                callback?(nil)
+            }
+            
+        }
+        
+        bridge.register(handlerName: "getClipboardData") { _, callback in
+            if let txt = UIPasteboard.general.string {
+                callback?(txt)
+                return
+            }
+            callback?(nil)
+        }
+        
+        
+        bridge.register(handlerName: "setClipboardData") { params, callback in
+            guard let data = params?["data"] as? String else {
+                callback?(false)
+                return
+            }
+            UIPasteboard.general.string = data
+            callback?(true)
+        }
+        
+        
+        bridge.register(handlerName: "hideNavigationBar") { [weak self] params, _ in
+            self?.navigationController?.setNavigationBarHidden(true, animated: true)
+        }
+        
+        bridge.register(handlerName: "showNavigationBar") { [weak self] params, _ in
+            self?.navigationController?.setNavigationBarHidden(false, animated: true)
+        }
+        
         // 以下为测试api
-        bridge.register(handlerName: "selectPhoto") { (parameters, callback) in
+        bridge.register(handlerName: "selectPhoto") { [weak self] (parameters, callback) in
+            if self == nil {
+                callback?(false)
+                return
+            }
             let ps = ZLPhotoPreviewSheet()
             let config = ZLPhotoConfiguration.default()
             config.allowTakePhotoInLibrary = parameters?[""] as? Bool ?? true
@@ -468,7 +597,7 @@ extension MiniPageViewController {
                 }
                 callback?(false)
             }
-            ps.showPhotoLibrary(sender: self)
+            ps.showPhotoLibrary(sender: self!)
         }
     }
 }

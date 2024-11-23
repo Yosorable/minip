@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -78,10 +78,15 @@
 		483794B12B973D0D0073A001 /* ZLPhotoBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = 483794B02B973D0D0073A001 /* ZLPhotoBrowser */; };
 		484E082F2B96D6850018DCF0 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E082E2B96D6850018DCF0 /* Api.swift */; };
 		484E08312B96D6DD0018DCF0 /* AppDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */; };
+		485A75222BDCA43F00D887A4 /* logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485A75212BDCA43F00D887A4 /* logger.swift */; };
 		487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 487E38922A8FBA48003464D7 /* Kingfisher */; };
 		487E38972A8FBD29003464D7 /* Int++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487E38962A8FBD29003464D7 /* Int++.swift */; };
+		488B55482C61BC970042DADE /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488B55472C61BC970042DADE /* TestView.swift */; };
 		488DDFF52ABEEAEE00BAB280 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */; };
 		488DDFF72ABEF81400BAB280 /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488DDFF62ABEF81400BAB280 /* String++.swift */; };
+		48947C422BE2963E00EE9F82 /* MinipRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48947C412BE2963E00EE9F82 /* MinipRequest.swift */; };
+		48A9311D2BCE67E700936954 /* MiniV2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A9311C2BCE67E700936954 /* MiniV2ViewController.swift */; };
+		48A9315C2BCE6E6600936954 /* ECMASwift in Frameworks */ = {isa = PBXBuildFile; productRef = 48A9315B2BCE6E6600936954 /* ECMASwift */; };
 		48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C385AC2A978520006BEE35 /* Polyfill.swift */; };
 		48DF6B9D288D32C800D523C1 /* minipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF6B9C288D32C800D523C1 /* minipApp.swift */; };
 		48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA0288D32CA00D523C1 /* Assets.xcassets */; };
@@ -119,9 +124,13 @@
 		482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppManager.swift; sourceTree = "<group>"; };
 		484E082E2B96D6850018DCF0 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
+		485A75212BDCA43F00D887A4 /* logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = logger.swift; sourceTree = "<group>"; };
 		487E38962A8FBD29003464D7 /* Int++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int++.swift"; sourceTree = "<group>"; };
+		488B55472C61BC970042DADE /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		488DDFF62ABEF81400BAB280 /* String++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String++.swift"; sourceTree = "<group>"; };
+		48947C412BE2963E00EE9F82 /* MinipRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipRequest.swift; sourceTree = "<group>"; };
+		48A9311C2BCE67E700936954 /* MiniV2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniV2ViewController.swift; sourceTree = "<group>"; };
 		48C385AC2A978520006BEE35 /* Polyfill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polyfill.swift; sourceTree = "<group>"; };
 		48DF6B99288D32C800D523C1 /* minip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DF6B9C288D32C800D523C1 /* minipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = minipApp.swift; sourceTree = "<group>"; };
@@ -145,6 +154,7 @@
 				2B9DC1EA2A5E8E400061FAB8 /* TreeSitterPythonQueries in Frameworks */,
 				2B9DC1E62A5E8E400061FAB8 /* TreeSitterMarkdownRunestone in Frameworks */,
 				487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */,
+				48A9315C2BCE6E6600936954 /* ECMASwift in Frameworks */,
 				2B1B32C42A61358B00DA573F /* Alamofire in Frameworks */,
 				2B9DC1D42A5E8E400061FAB8 /* TreeSitterJSON in Frameworks */,
 				2B9DC1D02A5E8E400061FAB8 /* TreeSitterHTMLQueries in Frameworks */,
@@ -226,6 +236,8 @@
 			children = (
 				2BD9B1AB2A5BD4E600036AFD /* CodeEditorV2.swift */,
 				2B917FD92A5D5AF7002DC170 /* JSCoreTestView.swift */,
+				48A9311C2BCE67E700936954 /* MiniV2ViewController.swift */,
+				488B55472C61BC970042DADE /* TestView.swift */,
 			);
 			path = TestViews;
 			sourceTree = "<group>";
@@ -264,6 +276,7 @@
 			children = (
 				2B9B57992A56399B002E9D57 /* utils.swift */,
 				2B6D0E4B2A623D93005BFEB9 /* ImagePreviewViewController.swift */,
+				485A75212BDCA43F00D887A4 /* logger.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -341,6 +354,7 @@
 			children = (
 				48248BC12AF1F4D0001097CC /* MWebView.swift */,
 				48248BC32AF1F6C1001097CC /* MWebViewPool.swift */,
+				48947C412BE2963E00EE9F82 /* MinipRequest.swift */,
 			);
 			path = MWebView;
 			sourceTree = "<group>";
@@ -365,8 +379,8 @@
 		48DF6B9B288D32C800D523C1 /* minip */ = {
 			isa = PBXGroup;
 			children = (
-				48248BC02AF1F4B2001097CC /* MWebView */,
 				2B9B579E2A57D5B5002E9D57 /* Info.plist */,
+				48248BC02AF1F4B2001097CC /* MWebView */,
 				2B1B32D52A61783800DA573F /* DataStore */,
 				2B1B32BA2A60E6EA00DA573F /* ObjC */,
 				2B8F0B932A597C3700D9359F /* Extension */,
@@ -452,6 +466,7 @@
 				2BC331B32A62D47700441447 /* SwiftLMDB */,
 				487E38922A8FBA48003464D7 /* Kingfisher */,
 				483794B02B973D0D0073A001 /* ZLPhotoBrowser */,
+				48A9315B2BCE6E6600936954 /* ECMASwift */,
 			);
 			productName = minip;
 			productReference = 48DF6B99288D32C800D523C1 /* minip.app */;
@@ -495,6 +510,7 @@
 				2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */,
 				487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				483794AF2B973D0D0073A001 /* XCRemoteSwiftPackageReference "ZLPhotoBrowser" */,
+				48A9315A2BCE6E6600936954 /* XCLocalSwiftPackageReference "../local-package/ECMASwift" */,
 			);
 			productRefGroup = 48DF6B9A288D32C800D523C1 /* Products */;
 			projectDirPath = "";
@@ -523,6 +539,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B415A112A7E8FA900B3BF94 /* MiniPageViewController.swift in Sources */,
+				488B55482C61BC970042DADE /* TestView.swift in Sources */,
 				2B917FDA2A5D5AF7002DC170 /* JSCoreTestView.swift in Sources */,
 				2B8DC8BA2A5FAC4B002D5288 /* VSCodeDarkTheme.swift in Sources */,
 				2B1B32CF2A61633000DA573F /* FilePickerView.swift in Sources */,
@@ -533,6 +550,7 @@
 				2B9CF4242A5A6A6100BD2C7F /* FileBrowserView.swift in Sources */,
 				2B1B32C72A6135D300DA573F /* DownloadProjectView.swift in Sources */,
 				2B9B579A2A56399B002E9D57 /* utils.swift in Sources */,
+				48947C422BE2963E00EE9F82 /* MinipRequest.swift in Sources */,
 				2BD9B1AC2A5BD4E600036AFD /* CodeEditorV2.swift in Sources */,
 				48FB5A052B95CD9400D2DFCC /* UIViewController++.swift in Sources */,
 				48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */,
@@ -548,11 +566,13 @@
 				2B8F0B952A597C4800D9359F /* Color++.swift in Sources */,
 				2B6D0E4E2A624382005BFEB9 /* UIView++.swift in Sources */,
 				2BD9B1D92A5C426700036AFD /* EditorTheme.swift in Sources */,
+				485A75222BDCA43F00D887A4 /* logger.swift in Sources */,
 				2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */,
 				488DDFF72ABEF81400BAB280 /* String++.swift in Sources */,
 				2B1B32D12A6163A100DA573F /* ImportProjectFromFileView.swift in Sources */,
 				48DF6B9D288D32C800D523C1 /* minipApp.swift in Sources */,
 				2B1B32D72A61784600DA573F /* Defaults.swift in Sources */,
+				48A9311D2BCE67E700936954 /* MiniV2ViewController.swift in Sources */,
 				484E082F2B96D6850018DCF0 /* Api.swift in Sources */,
 				2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */,
 			);
@@ -766,6 +786,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		48A9315A2BCE6E6600936954 /* XCLocalSwiftPackageReference "../local-package/ECMASwift" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../local-package/ECMASwift";
+		};
+/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		2B1B32C22A61358B00DA573F /* XCRemoteSwiftPackageReference "Alamofire" */ = {
@@ -1091,6 +1118,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		48A9315B2BCE6E6600936954 /* ECMASwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ECMASwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

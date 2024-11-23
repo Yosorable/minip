@@ -6,18 +6,24 @@
 //
 
 import UIKit
+import OSLog
+import WebKit
 
-protocol MWebViewPoolProtocol: class {
+protocol MWebViewPoolProtocol: AnyObject {
     func webviewWillLeavePool()
     func webviewWillEnterPool()
 }
 
 public class MWebViewPool: NSObject {
+    
+    private let processPool = WKProcessPool()
 
     // 当前有被页面持有的webview
     public var visiableWebViewSet = Set<MWebView>()
     // 回收池中的webview
     public var reusableWebViewSet = Set<MWebView>()
+    
+    public var counter = 0
 
     fileprivate let lock = DispatchSemaphore(value: 1)
 
@@ -35,7 +41,7 @@ public class MWebViewPool: NSObject {
                                                selector: #selector(mainControllerInit),
                                                name: NSNotification.Name("kMainControllerInitSuccessNotiKey"),
                                                object: nil)
-        print("init pool")
+        logger.debug("[MWebViewPool] init pool")
     }
 
     deinit {
@@ -48,6 +54,7 @@ public class MWebViewPool: NSObject {
 extension MWebViewPool {
 
     @objc func mainControllerInit() {
+        logger.debug("[MWebViewPool] mainControllerInit, prepare reuse webview")
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.25) {
             self.prepareReuseWebView()
         }
@@ -63,6 +70,18 @@ extension MWebViewPool {
 
 // MARK: Assistant
 extension MWebViewPool {
+    
+    func createNewWebvew() -> MWebView {
+        logger.debug("[MWebViewPool] create new")
+        let cfg = MWebView.defaultConfiguration()
+        cfg.processPool = self.processPool
+        cfg.setURLSchemeHandler(MinipRequest(), forURLScheme: "miniprequest")
+        
+        let webview = MWebView(frame: CGRect.zero, configuration: cfg)
+        webview.isOpaque = false
+        webview.scrollView.contentInsetAdjustmentBehavior = .always
+        return webview
+    }
 
     /// 使用中的webView持有者已销毁，则放回可复用池中
     func tryCompactWeakHolders() {
@@ -79,10 +98,7 @@ extension MWebViewPool {
     /// 预备一个空的webview
     func prepareReuseWebView() {
         guard reusableWebViewSet.count <= 0 else { return }
-        let webview = MWebView(frame: CGRect.zero, configuration: MWebView.defaultConfiguration())
-        webview.isOpaque = false
-        webview.scrollView.contentInsetAdjustmentBehavior = .always
-        self.reusableWebViewSet.insert(webview)
+        self.reusableWebViewSet.insert(self.createNewWebvew())
     }
 }
 
@@ -94,10 +110,7 @@ public extension MWebViewPool {
     func getReusedWebView(forHolder holder: AnyObject?) -> MWebView {
         assert(holder != nil, "ZXYWebView holder不能为nil")
         guard let holder = holder else {
-            let webview = MWebView(frame: CGRect.zero, configuration: MWebView.defaultConfiguration())
-            webview.isOpaque = false
-            webview.scrollView.contentInsetAdjustmentBehavior = .always
-            return webview
+            return self.createNewWebvew()
         }
 
         tryCompactWeakHolders()
@@ -105,7 +118,7 @@ public extension MWebViewPool {
         lock.wait()
         if reusableWebViewSet.count > 0 {
             // 缓存池中有
-            print("reuse")
+            logger.debug("[MWebViewPool] reuse")
             webView = reusableWebViewSet.randomElement()!
             reusableWebViewSet.remove(webView)
             visiableWebViewSet.insert(webView)
@@ -113,14 +126,13 @@ public extension MWebViewPool {
             webView.webviewWillLeavePool()
         } else {
             // 缓存池没有，创建新的
-            print("create new")
-            webView = MWebView(frame: CGRect.zero, configuration: MWebView.defaultConfiguration())
-            webView.isOpaque = false
-            webView.scrollView.contentInsetAdjustmentBehavior = .always
+            webView = self.createNewWebvew()
             visiableWebViewSet.insert(webView)
         }
 
         webView.holderObject = holder
+        webView.id = counter
+        counter += 1
         lock.signal()
 
         return webView
@@ -129,6 +141,7 @@ public extension MWebViewPool {
     /// 回收可复用的webView到复用池中
     func recycleReusedWebView(_ webView: MWebView?) {
         guard let webView = webView else { return }
+        logger.debug("[MWebViewPool] recycle webview")
         lock.wait()
         // 存在于当前使用中，则回收
         if visiableWebViewSet.contains(webView) {

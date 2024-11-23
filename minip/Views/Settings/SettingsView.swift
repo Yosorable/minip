@@ -58,6 +58,19 @@ struct SettingsView: View {
             } label: {
                 Text("clear kf image cache")
             }
+            
+            Button {
+                MiniV2Egine.shared.launch()
+            } label: {
+                Text("miniV2")
+            }
+            
+            
+            NavigationLink {
+                TestView()
+            } label: {
+                Text("TestView")
+            }
         }
         .navigationTitle(Text("Settings"))
     }

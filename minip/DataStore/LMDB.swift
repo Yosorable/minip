@@ -20,7 +20,7 @@ class KVStoreManager {
             }
             environment = try Environment(path: defaultURL.path, flags: [], maxDBs: 128)
         } catch {
-            print(error)
+            logger.error("[KVStoreManager] \(error)")
         }
     }
     

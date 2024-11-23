@@ -37,14 +37,17 @@ class ImagePreviewViewController: UIViewController {
             if url.scheme == "file" {
                 imageView.image = UIImage(contentsOfFile: url.path)
             } else {
+//                imageView.setWebImage(url: url)
+//                imageView
                 imageView.setWebImage(url: url)
             }
         }
         view.backgroundColor = .black
-        
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         self.view.addGestureRecognizer(tapGestureRecognizer)
-            
+        
+//        imageView.doubleTapGesture.require(toFail: tapGestureRecognizer)
+        tapGestureRecognizer.require(toFail: imageView.doubleTapGesture)
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
         self.view.addGestureRecognizer(longPressRecognizer)
     }
@@ -177,7 +180,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
         
         contentOffset = centerOffset
     }
-    
+    var doubleTapGesture: UITapGestureRecognizer!
     open func setup() {
         
 #if swift(>=3.2)
@@ -193,7 +196,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
         showsHorizontalScrollIndicator = false
         addSubview(imageView)
         
-        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
+        doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
         doubleTapGesture.numberOfTapsRequired = 2
         addGestureRecognizer(doubleTapGesture)
     }

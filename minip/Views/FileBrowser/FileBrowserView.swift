@@ -336,7 +336,7 @@ class FileBrowserPageViewModel: ObservableObject {
     }
     
     func fetchFiles() {
-        print("fetch files")
+        logger.debug("[fetchFiles] fetch files")
         let fileManager = FileManager.default
         let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: path)
         var res = [FileInfo]()
@@ -350,7 +350,7 @@ class FileBrowserPageViewModel: ObservableObject {
             }
             files = res
         } catch let error {
-            print("\(error)")
+            logger.error("[fetchFiles] \(error)")
         }
     }
     

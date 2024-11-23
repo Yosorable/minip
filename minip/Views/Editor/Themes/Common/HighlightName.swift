@@ -42,9 +42,11 @@ public enum HighlightName: String {
 #if DEBUG
         if !previousUnrecognizedHighlightNames.contains(rawHighlightName) {
             previousUnrecognizedHighlightNames.append(rawHighlightName)
-            print("Unrecognized highlight name: '\(rawHighlightName)'."
-                  + " Add the highlight name to HighlightName.swift if you want to add support for syntax highlighting it."
-                  + " This message will only be shown once per highlight name.")
+            
+            let msg = "[HighlightName] Unrecognized highlight name: '\(rawHighlightName)'."
+            + " Add the highlight name to HighlightName.swift if you want to add support for syntax highlighting it."
+            + " This message will only be shown once per highlight name."
+            logger.debug("\(msg)")
         }
 #endif
         return nil

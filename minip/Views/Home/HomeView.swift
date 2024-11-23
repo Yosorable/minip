@@ -87,7 +87,7 @@ struct HomeView: View {
                     Defaults[.appSortList].move(fromOffsets: from, toOffset: to)
                 }
                 .onDelete { item in
-                    print(item)
+                    logger.debug("[HomeView] \(item)")
                 }
             }
             .onAppear {

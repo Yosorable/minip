@@ -12,4 +12,7 @@ extension Defaults.Keys {
     
     // appId，首页app的顺序, 新的app（不在此列表中的）总是在最前
     static let appSortList = Key<[String]>("appSortList", default: [String]())
+    
+    // app info 缓存
+    static let appInfoList = Key<[AppInfo]>("appInfoList", default: [AppInfo]())
 }

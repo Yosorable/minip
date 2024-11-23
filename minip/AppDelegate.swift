@@ -33,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
         })
         window.makeKeyAndVisible()
         _ = MWebViewPool.shared
+        _ = MiniV2Egine.shared
         NotificationCenter.default.post(name: NSNotification.Name("kMainControllerInitSuccessNotiKey"), object: nil)
 
         return true

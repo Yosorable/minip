@@ -15,6 +15,7 @@ import Kingfisher
 import SafariServices
 import AVKit
 import AVFoundation
+import OSLog
 
 class MiniPageViewController: UIViewController {
     var webview: MWebView!
@@ -28,7 +29,7 @@ class MiniPageViewController: UIViewController {
     init(app: AppInfo, page: String? = nil, title: String? = nil) {
         self.app = app
         self.page = page ?? app.homepage
-        _title = title
+        _title = title ?? app.title
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -44,11 +45,12 @@ class MiniPageViewController: UIViewController {
             self.webview.tintColor = .systemBlue
             self.webview.scrollView.contentInsetAdjustmentBehavior = .always
             MWebViewPool.shared.recycleReusedWebView(self.webview)
-            print("recycle")
         }
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         webview = MWebViewPool.shared.getReusedWebView(forHolder: self)
         bridge = WKWebViewJavascriptBridge(webView: webview)
         register()
@@ -122,6 +124,12 @@ class MiniPageViewController: UIViewController {
         setNavigationBarInTabbar()
         adaptColorScheme()
     }
+    
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        if navigationController?.isNavigationBarHidden ?? false && motion == .motionShake {
+            showAppDetail()
+        }
+    }
 
     // color scheme change event
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -178,8 +186,15 @@ class MiniPageViewController: UIViewController {
     
     @objc
     func showAppDetail() {
+        var closeFnc: (()->Void)?
+        if self.navigationController?.isNavigationBarHidden ?? true {
+            closeFnc = {
+                self.close()
+            }
+        }
+        
         self.presentPanModal(AppDetailViewController(appInfo: app, reloadPageFunc: {
             self.webview.reload()
-        }, parentVC: self))
+        }, closeFunc: closeFnc, parentVC: self))
     }
 }

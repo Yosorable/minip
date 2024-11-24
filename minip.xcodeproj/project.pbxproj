@@ -72,6 +72,8 @@
 		2BD9B1D92A5C426700036AFD /* EditorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD9B1D82A5C426700036AFD /* EditorTheme.swift */; };
 		2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD9B1DA2A5C428700036AFD /* HighlightName.swift */; };
 		2BEEA861288FACA5006095DC /* WKWebViewJavascriptBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 2BEEA860288FACA5006095DC /* WKWebViewJavascriptBridge */; };
+		4800EA092CF1C93300F49842 /* FlyingFox in Frameworks */ = {isa = PBXBuildFile; productRef = 4800EA082CF1C93300F49842 /* FlyingFox */; };
+		4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */ = {isa = PBXBuildFile; productRef = 4800EA0A2CF1C93300F49842 /* FlyingSocks */; };
 		48248BC22AF1F4D0001097CC /* MWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC12AF1F4D0001097CC /* MWebView.swift */; };
 		48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC32AF1F6C1001097CC /* MWebViewPool.swift */; };
 		482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */; };
@@ -151,6 +153,7 @@
 				2B9DC1FC2A5E8E400061FAB8 /* TreeSitterTypeScriptQueries in Frameworks */,
 				2B9DC1F02A5E8E400061FAB8 /* TreeSitterSCSSQueries in Frameworks */,
 				2B9DC1E02A5E8E400061FAB8 /* TreeSitterLanguagesCommon in Frameworks */,
+				4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */,
 				2B9DC1EA2A5E8E400061FAB8 /* TreeSitterPythonQueries in Frameworks */,
 				2B9DC1E62A5E8E400061FAB8 /* TreeSitterMarkdownRunestone in Frameworks */,
 				487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */,
@@ -164,6 +167,7 @@
 				2BD9B1AA2A5BD4D300036AFD /* Runestone in Frameworks */,
 				2B9DC1FA2A5E8E400061FAB8 /* TreeSitterTypeScript in Frameworks */,
 				2BEEA861288FACA5006095DC /* WKWebViewJavascriptBridge in Frameworks */,
+				4800EA092CF1C93300F49842 /* FlyingFox in Frameworks */,
 				2B9DC1F42A5E8E400061FAB8 /* TreeSitterTSX in Frameworks */,
 				2B9DC1D62A5E8E400061FAB8 /* TreeSitterJSONQueries in Frameworks */,
 				2B9DC1F62A5E8E400061FAB8 /* TreeSitterTSXQueries in Frameworks */,
@@ -467,6 +471,8 @@
 				487E38922A8FBA48003464D7 /* Kingfisher */,
 				483794B02B973D0D0073A001 /* ZLPhotoBrowser */,
 				48A9315B2BCE6E6600936954 /* ECMASwift */,
+				4800EA082CF1C93300F49842 /* FlyingFox */,
+				4800EA0A2CF1C93300F49842 /* FlyingSocks */,
 			);
 			productName = minip;
 			productReference = 48DF6B99288D32C800D523C1 /* minip.app */;
@@ -511,6 +517,7 @@
 				487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				483794AF2B973D0D0073A001 /* XCRemoteSwiftPackageReference "ZLPhotoBrowser" */,
 				48A9315A2BCE6E6600936954 /* XCLocalSwiftPackageReference "../local-package/ECMASwift" */,
+				4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */,
 			);
 			productRefGroup = 48DF6B9A288D32C800D523C1 /* Products */;
 			projectDirPath = "";
@@ -875,6 +882,14 @@
 				kind = branch;
 			};
 		};
+		4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swhitty/FlyingFox.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.20.0;
+			};
+		};
 		483794AF2B973D0D0073A001 /* XCRemoteSwiftPackageReference "ZLPhotoBrowser" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/longitachi/ZLPhotoBrowser.git";
@@ -1108,6 +1123,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2BEEA85F288FACA5006095DC /* XCRemoteSwiftPackageReference "WKWebViewJavascriptBridge" */;
 			productName = WKWebViewJavascriptBridge;
+		};
+		4800EA082CF1C93300F49842 /* FlyingFox */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */;
+			productName = FlyingFox;
+		};
+		4800EA0A2CF1C93300F49842 /* FlyingSocks */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */;
+			productName = FlyingSocks;
 		};
 		483794B02B973D0D0073A001 /* ZLPhotoBrowser */ = {
 			isa = XCSwiftPackageProductDependency;

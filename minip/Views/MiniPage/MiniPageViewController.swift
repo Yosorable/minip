@@ -67,8 +67,19 @@ class MiniPageViewController: UIViewController {
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
         
-        let url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
-        webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
+        var url: URL
+        if app.webServerEnabled == true, let addr = MiniAppManager.shared.serverAddress {
+            if !page.starts(with: "/") {
+                page = "/" + page
+            }
+            url = URL(string: addr + "\(page)")!
+            logger.info("[webview] load \(url)")
+            let req = URLRequest(url: url)
+            webview.load(req)
+        } else {
+            url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
+            webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
+        }
         self.pageURL = url
         
         let showNav = app.navigationBarStatus == "display"
@@ -153,11 +164,15 @@ class MiniPageViewController: UIViewController {
     }
 
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
         setNavigationBarInTabbar()
         webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"viewDidAppear\"))")
     }
 
     override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
         webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"viewDidDisappear\"))")
     }
 
@@ -180,18 +195,28 @@ class MiniPageViewController: UIViewController {
 
     @objc
     func close() {
-        self.dismiss(animated: true)
-        MiniAppManager.shared.clearOpenedApp()
+        self.dismiss(animated: true, completion: {
+            if MiniAppManager.shared.openedApp?.landscape == true {
+                if #available(iOS 16.0, *) {
+                    let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                    windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .all))
+                } else {
+                    UIDevice.current.setValue(UIInterfaceOrientation.unknown.rawValue, forKey: "orientation")
+                }
+            }
+            MiniAppManager.shared.clearOpenedApp()
+        })
     }
     
     @objc
     func showAppDetail() {
         var closeFnc: (()->Void)?
-        if self.navigationController?.isNavigationBarHidden ?? true {
-            closeFnc = {
-                self.close()
-            }
-        }
+        // 暂时停用appdetail中的关闭按钮
+//        if self.navigationController?.isNavigationBarHidden ?? true {
+//            closeFnc = {
+//                self.close()
+//            }
+//        }
         
         self.presentPanModal(AppDetailViewController(appInfo: app, reloadPageFunc: {
             self.webview.reload()

@@ -35,7 +35,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
         _ = MWebViewPool.shared
         _ = MiniV2Egine.shared
         NotificationCenter.default.post(name: NSNotification.Name("kMainControllerInitSuccessNotiKey"), object: nil)
-
         return true
     }
 
@@ -78,5 +77,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
         }
 
         return false
+    }
+    
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        guard let serv = MiniAppManager.shared.server else {
+            logger.debug("[enter foreground] not create server")
+            return
+        }
+        guard let app = MiniAppManager.shared.openedApp else {
+            logger.debug("[enter foreground] no app opened")
+            return
+        }
+        
+        // fix bug: 横屏自动变成竖屏
+        if app.landscape == true {
+            if #available(iOS 16.0, *) {
+                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscape))
+            } else {
+                UIDevice.current.setValue(UIInterfaceOrientation.landscapeLeft.rawValue, forKey: "orientation")
+            }
+        }
+
+        Task {
+            if await serv.isListening {
+                print("[enter foreground] server is running")
+                return
+            }
+            print("[enter foreground] server not run, try to run")
+            try? await serv.run()
+        }
     }
 }

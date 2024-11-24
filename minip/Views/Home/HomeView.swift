@@ -8,6 +8,7 @@
 import SwiftUI
 import Kingfisher
 import Defaults
+import FlyingFox
 
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
@@ -195,38 +196,107 @@ struct AppListItemView: View {
                             return
                         }
                         let app = appInfo
-
-                        var vc: UINavigationController
                         
-                        if let tabs = app.tabs, tabs.count > 0 {
-                            let tabc = UITabBarController()
-
-                            var pages = [UIViewController]()
-                            for (idx, ele) in tabs.enumerated() {
-                                let page = MiniPageViewController(app: app, page: ele.path, title: ele.title)
-                                page.tabBarItem = UITabBarItem(title: ele.title, image: UIImage(systemName: ele.systemImage), tag: idx)
-                                pages.append(page)
+                        Task {
+                            var addr = ""
+                            if app.webServerEnabled == true {
+                                var server: HTTPServer
+                                if MiniAppManager.shared.server == nil {
+                                    server = HTTPServer(address: try! .inet(ip4: "127.0.0.1", port: 60008))
+                                    MiniAppManager.shared.server = server
+                                    let fileManager = FileManager.default
+                                    let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                                    
+                                    let dirHandler = DirectoryHTTPHandler(root: documentsURL)
+                                    await server.appendRoute("GET /*") { req in
+                                        var _req: HTTPRequest = req
+                                        guard let appName = MiniAppManager.shared.openedApp?.name else {
+                                            return HTTPResponse(statusCode: .notFound)
+                                        }
+                                        _req.path = "/\(appName)" + req.path
+                                        print(_req.path)
+                                        do {
+                                            return try await dirHandler.handleRequest(_req)
+                                        } catch {
+                                            return HTTPResponse(statusCode: .notFound)
+                                        }
+                                    }
+                                    
+                                    
+//                                    let dirHandler = DirectoryHTTPHandler(root: documentsURL.appendingPolyfill(path: "live2d-test"))
+//                                    await server.appendRoute("GET /*", to: dirHandler)
+                                    
+                                    await server.appendRoute("POST /closeApp") { _ in
+                                        DispatchQueue.main.async {
+                                            if let mvc = GetTopViewController() as? MiniPageViewController {
+                                                mvc.close()
+                                            }
+                                        }
+                                        return HTTPResponse(statusCode: .ok)
+                                    }
+                                } else {
+                                    server = MiniAppManager.shared.server!
+                                }
+                                
+                                Task {
+                                    try? await server.run()
+                                }
+                                try? await server.waitUntilListening()
+                                if let ipPort = await server.listeningAddress {
+                                    switch ipPort {
+                                    case .ip4(_, port: let port): addr = "http://127.0.0.1:\(port)"
+                                    case .ip6(_, port: let port): addr = "http://[::1]:\(port)"
+                                    case .unix(let unixAddr):
+                                        addr = "http://" + unixAddr
+                                    }
+                                    logger.info("[getAddress] \(addr)")
+                                    MiniAppManager.shared.serverAddress = addr
+                                }
                             }
-                            tabc.viewControllers = pages
-
-                            vc = UINavigationController(rootViewController: tabc)
-
-                            if let tc = app.tintColor {
-                                vc.navigationBar.tintColor = UIColor(hex: tc)
-                                tabc.tabBar.tintColor = UIColor(hex: tc)
+                            
+                            var vc: UINavigationController
+                            if let tabs = app.tabs, tabs.count > 0 {
+                                let tabc = UITabBarController()
+                                
+                                var pages = [UIViewController]()
+                                for (idx, ele) in tabs.enumerated() {
+                                    let page = MiniPageViewController(app: app, page: ele.path, title: ele.title)
+                                    page.tabBarItem = UITabBarItem(title: ele.title, image: UIImage(systemName: ele.systemImage), tag: idx)
+                                    pages.append(page)
+                                }
+                                tabc.viewControllers = pages
+                                
+                                vc = UINavigationController(rootViewController: tabc)
+                                
+                                if let tc = app.tintColor {
+                                    vc.navigationBar.tintColor = UIColor(hex: tc)
+                                    tabc.tabBar.tintColor = UIColor(hex: tc)
+                                }
+                            } else {
+                                vc = UINavigationController(rootViewController: MiniPageViewController(app: app))
                             }
-                        } else {
-                            vc = UINavigationController(rootViewController: MiniPageViewController(app: app))
+                            
+                            if app.colorScheme == "dark" {
+                                vc.overrideUserInterfaceStyle = .dark
+                            } else if app.colorScheme == "light" {
+                                vc.overrideUserInterfaceStyle = .light
+                            }
+                            vc.modalPresentationStyle = .fullScreen
+                            MiniAppManager.shared.openedApp = app
+                            
+                            if app.landscape == true {
+                                if #available(iOS 16.0, *) {
+                                    let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                                    windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscape))
+                                } else {
+                                    UIDevice.current.setValue(UIInterfaceOrientation.landscapeLeft.rawValue, forKey: "orientation")
+                                }
+                                try await Task.sleep(nanoseconds: 220_000_000)
+                            }
+                            
+                            GetTopViewController()?.present(vc, animated: true)
                         }
-
-                        if app.colorScheme == "dark" {
-                            vc.overrideUserInterfaceStyle = .dark
-                        } else if app.colorScheme == "light" {
-                            vc.overrideUserInterfaceStyle = .light
-                        }
-                        vc.modalPresentationStyle = .fullScreen
-                        MiniAppManager.shared.openedApp = app
-                        GetTopViewController()?.present(vc, animated: true)
+                        
                     } label: {
                         EmptyView()
                     }

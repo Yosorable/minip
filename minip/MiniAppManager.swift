@@ -8,6 +8,7 @@
 import Foundation
 import Defaults
 import UIKit
+import FlyingFox
 
 struct RouteParameter: Hashable, Codable {
     var path: String
@@ -21,6 +22,9 @@ class MiniAppManager {
     var appTmpStore: [String:String] = [String:String]()
     var openedApp: AppInfo? = nil
     var obseredData = [String: Set<Int>]() // data key: webview id
+    
+    var server: HTTPServer? = nil
+    var serverAddress: String? = nil
 
     func getAppInfos() -> [AppInfo] {
         var tmpApps: [AppInfo] = []
@@ -99,9 +103,7 @@ class MiniAppManager {
     
     func openMiniApp(app: AppInfo, rc: UIViewController? = nil, animated: Bool = true) {
         var vc: UINavigationController
-        
-        if app.webServerEnabled == true {
-        }
+
 
         if let tabs = app.tabs, tabs.count > 0 {
             let tabc = UITabBarController()

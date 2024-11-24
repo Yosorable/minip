@@ -7,6 +7,7 @@
 
 import Foundation
 import Defaults
+import FlyingFox
 
 class HomeViewModel: ObservableObject {
     @Published var apps: [AppInfo] = []
@@ -69,6 +70,8 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     
     // web server
     var webServerEnabled: Bool?
+    // orientation
+    var landscape: Bool?
     
     var id: String {
         return appId

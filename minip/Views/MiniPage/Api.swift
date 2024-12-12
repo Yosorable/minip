@@ -561,6 +561,87 @@ extension MiniPageViewController {
             self?.navigationController?.setNavigationBarHidden(false, animated: true)
         }
         
+        // sqlite
+        bridge.register(handlerName: "sqliteOpen") { [weak self] params, callback in
+            guard let path = params?["path"] as? String else {
+                callback?(false)
+                logger.error("[sqliteOpen] path error")
+                return
+            }
+            guard let self = self else {
+                callback?(false)
+                logger.error("[sqliteOpen] deinited")
+                return
+            }
+
+            let fileManager = FileManager.default
+            let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let appDirURL = documentsURL.appendingPolyfill(path: app.name)
+            let targetFileURL: URL = appDirURL.appendingPathComponent(path)
+            let key = targetFileURL.path
+            if MiniAppManager.shared.openedDatabase.keys.contains(key) {
+                callback?(key)
+                logger.info("[sqliteOpen] already opened")
+                return
+            }
+            
+            let db = SQLiteDatabase()
+            if !db.open(databasePath: key) {
+                callback?(false)
+                logger.error("[sqliteOpen] open or create db error at [\(key)]")
+                return
+            }
+            MiniAppManager.shared.openedDatabase[key] = db
+            logger.info("[sqliteOpen] open db at [\(key)]")
+            callback?(key)
+        }
+        
+        bridge.register(handlerName: "sqliteClose") { params, callback in
+            guard let path = params?["path"] as? String else {
+                callback?(false)
+                logger.error("[sqliteClose] path error")
+                return
+            }
+            let key = path
+            
+            if let db = MiniAppManager.shared.openedDatabase.removeValue(forKey: key) {
+                db.close()
+                callback?(true)
+                logger.info("[sqliteClose] close db at [\(key)]")
+                return
+            }
+            callback?(false)
+        }
+        
+        bridge.register(handlerName: "sqliteExecute") { params, callback in
+            guard let path = params?["path"] as? String else {
+                callback?(false)
+                logger.error("[sqliteExecute] path error")
+                return
+            }
+            let key = path
+            guard let sql = params?["sql"] as? String else {
+                callback?(false)
+                logger.error("[sqliteExecute] sql error")
+                return
+            }
+            guard let db = MiniAppManager.shared.openedDatabase[key] else {
+                callback?(false)
+                logger.error("[sqliteExecute] db not open at [\(key)]")
+                return
+            }
+            do {
+                let sqlRes = try db.executeQuery(sql: sql)
+                var res = [String:Any]()
+                res["code"] = 7
+                res["data"] = sqlRes
+                logger.info("[sqliteExecute] excute sql success at [\(key)]")
+                callback?(res)
+            } catch {
+                logger.error("[sqliteExecute] fail to excute sql at [\(key)]")
+            }
+        }
+        
         // 以下为测试api
         bridge.register(handlerName: "selectPhoto") { [weak self] (parameters, callback) in
             if self == nil {
@@ -598,6 +679,14 @@ extension MiniPageViewController {
                 callback?(false)
             }
             ps.showPhotoLibrary(sender: self!)
+        }
+        
+        bridge.register(handlerName: "ping") { (parameters, callback) in
+            var res = "pong"
+            if let data = parameters?["data"] as? String {
+                res += " " + data
+            }
+            callback?(res)
         }
     }
 }

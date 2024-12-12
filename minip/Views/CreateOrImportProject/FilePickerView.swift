@@ -46,18 +46,32 @@ struct FileImporterView: UIViewControllerRepresentable {
             }
             HUD.flash(.labeledProgress(title: nil, subtitle: "Loading"), delay: .infinity)
             let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            
+            // 解压缩包
             DispatchQueue.global().async {
-                if SSZipArchive.unzipFile(atPath: path, toDestination: docURL.path) {
+//                if SSZipArchive.unzipFile(atPath: path, toDestination: docURL.path) {
+//                    DispatchQueue.main.async { [self] in
+//                        HUD.flash(.labeledSuccess(title: nil, subtitle: "Success"), delay: 1)
+//                        self.parent.onSuccess?()
+//                    }
+//                } else {
+//                    DispatchQueue.main.async { [self] in
+//                        HUD.flash(.labeledError(title: nil, subtitle: "Uncompress error"), delay: 1)
+//                        self.parent.onSuccess?()
+//                    }
+//                }
+                
+                InstallMiniApp(pkgFile: urls.first!, onSuccess: {
                     DispatchQueue.main.async { [self] in
                         HUD.flash(.labeledSuccess(title: nil, subtitle: "Success"), delay: 1)
                         self.parent.onSuccess?()
                     }
-                } else {
+                }, onFailed: { err in
                     DispatchQueue.main.async { [self] in
-                        HUD.flash(.labeledError(title: nil, subtitle: "Uncompress error"), delay: 1)
+                        HUD.flash(.labeledError(title: nil, subtitle: err), delay: 1)
                         self.parent.onSuccess?()
                     }
-                }
+                })
             }
         }
 

@@ -64,3 +64,41 @@ class MinipRequest: NSObject, WKURLSchemeHandler {
         schemeHandlers.removeValue(forKey: urlSchemeTask.hash)
     }
 }
+
+
+class MinipURLSchemePing: NSObject, WKURLSchemeHandler {
+    var schemeHandlers: [Int:WKURLSchemeTask] = [:]
+
+    func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
+        schemeHandlers[urlSchemeTask.hash] = urlSchemeTask
+        // 获取原始请求
+        let request = urlSchemeTask.request
+
+        // 创建一个新的请求
+        
+        var res = "pong".data(using: .utf8)!
+        if let data = request.httpBody {
+            res.append(" ".data(using: .utf8)!)
+            res.append(data)
+        }
+        
+        if (self.schemeHandlers[urlSchemeTask.hash] != nil) {
+            let url = request.url!
+            let headers = [
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST",
+//                "Content-Type": "application/json"
+            ]
+            let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: headers)!
+            urlSchemeTask.didReceive(response)
+            urlSchemeTask.didReceive(res)
+            urlSchemeTask.didFinish()
+            self.schemeHandlers.removeValue(forKey: urlSchemeTask.hash)
+        }
+    }
+    
+    func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
+        // 处理停止请求的逻辑
+        schemeHandlers.removeValue(forKey: urlSchemeTask.hash)
+    }
+}

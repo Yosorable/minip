@@ -192,16 +192,27 @@ struct DownloadProjectView: View {
     }
     
     func unCompress(file: URL) {
-        let dest = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        if SSZipArchive.unzipFile(atPath: file.path, toDestination: dest.path) {
+//        // 解压缩包
+//        let dest = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+//        if SSZipArchive.unzipFile(atPath: file.path, toDestination: dest.path) {
+//            HUD.flash(.labeledSuccess(title: nil, subtitle: "Success"), delay: 0.5, completion: { _ in
+//                dismiss()
+//                onSuccess?()
+//            })
+//            return
+//        }
+//        alertMsg = "Unknow error"
+//        showAlert = true
+        
+        InstallMiniApp(pkgFile: file, onSuccess: {
             HUD.flash(.labeledSuccess(title: nil, subtitle: "Success"), delay: 0.5, completion: { _ in
                 dismiss()
                 onSuccess?()
             })
-            return
-        }
-        alertMsg = "Unknow error"
-        showAlert = true
+        }, onFailed: { err in
+            alertMsg = err
+            showAlert = true
+        })
     }
 }
 

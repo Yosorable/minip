@@ -234,6 +234,18 @@ struct AppListItemView: View {
                                         }
                                         return HTTPResponse(statusCode: .ok)
                                     }
+                                    
+                                    await server.appendRoute("POST /ping") { req in
+                                        var res = "pong".data(using: .utf8)!
+                                        do {
+                                            let data = try await req.bodyData
+                                            res.append(" ".data(using: .utf8)!)
+                                            res.append(data)
+                                        } catch {
+                                            
+                                        }
+                                        return HTTPResponse(statusCode: .ok, body: res)
+                                    }
                                 } else {
                                     server = MiniAppManager.shared.server!
                                 }

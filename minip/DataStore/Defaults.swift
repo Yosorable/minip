@@ -15,4 +15,7 @@ extension Defaults.Keys {
     
     // app info 缓存
     static let appInfoList = Key<[AppInfo]>("appInfoList", default: [AppInfo]())
+    
+    // wkwebview inspect
+    static let wkwebviewInspectable = Key<Bool>("wkwebviewInspectable", default: false)
 }

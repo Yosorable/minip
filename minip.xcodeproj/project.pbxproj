@@ -78,6 +78,7 @@
 		48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC32AF1F6C1001097CC /* MWebViewPool.swift */; };
 		482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */; };
 		483794B12B973D0D0073A001 /* ZLPhotoBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = 483794B02B973D0D0073A001 /* ZLPhotoBrowser */; };
+		483E061F2D08227500140F13 /* SQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483E061E2D08227500140F13 /* SQLite.swift */; };
 		484E082F2B96D6850018DCF0 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E082E2B96D6850018DCF0 /* Api.swift */; };
 		484E08312B96D6DD0018DCF0 /* AppDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */; };
 		485A75222BDCA43F00D887A4 /* logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485A75212BDCA43F00D887A4 /* logger.swift */; };
@@ -90,6 +91,7 @@
 		48A9311D2BCE67E700936954 /* MiniV2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A9311C2BCE67E700936954 /* MiniV2ViewController.swift */; };
 		48A9315C2BCE6E6600936954 /* ECMASwift in Frameworks */ = {isa = PBXBuildFile; productRef = 48A9315B2BCE6E6600936954 /* ECMASwift */; };
 		48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C385AC2A978520006BEE35 /* Polyfill.swift */; };
+		48D399872D06E88400BDD99F /* InstallMiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D399862D06E88400BDD99F /* InstallMiniApp.swift */; };
 		48DF6B9D288D32C800D523C1 /* minipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF6B9C288D32C800D523C1 /* minipApp.swift */; };
 		48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA0288D32CA00D523C1 /* Assets.xcassets */; };
 		48DF6BA4288D32CA00D523C1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */; };
@@ -124,6 +126,7 @@
 		48248BC12AF1F4D0001097CC /* MWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWebView.swift; sourceTree = "<group>"; };
 		48248BC32AF1F6C1001097CC /* MWebViewPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWebViewPool.swift; sourceTree = "<group>"; };
 		482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppManager.swift; sourceTree = "<group>"; };
+		483E061E2D08227500140F13 /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLite.swift; sourceTree = "<group>"; };
 		484E082E2B96D6850018DCF0 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
 		485A75212BDCA43F00D887A4 /* logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = logger.swift; sourceTree = "<group>"; };
@@ -134,6 +137,7 @@
 		48947C412BE2963E00EE9F82 /* MinipRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipRequest.swift; sourceTree = "<group>"; };
 		48A9311C2BCE67E700936954 /* MiniV2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniV2ViewController.swift; sourceTree = "<group>"; };
 		48C385AC2A978520006BEE35 /* Polyfill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polyfill.swift; sourceTree = "<group>"; };
+		48D399862D06E88400BDD99F /* InstallMiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallMiniApp.swift; sourceTree = "<group>"; };
 		48DF6B99288D32C800D523C1 /* minip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DF6B9C288D32C800D523C1 /* minipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = minipApp.swift; sourceTree = "<group>"; };
 		48DF6BA0288D32CA00D523C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -281,6 +285,8 @@
 				2B9B57992A56399B002E9D57 /* utils.swift */,
 				2B6D0E4B2A623D93005BFEB9 /* ImagePreviewViewController.swift */,
 				485A75212BDCA43F00D887A4 /* logger.swift */,
+				48D399862D06E88400BDD99F /* InstallMiniApp.swift */,
+				483E061E2D08227500140F13 /* SQLite.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -549,6 +555,7 @@
 				488B55482C61BC970042DADE /* TestView.swift in Sources */,
 				2B917FDA2A5D5AF7002DC170 /* JSCoreTestView.swift in Sources */,
 				2B8DC8BA2A5FAC4B002D5288 /* VSCodeDarkTheme.swift in Sources */,
+				483E061F2D08227500140F13 /* SQLite.swift in Sources */,
 				2B1B32CF2A61633000DA573F /* FilePickerView.swift in Sources */,
 				488DDFF52ABEEAEE00BAB280 /* AppDelegate.swift in Sources */,
 				2BC331B62A62D48C00441447 /* LMDB.swift in Sources */,
@@ -573,6 +580,7 @@
 				2B8F0B952A597C4800D9359F /* Color++.swift in Sources */,
 				2B6D0E4E2A624382005BFEB9 /* UIView++.swift in Sources */,
 				2BD9B1D92A5C426700036AFD /* EditorTheme.swift in Sources */,
+				48D399872D06E88400BDD99F /* InstallMiniApp.swift in Sources */,
 				485A75222BDCA43F00D887A4 /* logger.swift in Sources */,
 				2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */,
 				488DDFF72ABEF81400BAB280 /* String++.swift in Sources */,

@@ -81,5 +81,10 @@ extension MWebView: MWebViewPoolProtocol {
         }
         #warning("使用自定义的移除占位图")
         loadHTMLString("", baseURL: nil)
+        
+        
+        if #available(iOS 16.4, *) {
+            isInspectable = false
+        }
     }
 }

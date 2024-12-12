@@ -11,6 +11,7 @@ import PKHUD
 import Kingfisher
 import AVKit
 import Alamofire
+import Defaults
 
 struct SettingsView: View {
     var body: some View {
@@ -24,6 +25,9 @@ struct SettingsView: View {
             }
         }
     }
+    
+//    @State var wkwebviewInspectable = Defaults[.wkwebviewInspectable]
+    @Default(.wkwebviewInspectable) var wkwebviewInspectable
     
     var content: some View {
         List {
@@ -71,6 +75,10 @@ struct SettingsView: View {
             } label: {
                 Text("TestView")
             }
+            
+            Toggle(isOn: $wkwebviewInspectable, label: {
+                Text("Allow inspect wkwebview")
+            })
         }
         .navigationTitle(Text("Settings"))
     }

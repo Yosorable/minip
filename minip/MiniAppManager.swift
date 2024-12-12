@@ -25,6 +25,8 @@ class MiniAppManager {
     
     var server: HTTPServer? = nil
     var serverAddress: String? = nil
+    
+    var openedDatabase: [String:SQLiteDatabase] = [String:SQLiteDatabase]()
 
     func getAppInfos() -> [AppInfo] {
         var tmpApps: [AppInfo] = []
@@ -98,6 +100,12 @@ class MiniAppManager {
         self.obseredData.removeAll()
         if let appId = appId {
             KVStoreManager.shared.removeDB(dbName: appId)
+        }
+        if !self.openedDatabase.isEmpty {
+            self.openedDatabase.forEach { k, v in
+                v.close()
+            }
+            self.openedDatabase.removeAll()
         }
     }
     

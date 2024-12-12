@@ -16,6 +16,7 @@ import SafariServices
 import AVKit
 import AVFoundation
 import OSLog
+import Defaults
 
 class MiniPageViewController: UIViewController {
     var webview: MWebView!
@@ -52,6 +53,9 @@ class MiniPageViewController: UIViewController {
         super.viewDidLoad()
         
         webview = MWebViewPool.shared.getReusedWebView(forHolder: self)
+        if #available(iOS 16.4, *) {
+            webview.isInspectable = Defaults[.wkwebviewInspectable]
+        }
         bridge = WKWebViewJavascriptBridge(webView: webview)
         register()
 

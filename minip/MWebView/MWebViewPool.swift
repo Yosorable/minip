@@ -76,6 +76,7 @@ extension MWebViewPool {
         let cfg = MWebView.defaultConfiguration()
         cfg.processPool = self.processPool
         cfg.setURLSchemeHandler(MinipRequest(), forURLScheme: "miniprequest")
+        cfg.setURLSchemeHandler(MinipURLSchemePing(), forURLScheme: "minipping")
         
         let webview = MWebView(frame: CGRect.zero, configuration: cfg)
         webview.isOpaque = false
@@ -163,3 +164,4 @@ public extension MWebViewPool {
         lock.signal()
     }
 }
+

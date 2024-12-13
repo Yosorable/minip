@@ -688,5 +688,23 @@ extension MiniPageViewController {
             }
             callback?(res)
         }
+        
+        // install app
+        // todo: permission control !!!
+        bridge.register(handlerName: "installApp") { (parameters, callback) in
+            guard let url = parameters?["url"] as? String  else {
+                callback?(ApiUtils.makeFailedRes(msg: "Error format of url"))
+                return
+            }
+            DownloadMiniAppPackageToTmpFolder(url, onError: { err in
+                callback?(ApiUtils.makeFailedRes(msg: err.errorDescription))
+            }, onSuccess: { pkgURL in
+                InstallMiniApp(pkgFile: pkgURL, onSuccess: {
+                    callback?(ApiUtils.makeSuccessRes(msg: "Succeed"))
+                }, onFailed: {msg in
+                    callback?(ApiUtils.makeFailedRes(msg: msg))
+                })
+            })
+        }
     }
 }

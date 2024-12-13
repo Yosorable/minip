@@ -7,6 +7,7 @@
 
 import Foundation
 import ZipArchive
+import Alamofire
 
 // todo: 安装位置和数据存储位置分离？
 func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((String)->Void)? = nil) {
@@ -30,6 +31,34 @@ func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((Stri
     } catch {
         onFailed?(error.localizedDescription)
     }
+}
+
+// download miniapp package and save to tmp folder
+func DownloadMiniAppPackageToTmpFolder(_ downURL: String, onError: @escaping (ErrorMsg)->Void, onSuccess: @escaping (URL)->Void) {
+    guard let downurl = URL(string: downURL) else {
+        onError(ErrorMsg(errorDescription: "Error URL"))
+        return
+    }
+    
+    let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    let destination: (URL, HTTPURLResponse) -> (URL, DownloadRequest.Options) = { tmpURL, res in
+        let pathComponent = res.suggestedFilename ?? "default.zip"
+        
+        let finalPath = docURL.appendingPolyfill(path: "tmp").appendingPathComponent(pathComponent)
+        return (finalPath, [.createIntermediateDirectories, .removePreviousFile])
+    }
+    let downloadReq = AF.download(downurl, to: destination)
+        .response(completionHandler: { resp in
+            if let err = resp.error {
+                onError(ErrorMsg(errorDescription: err.localizedDescription))
+                return
+            } else if let tmpUrl = resp.fileURL {
+                onSuccess(tmpUrl)
+                return
+            }
+            onError(ErrorMsg(errorDescription: "Unknow error"))
+        })
+    
 }
 
 private func findAppJSON(in directory: URL) throws -> URL? {

@@ -62,13 +62,18 @@ private func findAppJSON(in directory: URL) throws -> URL? {
 }
 
 private func installByAppJSON(in appJSONURL: URL) throws {
+    let decoder = JSONDecoder()
     do {
         // 读取 app.json 文件内容
         let data = try Data(contentsOf: appJSONURL)
-        guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-              let name = json["name"] as? String else {
-            logger.error("app.json 文件格式无效或缺少 'name' 字段")
-            throw ErrorMsg(errorDescription: "app.json 文件格式无效或缺少 'name' 字段")
+//        guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+//              let name = json["name"] as? String else {
+//            logger.error("app.json 文件格式无效或缺少 'name' 字段")
+//            throw ErrorMsg(errorDescription: "app.json 文件格式无效或缺少 'name' 字段")
+//        }
+        guard let newAppInfo = try? decoder.decode(AppInfo.self, from: data) else {
+            logger.error("app.json 文件格式无效")
+            throw ErrorMsg(errorDescription: "app.json 文件格式无效")
         }
 
         // 确定 app.json 所在文件夹
@@ -76,7 +81,36 @@ private func installByAppJSON(in appJSONURL: URL) throws {
 
         // 确定目标路径：软件根目录 + name 字段
         let rootDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let targetFolderURL = rootDirectory.appendingPathComponent(name)
+        let targetFolderURL = rootDirectory.appendingPathComponent(newAppInfo.name)
+
+        
+        // 删除旧文件: 存在旧列表中但在新列表中不存在的（不对比md5，因为会直接覆盖）
+        if let filesList = newAppInfo.files {
+            var toDeleteFiles = [URL]()
+            var mp = [String:AppInfo.File]()
+            filesList.forEach { ele in
+                mp[ele.path] = ele
+            }
+            // 读取原列表
+            let oldAppJsonPath = targetFolderURL.appendingPathComponent("app.json")
+
+            if let oldAppJsonData = try? Data(contentsOf: oldAppJsonPath),
+               let oldJson = try? decoder.decode(AppInfo.self, from: oldAppJsonData),
+               let oldFilesList = oldJson.files {
+                oldFilesList.forEach { ele in
+                    if !mp.keys.contains(ele.path) {
+                        let tmpPath = targetFolderURL.appendingPolyfill(path: ele.path)
+                        toDeleteFiles.append(tmpPath)
+                    }
+                }
+                logger.debug("[install-miniapp] to delete files: \(toDeleteFiles)")
+                try toDeleteFiles.forEach { ele in
+                    try FileManager.default.removeItem(at: ele)
+                }
+            }
+                
+        }
+        
 
         // 移动文件夹
 //        try FileManager.default.moveItem(at: parentFolderURL, to: targetFolderURL)

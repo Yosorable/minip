@@ -73,7 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
                 return false
             }
 
-            MiniAppManager.shared.openMiniApp(app: app, rc: window?.rootViewController, animated: false)
+            MiniAppManager.shared.openMiniAppV2(app: app, rc: window?.rootViewController, animated: false)
         }
 
         return false

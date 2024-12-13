@@ -67,7 +67,7 @@ class MiniPageViewController: UIViewController {
             self.view.backgroundColor = .systemBackground
         }
 
-        
+
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
         
@@ -82,6 +82,7 @@ class MiniPageViewController: UIViewController {
             webview.load(req)
         } else {
             url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
+            logger.info("[webview] load \(url)")
             webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
         }
         self.pageURL = url

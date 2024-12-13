@@ -73,6 +73,9 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     // orientation
     var landscape: Bool?
     
+    // file list
+    var files: [File]?
+    
     var id: String {
         return appId
     }
@@ -90,5 +93,11 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
         var path: String
         var title: String
         var systemImage: String
+    }
+    
+    struct File: Hashable, Codable {
+        var name: String
+        var path: String
+        var hash: String
     }
 }

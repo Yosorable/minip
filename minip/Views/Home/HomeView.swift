@@ -335,39 +335,7 @@ struct AppListItemView: View {
                     if editMode?.wrappedValue == .active {
                         return
                     }
-                    let app = appInfo
-                    
-                    var vc: UINavigationController
-                    
-                    if let tabs = app.tabs, tabs.count > 0 {
-                        let tabc = UITabBarController()
-
-                        var pages = [UIViewController]()
-                        for (idx, ele) in tabs.enumerated() {
-                            let page = MiniPageViewController(app: app, page: ele.path, title: ele.title)
-                            page.tabBarItem = UITabBarItem(title: ele.title, image: UIImage(systemName: ele.systemImage), tag: idx)
-                            pages.append(page)
-                        }
-                        tabc.viewControllers = pages
-
-                        vc = UINavigationController(rootViewController: tabc)
-
-                        if let tc = app.tintColor {
-                            vc.navigationBar.tintColor = UIColor(hex: tc)
-                            tabc.tabBar.tintColor = UIColor(hex: tc)
-                        }
-                    } else {
-                        vc = UINavigationController(rootViewController: MiniPageViewController(app: app))
-                    }
-
-                    if app.colorScheme == "dark" {
-                        vc.overrideUserInterfaceStyle = .dark
-                    } else if app.colorScheme == "light" {
-                        vc.overrideUserInterfaceStyle = .light
-                    }
-                    vc.modalPresentationStyle = .fullScreen
-                    MiniAppManager.shared.openedApp = app
-                    GetTopViewController()?.present(vc, animated: true)
+                    MiniAppManager.shared.openMiniAppV2(app: appInfo)
                 }
             // todo: 滑动功能
         }

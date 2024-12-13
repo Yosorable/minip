@@ -7,6 +7,7 @@
 
 import Foundation
 
+// todo: wkwebviewjavascriptbridge conflict
 class ApiUtils {
     private init() {}
     

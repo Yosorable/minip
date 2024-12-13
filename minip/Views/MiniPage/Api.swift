@@ -697,12 +697,12 @@ extension MiniPageViewController {
                 return
             }
             DownloadMiniAppPackageToTmpFolder(url, onError: { err in
-                callback?(ApiUtils.makeFailedRes(msg: err.errorDescription))
+                callback?(false)
             }, onSuccess: { pkgURL in
                 InstallMiniApp(pkgFile: pkgURL, onSuccess: {
-                    callback?(ApiUtils.makeSuccessRes(msg: "Succeed"))
+                    callback?(true)
                 }, onFailed: {msg in
-                    callback?(ApiUtils.makeFailedRes(msg: msg))
+                    callback?(false)
                 })
             })
         }

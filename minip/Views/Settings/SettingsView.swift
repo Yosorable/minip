@@ -12,6 +12,7 @@ import Kingfisher
 import AVKit
 import Alamofire
 import Defaults
+import Hero
 
 struct SettingsView: View {
     var body: some View {
@@ -26,7 +27,7 @@ struct SettingsView: View {
         }
     }
     
-//    @State var wkwebviewInspectable = Defaults[.wkwebviewInspectable]
+    //    @State var wkwebviewInspectable = Defaults[.wkwebviewInspectable]
     @Default(.wkwebviewInspectable) var wkwebviewInspectable
     
     var content: some View {
@@ -53,7 +54,7 @@ struct SettingsView: View {
             } label: {
                 Text("clear wkwebview cache")
             }
-
+            
             Button {
                 KingfisherManager.shared.cache.clearDiskCache(completion: {
                     KingfisherManager.shared.cache.clearMemoryCache()
@@ -79,6 +80,16 @@ struct SettingsView: View {
             Toggle(isOn: $wkwebviewInspectable, label: {
                 Text("Allow inspect wkwebview")
             })
+            
+            Button {
+                let vc = HeroNextViewController()
+                vc.hero.isEnabled = true
+                vc.hero.modalAnimationType = .selectBy(presenting: .push(direction: .left), dismissing: .pull(direction: .right))
+                //                                vc.hero.modalAnimationType = .selectBy(presenting: .cover(direction: .up), dismissing: .uncover(direction: .down))
+                GetTopViewController()?.present(vc, animated: true)
+            } label: {
+                Text("Custom swipe back")
+            }
         }
         .navigationTitle(Text("Settings"))
     }

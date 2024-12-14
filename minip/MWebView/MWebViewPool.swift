@@ -77,6 +77,7 @@ extension MWebViewPool {
         cfg.processPool = self.processPool
         cfg.setURLSchemeHandler(MinipRequest(), forURLScheme: "miniprequest")
         cfg.setURLSchemeHandler(MinipURLSchemePing(), forURLScheme: "minipping")
+        cfg.userContentController.addScriptMessageHandler(MinipNativeInteraction(), contentWorld: .page, name: MinipNativeInteraction.name)
         
         let webview = MWebView(frame: CGRect.zero, configuration: cfg)
         webview.isOpaque = false

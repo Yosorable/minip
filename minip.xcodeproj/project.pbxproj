@@ -83,6 +83,10 @@
 		484E08312B96D6DD0018DCF0 /* AppDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */; };
 		485A75222BDCA43F00D887A4 /* logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485A75212BDCA43F00D887A4 /* logger.swift */; };
 		486819192D0C943200F4089D /* ApiUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486819182D0C943200F4089D /* ApiUtils.swift */; };
+		4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869E8072D0D345600E2B080 /* MinipNativeInteraction.swift */; };
+		4870C3E72D0D589E00F562E8 /* Hero in Frameworks */ = {isa = PBXBuildFile; productRef = 4870C3E62D0D589E00F562E8 /* Hero */; };
+		4870C3E92D0D58E800F562E8 /* HeroNextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4870C3E82D0D58E800F562E8 /* HeroNextViewController.swift */; };
+		4870C3EB2D0D6EDE00F562E8 /* MinipApiV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4870C3EA2D0D6EDE00F562E8 /* MinipApiV3.swift */; };
 		487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 487E38922A8FBA48003464D7 /* Kingfisher */; };
 		487E38972A8FBD29003464D7 /* Int++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487E38962A8FBD29003464D7 /* Int++.swift */; };
 		488B55482C61BC970042DADE /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488B55472C61BC970042DADE /* TestView.swift */; };
@@ -132,6 +136,9 @@
 		484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
 		485A75212BDCA43F00D887A4 /* logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = logger.swift; sourceTree = "<group>"; };
 		486819182D0C943200F4089D /* ApiUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiUtils.swift; sourceTree = "<group>"; };
+		4869E8072D0D345600E2B080 /* MinipNativeInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipNativeInteraction.swift; sourceTree = "<group>"; };
+		4870C3E82D0D58E800F562E8 /* HeroNextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroNextViewController.swift; sourceTree = "<group>"; };
+		4870C3EA2D0D6EDE00F562E8 /* MinipApiV3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipApiV3.swift; sourceTree = "<group>"; };
 		487E38962A8FBD29003464D7 /* Int++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int++.swift"; sourceTree = "<group>"; };
 		488B55472C61BC970042DADE /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -157,6 +164,7 @@
 				2B6D0E4A2A6223B4005BFEB9 /* PanModal in Frameworks */,
 				483794B12B973D0D0073A001 /* ZLPhotoBrowser in Frameworks */,
 				2B9DC1FC2A5E8E400061FAB8 /* TreeSitterTypeScriptQueries in Frameworks */,
+				4870C3E72D0D589E00F562E8 /* Hero in Frameworks */,
 				2B9DC1F02A5E8E400061FAB8 /* TreeSitterSCSSQueries in Frameworks */,
 				2B9DC1E02A5E8E400061FAB8 /* TreeSitterLanguagesCommon in Frameworks */,
 				4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */,
@@ -248,6 +256,7 @@
 				2B917FD92A5D5AF7002DC170 /* JSCoreTestView.swift */,
 				48A9311C2BCE67E700936954 /* MiniV2ViewController.swift */,
 				488B55472C61BC970042DADE /* TestView.swift */,
+				4870C3E82D0D58E800F562E8 /* HeroNextViewController.swift */,
 			);
 			path = TestViews;
 			sourceTree = "<group>";
@@ -368,6 +377,8 @@
 				48248BC12AF1F4D0001097CC /* MWebView.swift */,
 				48248BC32AF1F6C1001097CC /* MWebViewPool.swift */,
 				48947C412BE2963E00EE9F82 /* MinipRequest.swift */,
+				4869E8072D0D345600E2B080 /* MinipNativeInteraction.swift */,
+				4870C3EA2D0D6EDE00F562E8 /* MinipApiV3.swift */,
 			);
 			path = MWebView;
 			sourceTree = "<group>";
@@ -482,6 +493,7 @@
 				48A9315B2BCE6E6600936954 /* ECMASwift */,
 				4800EA082CF1C93300F49842 /* FlyingFox */,
 				4800EA0A2CF1C93300F49842 /* FlyingSocks */,
+				4870C3E62D0D589E00F562E8 /* Hero */,
 			);
 			productName = minip;
 			productReference = 48DF6B99288D32C800D523C1 /* minip.app */;
@@ -527,6 +539,7 @@
 				483794AF2B973D0D0073A001 /* XCRemoteSwiftPackageReference "ZLPhotoBrowser" */,
 				48A9315A2BCE6E6600936954 /* XCLocalSwiftPackageReference "../local-package/ECMASwift" */,
 				4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */,
+				4870C3E52D0D589E00F562E8 /* XCRemoteSwiftPackageReference "Hero" */,
 			);
 			productRefGroup = 48DF6B9A288D32C800D523C1 /* Products */;
 			projectDirPath = "";
@@ -555,6 +568,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B415A112A7E8FA900B3BF94 /* MiniPageViewController.swift in Sources */,
+				4870C3E92D0D58E800F562E8 /* HeroNextViewController.swift in Sources */,
 				488B55482C61BC970042DADE /* TestView.swift in Sources */,
 				2B917FDA2A5D5AF7002DC170 /* JSCoreTestView.swift in Sources */,
 				2B8DC8BA2A5FAC4B002D5288 /* VSCodeDarkTheme.swift in Sources */,
@@ -585,6 +599,7 @@
 				2BD9B1D92A5C426700036AFD /* EditorTheme.swift in Sources */,
 				48D399872D06E88400BDD99F /* DownloadAndInstallMiniApp.swift in Sources */,
 				485A75222BDCA43F00D887A4 /* logger.swift in Sources */,
+				4870C3EB2D0D6EDE00F562E8 /* MinipApiV3.swift in Sources */,
 				2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */,
 				488DDFF72ABEF81400BAB280 /* String++.swift in Sources */,
 				2B1B32D12A6163A100DA573F /* ImportProjectFromFileView.swift in Sources */,
@@ -594,6 +609,7 @@
 				48A9311D2BCE67E700936954 /* MiniV2ViewController.swift in Sources */,
 				484E082F2B96D6850018DCF0 /* Api.swift in Sources */,
 				2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */,
+				4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -910,6 +926,14 @@
 				version = 4.4.8;
 			};
 		};
+		4870C3E52D0D589E00F562E8 /* XCRemoteSwiftPackageReference "Hero" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HeroTransitions/Hero.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.3;
+			};
+		};
 		487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
@@ -1150,6 +1174,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 483794AF2B973D0D0073A001 /* XCRemoteSwiftPackageReference "ZLPhotoBrowser" */;
 			productName = ZLPhotoBrowser;
+		};
+		4870C3E62D0D589E00F562E8 /* Hero */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4870C3E52D0D589E00F562E8 /* XCRemoteSwiftPackageReference "Hero" */;
+			productName = Hero;
 		};
 		487E38922A8FBA48003464D7 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

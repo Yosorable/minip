@@ -122,22 +122,24 @@ class AppDetailViewController: UIViewController {
                     ScrollView(.horizontal) {
                         HStack(spacing: 10) {
                             Button {
-                                self.dismiss(animated: true, completion: nil)
-                                let vc = UIHostingController(
-                                    rootView:
-                                        VStack{
-                                            Text("App \"\(MiniAppManager.shared.openedApp?.name ?? "")\" Settings")
-                                            Button {
-                                                self.parentVC.navigationController?.popViewController(animated: true)
-                                            } label: {
-                                                Text("Back")
+                                self.dismiss(animated: true, completion: {
+                                    let vc = UIHostingController(
+                                        rootView:
+                                            VStack{
+                                                Text("App \"\(MiniAppManager.shared.openedApp?.name ?? "")\" Settings")
+                                                Button {
+                                                    self.parentVC.navigationController?.popViewController(animated: true)
+                                                } label: {
+                                                    Text("Back")
+                                                }
                                             }
-                                        }
-                                )
-                                vc.view.tintColor = self.view.tintColor
+                                    )
+                                    vc.view.tintColor = self.view.tintColor
 
-                                vc.title = "Settings"
-                                self.parentVC.navigationController?.pushViewController(vc, animated: true)
+                                    vc.title = "Settings"
+                                    self.parentVC.navigationController?.pushViewController(vc, animated: true)
+                                })
+                                
                                 
                             } label: {
                                 VStack {

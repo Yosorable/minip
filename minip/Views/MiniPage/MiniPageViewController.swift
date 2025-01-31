@@ -26,11 +26,14 @@ class MiniPageViewController: UIViewController {
     var _title: String?
     var pageURL: URL?
     var refreshControl: UIRefreshControl?
+    var initialTouchPoint: CGPoint = CGPoint(x: 0, y: 0)
+    var isRoot: Bool
     
-    init(app: AppInfo, page: String? = nil, title: String? = nil) {
+    init(app: AppInfo, page: String? = nil, title: String? = nil, isRoot: Bool = false) {
         self.app = app
         self.page = page ?? app.homepage
         _title = title ?? app.title
+        self.isRoot = isRoot
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -45,6 +48,9 @@ class MiniPageViewController: UIViewController {
             self.refreshControl = nil
             self.webview.tintColor = .systemBlue
             self.webview.scrollView.contentInsetAdjustmentBehavior = .always
+            
+            (self.navigationController as? PannableNavigationViewController)?.removePanGesture(vc: self)
+            
             MWebViewPool.shared.recycleReusedWebView(self.webview)
         }
     }
@@ -139,6 +145,13 @@ class MiniPageViewController: UIViewController {
         }
         setNavigationBarInTabbar()
         adaptColorScheme()
+        
+        if self.isRoot {
+            // todo: remove delay
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                (self.navigationController as? PannableNavigationViewController)?.addPanGesture(vc: self)
+            })
+        }
     }
     
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -167,11 +180,14 @@ class MiniPageViewController: UIViewController {
     func refreshWebView(_ sender: UIRefreshControl) {
         webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"refreshView\"))")
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.setNavigationBarInTabbar()
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        setNavigationBarInTabbar()
         webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"viewDidAppear\"))")
     }
 
@@ -201,6 +217,7 @@ class MiniPageViewController: UIViewController {
     @objc
     func close() {
         self.dismiss(animated: true, completion: {
+            logger.info("[MiniPageViewController] clear open app info & reset orientation")
             if MiniAppManager.shared.openedApp?.landscape == true {
                 if #available(iOS 16.0, *) {
                     let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene

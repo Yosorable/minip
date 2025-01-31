@@ -12,7 +12,7 @@ import Kingfisher
 import AVKit
 import Alamofire
 import Defaults
-import Hero
+import SafariServices
 
 struct SettingsView: View {
     var body: some View {
@@ -70,6 +70,12 @@ struct SettingsView: View {
                 Text("miniV2")
             }
             
+            Button {
+                MiniV2Egine.shared.launch(true)
+            } label: {
+                Text("miniv2 with webview runtime")
+            }
+            
             
             NavigationLink {
                 TestView()
@@ -82,13 +88,24 @@ struct SettingsView: View {
             })
             
             Button {
-                let vc = HeroNextViewController()
-                vc.hero.isEnabled = true
-                vc.hero.modalAnimationType = .selectBy(presenting: .push(direction: .left), dismissing: .pull(direction: .right))
-                //                                vc.hero.modalAnimationType = .selectBy(presenting: .cover(direction: .up), dismissing: .uncover(direction: .down))
+//                let vc = HeroNextViewController()
+//                vc.hero.isEnabled = true
+//                vc.hero.modalAnimationType = .selectBy(presenting: .push(direction: .left), dismissing: .pull(direction: .right))
+//                //                                vc.hero.modalAnimationType = .selectBy(presenting: .cover(direction: .up), dismissing: .uncover(direction: .down))
+//                GetTopViewController()?.present(vc, animated: true)
+                let vc = UINavigationController(rootViewController: SwipeModalViewController())
+                vc.modalPresentationStyle = .overCurrentContext
+                
                 GetTopViewController()?.present(vc, animated: true)
             } label: {
                 Text("Custom swipe back")
+            }
+            
+            Button {
+                let svc = SFSafariViewController(url: URL(string: "https://www.baidu.com")!)
+                GetTopViewController()?.present(svc, animated: true)
+            } label: {
+                Text("Safari View")
             }
         }
         .navigationTitle(Text("Settings"))

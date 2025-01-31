@@ -77,6 +77,7 @@
 		48248BC22AF1F4D0001097CC /* MWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC12AF1F4D0001097CC /* MWebView.swift */; };
 		48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC32AF1F6C1001097CC /* MWebViewPool.swift */; };
 		482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */; };
+		482F03BE2D4C528E00D6CA6B /* SwipeModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482F03BD2D4C528E00D6CA6B /* SwipeModalViewController.swift */; };
 		483794B12B973D0D0073A001 /* ZLPhotoBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = 483794B02B973D0D0073A001 /* ZLPhotoBrowser */; };
 		483E061F2D08227500140F13 /* SQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483E061E2D08227500140F13 /* SQLite.swift */; };
 		484E082F2B96D6850018DCF0 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E082E2B96D6850018DCF0 /* Api.swift */; };
@@ -84,8 +85,6 @@
 		485A75222BDCA43F00D887A4 /* logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485A75212BDCA43F00D887A4 /* logger.swift */; };
 		486819192D0C943200F4089D /* ApiUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486819182D0C943200F4089D /* ApiUtils.swift */; };
 		4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869E8072D0D345600E2B080 /* MinipNativeInteraction.swift */; };
-		4870C3E72D0D589E00F562E8 /* Hero in Frameworks */ = {isa = PBXBuildFile; productRef = 4870C3E62D0D589E00F562E8 /* Hero */; };
-		4870C3E92D0D58E800F562E8 /* HeroNextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4870C3E82D0D58E800F562E8 /* HeroNextViewController.swift */; };
 		4870C3EB2D0D6EDE00F562E8 /* MinipApiV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4870C3EA2D0D6EDE00F562E8 /* MinipApiV3.swift */; };
 		487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 487E38922A8FBA48003464D7 /* Kingfisher */; };
 		487E38972A8FBD29003464D7 /* Int++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487E38962A8FBD29003464D7 /* Int++.swift */; };
@@ -93,6 +92,7 @@
 		488DDFF52ABEEAEE00BAB280 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */; };
 		488DDFF72ABEF81400BAB280 /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488DDFF62ABEF81400BAB280 /* String++.swift */; };
 		48947C422BE2963E00EE9F82 /* MinipRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48947C412BE2963E00EE9F82 /* MinipRequest.swift */; };
+		48A57B572D4A1F06004AFC42 /* SwipeToDismiss.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A57B562D4A1F06004AFC42 /* SwipeToDismiss.swift */; };
 		48A9311D2BCE67E700936954 /* MiniV2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A9311C2BCE67E700936954 /* MiniV2ViewController.swift */; };
 		48A9315C2BCE6E6600936954 /* ECMASwift in Frameworks */ = {isa = PBXBuildFile; productRef = 48A9315B2BCE6E6600936954 /* ECMASwift */; };
 		48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C385AC2A978520006BEE35 /* Polyfill.swift */; };
@@ -100,6 +100,7 @@
 		48DF6B9D288D32C800D523C1 /* minipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF6B9C288D32C800D523C1 /* minipApp.swift */; };
 		48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA0288D32CA00D523C1 /* Assets.xcassets */; };
 		48DF6BA4288D32CA00D523C1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */; };
+		48E39B592D4D126400C4A3CD /* TabViewFIx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39B582D4D125D00C4A3CD /* TabViewFIx.swift */; };
 		48FB5A052B95CD9400D2DFCC /* UIViewController++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FB5A042B95CD9400D2DFCC /* UIViewController++.swift */; };
 /* End PBXBuildFile section */
 
@@ -131,19 +132,20 @@
 		48248BC12AF1F4D0001097CC /* MWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWebView.swift; sourceTree = "<group>"; };
 		48248BC32AF1F6C1001097CC /* MWebViewPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWebViewPool.swift; sourceTree = "<group>"; };
 		482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppManager.swift; sourceTree = "<group>"; };
+		482F03BD2D4C528E00D6CA6B /* SwipeModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeModalViewController.swift; sourceTree = "<group>"; };
 		483E061E2D08227500140F13 /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLite.swift; sourceTree = "<group>"; };
 		484E082E2B96D6850018DCF0 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
 		485A75212BDCA43F00D887A4 /* logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = logger.swift; sourceTree = "<group>"; };
 		486819182D0C943200F4089D /* ApiUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiUtils.swift; sourceTree = "<group>"; };
 		4869E8072D0D345600E2B080 /* MinipNativeInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipNativeInteraction.swift; sourceTree = "<group>"; };
-		4870C3E82D0D58E800F562E8 /* HeroNextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroNextViewController.swift; sourceTree = "<group>"; };
 		4870C3EA2D0D6EDE00F562E8 /* MinipApiV3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipApiV3.swift; sourceTree = "<group>"; };
 		487E38962A8FBD29003464D7 /* Int++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int++.swift"; sourceTree = "<group>"; };
 		488B55472C61BC970042DADE /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		488DDFF62ABEF81400BAB280 /* String++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String++.swift"; sourceTree = "<group>"; };
 		48947C412BE2963E00EE9F82 /* MinipRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipRequest.swift; sourceTree = "<group>"; };
+		48A57B562D4A1F06004AFC42 /* SwipeToDismiss.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeToDismiss.swift; sourceTree = "<group>"; };
 		48A9311C2BCE67E700936954 /* MiniV2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniV2ViewController.swift; sourceTree = "<group>"; };
 		48C385AC2A978520006BEE35 /* Polyfill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polyfill.swift; sourceTree = "<group>"; };
 		48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadAndInstallMiniApp.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 		48DF6B9C288D32C800D523C1 /* minipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = minipApp.swift; sourceTree = "<group>"; };
 		48DF6BA0288D32CA00D523C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		48E39B582D4D125D00C4A3CD /* TabViewFIx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewFIx.swift; sourceTree = "<group>"; };
 		48FB5A042B95CD9400D2DFCC /* UIViewController++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController++.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -164,7 +167,6 @@
 				2B6D0E4A2A6223B4005BFEB9 /* PanModal in Frameworks */,
 				483794B12B973D0D0073A001 /* ZLPhotoBrowser in Frameworks */,
 				2B9DC1FC2A5E8E400061FAB8 /* TreeSitterTypeScriptQueries in Frameworks */,
-				4870C3E72D0D589E00F562E8 /* Hero in Frameworks */,
 				2B9DC1F02A5E8E400061FAB8 /* TreeSitterSCSSQueries in Frameworks */,
 				2B9DC1E02A5E8E400061FAB8 /* TreeSitterLanguagesCommon in Frameworks */,
 				4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */,
@@ -252,11 +254,13 @@
 		2B8F0B812A5858D800D9359F /* TestViews */ = {
 			isa = PBXGroup;
 			children = (
+				48E39B582D4D125D00C4A3CD /* TabViewFIx.swift */,
 				2BD9B1AB2A5BD4E600036AFD /* CodeEditorV2.swift */,
 				2B917FD92A5D5AF7002DC170 /* JSCoreTestView.swift */,
 				48A9311C2BCE67E700936954 /* MiniV2ViewController.swift */,
 				488B55472C61BC970042DADE /* TestView.swift */,
-				4870C3E82D0D58E800F562E8 /* HeroNextViewController.swift */,
+				48A57B562D4A1F06004AFC42 /* SwipeToDismiss.swift */,
+				482F03BD2D4C528E00D6CA6B /* SwipeModalViewController.swift */,
 			);
 			path = TestViews;
 			sourceTree = "<group>";
@@ -493,7 +497,6 @@
 				48A9315B2BCE6E6600936954 /* ECMASwift */,
 				4800EA082CF1C93300F49842 /* FlyingFox */,
 				4800EA0A2CF1C93300F49842 /* FlyingSocks */,
-				4870C3E62D0D589E00F562E8 /* Hero */,
 			);
 			productName = minip;
 			productReference = 48DF6B99288D32C800D523C1 /* minip.app */;
@@ -539,7 +542,6 @@
 				483794AF2B973D0D0073A001 /* XCRemoteSwiftPackageReference "ZLPhotoBrowser" */,
 				48A9315A2BCE6E6600936954 /* XCLocalSwiftPackageReference "../local-package/ECMASwift" */,
 				4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */,
-				4870C3E52D0D589E00F562E8 /* XCRemoteSwiftPackageReference "Hero" */,
 			);
 			productRefGroup = 48DF6B9A288D32C800D523C1 /* Products */;
 			projectDirPath = "";
@@ -568,7 +570,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B415A112A7E8FA900B3BF94 /* MiniPageViewController.swift in Sources */,
-				4870C3E92D0D58E800F562E8 /* HeroNextViewController.swift in Sources */,
 				488B55482C61BC970042DADE /* TestView.swift in Sources */,
 				2B917FDA2A5D5AF7002DC170 /* JSCoreTestView.swift in Sources */,
 				2B8DC8BA2A5FAC4B002D5288 /* VSCodeDarkTheme.swift in Sources */,
@@ -578,6 +579,7 @@
 				2BC331B62A62D48C00441447 /* LMDB.swift in Sources */,
 				482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */,
 				2B6D0E4C2A623D93005BFEB9 /* ImagePreviewViewController.swift in Sources */,
+				482F03BE2D4C528E00D6CA6B /* SwipeModalViewController.swift in Sources */,
 				2B9CF4242A5A6A6100BD2C7F /* FileBrowserView.swift in Sources */,
 				2B1B32C72A6135D300DA573F /* DownloadProjectView.swift in Sources */,
 				2B9B579A2A56399B002E9D57 /* utils.swift in Sources */,
@@ -601,12 +603,14 @@
 				485A75222BDCA43F00D887A4 /* logger.swift in Sources */,
 				4870C3EB2D0D6EDE00F562E8 /* MinipApiV3.swift in Sources */,
 				2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */,
+				48A57B572D4A1F06004AFC42 /* SwipeToDismiss.swift in Sources */,
 				488DDFF72ABEF81400BAB280 /* String++.swift in Sources */,
 				2B1B32D12A6163A100DA573F /* ImportProjectFromFileView.swift in Sources */,
 				48DF6B9D288D32C800D523C1 /* minipApp.swift in Sources */,
 				2B1B32D72A61784600DA573F /* Defaults.swift in Sources */,
 				486819192D0C943200F4089D /* ApiUtils.swift in Sources */,
 				48A9311D2BCE67E700936954 /* MiniV2ViewController.swift in Sources */,
+				48E39B592D4D126400C4A3CD /* TabViewFIx.swift in Sources */,
 				484E082F2B96D6850018DCF0 /* Api.swift in Sources */,
 				2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */,
 				4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */,
@@ -891,7 +895,7 @@
 			repositoryURL = "https://github.com/simonbs/Runestone";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
+				minimumVersion = 0.5.1;
 			};
 		};
 		2BD9B1D42A5C09C700036AFD /* XCRemoteSwiftPackageReference "KeyboardToolbar" */ = {
@@ -924,14 +928,6 @@
 			requirement = {
 				kind = exactVersion;
 				version = 4.4.8;
-			};
-		};
-		4870C3E52D0D589E00F562E8 /* XCRemoteSwiftPackageReference "Hero" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/HeroTransitions/Hero.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.6.3;
 			};
 		};
 		487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
@@ -1174,11 +1170,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 483794AF2B973D0D0073A001 /* XCRemoteSwiftPackageReference "ZLPhotoBrowser" */;
 			productName = ZLPhotoBrowser;
-		};
-		4870C3E62D0D589E00F562E8 /* Hero */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4870C3E52D0D589E00F562E8 /* XCRemoteSwiftPackageReference "Hero" */;
-			productName = Hero;
 		};
 		487E38922A8FBA48003464D7 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

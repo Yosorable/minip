@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WebKit
 
 struct TestView: View {
     @State var num = 45
@@ -45,6 +46,97 @@ struct TestView: View {
                 } label: {
                     Text("run fib \(num)")
                 }.disabled(isRunning)
+                
+                Button {
+                    let vc = UINavigationController(rootViewController: TestViewController())
+                    vc.overrideUserInterfaceStyle = .light
+                    vc.modalPresentationStyle = .fullScreen
+                    GetTopViewController()?.present(vc, animated: true)
+                } label: {
+                    Text("test webview")
+                }
             }
         }
+}
+
+class TestViewController: UIViewController {
+    var webview: WKWebView!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        navigationItem.leftBarButtonItems = [
+            UIBarButtonItem(
+                image: UIImage(systemName: "chevron.left"), style: .done, target: self, action: #selector(back)
+            )
+        ]
+        
+        navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(
+                image: UIImage(systemName: "xmark"), style: .done, target: self, action: #selector(close)
+            ),
+            UIBarButtonItem(
+                image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(refresh)
+            )
+        ]
+        
+        self.webview = WKWebView()
+        self.title = "Test WebView"
+        self.view = webview
+        loadHtml()
+        
+    }
+    
+    @objc
+    func close() {
+        self.dismiss(animated: true)
+    }
+    
+    @objc
+    func refresh() {
+        loadHtml()
+    }
+    
+    @objc
+    func back() {
+        if webview.canGoBack {
+            webview.goBack()
+        }
+    }
+    
+    func loadHtml() {
+        webview.loadHTMLString("""
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0" />
+</head>
+<body>
+    <h1>Hello, world!</h1>
+    <div id="res"></div>
+    <button onclick="runFib()">run fibonacci 45</button>
+    <script>
+    const resDiv = document.querySelector("#res")
+    resDiv.innerText = window.location.href
+
+    
+window.onerror = function(e) {
+    resDiv.innerText = e.message
+}
+
+    function fib(n) {
+        if (n <= 2)
+            return 1
+        return fib(n - 1) + fib(n-2)
+    }
+
+    function runFib() {
+        const start = Date.now()
+        const res = fib(45)
+        const end = Date.now()
+        resDiv.innerText = `res: ${res}, cost: ${(end - start) / 1000}`
+    }
+    </script>
+</body>
+</html>
+""", baseURL: nil)
+    }
 }

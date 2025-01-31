@@ -1,5 +1,5 @@
 {
-  "originHash" : "d8cf48c592dcdb2861679902f62f8ed56388374da3c6b3dbfa503038de05c0b1",
+  "originHash" : "9ce8ea891d17c43c4d782f40efadcee28033ca5988124da0ad97e39f94c916b1",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -35,15 +35,6 @@
       "state" : {
         "revision" : "5653d61252af7f2dd8b43a77fb2a03678290f393",
         "version" : "0.20.0"
-      }
-    },
-    {
-      "identity" : "hero",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/HeroTransitions/Hero.git",
-      "state" : {
-        "revision" : "b307e2d48d582118e5101d04f5187c91595a1095",
-        "version" : "1.6.3"
       }
     },
     {
@@ -87,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/simonbs/Runestone",
       "state" : {
-        "revision" : "9a486543e8ea44a705359cd06069c8f86e18df1b",
-        "version" : "0.5.0"
+        "revision" : "1fad339aab99cf2136ce6bf8c32da3265b2e85e5",
+        "version" : "0.5.1"
       }
     },
     {

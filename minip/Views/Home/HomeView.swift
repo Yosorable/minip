@@ -269,23 +269,24 @@ struct AppListItemView: View {
                             var vc: UINavigationController
                             if let tabs = app.tabs, tabs.count > 0 {
                                 let tabc = UITabBarController()
+//                                let tabc = MainTabBarController()
                                 
                                 var pages = [UIViewController]()
                                 for (idx, ele) in tabs.enumerated() {
-                                    let page = MiniPageViewController(app: app, page: ele.path, title: ele.title)
+                                    let page = MiniPageViewController(app: app, page: ele.path, title: ele.title, isRoot: true)
                                     page.tabBarItem = UITabBarItem(title: ele.title, image: UIImage(systemName: ele.systemImage), tag: idx)
                                     pages.append(page)
                                 }
                                 tabc.viewControllers = pages
                                 
-                                vc = UINavigationController(rootViewController: tabc)
+                                vc = PannableNavigationViewController(rootViewController: tabc)
                                 
                                 if let tc = app.tintColor {
                                     vc.navigationBar.tintColor = UIColor(hex: tc)
                                     tabc.tabBar.tintColor = UIColor(hex: tc)
                                 }
                             } else {
-                                vc = UINavigationController(rootViewController: MiniPageViewController(app: app))
+                                vc = PannableNavigationViewController(rootViewController: MiniPageViewController(app: app, isRoot: true))
                             }
                             
                             if app.colorScheme == "dark" {
@@ -293,7 +294,7 @@ struct AppListItemView: View {
                             } else if app.colorScheme == "light" {
                                 vc.overrideUserInterfaceStyle = .light
                             }
-                            vc.modalPresentationStyle = .fullScreen
+                            vc.modalPresentationStyle = .overFullScreen
                             MiniAppManager.shared.openedApp = app
                             
                             if app.landscape == true {

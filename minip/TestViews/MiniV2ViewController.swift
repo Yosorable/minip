@@ -10,16 +10,24 @@ import WebKit
 import ECMASwift
 import JavaScriptCore
 
-class MiniV2Egine {
+class MiniV2Egine: NSObject, WKUIDelegate {
     static let shared = MiniV2Egine()
     
     var rootNavigationController: UINavigationController? = nil
     var Pages = [String: MiniV2ViewController]()
     var runtime: JSRuntime!
+    var webviewBackend: WKWebView!
+    
+    var useWKWebViewBackend: Bool = false
     
     
-    func launch() {
-        setRuntime()
+    func launch(_ wkwv: Bool = false) {
+        useWKWebViewBackend = wkwv
+        if useWKWebViewBackend {
+            setWKWebViewBackendRuntime()
+        } else {
+            setRuntime()
+        }
         let page = MiniV2ViewController()
         Pages[page.id] = page
         page.title = "MiniV2"
@@ -31,6 +39,93 @@ class MiniV2Egine {
     func clear() {
         Pages.removeAll()
         runtime = nil
+        if webviewBackend != nil {
+            webviewBackend.uiDelegate = nil
+            if #available(iOS 16.4, *) {
+                webviewBackend.isInspectable = false
+            }
+            webviewBackend = nil
+        }
+    }
+    
+    // webview backend interact
+    func webView(_ webView: WKWebView,
+                 runJavaScriptTextInputPanelWithPrompt prompt: String,
+                 defaultText: String?,
+                 initiatedByFrame frame: WKFrameInfo,
+                 completionHandler: @escaping (String?) -> Void) {
+        guard let dt = prompt.data(using: .utf8),
+        let jsonObj = try? JSONSerialization.jsonObject(with: dt) as? [String: Any],
+            let api = jsonObj["api"] as? String else {
+                completionHandler(nil)
+                return
+            }
+        if api == "callWebView" {
+            if let pageId = jsonObj["pageId"] as? String,
+               let script = jsonObj["script"] as? String,
+               let pg = self.Pages[pageId] {
+                pg.webview.evaluateJavaScript(script)
+            }
+            
+            completionHandler(nil)
+            return
+        } else if api == "newPage" {
+            let title = jsonObj["title"] as? String
+            let newPage = MiniV2ViewController()
+            newPage.title = title
+            self.Pages[newPage.id] = newPage
+            self.rootNavigationController?.pushViewController(newPage, animated: true)
+            
+            completionHandler(newPage.id)
+            return
+        } else if api == "_pushPage" {
+            if let pageId = jsonObj["pageId"] as? String {
+                let newPage = MiniV2ViewController()
+                newPage.id = pageId
+                newPage.title = jsonObj["title"] as? String
+                self.Pages[newPage.id] = newPage
+                self.rootNavigationController?.pushViewController(newPage, animated: true)
+                
+                completionHandler(nil)
+                return
+            }
+        }
+        completionHandler(nil)
+    }
+    
+    func setWKWebViewBackendRuntime() {
+        webviewBackend = MWebViewPool.shared.getReusedWebView(forHolder: self)
+        webviewBackend.uiDelegate = self
+        if #available(iOS 16.4, *) {
+            webviewBackend.isInspectable = true
+        }
+        let fileManager = FileManager.default
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        
+        let name = "react-custom-render"
+        let url = URL(string: documentsURL.absoluteString + "\(name)") ?? documentsURL.appendingPolyfill(path: "\(name)")
+        let entry = url.appendingPathComponent("index.js")
+        
+        let jsFunction = """
+function callWebView(pageId, script) {
+    prompt(JSON.stringify({api: "callWebView", pageId, script}))
+}
+
+function newPage(title) {
+    return prompt(JSON.stringify({api: "newPage", title}))
+}
+
+function _pushPage(pageId, title) {
+    prompt(JSON.stringify({api: "_pushPage", pageId, title}))
+}
+
+"""
+        
+        let userScript = WKUserScript(source: jsFunction, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+        webviewBackend.configuration.userContentController.addUserScript(userScript)
+        
+        webviewBackend.loadHTMLString("<script>\(cat(url:entry))</script>", baseURL: nil)
+        //webviewBackend.evaluateJavaScript(cat(url: entry))
     }
     
     func setRuntime() {
@@ -88,7 +183,6 @@ class MiniV2Egine {
 }
 
 class MiniV2ViewController: UIViewController {
-    var runtime = MiniV2Egine.shared.runtime
     var webview: WKWebView!
     var id = UUID().uuidString
     
@@ -176,7 +270,12 @@ extension MiniV2ViewController: WKUIDelegate {
             completionHandler(self.id)
             return
         }
-        runtime?.context.evaluateScript(prompt)
+        
+        if MiniV2Egine.shared.useWKWebViewBackend {
+            MiniV2Egine.shared.webviewBackend?.evaluateJavaScript(prompt)
+        } else {
+            MiniV2Egine.shared.runtime?.context.evaluateScript(prompt)
+        }
 //        print("call jscore")
         completionHandler(nil)
     }

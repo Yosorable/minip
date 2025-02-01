@@ -215,7 +215,3 @@ struct DownloadProjectView: View {
         })
     }
 }
-
-struct ErrorMsg: LocalizedError {
-    var errorDescription: String?
-}

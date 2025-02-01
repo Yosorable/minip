@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - disable ios18 tabview switch animation
 class MainTabBarController: UITabBarController {
     
     override var selectedIndex: Int {

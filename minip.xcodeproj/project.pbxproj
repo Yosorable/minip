@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -24,7 +24,6 @@
 		2B8F0B922A597C1E00D9359F /* PKHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 2B8F0B912A597C1E00D9359F /* PKHUD */; };
 		2B8F0B952A597C4800D9359F /* Color++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8F0B942A597C4800D9359F /* Color++.swift */; };
 		2B9003C32A81FEB400ED360D /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9003C22A81FEB400ED360D /* LazyView.swift */; };
-		2B917FDA2A5D5AF7002DC170 /* JSCoreTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B917FD92A5D5AF7002DC170 /* JSCoreTestView.swift */; };
 		2B9B579A2A56399B002E9D57 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9B57992A56399B002E9D57 /* utils.swift */; };
 		2B9CF4122A5A55A100BD2C7F /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9CF4112A5A55A100BD2C7F /* EditorView.swift */; };
 		2B9CF4242A5A6A6100BD2C7F /* FileBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9CF4232A5A6A6100BD2C7F /* FileBrowserView.swift */; };
@@ -75,7 +74,7 @@
 		48248BC22AF1F4D0001097CC /* MWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC12AF1F4D0001097CC /* MWebView.swift */; };
 		48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC32AF1F6C1001097CC /* MWebViewPool.swift */; };
 		482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */; };
-		482F03BE2D4C528E00D6CA6B /* SwipeModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482F03BD2D4C528E00D6CA6B /* SwipeModalViewController.swift */; };
+		482F03BE2D4C528E00D6CA6B /* PannableNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482F03BD2D4C528E00D6CA6B /* PannableNavigationViewController.swift */; };
 		483794B12B973D0D0073A001 /* ZLPhotoBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = 483794B02B973D0D0073A001 /* ZLPhotoBrowser */; };
 		483E061F2D08227500140F13 /* SQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483E061E2D08227500140F13 /* SQLite.swift */; };
 		484E082F2B96D6850018DCF0 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E082E2B96D6850018DCF0 /* Api.swift */; };
@@ -86,19 +85,14 @@
 		4870C3EB2D0D6EDE00F562E8 /* MinipApiV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4870C3EA2D0D6EDE00F562E8 /* MinipApiV3.swift */; };
 		487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 487E38922A8FBA48003464D7 /* Kingfisher */; };
 		487E38972A8FBD29003464D7 /* Int++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487E38962A8FBD29003464D7 /* Int++.swift */; };
-		488B55482C61BC970042DADE /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488B55472C61BC970042DADE /* TestView.swift */; };
 		488C2F392D4DECDE00892E3A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488C2F382D4DECD200892E3A /* HomeViewController.swift */; };
 		488C2F3B2D4DED9700892E3A /* AppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488C2F3A2D4DED9200892E3A /* AppCell.swift */; };
 		488C2F3E2D4E1BDC00892E3A /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488C2F3D2D4E1BD900892E3A /* AppInfo.swift */; };
 		488DDFF52ABEEAEE00BAB280 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */; };
 		488DDFF72ABEF81400BAB280 /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488DDFF62ABEF81400BAB280 /* String++.swift */; };
 		48947C422BE2963E00EE9F82 /* MinipRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48947C412BE2963E00EE9F82 /* MinipRequest.swift */; };
-		48A57B572D4A1F06004AFC42 /* SwipeToDismiss.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A57B562D4A1F06004AFC42 /* SwipeToDismiss.swift */; };
-		48A9311D2BCE67E700936954 /* MiniV2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48A9311C2BCE67E700936954 /* MiniV2ViewController.swift */; };
-		48A9315C2BCE6E6600936954 /* ECMASwift in Frameworks */ = {isa = PBXBuildFile; productRef = 48A9315B2BCE6E6600936954 /* ECMASwift */; };
 		48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C385AC2A978520006BEE35 /* Polyfill.swift */; };
 		48D399872D06E88400BDD99F /* DownloadAndInstallMiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */; };
-		48DF6B9D288D32C800D523C1 /* minipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DF6B9C288D32C800D523C1 /* minipApp.swift */; };
 		48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA0288D32CA00D523C1 /* Assets.xcassets */; };
 		48DF6BA4288D32CA00D523C1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */; };
 		48E39B592D4D126400C4A3CD /* TabViewFIx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39B582D4D125D00C4A3CD /* TabViewFIx.swift */; };
@@ -118,7 +112,6 @@
 		2B8DC8B92A5FAC4B002D5288 /* VSCodeDarkTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VSCodeDarkTheme.swift; sourceTree = "<group>"; };
 		2B8F0B942A597C4800D9359F /* Color++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color++.swift"; sourceTree = "<group>"; };
 		2B9003C22A81FEB400ED360D /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
-		2B917FD92A5D5AF7002DC170 /* JSCoreTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSCoreTestView.swift; sourceTree = "<group>"; };
 		2B9B57992A56399B002E9D57 /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		2B9B579E2A57D5B5002E9D57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2B9CF4112A5A55A100BD2C7F /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
@@ -130,7 +123,7 @@
 		48248BC12AF1F4D0001097CC /* MWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWebView.swift; sourceTree = "<group>"; };
 		48248BC32AF1F6C1001097CC /* MWebViewPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWebViewPool.swift; sourceTree = "<group>"; };
 		482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppManager.swift; sourceTree = "<group>"; };
-		482F03BD2D4C528E00D6CA6B /* SwipeModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeModalViewController.swift; sourceTree = "<group>"; };
+		482F03BD2D4C528E00D6CA6B /* PannableNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PannableNavigationViewController.swift; sourceTree = "<group>"; };
 		483E061E2D08227500140F13 /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLite.swift; sourceTree = "<group>"; };
 		484E082E2B96D6850018DCF0 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
@@ -139,19 +132,15 @@
 		4869E8072D0D345600E2B080 /* MinipNativeInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipNativeInteraction.swift; sourceTree = "<group>"; };
 		4870C3EA2D0D6EDE00F562E8 /* MinipApiV3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipApiV3.swift; sourceTree = "<group>"; };
 		487E38962A8FBD29003464D7 /* Int++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int++.swift"; sourceTree = "<group>"; };
-		488B55472C61BC970042DADE /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		488C2F382D4DECD200892E3A /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		488C2F3A2D4DED9200892E3A /* AppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCell.swift; sourceTree = "<group>"; };
 		488C2F3D2D4E1BD900892E3A /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
 		488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		488DDFF62ABEF81400BAB280 /* String++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String++.swift"; sourceTree = "<group>"; };
 		48947C412BE2963E00EE9F82 /* MinipRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipRequest.swift; sourceTree = "<group>"; };
-		48A57B562D4A1F06004AFC42 /* SwipeToDismiss.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeToDismiss.swift; sourceTree = "<group>"; };
-		48A9311C2BCE67E700936954 /* MiniV2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniV2ViewController.swift; sourceTree = "<group>"; };
 		48C385AC2A978520006BEE35 /* Polyfill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polyfill.swift; sourceTree = "<group>"; };
 		48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadAndInstallMiniApp.swift; sourceTree = "<group>"; };
 		48DF6B99288D32C800D523C1 /* minip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minip.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		48DF6B9C288D32C800D523C1 /* minipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = minipApp.swift; sourceTree = "<group>"; };
 		48DF6BA0288D32CA00D523C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		48E39B582D4D125D00C4A3CD /* TabViewFIx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewFIx.swift; sourceTree = "<group>"; };
@@ -174,7 +163,6 @@
 				2B9DC1EA2A5E8E400061FAB8 /* TreeSitterPythonQueries in Frameworks */,
 				2B9DC1E62A5E8E400061FAB8 /* TreeSitterMarkdownRunestone in Frameworks */,
 				487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */,
-				48A9315C2BCE6E6600936954 /* ECMASwift in Frameworks */,
 				2B1B32C42A61358B00DA573F /* Alamofire in Frameworks */,
 				2B9DC1D42A5E8E400061FAB8 /* TreeSitterJSON in Frameworks */,
 				2B9DC1D02A5E8E400061FAB8 /* TreeSitterHTMLQueries in Frameworks */,
@@ -244,20 +232,6 @@
 			path = DataStore;
 			sourceTree = "<group>";
 		};
-		2B8F0B812A5858D800D9359F /* TestViews */ = {
-			isa = PBXGroup;
-			children = (
-				48E39B582D4D125D00C4A3CD /* TabViewFIx.swift */,
-				2BD9B1AB2A5BD4E600036AFD /* CodeEditorV2.swift */,
-				2B917FD92A5D5AF7002DC170 /* JSCoreTestView.swift */,
-				48A9311C2BCE67E700936954 /* MiniV2ViewController.swift */,
-				488B55472C61BC970042DADE /* TestView.swift */,
-				48A57B562D4A1F06004AFC42 /* SwipeToDismiss.swift */,
-				482F03BD2D4C528E00D6CA6B /* SwipeModalViewController.swift */,
-			);
-			path = TestViews;
-			sourceTree = "<group>";
-		};
 		2B8F0B932A597C3700D9359F /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -276,6 +250,8 @@
 			isa = PBXGroup;
 			children = (
 				2B9003C22A81FEB400ED360D /* LazyView.swift */,
+				48E39B582D4D125D00C4A3CD /* TabViewFIx.swift */,
+				482F03BD2D4C528E00D6CA6B /* PannableNavigationViewController.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -304,6 +280,7 @@
 			children = (
 				2BD9B1D72A5C424F00036AFD /* Themes */,
 				2B9CF4112A5A55A100BD2C7F /* EditorView.swift */,
+				2BD9B1AB2A5BD4E600036AFD /* CodeEditorV2.swift */,
 			);
 			path = Editor;
 			sourceTree = "<group>";
@@ -311,6 +288,7 @@
 		2B9CF4222A5A6A2700BD2C7F /* FileBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				2B9CF4102A5A558D00BD2C7F /* Editor */,
 				2B9CF4232A5A6A6100BD2C7F /* FileBrowserView.swift */,
 			);
 			path = FileBrowser;
@@ -321,9 +299,7 @@
 			children = (
 				2B9003C12A81FE9B00ED360D /* Components */,
 				2B1B32CB2A615BAB00DA573F /* Settings */,
-				2B1B32C52A61359E00DA573F /* CreateOrImportProject */,
 				2B9CF4222A5A6A2700BD2C7F /* FileBrowser */,
-				2B9CF4102A5A558D00BD2C7F /* Editor */,
 				2BB9201D2A530ACF00D4BE3C /* MiniPage */,
 				2BB920182A52FEC200D4BE3C /* Home */,
 			);
@@ -333,6 +309,7 @@
 		2BB920182A52FEC200D4BE3C /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				2B1B32C52A61359E00DA573F /* CreateOrImportProject */,
 				488C2F382D4DECD200892E3A /* HomeViewController.swift */,
 				488C2F3A2D4DED9200892E3A /* AppCell.swift */,
 			);
@@ -411,12 +388,10 @@
 				48248BC02AF1F4B2001097CC /* MWebView */,
 				2B1B32D52A61783800DA573F /* DataStore */,
 				2B8F0B932A597C3700D9359F /* Extension */,
-				2B8F0B812A5858D800D9359F /* TestViews */,
 				2B9B57982A563986002E9D57 /* utils */,
 				488C2F3C2D4E1BC600892E3A /* Models */,
 				2BB920172A52FEB800D4BE3C /* Views */,
 				488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */,
-				48DF6B9C288D32C800D523C1 /* minipApp.swift */,
 				482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */,
 				48DF6BA0288D32CA00D523C1 /* Assets.xcassets */,
 				2B9B579E2A57D5B5002E9D57 /* Info.plist */,
@@ -495,7 +470,6 @@
 				2BC331B32A62D47700441447 /* SwiftLMDB */,
 				487E38922A8FBA48003464D7 /* Kingfisher */,
 				483794B02B973D0D0073A001 /* ZLPhotoBrowser */,
-				48A9315B2BCE6E6600936954 /* ECMASwift */,
 				4800EA082CF1C93300F49842 /* FlyingFox */,
 				4800EA0A2CF1C93300F49842 /* FlyingSocks */,
 			);
@@ -541,7 +515,6 @@
 				2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */,
 				487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				483794AF2B973D0D0073A001 /* XCRemoteSwiftPackageReference "ZLPhotoBrowser" */,
-				48A9315A2BCE6E6600936954 /* XCLocalSwiftPackageReference "../local-package/ECMASwift" */,
 				4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */,
 			);
 			productRefGroup = 48DF6B9A288D32C800D523C1 /* Products */;
@@ -571,8 +544,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B415A112A7E8FA900B3BF94 /* MiniPageViewController.swift in Sources */,
-				488B55482C61BC970042DADE /* TestView.swift in Sources */,
-				2B917FDA2A5D5AF7002DC170 /* JSCoreTestView.swift in Sources */,
 				2B8DC8BA2A5FAC4B002D5288 /* VSCodeDarkTheme.swift in Sources */,
 				483E061F2D08227500140F13 /* SQLite.swift in Sources */,
 				488C2F3E2D4E1BDC00892E3A /* AppInfo.swift in Sources */,
@@ -581,7 +552,7 @@
 				2BC331B62A62D48C00441447 /* LMDB.swift in Sources */,
 				482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */,
 				2B6D0E4C2A623D93005BFEB9 /* ImagePreviewViewController.swift in Sources */,
-				482F03BE2D4C528E00D6CA6B /* SwipeModalViewController.swift in Sources */,
+				482F03BE2D4C528E00D6CA6B /* PannableNavigationViewController.swift in Sources */,
 				2B9CF4242A5A6A6100BD2C7F /* FileBrowserView.swift in Sources */,
 				2B1B32C72A6135D300DA573F /* DownloadProjectView.swift in Sources */,
 				2B9B579A2A56399B002E9D57 /* utils.swift in Sources */,
@@ -605,13 +576,10 @@
 				485A75222BDCA43F00D887A4 /* logger.swift in Sources */,
 				4870C3EB2D0D6EDE00F562E8 /* MinipApiV3.swift in Sources */,
 				2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */,
-				48A57B572D4A1F06004AFC42 /* SwipeToDismiss.swift in Sources */,
 				488DDFF72ABEF81400BAB280 /* String++.swift in Sources */,
 				2B1B32D12A6163A100DA573F /* ImportProjectFromFileView.swift in Sources */,
-				48DF6B9D288D32C800D523C1 /* minipApp.swift in Sources */,
 				2B1B32D72A61784600DA573F /* Defaults.swift in Sources */,
 				486819192D0C943200F4089D /* ApiUtils.swift in Sources */,
-				48A9311D2BCE67E700936954 /* MiniV2ViewController.swift in Sources */,
 				48E39B592D4D126400C4A3CD /* TabViewFIx.swift in Sources */,
 				484E082F2B96D6850018DCF0 /* Api.swift in Sources */,
 				2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */,
@@ -827,13 +795,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCLocalSwiftPackageReference section */
-		48A9315A2BCE6E6600936954 /* XCLocalSwiftPackageReference "../local-package/ECMASwift" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "../local-package/ECMASwift";
-		};
-/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		2B1B32C22A61358B00DA573F /* XCRemoteSwiftPackageReference "Alamofire" */ = {
@@ -1177,10 +1138,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
-		};
-		48A9315B2BCE6E6600936954 /* ECMASwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ECMASwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

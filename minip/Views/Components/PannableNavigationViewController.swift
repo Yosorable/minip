@@ -7,44 +7,6 @@
 
 import UIKit
 
-class SwipeModalViewController : UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.navigationController?.overrideUserInterfaceStyle = .light
-        self.view.backgroundColor = .white
-        self.title = "SwipeModalViewController"
-        
-        let gesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(panGestureRecognizerHandler))
-        gesture.edges = .left
-        self.view.addGestureRecognizer(gesture)
-    }
-    
-    var initialTouchPoint: CGPoint = CGPoint(x: 0,y: 0)
-    @objc func panGestureRecognizerHandler(_ sender: UIScreenEdgePanGestureRecognizer) {
-        let touchPoint = sender.location(in: self.view?.window)
-        
-        if sender.state == UIGestureRecognizer.State.began {
-            initialTouchPoint = touchPoint
-            print(touchPoint)
-        } else if sender.state == UIGestureRecognizer.State.changed {
-            if touchPoint.x - initialTouchPoint.x > 0 {
-                let offset = max(0, touchPoint.x - initialTouchPoint.x)
-                let newY = (offset / self.view.frame.size.width) * self.view.frame.size.height
-                self.view.frame = CGRect(x: 0, y: newY, width: self.view.frame.size.width, height: self.view.frame.size.height)
-            }
-        } else if sender.state == UIGestureRecognizer.State.ended || sender.state == UIGestureRecognizer.State.cancelled {
-            if touchPoint.x - initialTouchPoint.x >= self.view.frame.size.width / 1.7 {
-                self.dismiss(animated: true, completion: nil)
-            } else {
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: self.view.frame.size.height)
-                })
-            }
-        }
-    }
-}
-
 class PannableNavigationViewController: UINavigationController {
     public var minimumScreenRatioToHide = 0.53 as CGFloat
     public var animationDuration = 0.2 as TimeInterval

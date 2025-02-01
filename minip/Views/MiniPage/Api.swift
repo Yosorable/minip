@@ -44,12 +44,14 @@ extension MiniPageViewController {
             let _newPage = parameters?["page"] as? String
             let title = parameters?["title"] as? String
             if let newPage = _newPage {
-                MiniAppManager.shared.path.append(RouteParameter(path: newPage, title: title))
                 guard let app = self?.app  else {
                     callback?(false)
                     return
                 }
                 let vc = MiniPageViewController(app: app, page: newPage, title: title)
+                if self?.isRoot == true {
+                    vc.hidesBottomBarWhenPushed = true
+                }
                 self?.navigationController?.pushViewController(vc, animated: true)
                 callback?(true)
                 return
@@ -328,7 +330,7 @@ extension MiniPageViewController {
                 try KVStoreManager.shared.getDB(dbName: appId)?.put(value: val, forKey: key)
                 callback?(true)
                 // observed data
-                if let wids = MiniAppManager.shared.obseredData[key], let that = self {
+                if let wids = MiniAppManager.shared.observedData[key], let that = self {
                     var waitToSendWIDs = [Int]()
                     wids.forEach {id in
                         if id == that.webview.id {
@@ -388,7 +390,7 @@ extension MiniPageViewController {
                 try KVStoreManager.shared.getDB(dbName: appId)?.deleteValue(forKey: key)
                 callback?(true)
                 
-                if let wids = MiniAppManager.shared.obseredData[key], let that = self {
+                if let wids = MiniAppManager.shared.observedData[key], let that = self {
                     var waitToSendWIDs = [Int]()
                     wids.forEach {id in
                         if id == that.webview.id {
@@ -523,10 +525,10 @@ extension MiniPageViewController {
                 }
                 
                 let wid = self?.webview.id!
-                if MiniAppManager.shared.obseredData[key] == nil {
-                    MiniAppManager.shared.obseredData[key] = Set<Int>()
+                if MiniAppManager.shared.observedData[key] == nil {
+                    MiniAppManager.shared.observedData[key] = Set<Int>()
                 }
-                MiniAppManager.shared.obseredData[key]?.insert(wid!)
+                MiniAppManager.shared.observedData[key]?.insert(wid!)
             } catch let error {
                 logger.error("[register] \(error.localizedDescription)")
                 callback?(nil)

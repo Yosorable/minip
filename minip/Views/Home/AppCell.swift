@@ -84,10 +84,12 @@ class AppCell: UITableViewCell {
             var iconURL: URL?
             if icon.starts(with: "http://") || icon.starts(with: "https://") {
                 iconURL = URL(string: icon)
+                appIconImageView.kf.setImage(with: iconURL)
             } else {
-                iconURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPolyfill(path: app.name).appendingPolyfill(path: icon)
+                if let iconURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPolyfill(path: app.name).appendingPolyfill(path: icon) {
+                    appIconImageView.image = UIImage(contentsOfFile: iconURL.path)
+                }
             }
-            appIconImageView.kf.setImage(with: iconURL)
         }
     }
 }

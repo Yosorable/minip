@@ -78,7 +78,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
                 return false
             }
 
-            MiniAppManager.shared.openMiniAppV2(app: app, rc: window?.rootViewController, animated: false)
+            guard let vc = window?.rootViewController else {
+                return false
+            }
+            MiniAppManager.shared.openMiniApp(parent: vc, appInfo: app)
+
+            return true
         }
 
         return false

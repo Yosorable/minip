@@ -18,4 +18,7 @@ extension Defaults.Keys {
     
     // wkwebview inspect
     static let wkwebviewInspectable = Key<Bool>("wkwebviewInspectable", default: false)
+    
+    // capsule button
+    static let useCapsuleButton = Key<Bool>("useCapsuleButton", default: false)
 }

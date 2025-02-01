@@ -28,13 +28,14 @@ struct SettingsView: View {
     }
 
     @Default(.wkwebviewInspectable) var wkwebviewInspectable
+    @Default(.useCapsuleButton) var useCapsuleButton
     
     var content: some View {
         List {
             Button {
                 PreviewImage(url: URL(string: "https://img0.baidu.com/it/u=1724694977,4042951717&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800"))
             } label: {
-                Text("preview")
+                Text("Image preview")
             }
             
             Button {
@@ -45,7 +46,7 @@ struct SettingsView: View {
                 }
                 
             } label: {
-                Text("clear wkwebview cache")
+                Text("Clear wkwebview cache")
             }
             
             Button {
@@ -54,11 +55,15 @@ struct SettingsView: View {
                     HUD.flash(.labeledSuccess(title: nil, subtitle: "clear success"), delay: 1)
                 })
             } label: {
-                Text("clear kf image cache")
+                Text("Clear kf image cache")
             }
             
             Toggle(isOn: $wkwebviewInspectable, label: {
                 Text("Allow inspect wkwebview")
+            })
+
+            Toggle(isOn: $useCapsuleButton, label: {
+                Text("Use capsule button")
             })
 
         }

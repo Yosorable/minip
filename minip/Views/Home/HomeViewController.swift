@@ -111,6 +111,11 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         })
         
         let settingsAction = UIContextualAction(style: .normal, title: "Settings", handler: { _,_, completion in
+            let ss = MiniAppSettingsViewController()
+            let vc = NavableNavigationViewController(rootViewController: ss)
+            vc.addPanGesture(vc: ss)
+            vc.modalPresentationStyle = .overFullScreen
+            self.present(vc, animated: true)
             completion(true)
         })
         

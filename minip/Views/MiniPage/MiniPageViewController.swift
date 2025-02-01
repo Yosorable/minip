@@ -49,8 +49,6 @@ class MiniPageViewController: UIViewController {
             self.webview.tintColor = .systemBlue
             self.webview.scrollView.contentInsetAdjustmentBehavior = .always
             
-            (self.navigationController as? PannableNavigationViewController)?.removePanGesture(vc: self)
-            
             MWebViewPool.shared.recycleReusedWebView(self.webview)
         }
     }
@@ -108,32 +106,41 @@ class MiniPageViewController: UIViewController {
         }
 
         if showNav {
-//            let closebtn = UIButton.init(type: .custom)
-//            closebtn.setImage(UIImage(named: "close-icon"), for: .normal)
-//            closebtn.addTarget(self, action: #selector(close), for: .touchUpInside)
-//            
-//            let morebtn = UIButton.init(type: .custom)
-//            morebtn.setImage(UIImage(named: "more-icon"), for: .normal)
-//            morebtn.addTarget(self, action: #selector(showAppDetail), for: .touchUpInside)
-//            
-//            let stackview = UIStackView.init(arrangedSubviews: [morebtn, closebtn])
-//            stackview.distribution = .equalSpacing
-//            stackview.axis = .horizontal
-//            stackview.alignment = .center
-//            stackview.spacing = 0
-//            
-//            let rightBarButton = UIBarButtonItem(customView: stackview)
-//            self.navigationItem.rightBarButtonItem = rightBarButton
-//            rightBarButton.tintColor = view.tintColor
-            
-            navigationItem.rightBarButtonItems = [
-                UIBarButtonItem(
-                    image: UIImage(systemName: "xmark"), style: .done, target: self, action: #selector(close)
-                ),
-                UIBarButtonItem(
-                    image: UIImage(systemName: "ellipsis"), style: .done, target: self, action: #selector(showAppDetail)
-                )
-            ]
+            if Defaults[.useCapsuleButton] {
+                let moreButton = UIButton(type: .system)
+                moreButton.setImage(UIImage(named: "capsule-more-icon"), for: .normal)
+                moreButton.addTarget(self, action: #selector(showAppDetail), for: .touchUpInside)
+
+                let closeButton = UIButton(type: .system)
+                closeButton.bounds = CGRect(x: 0, y: 0, width: 132 / 3, height: 96 / 3)
+                closeButton.setImage(UIImage(named: "capsule-close-icon"), for: .normal)
+                closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+
+                let stackView = UIStackView(arrangedSubviews: [moreButton, closeButton])
+                stackView.axis = .horizontal
+                stackView.spacing = 0
+                stackView.distribution = .equalSpacing
+                
+                NSLayoutConstraint.activate([
+                    moreButton.widthAnchor.constraint(equalToConstant: 132 / 3),
+                    moreButton.heightAnchor.constraint(equalToConstant: 96 / 3),
+                    closeButton.widthAnchor.constraint(equalToConstant: 132 / 3),
+                    closeButton.heightAnchor.constraint(equalToConstant: 96 / 3)
+                ])
+
+                navigationItem.rightBarButtonItems = [
+                    UIBarButtonItem(customView: stackView)
+                ]
+            } else {
+                navigationItem.rightBarButtonItems = [
+                    UIBarButtonItem(
+                        image: UIImage(systemName: "xmark"), style: .done, target: self, action: #selector(close)
+                    ),
+                    UIBarButtonItem(
+                        image: UIImage(systemName: "ellipsis"), style: .done, target: self, action: #selector(showAppDetail)
+                    )
+                ]
+            }
             
             if let nc = app.navigationBarColor {
                 navigationController?.navigationBar.barTintColor = UIColor(hex: nc)
@@ -143,14 +150,15 @@ class MiniPageViewController: UIViewController {
             navigationController?.setNavigationBarHidden(true, animated: false)
             webview.scrollView.contentInsetAdjustmentBehavior = .never
         }
-        setNavigationBarInTabbar()
+
         adaptColorScheme()
-        
-        if self.isRoot {
-            // todo: remove delay
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-                (self.navigationController as? PannableNavigationViewController)?.addPanGesture(vc: self)
-            })
+
+        if isRoot {
+            if let tabVC = tabBarController as? PannableTabBarController {
+                tabVC.addPanGesture(vc: self)
+            } else if let navVC = navigationController as? PannableNavigationViewController {
+                navVC.addPanGesture(vc: self)
+            }
         }
     }
     
@@ -180,10 +188,6 @@ class MiniPageViewController: UIViewController {
     func refreshWebView(_ sender: UIRefreshControl) {
         webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"refreshView\"))")
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.setNavigationBarInTabbar()
-    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -195,13 +199,6 @@ class MiniPageViewController: UIViewController {
         super.viewDidDisappear(animated)
         
         webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"viewDidDisappear\"))")
-    }
-
-    func setNavigationBarInTabbar() {
-        if let tabc = tabBarController {
-            tabc.title = title
-            tabc.navigationItem.rightBarButtonItems = navigationItem.rightBarButtonItems
-        }
     }
     
     func addRefreshControl() {

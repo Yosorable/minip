@@ -5,6 +5,7 @@
 //  Created by ByteDance on 2023/7/15.
 //
 
+import Foundation
 import SwiftLMDB
 
 class KVStoreManager {

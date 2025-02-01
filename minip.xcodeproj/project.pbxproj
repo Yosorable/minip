@@ -106,7 +106,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2B1B32BF2A60ED8F00DA573F /* minip-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "minip-Bridging-Header.h"; sourceTree = "<group>"; };
 		2B1B32C02A6132FD00DA573F /* FileManager++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager++.swift"; sourceTree = "<group>"; };
 		2B1B32C62A6135D300DA573F /* DownloadProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProjectView.swift; sourceTree = "<group>"; };
 		2B1B32CC2A615BB800DA573F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -218,14 +217,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2B1B32BA2A60E6EA00DA573F /* ObjC */ = {
-			isa = PBXGroup;
-			children = (
-				2B1B32BF2A60ED8F00DA573F /* minip-Bridging-Header.h */,
-			);
-			path = ObjC;
-			sourceTree = "<group>";
-		};
 		2B1B32C52A61359E00DA573F /* CreateOrImportProject */ = {
 			isa = PBXGroup;
 			children = (
@@ -419,7 +410,6 @@
 			children = (
 				48248BC02AF1F4B2001097CC /* MWebView */,
 				2B1B32D52A61783800DA573F /* DataStore */,
-				2B1B32BA2A60E6EA00DA573F /* ObjC */,
 				2B8F0B932A597C3700D9359F /* Extension */,
 				2B8F0B812A5858D800D9359F /* TestViews */,
 				2B9B57982A563986002E9D57 /* utils */,
@@ -775,7 +765,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "minip/ObjC/minip-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -809,7 +799,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "minip/ObjC/minip-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

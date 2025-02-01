@@ -107,6 +107,19 @@ struct SettingsView: View {
             } label: {
                 Text("Safari View")
             }
+            
+            Button {
+                let tabvc = UITabBarController()
+
+                tabvc.viewControllers = [
+                    UINavigationController(rootViewController: HomeViewController())
+                ]
+
+                tabvc.modalPresentationStyle = .fullScreen
+                GetTopViewController()?.present(tabvc, animated: true)
+            } label: {
+                Text("UIKit app")
+            }
         }
         .navigationTitle(Text("Settings"))
     }

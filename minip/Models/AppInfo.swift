@@ -1,50 +1,11 @@
 //
-//  HomeViewController.swift
+//  AppInfo.swift
 //  minip
 //
-//  Created by ByteDance on 2023/7/3.
+//  Created by LZY on 2025/2/1.
 //
 
-import Foundation
 import Defaults
-import FlyingFox
-
-class HomeViewModel: ObservableObject {
-    @Published var apps: [AppInfo] = []
-    
-    @Published var selectedApp: AppInfo?
-    @Published var deleteApp: AppInfo?
-    @Published var showDeleteAlert = false
-    
-    init() {
-        Task {
-            loadAppInfos()
-        }
-    }
-
-    func loadAppInfos() {
-        let tmpApps = MiniAppManager.shared.getAppInfos()
-        DispatchQueue.main.async {
-            self.apps = tmpApps
-        }
-    }
-    
-    func getAppIconURL(appId: String) -> URL? {
-        for ele in apps {
-            if ele.id != appId {
-                continue
-            }
-            guard let icon = ele.icon else {
-                return nil
-            }
-            if icon.starts(with: "http://") || icon.starts(with: "https://") {
-                return URL(string: icon)
-            }
-            return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPolyfill(path: ele.name).appendingPolyfill(path: icon)
-        }
-        return nil
-    }
-}
 
 struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     var name: String
@@ -101,3 +62,4 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
         var hash: String
     }
 }
+

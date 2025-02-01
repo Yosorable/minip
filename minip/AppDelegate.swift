@@ -17,20 +17,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let window = UIWindow()
         self.window = window
-        window.rootViewController = UIHostingController(rootView: TabView {
-            HomeView()
-                .tabItem {
-                    Label("Projects", systemImage: "shippingbox")
-                }
-            FileBrowserView()
-                .tabItem {
-                    Label("Files", systemImage: "folder")
-                }
-            SettingsView()
-                .tabItem {
-                    Label("Settings", systemImage: "gear")
-                }
-        })
+        let mainVC = UITabBarController()
+        mainVC.viewControllers = [
+            {
+                let vc = UINavigationController(rootViewController: HomeViewController())
+                vc.tabBarItem = UITabBarItem(title: "Projects", image: UIImage(systemName: "shippingbox.fill"), tag: 1)
+                return vc
+            }(),
+            {
+                let vc = UIHostingController(rootView: FileBrowserView())
+                vc.tabBarItem = UITabBarItem(title: "Files", image: UIImage(systemName: "folder.fill"), tag: 1)
+                return vc
+            }(),
+            {
+                let vc = UIHostingController(rootView: SettingsView())
+                vc.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gear"), tag: 2)
+                return vc
+            }(),
+        ]
+        
+        window.rootViewController = mainVC
         window.makeKeyAndVisible()
         _ = MWebViewPool.shared
         _ = MiniV2Egine.shared

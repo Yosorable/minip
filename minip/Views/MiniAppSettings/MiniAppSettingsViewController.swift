@@ -23,12 +23,10 @@ class MiniAppSettingsViewController: UIViewController {
                 }
             }
         })
-                
-        // 添加 SwiftUI 视图为子视图
+
         addChild(hostingController)
         view.addSubview(hostingController.view)
-        
-        // 设置约束，使 SwiftUI 视图适应 UIViewController
+
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),

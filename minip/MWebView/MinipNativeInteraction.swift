@@ -33,8 +33,6 @@ class MinipNativeInteraction: NSObject, WKScriptMessageHandlerWithReply {
         
         let wid = (message.webView as? MWebView)?.id ?? -1
         logger.debug("[minip-api-v3] call api [\(api.rawValue)] from [webview:\(wid == -1 ? "unknown" : "\(wid)")] with [\(body.count < 1000 ? body : "data length: \(body.count)")]")
-
-        
         switch api {
         case .ping:
             var res = InteropUtils.succeed()

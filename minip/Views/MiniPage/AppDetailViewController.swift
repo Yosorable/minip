@@ -123,29 +123,13 @@ class AppDetailViewController: UIViewController {
                         HStack(spacing: 10) {
                             Button {
                                 self.dismiss(animated: true, completion: {
-//                                    let vc = UIHostingController(
-//                                        rootView:
-//                                            VStack{
-//                                                Text("App \"\(MiniAppManager.shared.openedApp?.name ?? "")\" Settings")
-//                                                Button {
-//                                                    self.parentVC.navigationController?.popViewController(animated: true)
-//                                                } label: {
-//                                                    Text("Back")
-//                                                }
-//                                            }
-//                                    )
-//                                    vc.view.tintColor = self.view.tintColor
-//
-//                                    vc.title = "Settings"
-//                                    self.parentVC.navigationController?.pushViewController(vc, animated: true)
-                                    
-                                    let ss = MiniAppSettingsViewController()
+                                    let ss = MiniAppSettingsViewController(style: .insetGrouped)
                                     let vc = NavableNavigationViewController(rootViewController: ss)
+                                    vc.overrideUserInterfaceStyle = self.overrideUserInterfaceStyle
                                     vc.addPanGesture(vc: ss)
                                     vc.modalPresentationStyle = .overFullScreen
                                     self.parentVC.present(vc, animated: true)
                                 })
-                                
                                 
                             } label: {
                                 VStack {

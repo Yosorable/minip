@@ -10,7 +10,6 @@ import SafariServices
 import AVFoundation
 import AVKit
 import PKHUD
-import ZLPhotoBrowser
 import SwiftUI
 import LocalAuthentication
 
@@ -645,44 +644,6 @@ extension MiniPageViewController {
         }
         
         // 以下为测试api
-        bridge.register(handlerName: "selectPhoto") { [weak self] (parameters, callback) in
-            if self == nil {
-                callback?(false)
-                return
-            }
-            let ps = ZLPhotoPreviewSheet()
-            let config = ZLPhotoConfiguration.default()
-            config.allowTakePhotoInLibrary = parameters?[""] as? Bool ?? true
-            config.allowSelectVideo = parameters?[""] as? Bool ?? false
-            config.allowSelectImage = parameters?[""] as? Bool ?? true
-            config.allowSelectOriginal = parameters?[""] as? Bool ?? false
-            config.maxSelectCount = parameters?[""] as? Int ?? 1
-            
-            ps.selectImageBlock = { results, isOriginal in
-                guard !results.isEmpty else {
-                    callback?(false)
-                    return
-                }
-                let assets = results
-                let asset = assets[0].asset
-                if asset.mediaType == .image, let imgData = assets[0].image.pngData() {
-                    var images: [UIImage] = []
-                    for ele in assets {
-                        images.append(ele.image)
-                    }
-                    
-                    let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                    let path = docURL.appendingPolyfill(path: "tmp").appendingPathComponent(UUID().uuidString, conformingTo: .png)
-
-                    try? imgData.write(to: path)
-                    callback?([path.absoluteString])
-                    return
-                }
-                callback?(false)
-            }
-            ps.showPhotoLibrary(sender: self!)
-        }
-        
         bridge.register(handlerName: "ping") { (parameters, callback) in
             var res = "pong"
             if let data = parameters?["data"] as? String {

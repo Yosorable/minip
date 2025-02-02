@@ -75,7 +75,6 @@
 		48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC32AF1F6C1001097CC /* MWebViewPool.swift */; };
 		482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */; };
 		482F03BE2D4C528E00D6CA6B /* PannableNavAndTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482F03BD2D4C528E00D6CA6B /* PannableNavAndTab.swift */; };
-		483794B12B973D0D0073A001 /* ZLPhotoBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = 483794B02B973D0D0073A001 /* ZLPhotoBrowser */; };
 		483E061F2D08227500140F13 /* SQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483E061E2D08227500140F13 /* SQLite.swift */; };
 		484E082F2B96D6850018DCF0 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E082E2B96D6850018DCF0 /* Api.swift */; };
 		484E08312B96D6DD0018DCF0 /* AppDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */; };
@@ -161,7 +160,6 @@
 				2B9DC1E22A5E8E400061FAB8 /* TreeSitterMarkdown in Frameworks */,
 				2B9DC1D22A5E8E400061FAB8 /* TreeSitterHTMLRunestone in Frameworks */,
 				2B6D0E4A2A6223B4005BFEB9 /* PanModal in Frameworks */,
-				483794B12B973D0D0073A001 /* ZLPhotoBrowser in Frameworks */,
 				2B9DC1FC2A5E8E400061FAB8 /* TreeSitterTypeScriptQueries in Frameworks */,
 				2B9DC1F02A5E8E400061FAB8 /* TreeSitterSCSSQueries in Frameworks */,
 				2B9DC1E02A5E8E400061FAB8 /* TreeSitterLanguagesCommon in Frameworks */,
@@ -486,7 +484,6 @@
 				2B6D0E492A6223B4005BFEB9 /* PanModal */,
 				2BC331B32A62D47700441447 /* SwiftLMDB */,
 				487E38922A8FBA48003464D7 /* Kingfisher */,
-				483794B02B973D0D0073A001 /* ZLPhotoBrowser */,
 				4800EA082CF1C93300F49842 /* FlyingFox */,
 				4800EA0A2CF1C93300F49842 /* FlyingSocks */,
 			);
@@ -531,7 +528,6 @@
 				2B6D0E482A6223B4005BFEB9 /* XCRemoteSwiftPackageReference "PanModal" */,
 				2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */,
 				487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				483794AF2B973D0D0073A001 /* XCRemoteSwiftPackageReference "ZLPhotoBrowser" */,
 				4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */,
 			);
 			productRefGroup = 48DF6B9A288D32C800D523C1 /* Products */;
@@ -905,14 +901,6 @@
 				minimumVersion = 0.20.0;
 			};
 		};
-		483794AF2B973D0D0073A001 /* XCRemoteSwiftPackageReference "ZLPhotoBrowser" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/longitachi/ZLPhotoBrowser.git";
-			requirement = {
-				kind = exactVersion;
-				version = 4.4.8;
-			};
-		};
 		487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
@@ -1148,11 +1136,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */;
 			productName = FlyingSocks;
-		};
-		483794B02B973D0D0073A001 /* ZLPhotoBrowser */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 483794AF2B973D0D0073A001 /* XCRemoteSwiftPackageReference "ZLPhotoBrowser" */;
-			productName = ZLPhotoBrowser;
 		};
 		487E38922A8FBA48003464D7 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

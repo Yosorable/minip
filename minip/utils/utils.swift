@@ -10,7 +10,6 @@ import PKHUD
 import UIKit
 import AudioToolbox
 import os.log
-import ZLPhotoBrowser
 
 func WriteToFile(data: Data, fileName: String) -> Bool {
     // get path of directory
@@ -210,7 +209,7 @@ func PreviewImage(url: URL? = nil) {
     
     
     let vc = ImagePreviewViewController(imageURL: url)
-    vc.modalPresentationStyle = .overCurrentContext
+    vc.modalPresentationStyle = .overFullScreen
     vc.modalTransitionStyle = .crossDissolve
 
     if let tabc = tvc?.navigationController {

@@ -134,9 +134,8 @@ extension NavTransitionDelegate:  UIViewControllerAnimatedTransitioning {
                            delay: 0.0,
                            options: .transitionCrossDissolve,
                            animations: {
-                fromVC.view.alpha = 0.5
                 toVC.view.frame = finalFrameForVC
-                fromVC.view.transform = CGAffineTransform(translationX: -UIScreen.main.bounds.size.width / 2, y: 0)
+                fromVC.view.transform = CGAffineTransform(translationX: -UIScreen.main.bounds.size.width / 3, y: 0)
             }, completion: { _ in
                 transitionContext.completeTransition(true)
             })
@@ -148,10 +147,9 @@ extension NavTransitionDelegate:  UIViewControllerAnimatedTransitioning {
             // Additional ways to animate, Spring velocity & damping
             UIView.animate(withDuration: self.transition.dismissDuration,
                            delay: 0.0,
-                           options: .curveLinear,
+                           options: self.interactiveTransition.hasStarted ? .curveLinear : .transitionCrossDissolve,
                            animations: {
                 fromVC.view.frame = finalFrame
-                toVC.view.alpha = 1.0
                 toVC.view.transform = .identity
             },
                            completion: { _ in

@@ -28,9 +28,6 @@ public class MWebView: WKWebView {
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
         config.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
         config.allowsInlineMediaPlayback = true
-//        if #available(iOS 14.5, *) {
-//            config.preferences.isTextInteractionEnabled = false
-//        }
 
         return config
     }

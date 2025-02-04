@@ -83,19 +83,19 @@ class MinipNativeInteraction: NSObject, WKScriptMessageHandlerWithReply {
     
     class InteropUtils {
         static func succeed(msg _msg: String? = nil) -> Response<String> {
-            Response<String>(code: 7, msg: _msg)
-        }
-        
-        static func succeedWithData<T: Codable>(data _data: T, msg _msg: String? = nil) -> Response<T> {
-            Response(code: 7, msg: _msg, data: _data)
-        }
-        
-        static func fail(msg _msg: String? = nil) -> Response<String> {
             Response<String>(code: 0, msg: _msg)
         }
         
-        static func failWithData<T: Codable>(data _data: T, msg _msg: String? = nil) -> Response<T> {
+        static func succeedWithData<T: Codable>(data _data: T, msg _msg: String? = nil) -> Response<T> {
             Response(code: 0, msg: _msg, data: _data)
+        }
+        
+        static func fail(msg _msg: String? = nil) -> Response<String> {
+            Response<String>(code: 7, msg: _msg)
+        }
+        
+        static func failWithData<T: Codable>(data _data: T, msg _msg: String? = nil) -> Response<T> {
+            Response(code: 7, msg: _msg, data: _data)
         }
     }
 }

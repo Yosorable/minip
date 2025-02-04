@@ -62,7 +62,7 @@ class MiniPageViewController: UIViewController {
         }
         bridge = WKWebViewJavascriptBridge(webView: webview)
         register()
-
+        
         self.view = webview
         
         if let bc = app.backgroundColor {
@@ -70,8 +70,8 @@ class MiniPageViewController: UIViewController {
         } else {
             self.view.backgroundColor = .systemBackground
         }
-
-
+        
+        
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
         
@@ -152,7 +152,7 @@ class MiniPageViewController: UIViewController {
 
         adaptColorScheme()
 
-        if isRoot {
+        if isRoot && app.landscape != true {
             if let tabVC = tabBarController as? PannableTabBarController {
                 tabVC.addPanGesture(vc: self)
             } else if let navVC = navigationController as? PannableNavigationViewController {

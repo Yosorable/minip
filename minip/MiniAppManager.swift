@@ -223,6 +223,7 @@ extension MiniAppManager {
             
             if appInfo.landscape == true {
                 await MainActor.run {
+                    vc.modalPresentationStyle = .fullScreen
                     if #available(iOS 16.0, *) {
                         let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
                         windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscape))
@@ -241,12 +242,12 @@ extension MiniAppManager {
     
     private func setupMiniAppCapsuleButton(navigationController: UINavigationController) {
         let moreButton = UIButton(type: .system)
-        moreButton.setImage(UIImage(named: "capsule-more-icon"), for: .normal)
+        moreButton.setImage(UIImage(named: "capsule-more"), for: .normal)
         moreButton.addTarget(self, action: #selector(globalButtonTapped), for: .touchUpInside)
         
         
         let closeButton = UIButton(type: .system)
-        closeButton.setImage(UIImage(named: "capsule-close-icon"), for: .normal)
+        closeButton.setImage(UIImage(named: "capsule-close"), for: .normal)
         closeButton.addTarget(self, action: #selector(globalButtonTapped), for: .touchUpInside)
         
         // 将按钮添加到 navigationBar

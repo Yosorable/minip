@@ -108,12 +108,11 @@ class MiniPageViewController: UIViewController {
         if showNav {
             if Defaults[.useCapsuleButton] {
                 let moreButton = UIButton(type: .system)
-                moreButton.setImage(UIImage(named: "capsule-more-icon"), for: .normal)
+                moreButton.setImage(UIImage(named: "capsule-more"), for: .normal)
                 moreButton.addTarget(self, action: #selector(showAppDetail), for: .touchUpInside)
 
                 let closeButton = UIButton(type: .system)
-                closeButton.bounds = CGRect(x: 0, y: 0, width: 132 / 3, height: 96 / 3)
-                closeButton.setImage(UIImage(named: "capsule-close-icon"), for: .normal)
+                closeButton.setImage(UIImage(named: "capsule-close"), for: .normal)
                 closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
 
                 let stackView = UIStackView(arrangedSubviews: [moreButton, closeButton])

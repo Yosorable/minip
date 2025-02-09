@@ -41,6 +41,9 @@ struct FileBrowserPageView: View {
             .refreshable {
                 viewModel.fetchFiles()
             }
+            .onAppear {
+                viewModel.fetchFiles()
+            }
         } else {
             return List {
                 ForEach(viewModel.files, id: \.id) { ele in
@@ -332,7 +335,6 @@ class FileBrowserPageViewModel: ObservableObject {
     
     init(path: String) {
         self.path = path
-        fetchFiles()
     }
     
     func fetchFiles() {

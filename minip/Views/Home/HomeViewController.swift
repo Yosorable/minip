@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftUI
+import Defaults
 
 class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var apps: [AppInfo] = []
@@ -20,7 +21,9 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     lazy var addProjectBtn: UIBarButtonItem = {
         let menu = UIMenu(children: [
             UIAction(title: "Create new project", image: UIImage(systemName: "folder.badge.plus")) {act in
-                ShowNotImplement()
+                ShowCreateNewProjectAlert(self, onCreatedSuccess: {
+                    self.refreshData()
+                })
             },
             UIAction(title: "Load from web", image: UIImage(systemName: "network")) {act in
                 let vc = UIHostingController(rootView: DownloadProjectView())
@@ -102,12 +105,27 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         })
     }
 
-    // MARK: - 左滑action
+    // MARK: - swipe actions
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete", handler: {_,_, completion in
-            self.apps.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            completion(true)
+            let app = self.apps[indexPath.row]
+            let alert = UIAlertController(title: "Delete Project", message: "Are to sure to delete \(app.displayName ?? app.name)", preferredStyle: .alert)
+            let confirm = UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+                MiniAppManager.shared.deleteMiniAPp(app: self.apps[indexPath.row], completion: {
+                    self.apps.remove(at: indexPath.row)
+                    tableView.beginUpdates()
+                    tableView.deleteRows(at: [indexPath], with: .automatic)
+                    tableView.endUpdates()
+                    completion(true)
+                    ShowSimpleSuccess(msg: "Project deleted successfully.")
+                })
+            })
+            let cancel = UIAlertAction(title: "Cancel", style: .default, handler: { _ in
+                completion(false)
+            })
+            alert.addAction(cancel)
+            alert.addAction(confirm)
+            self.present(alert, animated: true)
         })
         
         let settingsAction = UIContextualAction(style: .normal, title: "Settings", handler: { _,_, completion in
@@ -121,14 +139,14 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return swipeConfiguration
     }
     
-    // MARK: - 允许拖动排序
+    // MARK: - move item
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
     func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
-        let movedApp = apps.remove(at: fromIndexPath.row)
-        apps.insert(movedApp, at: toIndexPath.row)
+        self.apps.swapAt(fromIndexPath.row, toIndexPath.row)
+        Defaults[.appSortList].swapAt(fromIndexPath.row, toIndexPath.row)
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {

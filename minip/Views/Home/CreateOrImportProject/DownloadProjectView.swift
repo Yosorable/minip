@@ -57,7 +57,7 @@ struct DownloadProjectView: View {
                 }
             } footer: {
                 HStack {
-                    Text("only support zip file")
+                    Text("Only support .zip file")
                         .foregroundColor(.secondary)
                 }
             }
@@ -79,7 +79,7 @@ struct DownloadProjectView: View {
             }
             
             Section {} footer: {
-                Text("Download files are stored at tmp directory in documents. You need to manually delete them.")
+                Text("Downloaded files are saved at tmp directory in documents. You need to delete them manually.")
             }
             if downloading || uncompressing {
                 Section {
@@ -192,18 +192,6 @@ struct DownloadProjectView: View {
     }
     
     func unCompress(file: URL) {
-//        // 解压缩包
-//        let dest = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-//        if SSZipArchive.unzipFile(atPath: file.path, toDestination: dest.path) {
-//            HUD.flash(.labeledSuccess(title: nil, subtitle: "Success"), delay: 0.5, completion: { _ in
-//                dismiss()
-//                onSuccess?()
-//            })
-//            return
-//        }
-//        alertMsg = "Unknow error"
-//        showAlert = true
-        
         InstallMiniApp(pkgFile: file, onSuccess: {
             HUD.flash(.labeledSuccess(title: nil, subtitle: "Success"), delay: 0.5, completion: { _ in
                 dismiss()

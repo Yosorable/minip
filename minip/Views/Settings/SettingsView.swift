@@ -33,12 +33,6 @@ struct SettingsView: View {
     var content: some View {
         List {
             Button {
-                PreviewImage(url: URL(string: "https://img0.baidu.com/it/u=1724694977,4042951717&fm=253&fmt=auto&app=120&f=JPEG?w=1280&h=800"))
-            } label: {
-                Text("Image preview")
-            }
-            
-            Button {
                 let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
                 let dateFrom = Date(timeIntervalSince1970: 0)
                 WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: dateFrom) {
@@ -46,7 +40,7 @@ struct SettingsView: View {
                 }
                 
             } label: {
-                Text("Clear wkwebview cache")
+                Text("Clear WebView cache")
             }
             
             Button {
@@ -55,7 +49,7 @@ struct SettingsView: View {
                     HUD.flash(.labeledSuccess(title: nil, subtitle: "clear success"), delay: 1)
                 })
             } label: {
-                Text("Clear kf image cache")
+                Text("Clear KFImage cache")
             }
             
             Toggle(isOn: $wkwebviewInspectable, label: {

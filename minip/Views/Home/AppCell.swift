@@ -79,7 +79,7 @@ class AppCell: UITableViewCell {
         appNameLabel.text = app.displayName ?? app.name
         authorLabel.text = "@" + (app.author ?? "no_author")
         appIdLabel.text = app.appId
-        
+        appIconImageView.image = nil
         if let icon = app.icon {
             var iconURL: URL?
             if icon.starts(with: "http://") || icon.starts(with: "https://") {

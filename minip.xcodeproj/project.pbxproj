@@ -68,7 +68,6 @@
 		2BD9B1D62A5C09C700036AFD /* KeyboardToolbar in Frameworks */ = {isa = PBXBuildFile; productRef = 2BD9B1D52A5C09C700036AFD /* KeyboardToolbar */; };
 		2BD9B1D92A5C426700036AFD /* EditorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD9B1D82A5C426700036AFD /* EditorTheme.swift */; };
 		2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD9B1DA2A5C428700036AFD /* HighlightName.swift */; };
-		2BEEA861288FACA5006095DC /* WKWebViewJavascriptBridge in Frameworks */ = {isa = PBXBuildFile; productRef = 2BEEA860288FACA5006095DC /* WKWebViewJavascriptBridge */; };
 		4800EA092CF1C93300F49842 /* FlyingFox in Frameworks */ = {isa = PBXBuildFile; productRef = 4800EA082CF1C93300F49842 /* FlyingFox */; };
 		4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */ = {isa = PBXBuildFile; productRef = 4800EA0A2CF1C93300F49842 /* FlyingSocks */; };
 		48248BC22AF1F4D0001097CC /* MWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC12AF1F4D0001097CC /* MWebView.swift */; };
@@ -76,10 +75,8 @@
 		482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */; };
 		482F03BE2D4C528E00D6CA6B /* PannableNavAndTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482F03BD2D4C528E00D6CA6B /* PannableNavAndTab.swift */; };
 		483E061F2D08227500140F13 /* SQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483E061E2D08227500140F13 /* SQLite.swift */; };
-		484E082F2B96D6850018DCF0 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E082E2B96D6850018DCF0 /* Api.swift */; };
 		484E08312B96D6DD0018DCF0 /* AppDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */; };
 		485A75222BDCA43F00D887A4 /* logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485A75212BDCA43F00D887A4 /* logger.swift */; };
-		486819192D0C943200F4089D /* ApiUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 486819182D0C943200F4089D /* ApiUtils.swift */; };
 		4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869E8072D0D345600E2B080 /* MinipNativeInteraction.swift */; };
 		487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 487E38922A8FBA48003464D7 /* Kingfisher */; };
 		487E38972A8FBD29003464D7 /* Int++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 487E38962A8FBD29003464D7 /* Int++.swift */; };
@@ -133,10 +130,8 @@
 		482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppManager.swift; sourceTree = "<group>"; };
 		482F03BD2D4C528E00D6CA6B /* PannableNavAndTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PannableNavAndTab.swift; sourceTree = "<group>"; };
 		483E061E2D08227500140F13 /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLite.swift; sourceTree = "<group>"; };
-		484E082E2B96D6850018DCF0 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
 		485A75212BDCA43F00D887A4 /* logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = logger.swift; sourceTree = "<group>"; };
-		486819182D0C943200F4089D /* ApiUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiUtils.swift; sourceTree = "<group>"; };
 		4869E8072D0D345600E2B080 /* MinipNativeInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipNativeInteraction.swift; sourceTree = "<group>"; };
 		487E38962A8FBD29003464D7 /* Int++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int++.swift"; sourceTree = "<group>"; };
 		488C2F382D4DECD200892E3A /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -187,7 +182,6 @@
 				2B9DC2042A5E8E400061FAB8 /* TreeSitterYAMLRunestone in Frameworks */,
 				2BD9B1AA2A5BD4D300036AFD /* Runestone in Frameworks */,
 				2B9DC1FA2A5E8E400061FAB8 /* TreeSitterTypeScript in Frameworks */,
-				2BEEA861288FACA5006095DC /* WKWebViewJavascriptBridge in Frameworks */,
 				4800EA092CF1C93300F49842 /* FlyingFox in Frameworks */,
 				2B9DC1F42A5E8E400061FAB8 /* TreeSitterTSX in Frameworks */,
 				2B9DC1D62A5E8E400061FAB8 /* TreeSitterJSONQueries in Frameworks */,
@@ -340,8 +334,6 @@
 				2B415A102A7E8FA900B3BF94 /* MiniPageViewController.swift */,
 				484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */,
 				48F6490E2D58CE9B00C9FD82 /* PromptCallApi.swift */,
-				484E082E2B96D6850018DCF0 /* Api.swift */,
-				486819182D0C943200F4089D /* ApiUtils.swift */,
 			);
 			path = MiniPage;
 			sourceTree = "<group>";
@@ -474,7 +466,6 @@
 			);
 			name = minip;
 			packageProductDependencies = (
-				2BEEA860288FACA5006095DC /* WKWebViewJavascriptBridge */,
 				2B8F0B912A597C1E00D9359F /* PKHUD */,
 				2BD9B1A92A5BD4D300036AFD /* Runestone */,
 				2BD9B1D52A5C09C700036AFD /* KeyboardToolbar */,
@@ -551,7 +542,6 @@
 			);
 			mainGroup = 48DF6B90288D32C800D523C1;
 			packageReferences = (
-				2BEEA85F288FACA5006095DC /* XCRemoteSwiftPackageReference "WKWebViewJavascriptBridge" */,
 				2B8F0B902A597C1E00D9359F /* XCRemoteSwiftPackageReference "PKHUD" */,
 				2BD9B1A82A5BD4D300036AFD /* XCRemoteSwiftPackageReference "Runestone" */,
 				2BD9B1D42A5C09C700036AFD /* XCRemoteSwiftPackageReference "KeyboardToolbar" */,
@@ -634,9 +624,7 @@
 				2B1B32D12A6163A100DA573F /* ImportProjectFromFileView.swift in Sources */,
 				48D1FB7F2D4E97140093137D /* MiniAppSettingsViewController.swift in Sources */,
 				2B1B32D72A61784600DA573F /* Defaults.swift in Sources */,
-				486819192D0C943200F4089D /* ApiUtils.swift in Sources */,
 				48E39B592D4D126400C4A3CD /* TabViewFIx.swift in Sources */,
-				484E082F2B96D6850018DCF0 /* Api.swift in Sources */,
 				2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */,
 				4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */,
 				48F6490F2D58CE9E00C9FD82 /* PromptCallApi.swift in Sources */,
@@ -925,14 +913,6 @@
 				minimumVersion = 0.1.1;
 			};
 		};
-		2BEEA85F288FACA5006095DC /* XCRemoteSwiftPackageReference "WKWebViewJavascriptBridge" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Lision/WKWebViewJavascriptBridge.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/swhitty/FlyingFox.git";
@@ -1161,11 +1141,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2BD9B1D42A5C09C700036AFD /* XCRemoteSwiftPackageReference "KeyboardToolbar" */;
 			productName = KeyboardToolbar;
-		};
-		2BEEA860288FACA5006095DC /* WKWebViewJavascriptBridge */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2BEEA85F288FACA5006095DC /* XCRemoteSwiftPackageReference "WKWebViewJavascriptBridge" */;
-			productName = WKWebViewJavascriptBridge;
 		};
 		4800EA082CF1C93300F49842 /* FlyingFox */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -20,7 +20,6 @@ import Defaults
 
 class MiniPageViewController: UIViewController {
     var webview: MWebView!
-    var bridge: WKWebViewJavascriptBridge!
     var app: AppInfo
     var page: String
     var _title: String?
@@ -86,8 +85,6 @@ class MiniPageViewController: UIViewController {
         if #available(iOS 16.4, *) {
             webview.isInspectable = Defaults[.wkwebviewInspectable]
         }
-        bridge = WKWebViewJavascriptBridge(webView: webview)
-        register()
         
         self.view = webview
         
@@ -212,8 +209,6 @@ class MiniPageViewController: UIViewController {
     @objc
     func refreshWebView(_ sender: UIRefreshControl) {
         webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"pulldownrefresh\"))")
-        // todo: delete
-        webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"refreshView\"))")
     }
 
     override func viewDidAppear(_ animated: Bool) {

@@ -1,5 +1,5 @@
 {
-  "originHash" : "097c62c67b9eb9b9acb3bdd383a54e2f43e789abcc8dc8213eff77ec94e47e8d",
+  "originHash" : "b42e47b11a0f6aae50ebc2c19acd1a85b138ab9a5e8ae0b9a3dd9fd907afa5b1",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -107,15 +107,6 @@
       "state" : {
         "revision" : "a15ab30453d14097355d7d78ec7c0feb008cfbba",
         "version" : "0.1.7"
-      }
-    },
-    {
-      "identity" : "wkwebviewjavascriptbridge",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Lision/WKWebViewJavascriptBridge.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "51cdc110657e5ad469df712ca79632761d3fe11d"
       }
     },
     {

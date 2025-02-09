@@ -13,7 +13,7 @@ class KVStoreManager {
     var environment: Environment? = nil
     var dbMap: [String: Database] = [String: Database]()
     init() {
-        let defaultURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: ".store")
+        let defaultURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: ".data")
         let (exist, _) = fileOrFolderExists(path: defaultURL.path)
         do {
             if !exist {

@@ -7,7 +7,6 @@
 
 import UIKit
 import WebKit
-import WKWebViewJavascriptBridge
 import PKHUD
 import PanModal
 import SwiftUI

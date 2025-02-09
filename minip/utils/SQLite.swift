@@ -33,11 +33,12 @@ class SQLiteDatabase {
     // 执行 SQL 语句
     func executeQuery(sql: String) throws -> Any? {
         // 判断是否是查询语句
-        if sql.lowercased().hasPrefix("select") {
-            return try executeSelectQuery(sql: sql)
-        } else {
-            return try executeNonQuery(sql: sql)
-        }
+//        if sql.lowercased().hasPrefix("select") {
+//            return try executeSelectQuery(sql: sql)
+//        } else {
+//            return try executeNonQuery(sql: sql)
+//        }
+        return try executeSelectQuery(sql: sql)
     }
 
     // 执行查询操作

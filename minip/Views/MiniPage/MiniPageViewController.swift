@@ -37,6 +37,31 @@ class MiniPageViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
+    func redirectTo(page pg: String, title t: String? = nil) {
+        self.page = pg
+        if let t = t {
+            self.title = t
+        }
+        let fileManager = FileManager.default
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        
+        var url: URL
+        if app.webServerEnabled == true, let addr = MiniAppManager.shared.serverAddress {
+            if !page.starts(with: "/") {
+                page = "/" + page
+            }
+            url = URL(string: addr + "\(page)")!
+            logger.info("[webview] load \(url)")
+            let req = URLRequest(url: url)
+            webview.load(req)
+        } else {
+            url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
+            logger.info("[webview] load \(url)")
+            webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
+        }
+        self.pageURL = url
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -57,6 +82,7 @@ class MiniPageViewController: UIViewController {
         super.viewDidLoad()
         
         webview = MWebViewPool.shared.getReusedWebView(forHolder: self)
+        webview.uiDelegate = self
         if #available(iOS 16.4, *) {
             webview.isInspectable = Defaults[.wkwebviewInspectable]
         }
@@ -185,6 +211,8 @@ class MiniPageViewController: UIViewController {
 
     @objc
     func refreshWebView(_ sender: UIRefreshControl) {
+        webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"pulldownrefresh\"))")
+        // todo: delete
         webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"refreshView\"))")
     }
 

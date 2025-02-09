@@ -146,7 +146,7 @@ extension MiniAppManager {
         return vc
     }
     
-    func openMiniApp(parent: UIViewController, appInfo: AppInfo, animated: Bool = true, completion: (()->Void)? = nil) {
+    func openMiniApp(parent: UIViewController, window: UIWindow? = nil, appInfo: AppInfo, animated: Bool = true, completion: (()->Void)? = nil) {
         let app = appInfo
 
         Task {

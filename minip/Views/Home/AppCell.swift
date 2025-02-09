@@ -76,7 +76,7 @@ class AppCell: UITableViewCell {
     }
 
     func configure(with app: AppInfo) {
-        appNameLabel.text = app.name
+        appNameLabel.text = app.displayName ?? app.name
         authorLabel.text = "@" + (app.author ?? "no_author")
         appIdLabel.text = app.appId
         

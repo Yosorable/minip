@@ -9,6 +9,7 @@ import Defaults
 
 struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     var name: String
+    var displayName: String?
     var appId: String
     var author: String?
     var website: String?

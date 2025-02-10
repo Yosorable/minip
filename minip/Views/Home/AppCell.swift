@@ -14,7 +14,7 @@ class AppCell: UITableViewCell {
     lazy var appIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 10
+        imageView.layer.cornerRadius = 12
         imageView.clipsToBounds = true
         
         return imageView
@@ -80,6 +80,8 @@ class AppCell: UITableViewCell {
         authorLabel.text = "@" + (app.author ?? "no_author")
         appIdLabel.text = app.appId
         appIconImageView.image = nil
+        appIconImageView.layer.borderColor = nil
+        appIconImageView.layer.borderWidth = 0
         if let icon = app.icon {
             var iconURL: URL?
             if icon.starts(with: "http://") || icon.starts(with: "https://") {
@@ -90,6 +92,9 @@ class AppCell: UITableViewCell {
                     appIconImageView.image = UIImage(contentsOfFile: iconURL.path)
                 }
             }
+        } else {
+            appIconImageView.layer.borderColor = UIColor(.secondary).cgColor //UIColor.second.cgColor
+            appIconImageView.layer.borderWidth = 1
         }
     }
 }

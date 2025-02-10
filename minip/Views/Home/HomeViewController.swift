@@ -26,12 +26,16 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 })
             },
             UIAction(title: "Load from web", image: UIImage(systemName: "network")) {act in
-                let vc = UIHostingController(rootView: DownloadProjectView())
+                let vc = UIHostingController(rootView: DownloadProjectView(onSuccess: {
+                    self.refreshData()
+                }))
                 vc.modalPresentationStyle = .fullScreen
                 self.present(vc, animated: true)
             },
             UIAction(title: "Load from file", image: UIImage(systemName: "folder")) {act in
-                let vc = UIHostingController(rootView: ImportProjectFromFileView())
+                let vc = UIHostingController(rootView: ImportProjectFromFileView(onSuccess: {
+                    self.refreshData()
+                }))
                 vc.modalPresentationStyle = .fullScreen
                 self.present(vc, animated: true)
             },

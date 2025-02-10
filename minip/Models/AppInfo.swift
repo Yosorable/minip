@@ -27,7 +27,6 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     
     // can be override in PageConfig
     var backgroundColor: String? // hex string
-    var navigationBarColor: String?
     var tintColor: String? // hex string
     
     // web server

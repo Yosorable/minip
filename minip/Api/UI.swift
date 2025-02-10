@@ -37,20 +37,12 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
         }
-        let animated = (data?["animated"] as? Bool) ?? true
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = bColor
         appearance.titleTextAttributes = [.foregroundColor: fColor]
-        if animated {
-            UIView.animate(withDuration: 0.3) {
-                vc.navigationController?.navigationBar.standardAppearance = appearance
-                vc.navigationController?.navigationBar.scrollEdgeAppearance = appearance
-            }
-        } else {
-            vc.navigationController?.navigationBar.standardAppearance = appearance
-            vc.navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        }
+        vc.navigationController?.navigationBar.standardAppearance = appearance
+        vc.navigationController?.navigationBar.scrollEdgeAppearance = appearance
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
     

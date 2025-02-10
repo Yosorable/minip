@@ -145,8 +145,10 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
-        self.apps.swapAt(fromIndexPath.row, toIndexPath.row)
-        Defaults[.appSortList].swapAt(fromIndexPath.row, toIndexPath.row)
+        let movedItem = self.apps.remove(at: fromIndexPath.row)
+        self.apps.insert(movedItem, at: toIndexPath.row)
+        let movedItemS = Defaults[.appSortList].remove(at: fromIndexPath.row)
+        Defaults[.appSortList].insert(movedItemS, at: toIndexPath.row)
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {

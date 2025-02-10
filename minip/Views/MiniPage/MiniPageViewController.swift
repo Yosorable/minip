@@ -162,11 +162,6 @@ class MiniPageViewController: UIViewController {
                     )
                 ]
             }
-            
-            if let nc = app.navigationBarColor {
-                navigationController?.navigationBar.barTintColor = UIColor(hex: nc)
-            }
-
         } else {
             navigationController?.setNavigationBarHidden(true, animated: false)
             webview.scrollView.contentInsetAdjustmentBehavior = .never

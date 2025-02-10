@@ -12,7 +12,7 @@ import FlyingFox
 
 class MiniAppManager {
     static let shared = MiniAppManager()
-
+    
     var appTmpStore: [String:String] = [String:String]()
     var openedApp: AppInfo? = nil
     var observedData = [String: Set<Int>]() // data key: webview id
@@ -115,13 +115,12 @@ extension MiniAppManager {
                 let page = UINavigationController(rootViewController: MiniPageViewController(app: appInfo, page: ele.path, title: ele.title, isRoot: true))
                 page.tabBarItem = UITabBarItem(title: ele.title, image: UIImage(systemName: ele.systemImage), tag: idx)
                 pages.append(page)
-//                setupMiniAppCapsuleButton(navigationController: page)
             }
             tabc.viewControllers = pages
             
             if let tc = appInfo.tintColor {
                 let tint = UIColor(hex: tc)
-                pages.forEach {ele in
+                pages.forEach { ele in
                     ele.navigationBar.tintColor = tint
                 }
                 tabc.tabBar.tintColor = tint
@@ -134,7 +133,6 @@ extension MiniAppManager {
                 nvc.navigationBar.tintColor = UIColor(hex: tc)
             }
             vc = nvc
-//            setupMiniAppCapsuleButton(navigationController: nvc)
         }
         
         if appInfo.colorScheme == "dark" {
@@ -148,7 +146,7 @@ extension MiniAppManager {
     
     func openMiniApp(parent: UIViewController, window: UIWindow? = nil, appInfo: AppInfo, animated: Bool = true, completion: (()->Void)? = nil) {
         let app = appInfo
-
+        
         Task {
             var addr = ""
             if app.webServerEnabled == true {
@@ -238,38 +236,5 @@ extension MiniAppManager {
                 completion?()
             })
         }
-    }
-    
-    private func setupMiniAppCapsuleButton(navigationController: UINavigationController) {
-        let moreButton = UIButton(type: .system)
-        moreButton.setImage(UIImage(named: "capsule-more"), for: .normal)
-        moreButton.addTarget(self, action: #selector(globalButtonTapped), for: .touchUpInside)
-        
-        
-        let closeButton = UIButton(type: .system)
-        closeButton.setImage(UIImage(named: "capsule-close"), for: .normal)
-        closeButton.addTarget(self, action: #selector(globalButtonTapped), for: .touchUpInside)
-        
-        // 将按钮添加到 navigationBar
-        let stackView = UIStackView(arrangedSubviews: [moreButton, closeButton])
-        stackView.axis = .horizontal
-        stackView.spacing = 0
-        stackView.distribution = .equalSpacing
-        
-        
-        navigationController.navigationBar.addSubview(stackView)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stackView.trailingAnchor.constraint(equalTo: navigationController.navigationBar.trailingAnchor, constant: -15),
-            stackView.centerYAnchor.constraint(equalTo: navigationController.navigationBar.centerYAnchor),
-            moreButton.widthAnchor.constraint(equalToConstant: 132 / 3),
-            moreButton.heightAnchor.constraint(equalToConstant: 96 / 3),
-            closeButton.widthAnchor.constraint(equalToConstant: 132 / 3),
-            closeButton.heightAnchor.constraint(equalToConstant: 96 / 3)
-        ])
-    }
-    
-    @objc private func globalButtonTapped() {
-        print("全局按钮被点击")
     }
 }

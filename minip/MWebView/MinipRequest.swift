@@ -19,10 +19,9 @@ class MinipRequest: NSObject, WKURLSchemeHandler {
 
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
         schemeHandlers[urlSchemeTask.hash] = urlSchemeTask
-        // 获取原始请求
+ 
         let request = urlSchemeTask.request
 
-        // 创建一个新的请求
         
         let decoder = JSONDecoder()
         guard let httpBody = request.httpBody, let bd = try? decoder.decode(MinipRequestBody.self, from: httpBody), let url = URL(string: bd.url) else {
@@ -35,7 +34,6 @@ class MinipRequest: NSObject, WKURLSchemeHandler {
         newRequest.httpBody = bd.body?.data(using: .utf8)
         newRequest.allHTTPHeaderFields = bd.headers
         
-        // 发送新请求
         let session = URLSession.shared
         let task = session.dataTask(with: newRequest) { data, response, error in
             if let error = error {
@@ -48,7 +46,6 @@ class MinipRequest: NSObject, WKURLSchemeHandler {
                 return
             }
             
-            // 返回数据给 WebView
             if (self.schemeHandlers[urlSchemeTask.hash] != nil) {
                 urlSchemeTask.didReceive(response)
                 urlSchemeTask.didReceive(data)
@@ -60,7 +57,6 @@ class MinipRequest: NSObject, WKURLSchemeHandler {
     }
     
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
-        // 处理停止请求的逻辑
         schemeHandlers.removeValue(forKey: urlSchemeTask.hash)
     }
 }
@@ -71,10 +67,8 @@ class MinipURLSchemePing: NSObject, WKURLSchemeHandler {
 
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
         schemeHandlers[urlSchemeTask.hash] = urlSchemeTask
-        // 获取原始请求
-        let request = urlSchemeTask.request
 
-        // 创建一个新的请求
+        let request = urlSchemeTask.request
         
         var res = "pong".data(using: .utf8)!
         if let data = request.httpBody {
@@ -98,7 +92,6 @@ class MinipURLSchemePing: NSObject, WKURLSchemeHandler {
     }
     
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
-        // 处理停止请求的逻辑
         schemeHandlers.removeValue(forKey: urlSchemeTask.hash)
     }
 }

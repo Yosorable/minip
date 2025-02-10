@@ -26,8 +26,14 @@ class ImagePreviewViewController: UIViewController {
     override func viewDidLoad() {
         imageView = ZoomImageView()
         self.imageView.zoomMode = .fit
-        imageView.frame = view.frame
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
+        NSLayoutConstraint.activate([
+            imageView.topAnchor.constraint(equalTo: view.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
         
         imageView.showsVerticalScrollIndicator = true
         imageView.showsHorizontalScrollIndicator = true
@@ -37,16 +43,13 @@ class ImagePreviewViewController: UIViewController {
             if url.scheme == "file" {
                 imageView.image = UIImage(contentsOfFile: url.path)
             } else {
-//                imageView.setWebImage(url: url)
-//                imageView
                 imageView.setWebImage(url: url)
             }
         }
         view.backgroundColor = .black
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         self.view.addGestureRecognizer(tapGestureRecognizer)
-        
-//        imageView.doubleTapGesture.require(toFail: tapGestureRecognizer)
+
         tapGestureRecognizer.require(toFail: imageView.doubleTapGesture)
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
         self.view.addGestureRecognizer(longPressRecognizer)

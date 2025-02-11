@@ -22,7 +22,7 @@ func ShowCreateNewProjectAlert(_ parentVC: UIViewController, onCreatedSuccess: @
         let displayNameTF = alert.textFields?[1]
         let name = nameTF?.text ?? ""
         let displayName = displayNameTF?.text
-        if name == "" {
+        if name == "" || name.contains("/") || name.contains(".") {
             ShowSimpleError(err: ErrorMsg(errorDescription: "Invalid name"))
             return
         }

@@ -121,7 +121,11 @@ extension MinipApi {
         } else if type == "progress" {
             ProgressHUD.animate(msg, interaction: interaction)
         } else if type == "label" || type == "banner" {
-            ProgressHUD.banner(title, subTitle)
+            if let delay = dl {
+                ProgressHUD.banner(title, subTitle, delay: delay)
+            } else {
+                ProgressHUD.banner(title, subTitle)
+            }
         } else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return

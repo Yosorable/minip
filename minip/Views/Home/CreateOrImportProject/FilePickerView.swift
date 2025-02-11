@@ -10,8 +10,8 @@ import SwiftUI
 import SwiftUI
 import MobileCoreServices
 import UniformTypeIdentifiers
-import PKHUD
 import ZipArchive
+import ProgressHUD
 
 struct FileImporterView: UIViewControllerRepresentable {
     var onSuccess: (()->Void)?
@@ -41,35 +41,22 @@ struct FileImporterView: UIViewControllerRepresentable {
 
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             guard let path = urls.first?.path else {
-                HUD.flash(.labeledError(title: "", subtitle: "Path error"), delay: 1)
+                ProgressHUD.failed("Path error")
                 return
             }
-            HUD.flash(.labeledProgress(title: nil, subtitle: "Loading"), delay: .infinity)
+
+            ProgressHUD.animate("Loading", interaction: false)
             let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            
-            // 解压缩包
+
             DispatchQueue.global().async {
-//                if SSZipArchive.unzipFile(atPath: path, toDestination: docURL.path) {
-//                    DispatchQueue.main.async { [self] in
-//                        HUD.flash(.labeledSuccess(title: nil, subtitle: "Success"), delay: 1)
-//                        self.parent.onSuccess?()
-//                    }
-//                } else {
-//                    DispatchQueue.main.async { [self] in
-//                        HUD.flash(.labeledError(title: nil, subtitle: "Uncompress error"), delay: 1)
-//                        self.parent.onSuccess?()
-//                    }
-//                }
-                
                 InstallMiniApp(pkgFile: urls.first!, onSuccess: {
                     DispatchQueue.main.async { [self] in
-                        HUD.flash(.labeledSuccess(title: nil, subtitle: "Success"), delay: 1)
+                        ProgressHUD.succeed("Success")
                         self.parent.onSuccess?()
                     }
                 }, onFailed: { err in
-                    DispatchQueue.main.async { [self] in
-                        HUD.flash(.labeledError(title: nil, subtitle: err), delay: 1)
-                        self.parent.onSuccess?()
+                    DispatchQueue.main.async {
+                        ProgressHUD.failed(err)
                     }
                 })
             }

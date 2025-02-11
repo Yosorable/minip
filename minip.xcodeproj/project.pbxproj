@@ -21,7 +21,6 @@
 		2B6D0E4C2A623D93005BFEB9 /* ImagePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6D0E4B2A623D93005BFEB9 /* ImagePreviewViewController.swift */; };
 		2B6D0E4E2A624382005BFEB9 /* UIView++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6D0E4D2A624382005BFEB9 /* UIView++.swift */; };
 		2B8DC8BA2A5FAC4B002D5288 /* VSCodeDarkTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8DC8B92A5FAC4B002D5288 /* VSCodeDarkTheme.swift */; };
-		2B8F0B922A597C1E00D9359F /* PKHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 2B8F0B912A597C1E00D9359F /* PKHUD */; };
 		2B8F0B952A597C4800D9359F /* Color++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8F0B942A597C4800D9359F /* Color++.swift */; };
 		2B9003C32A81FEB400ED360D /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9003C22A81FEB400ED360D /* LazyView.swift */; };
 		2B9B579A2A56399B002E9D57 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9B57992A56399B002E9D57 /* utils.swift */; };
@@ -70,6 +69,7 @@
 		2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD9B1DA2A5C428700036AFD /* HighlightName.swift */; };
 		4800EA092CF1C93300F49842 /* FlyingFox in Frameworks */ = {isa = PBXBuildFile; productRef = 4800EA082CF1C93300F49842 /* FlyingFox */; };
 		4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */ = {isa = PBXBuildFile; productRef = 4800EA0A2CF1C93300F49842 /* FlyingSocks */; };
+		480B06452D5B3AC500FFAAA5 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 480B06442D5B3AC500FFAAA5 /* ProgressHUD */; };
 		48248BC22AF1F4D0001097CC /* MWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC12AF1F4D0001097CC /* MWebView.swift */; };
 		48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC32AF1F6C1001097CC /* MWebViewPool.swift */; };
 		482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */; };
@@ -181,7 +181,6 @@
 				2B1B32C42A61358B00DA573F /* Alamofire in Frameworks */,
 				2B9DC1D42A5E8E400061FAB8 /* TreeSitterJSON in Frameworks */,
 				2B9DC1D02A5E8E400061FAB8 /* TreeSitterHTMLQueries in Frameworks */,
-				2B8F0B922A597C1E00D9359F /* PKHUD in Frameworks */,
 				2BC331B42A62D47700441447 /* SwiftLMDB in Frameworks */,
 				2B9DC2042A5E8E400061FAB8 /* TreeSitterYAMLRunestone in Frameworks */,
 				2BD9B1AA2A5BD4D300036AFD /* Runestone in Frameworks */,
@@ -193,6 +192,7 @@
 				2B9DC1CA2A5E8E400061FAB8 /* TreeSitterCommentQueries in Frameworks */,
 				2B9DC1D82A5E8E400061FAB8 /* TreeSitterJSONRunestone in Frameworks */,
 				2B9DC1F22A5E8E400061FAB8 /* TreeSitterSCSSRunestone in Frameworks */,
+				480B06452D5B3AC500FFAAA5 /* ProgressHUD in Frameworks */,
 				2B9DC2002A5E8E400061FAB8 /* TreeSitterYAML in Frameworks */,
 				2B9DC1C42A5E8E400061FAB8 /* TreeSitterCSSQueries in Frameworks */,
 				2B9DC1CC2A5E8E400061FAB8 /* TreeSitterCommentRunestone in Frameworks */,
@@ -472,7 +472,6 @@
 			);
 			name = minip;
 			packageProductDependencies = (
-				2B8F0B912A597C1E00D9359F /* PKHUD */,
 				2BD9B1A92A5BD4D300036AFD /* Runestone */,
 				2BD9B1D52A5C09C700036AFD /* KeyboardToolbar */,
 				2B9DC1C12A5E8E400061FAB8 /* TreeSitterCSS */,
@@ -517,6 +516,7 @@
 				487E38922A8FBA48003464D7 /* Kingfisher */,
 				4800EA082CF1C93300F49842 /* FlyingFox */,
 				4800EA0A2CF1C93300F49842 /* FlyingSocks */,
+				480B06442D5B3AC500FFAAA5 /* ProgressHUD */,
 			);
 			productName = minip;
 			productReference = 48DF6B99288D32C800D523C1 /* minip.app */;
@@ -548,7 +548,6 @@
 			);
 			mainGroup = 48DF6B90288D32C800D523C1;
 			packageReferences = (
-				2B8F0B902A597C1E00D9359F /* XCRemoteSwiftPackageReference "PKHUD" */,
 				2BD9B1A82A5BD4D300036AFD /* XCRemoteSwiftPackageReference "Runestone" */,
 				2BD9B1D42A5C09C700036AFD /* XCRemoteSwiftPackageReference "KeyboardToolbar" */,
 				2B9DC1C02A5E8E400061FAB8 /* XCRemoteSwiftPackageReference "treesitterlanguages" */,
@@ -559,6 +558,7 @@
 				2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */,
 				487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */,
+				480B06432D5B3AC500FFAAA5 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 			);
 			productRefGroup = 48DF6B9A288D32C800D523C1 /* Products */;
 			projectDirPath = "";
@@ -883,14 +883,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		2B8F0B902A597C1E00D9359F /* XCRemoteSwiftPackageReference "PKHUD" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pkluz/PKHUD";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		2B9DC1C02A5E8E400061FAB8 /* XCRemoteSwiftPackageReference "treesitterlanguages" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/simonbs/treesitterlanguages";
@@ -931,6 +923,14 @@
 				minimumVersion = 0.20.0;
 			};
 		};
+		480B06432D5B3AC500FFAAA5 /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/relatedcode/ProgressHUD";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 14.1.3;
+			};
+		};
 		487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
@@ -961,11 +961,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2B6D0E482A6223B4005BFEB9 /* XCRemoteSwiftPackageReference "PanModal" */;
 			productName = PanModal;
-		};
-		2B8F0B912A597C1E00D9359F /* PKHUD */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2B8F0B902A597C1E00D9359F /* XCRemoteSwiftPackageReference "PKHUD" */;
-			productName = PKHUD;
 		};
 		2B9DC1C12A5E8E400061FAB8 /* TreeSitterCSS */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1161,6 +1156,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */;
 			productName = FlyingSocks;
+		};
+		480B06442D5B3AC500FFAAA5 /* ProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 480B06432D5B3AC500FFAAA5 /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			productName = ProgressHUD;
 		};
 		487E38922A8FBA48003464D7 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -6,10 +6,10 @@
 //
 
 import SwiftUI
-import PKHUD
 import Alamofire
 import ZipArchive
 import Defaults
+import ProgressHUD
 
 struct DownloadProjectView: View {
     @Environment(\.dismissPolyfill) var dismiss
@@ -178,11 +178,10 @@ struct DownloadProjectView: View {
                     return
                 } else if let tmpUrl = resp.fileURL {
                     uncompressing = true
-                    HUD.flash(.labeledSuccess(title: nil, subtitle: "Downloaded success, uncompressing"), delay: 0.5, completion: { _ in
-                        unCompress(file: tmpUrl)
-                        uncompressing = false
-                        Defaults[.lastDownloadedURL] = downURL
-                    })
+                    ProgressHUD.success("Download succeeded, uncompressing")
+                    unCompress(file: tmpUrl)
+                    uncompressing = false
+                    Defaults[.lastDownloadedURL] = downURL
                     return
                 }
                 alertMsg = "Unknow error"
@@ -193,10 +192,9 @@ struct DownloadProjectView: View {
     
     func unCompress(file: URL) {
         InstallMiniApp(pkgFile: file, onSuccess: {
-            HUD.flash(.labeledSuccess(title: nil, subtitle: "Success"), delay: 0.5, completion: { _ in
-                dismiss()
-                onSuccess?()
-            })
+            ProgressHUD.succeed("Success")
+            dismiss()
+            onSuccess?()
         }, onFailed: { err in
             alertMsg = err
             showAlert = true

@@ -7,7 +7,6 @@
 
 import UIKit
 import SwiftUI
-import PKHUD
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate  {

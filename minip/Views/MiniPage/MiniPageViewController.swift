@@ -7,7 +7,6 @@
 
 import UIKit
 import WebKit
-import PKHUD
 import PanModal
 import SwiftUI
 import Kingfisher

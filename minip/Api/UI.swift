@@ -6,9 +6,9 @@
 //
 
 import UIKit
-import PKHUD
 import AVFoundation
 import AVKit
+import ProgressHUD
 
 extension MinipApi {
     func setNavigationBarTitle(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
@@ -96,56 +96,51 @@ extension MinipApi {
         let title = parameters?["title"] as? String
         let subTitle = parameters?["subTitle"] as? String
         let delay = parameters?["delay"] as? Double
-        
-        var contentType: HUDContentType?
-        
-        type = type.lowercased()
-        if type == "success" {
-            contentType = .labeledSuccess(title: title, subtitle: subTitle)
-        } else if type == "error" {
-            contentType = .labeledError(title: title, subtitle: subTitle)
-        } else if type == "progress" {
-            contentType = .labeledProgress(title: title, subtitle: subTitle)
-        } else if type == "label" {
-            if title == nil && subTitle == nil {
-                return
-            } else if subTitle == nil {
-                contentType = .label(title)
-            } else if title == nil {
-                contentType = .label(subTitle)
+
+        var msg: String?
+        if title != nil {
+            msg = title
+        }
+        if subTitle != nil {
+            if msg != nil {
+                msg! += "\n" + subTitle!
             } else {
-                contentType = .label("\(title ?? "")\n\(subTitle ?? "")")
+                msg = subTitle
             }
         }
-        
-        guard let ct = contentType else {
+        var dl: TimeInterval?
+        if let d = delay {
+            dl = d / 1000
+        }
+        type = type.lowercased()
+        if type == "success" {
+            ProgressHUD.succeed(msg, interaction: false, delay: dl)
+        } else if type == "error" {
+            ProgressHUD.failed(msg, interaction: false, delay: dl)
+        } else if type == "progress" {
+            ProgressHUD.animate(msg, interaction: false)
+        } else if type == "label" {
+            ProgressHUD.banner(title, subTitle)
+        } else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
         }
-        if let d = delay {
-            HUD.flash(ct, delay: d / 1000) { res in
-                replyHandler(InteropUtils.succeed().toJsonString(), nil)
-            }
-        } else {
-            HUD.flash(ct, delay: 0.5) { res in
-                replyHandler(InteropUtils.succeed().toJsonString(), nil)
-            }
-        }
+        replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
     
     func hideHUD(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let _ = param.webView?.holderObject as? MiniPageViewController else {
             return
         }
-        HUD.hide { _ in
-            replyHandler(InteropUtils.succeed().toJsonString(), nil)
-        }
+
+        ProgressHUD.dismiss()
+        replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
     
     struct AlertAction: Codable {
         var title: String?
         var style: String?
-        var key: String // 回调参数
+        var key: String // callback parameter
     }
 
     struct AlertConfig: Codable {

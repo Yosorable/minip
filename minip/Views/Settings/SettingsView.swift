@@ -7,12 +7,12 @@
 
 import SwiftUI
 import WebKit
-import PKHUD
 import Kingfisher
 import AVKit
 import Alamofire
 import Defaults
 import SafariServices
+import ProgressHUD
 
 struct SettingsView: View {
     var body: some View {
@@ -36,7 +36,7 @@ struct SettingsView: View {
                 let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
                 let dateFrom = Date(timeIntervalSince1970: 0)
                 WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: dateFrom) {
-                    HUD.flash(.labeledSuccess(title: nil, subtitle: "clear success"), delay: 1)
+                    ProgressHUD.succeed("success")
                 }
                 
             } label: {
@@ -46,7 +46,7 @@ struct SettingsView: View {
             Button {
                 KingfisherManager.shared.cache.clearDiskCache(completion: {
                     KingfisherManager.shared.cache.clearMemoryCache()
-                    HUD.flash(.labeledSuccess(title: nil, subtitle: "clear success"), delay: 1)
+                    ProgressHUD.succeed("success")
                 })
             } label: {
                 Text("Clear KFImage cache")

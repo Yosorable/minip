@@ -1,5 +1,5 @@
 {
-  "originHash" : "b42e47b11a0f6aae50ebc2c19acd1a85b138ab9a5e8ae0b9a3dd9fd907afa5b1",
+  "originHash" : "13953d89e47387f3abf5d573db4b6919adc6a5d4b84d948e5a2cef709c9a71dc",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -65,12 +65,12 @@
       }
     },
     {
-      "identity" : "pkhud",
+      "identity" : "progresshud",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pkluz/PKHUD",
+      "location" : "https://github.com/relatedcode/ProgressHUD",
       "state" : {
-        "branch" : "master",
-        "revision" : "8fd26f23057c6bebd6695524b1c3e05e93aba571"
+        "revision" : "9364904a42cb25f58d026451140c4080a868e72e",
+        "version" : "14.1.3"
       }
     },
     {

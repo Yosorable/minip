@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import PKHUD
 import UIKit
 import AudioToolbox
 import os.log
+import ProgressHUD
 
 func WriteToFile(data: Data, fileName: String) -> Bool {
     // get path of directory
@@ -99,16 +99,12 @@ func saveFile(url: URL?, content: String) {
     } catch {}
 }
 
-func ShowNotImplement() {
-    HUD.flash(.labeledError(title: nil, subtitle: "Not implement"), delay: 1)
-}
-
 func ShowSimpleSuccess(msg: String? = nil) {
-    HUD.flash(.labeledSuccess(title: nil, subtitle: msg ?? "Success"), delay: 1)
+    ProgressHUD.succeed(msg ?? "Success")
 }
 
 func ShowSimpleError(err: Error? = nil) {
-    HUD.flash(.labeledError(title: nil, subtitle: err?.localizedDescription ?? "Error"), delay: 1)
+    ProgressHUD.failed(err?.localizedDescription ?? "Error")
 }
 
 func CleanTrashAsync(onComplete: (()->Void)? = nil, onError: ((Error)->Void)? = nil) {

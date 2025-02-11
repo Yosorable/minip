@@ -53,7 +53,7 @@ struct SettingsView: View {
             }
             
             Toggle(isOn: $wkwebviewInspectable, label: {
-                Text("Allow inspect wkwebview")
+                Text("Allow inspect WKWebView")
             })
 
             Toggle(isOn: $useCapsuleButton, label: {

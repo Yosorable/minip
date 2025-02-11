@@ -14,7 +14,7 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     var author: String?
     var website: String?
     var icon: String?
-    var version: String? // v{x.x.x}, like v0.0.1
+    var version: String? // x.x.x (0.0.1)
     var description: String?
     var displayMode: String? // multiple-webview, signle-webview(default)
     var homepage: String

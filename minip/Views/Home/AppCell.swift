@@ -93,7 +93,7 @@ class AppCell: UITableViewCell {
                 }
             }
         } else {
-            appIconImageView.layer.borderColor = UIColor(.secondary).cgColor //UIColor.second.cgColor
+            appIconImageView.layer.borderColor = UIColor(.secondary).cgColor
             appIconImageView.layer.borderWidth = 1
         }
     }

@@ -185,7 +185,8 @@ class SheetTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         
         self.transition.isPresenting = true
-        return self
+        // use default present animation
+        return nil
     }
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
@@ -200,13 +201,11 @@ class SheetTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
 
 
 extension SheetTransitionDelegate:  UIViewControllerAnimatedTransitioning {
-    
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return self.transition.isPresenting ? self.transition.presentDuration : self.transition.dismissDuration
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        
         guard let fromVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from),
               let toVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to) else {
             transitionContext.completeTransition(false)
@@ -215,41 +214,18 @@ extension SheetTransitionDelegate:  UIViewControllerAnimatedTransitioning {
         
         let containerView = transitionContext.containerView
         
-        if self.transition.isPresenting {
-            
-            let finalFrameForVC = transitionContext.finalFrame(for: toVC)
-            toVC.view.frame = finalFrameForVC.offsetBy(dx: 0, dy: UIScreen.main.bounds.size.height)
-            containerView.addSubview(toVC.view)
-            
-            // Additional ways to animate, Spring velocity & damping
-            UIView.animate(withDuration: self.transition.presentDuration,
-                           delay: 0.0,
-                           options: .transitionCrossDissolve,
-                           animations: {
-                fromVC.view.alpha = 0.3
-                toVC.view.frame = finalFrameForVC
-                fromVC.view.transform = CGAffineTransform(scaleX: 0.93, y: 0.93)
-            }, completion: { _ in
-                transitionContext.completeTransition(true)
-            })
-            
-        } else {
-            
-            var finalFrame = fromVC.view.frame
-            finalFrame.origin.y += finalFrame.height
-            
-            // Additional ways to animate, Spring velocity & damping
-            UIView.animate(withDuration: self.transition.dismissDuration,
-                           delay: 0.0,
-                           options: .transitionCrossDissolve,
-                           animations: {
-                fromVC.view.frame = finalFrame
-                toVC.view.alpha = 1.0
-                toVC.view.transform = .identity
-            },
-                           completion: { _ in
-                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-            })
-        }
+        containerView.insertSubview(toVC.view, belowSubview: fromVC.view)
+        var finalFrame = fromVC.view.frame
+        finalFrame.origin.y += finalFrame.height
+        
+        UIView.animate(withDuration: self.transition.dismissDuration,
+                       delay: 0.0,
+                       options: .transitionCrossDissolve,
+                       animations: {
+            fromVC.view.frame = finalFrame
+        },
+                       completion: { _ in
+            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+        })
     }
 }

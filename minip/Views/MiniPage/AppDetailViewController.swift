@@ -55,11 +55,9 @@ class AppDetailViewController: UIViewController {
         let subview = UIHostingController(
             rootView:
                 VStack {
-                    let noIconView  = Rectangle()
-                        .foregroundColor(.secondary)
-                        .cornerRadius(10)
+                    let noIconView = RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color.secondary, lineWidth: 1)
                         .frame(width: 60, height: 60)
-                        .shadow(radius: 2)
                     VStack {
                         if let iconURL = iconURL {
                             if iconURL.scheme == "file", let img = UIImage(contentsOfFile: iconURL.path) {
@@ -92,7 +90,7 @@ class AppDetailViewController: UIViewController {
                             .lineLimit(1)
                             .padding(.top)
                         Spacer()
-                        Text(appInfo.version ?? "v0.0.0")
+                        Text( "v" + (appInfo.version ?? "0.0.0"))
                             .font(.system(size: 10))
                             .lineLimit(1)
                             .foregroundColor(.secondary)

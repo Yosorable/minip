@@ -37,7 +37,7 @@ class MiniAppSettingsViewController: UITableViewController {
 //        
 //        hostingController.didMove(toParent: self)
         
-        if self.navigationController is NavableNavigationViewController {
+        if self.navigationController is BackableNavigationController {
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .done, target: self, action: #selector(self.closePage))
         } else {
             navigationItem.largeTitleDisplayMode = .never
@@ -47,7 +47,7 @@ class MiniAppSettingsViewController: UITableViewController {
     }
     
     @objc func closePage() {
-        if self.navigationController is NavableNavigationViewController {
+        if self.navigationController is BackableNavigationController {
             dismiss(animated: true)
         } else {
             self.navigationController?.popViewController(animated: true)

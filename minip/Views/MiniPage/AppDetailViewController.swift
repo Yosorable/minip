@@ -122,7 +122,7 @@ class AppDetailViewController: UIViewController {
                             Button {
                                 self.dismiss(animated: true, completion: {
                                     let ss = MiniAppSettingsViewController(style: .insetGrouped)
-                                    let vc = NavableNavigationViewController(rootViewController: ss)
+                                    let vc = BackableNavigationController(rootViewController: ss)
                                     vc.overrideUserInterfaceStyle = self.overrideUserInterfaceStyle
                                     vc.addPanGesture(vc: ss)
                                     vc.modalPresentationStyle = .overFullScreen

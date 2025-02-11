@@ -89,7 +89,7 @@
 		48947C422BE2963E00EE9F82 /* MinipRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48947C412BE2963E00EE9F82 /* MinipRequest.swift */; };
 		48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C385AC2A978520006BEE35 /* Polyfill.swift */; };
 		48D1FB7F2D4E97140093137D /* MiniAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D1FB7E2D4E97050093137D /* MiniAppSettingsViewController.swift */; };
-		48D1FB812D4E9C100093137D /* NavableNav.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D1FB802D4E9C080093137D /* NavableNav.swift */; };
+		48D1FB812D4E9C100093137D /* BackableNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D1FB802D4E9C080093137D /* BackableNavigationController.swift */; };
 		48D399872D06E88400BDD99F /* DownloadAndInstallMiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */; };
 		48D68D532D58DA56002303FD /* CreateProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D68D522D58DA4C002303FD /* CreateProject.swift */; };
 		48D68D552D58E894002303FD /* DeleteMiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D68D542D58E88D002303FD /* DeleteMiniApp.swift */; };
@@ -145,7 +145,7 @@
 		48947C412BE2963E00EE9F82 /* MinipRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipRequest.swift; sourceTree = "<group>"; };
 		48C385AC2A978520006BEE35 /* Polyfill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polyfill.swift; sourceTree = "<group>"; };
 		48D1FB7E2D4E97050093137D /* MiniAppSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppSettingsViewController.swift; sourceTree = "<group>"; };
-		48D1FB802D4E9C080093137D /* NavableNav.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavableNav.swift; sourceTree = "<group>"; };
+		48D1FB802D4E9C080093137D /* BackableNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackableNavigationController.swift; sourceTree = "<group>"; };
 		48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadAndInstallMiniApp.swift; sourceTree = "<group>"; };
 		48D68D522D58DA4C002303FD /* CreateProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProject.swift; sourceTree = "<group>"; };
 		48D68D542D58E88D002303FD /* DeleteMiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteMiniApp.swift; sourceTree = "<group>"; };
@@ -267,7 +267,7 @@
 				2B9003C22A81FEB400ED360D /* LazyView.swift */,
 				48E39B582D4D125D00C4A3CD /* TabViewFIx.swift */,
 				482F03BD2D4C528E00D6CA6B /* PannableNavAndTab.swift */,
-				48D1FB802D4E9C080093137D /* NavableNav.swift */,
+				48D1FB802D4E9C080093137D /* BackableNavigationController.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -592,7 +592,7 @@
 				483E061F2D08227500140F13 /* SQLite.swift in Sources */,
 				488C2F3E2D4E1BDC00892E3A /* AppInfo.swift in Sources */,
 				2B1B32CF2A61633000DA573F /* FilePickerView.swift in Sources */,
-				48D1FB812D4E9C100093137D /* NavableNav.swift in Sources */,
+				48D1FB812D4E9C100093137D /* BackableNavigationController.swift in Sources */,
 				488DDFF52ABEEAEE00BAB280 /* AppDelegate.swift in Sources */,
 				2BC331B62A62D48C00441447 /* LMDB.swift in Sources */,
 				48D68D532D58DA56002303FD /* CreateProject.swift in Sources */,

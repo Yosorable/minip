@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NavableNavigationViewController: UINavigationController {
+class BackableNavigationController: UINavigationController {
     public var minimumScreenRatioToHide = 0.53 as CGFloat
     public var animationDuration = 0.2 as TimeInterval
     

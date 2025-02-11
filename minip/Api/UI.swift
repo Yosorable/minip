@@ -94,8 +94,9 @@ extension MinipApi {
             return
         }
         let title = parameters?["title"] as? String
-        let subTitle = parameters?["subTitle"] as? String
+        let subTitle = (parameters?["subTitle"] as? String) ?? (parameters?["message"] as? String)
         let delay = parameters?["delay"] as? Double
+        let interaction = (parameters?["interaction"] as? Bool) ?? true
 
         var msg: String?
         if title != nil {
@@ -114,12 +115,12 @@ extension MinipApi {
         }
         type = type.lowercased()
         if type == "success" {
-            ProgressHUD.succeed(msg, interaction: false, delay: dl)
+            ProgressHUD.succeed(msg, interaction: interaction, delay: dl)
         } else if type == "error" {
-            ProgressHUD.failed(msg, interaction: false, delay: dl)
+            ProgressHUD.failed(msg, interaction: interaction, delay: dl)
         } else if type == "progress" {
-            ProgressHUD.animate(msg, interaction: false)
-        } else if type == "label" {
+            ProgressHUD.animate(msg, interaction: interaction)
+        } else if type == "label" || type == "banner" {
             ProgressHUD.banner(title, subTitle)
         } else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)

@@ -45,18 +45,42 @@ func ShowCreateNewProjectAlert(_ parentVC: UIViewController, onCreatedSuccess: @
         let htmlContent = """
         <!DOCTYPE html>
         <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-            <meta name="format-detection" content="telephone=no,email=no,address=no" >
-            <style>
-                html { color-scheme: light dark; }
-                body { font-family: Tahoma, Verdana, Arial, sans-serif; }
-            </style>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+          <meta name="format-detection" content="telephone=no,email=no,address=no" >
+          <style>
+            html { color-scheme: light dark; }
+            body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; }
+          </style>
         </head>
         <body>
-            <h1>Hello, world!</h1>
-            <p>This is demo file.</p>
-            <p>Go to "Files -> \(name)/index.html" to edit it.</p>
+          <h1>Hello, world!</h1>
+          <p>This is demo file.</p>
+          <p>Go to "Files -> \(name)/index.html" to edit it.</p>
+          <button disabled id="btn">click me</button>
+          <div id="msg"></div>
+          <script type="module">
+            import * as minip from "https://cdn.jsdelivr.net/gh/yosorable/minip-bridge@main/dist/index.mjs"
+            const msgDiv = document.querySelector("#msg")
+            const btn = document.querySelector("#btn")
+            function click() {
+              minip.showAlert({
+                title: "Alert",
+                message: "This is an alert.",
+                actions: [
+                  { title: "Ok", key: "Ok" },
+                  { title: "Cancel", key: "Cancel", style: "cancel" }
+                ]
+              })
+              .then(res => msgDiv.innerText = `You clicked ${res.data}.`)
+              .catch(err => {
+                let message = err ? (err.message ?? err.msg ?? err.data ?? JSON.stringify(err)) : "Unknown error"
+                msgDiv.innerText = `Some error occurs, message: ${message}`
+              })
+            }
+            btn.disabled = false
+            btn.onclick = click
+          </script>
         </body>
         </html>
         """

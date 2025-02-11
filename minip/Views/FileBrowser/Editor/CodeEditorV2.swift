@@ -33,7 +33,6 @@ class CodeEditorV2Controller: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-//            title = "TextCompanion"
         navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
         let textView = TextView()
         self.textView = textView

@@ -189,7 +189,7 @@ extension MinipApi {
     }
     
     func previewImage(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
+        guard let _ = param.webView?.holderObject as? MiniPageViewController else {
             return
         }
         guard let urlStr = (param.data as? [String: String])?["url"],
@@ -217,5 +217,59 @@ extension MinipApi {
             playerVC.player?.play()
         }
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
+    }
+    
+    // MARK: Picker
+    func showPicker(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
+            return
+        }
+        let data = param.data as? [String:Any]
+        guard
+            let typeStr = data?["type"] as? String,
+            let pickerType = PickerType(rawValue: typeStr),
+            let pickerData = data?["data"],
+            let jsonPickerData = try? JSONSerialization.data(withJSONObject: pickerData, options: [])  else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+        let decoder = JSONDecoder()
+        let pvc = PickerViewController()
+        pvc.pickerType = pickerType
+        if pickerType == .singleColumn {
+            guard let pickerData = try? decoder.decode(SingleColumnPickerView.Data.self, from: jsonPickerData) else {
+                replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+                return
+            }
+            pvc.singlePickerData = pickerData
+            pvc.onConfirmed = { [weak pvc] in
+                replyHandler(InteropUtils.succeedWithData(data: pvc?.singlePickerResult).toJsonString(), nil)
+            }
+        } else if pickerType == .multipleColumns {
+            guard let pickerData = try? decoder.decode(MultiColumnsPickerView.Data.self, from: jsonPickerData) else {
+                replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+                return
+            }
+            pvc.multiPickerData = pickerData
+            pvc.onConfirmed = { [weak pvc] in
+                replyHandler(InteropUtils.succeedWithData(data: pvc?.multiPickerResult).toJsonString(), nil)
+            }
+        } else if pickerType == .date || pickerType == .time {
+            guard let pickerData = try? decoder.decode(DatePickerView.Data.self, from: jsonPickerData) else {
+                replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+                return
+            }
+            pvc.datePickerData = pickerData
+            pvc.onConfirmed = { [weak pvc] in
+                replyHandler(InteropUtils.succeedWithData(data: pvc?.datePickerResult).toJsonString(), nil)
+            }
+        } else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+        pvc.onCanceled = {
+            replyHandler(InteropUtils.succeed(msg: "Canceled").toJsonString(), nil)
+        }
+        vc.present(pvc, animated: true)
     }
 }

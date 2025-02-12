@@ -103,6 +103,8 @@ class MinipNativeInteraction: NSObject, WKScriptMessageHandlerWithReply {
             api.deleteKVStorage(param: param, replyHandler: replyHandler)
         case .clearKVStorage:
             api.clearKVStorage(param: param, replyHandler: replyHandler)
+        case .showPicker:
+            api.showPicker(param: param, replyHandler: replyHandler)
         default:
             replyHandler(nil, "API \(apiName.rawValue) is not implemented or not allowed")
         }

@@ -21,6 +21,7 @@ class MinipApi {
         case showAppDetail
         case closeApp
         case installApp
+        // MARK: UI
         case setNavigationBarTitle
         case setNavigationBarColor
         case enablePullDownRefresh
@@ -30,6 +31,7 @@ class MinipApi {
         case showHUD
         case hideHUD
         case showAlert
+        case showPicker
         case previewImage
         case previewVideo
         case vibrate
@@ -39,7 +41,7 @@ class MinipApi {
         case setKVStorage
         case deleteKVStorage
         case clearKVStorage
-        // for prompt
+        // MARK: for prompt
         case getKVStorageSync
         case setKVStorageSync
         case deleteKVStorageSync

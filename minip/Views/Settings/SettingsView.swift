@@ -26,40 +26,51 @@ struct SettingsView: View {
             }
         }
     }
-
+    
     @Default(.wkwebviewInspectable) var wkwebviewInspectable
     @Default(.useCapsuleButton) var useCapsuleButton
     
     var content: some View {
         List {
-            Button {
-                let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
-                let dateFrom = Date(timeIntervalSince1970: 0)
-                WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: dateFrom) {
-                    ProgressHUD.succeed("success")
+            Section {
+                Button {
+                    let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
+                    let dateFrom = Date(timeIntervalSince1970: 0)
+                    WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: dateFrom) {
+                        ProgressHUD.succeed("success")
+                    }
+                    
+                } label: {
+                    Text("Clear WebView cache")
                 }
                 
-            } label: {
-                Text("Clear WebView cache")
+                Button {
+                    KingfisherManager.shared.cache.clearDiskCache(completion: {
+                        KingfisherManager.shared.cache.clearMemoryCache()
+                        ProgressHUD.succeed("success")
+                    })
+                } label: {
+                    Text("Clear KFImage cache")
+                }
+            } header: {
+                Text("Cache")
             }
             
-            Button {
-                KingfisherManager.shared.cache.clearDiskCache(completion: {
-                    KingfisherManager.shared.cache.clearMemoryCache()
-                    ProgressHUD.succeed("success")
+            Section {
+                Toggle(isOn: $wkwebviewInspectable, label: {
+                    Text("Allow inspect WKWebView")
                 })
-            } label: {
-                Text("Clear KFImage cache")
+                
+                Toggle(isOn: $useCapsuleButton, label: {
+                    Text("Use capsule button")
+                })
+            } header: {
+                Text("Preference")
             }
             
-            Toggle(isOn: $wkwebviewInspectable, label: {
-                Text("Allow inspect WKWebView")
-            })
-
-            Toggle(isOn: $useCapsuleButton, label: {
-                Text("Use capsule button")
-            })
-
+            Section {} footer: {
+                Text("Documentation and source code: [GitHub - yosorable/minip](https://github.com/yosorable/minip)")
+            }
         }
         .navigationTitle(Text("Settings"))
     }

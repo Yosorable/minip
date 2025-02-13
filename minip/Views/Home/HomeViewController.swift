@@ -53,6 +53,12 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return control
     }()
     
+    lazy var scanQRCodeButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(image: UIImage(systemName: "qrcode.viewfinder"), style: .plain, target: self, action: #selector(scanQRCode))
+        button.tintColor = UIColor(.primary)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Projects"
@@ -76,7 +82,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         editButtonItem.tintColor = UIColor(.primary)
         navigationItem.rightBarButtonItems = [addProjectBtn, editButtonItem]
-        
+        navigationItem.leftBarButtonItem = scanQRCodeButton
         
     }
     
@@ -89,6 +95,18 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.refreshControl.endRefreshing()
             }
         }
+    }
+    
+    @objc func scanQRCode() {
+        let qvc = QRScannerViewController()
+        qvc.modalPresentationStyle = .fullScreen
+        qvc.onSucceed = { [weak self] code in
+            QRCodeHandler.shared.handle(code: code, viewController: self)
+        }
+        qvc.onFailed = { err in
+            ShowSimpleError(err: err)
+        }
+        present(qvc, animated: true)
     }
     
     // MARK: - TableView DataSource

@@ -78,16 +78,7 @@ class PickerViewController: UIViewController {
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
         super.dismiss(animated: flag, completion: completion)
         if confirmed {
-            switch self.pickerType {
-            case .singleColumn:
-                onConfirmed?()
-            case .multipleColumns:
-                onConfirmed?()
-            case .date, .time:
-                onConfirmed?()
-            case .none:
-                break
-            }
+            onConfirmed?()
         } else {
             onCanceled?()
         }

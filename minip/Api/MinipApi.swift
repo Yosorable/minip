@@ -34,14 +34,17 @@ class MinipApi {
         case showPicker
         case previewImage
         case previewVideo
+        // MARK: Device
         case vibrate
         case getClipboardData
         case setClipboardData
+        case scanQRCode
+        // MARK: KVStorage async
         case getKVStorage
         case setKVStorage
         case deleteKVStorage
         case clearKVStorage
-        // MARK: for prompt
+        // MARK: KYStorage sync, for prompt
         case getKVStorageSync
         case setKVStorageSync
         case deleteKVStorageSync

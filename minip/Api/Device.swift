@@ -42,4 +42,22 @@ extension MinipApi {
         UIPasteboard.general.string = data
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
+    
+    func scanQRCode(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
+            return
+        }
+        let qvc = QRScannerViewController()
+        qvc.modalPresentationStyle = .fullScreen
+        qvc.onSucceed = { code in
+            replyHandler(InteropUtils.succeedWithData(data: code).toJsonString(), nil)
+        }
+        qvc.onCanceled = {
+            replyHandler(InteropUtils.succeed(msg: "Canceled").toJsonString(), nil)
+        }
+        qvc.onFailed = { err in
+            replyHandler(InteropUtils.fail(msg: err.localizedDescription).toJsonString(), nil)
+        }
+        vc.present(qvc, animated: true)
+    }
 }

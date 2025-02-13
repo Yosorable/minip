@@ -41,7 +41,7 @@ struct SettingsView: View {
                     }
                     
                 } label: {
-                    Text("Clear WebView cache")
+                    Text("Clear WKWebView cache")
                 }
                 
                 Button {
@@ -68,7 +68,22 @@ struct SettingsView: View {
                 Text("Preference")
             }
             
-            Section {} footer: {
+            Section {
+                HStack {
+                    Text("Version")
+                    Spacer()
+                    Text((Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) ?? "Unknown")
+                        .foregroundColor(.secondary)
+                }
+                HStack {
+                    Text("Build")
+                    Spacer()
+                    Text((Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String) ?? "Unknown")
+                        .foregroundColor(.secondary)
+                }
+            } header: {
+                Text("About")
+            } footer: {
                 Text("Documentation and source code: [GitHub - yosorable/minip](https://github.com/yosorable/minip)")
             }
         }

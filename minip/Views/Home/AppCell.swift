@@ -29,7 +29,7 @@ class AppCell: UITableViewCell {
     lazy var authorLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 10)
-        label.textColor = UIColor(.secondary)
+        label.textColor = .secondaryLabel
         label.numberOfLines = 1
         return label
     }()
@@ -37,7 +37,7 @@ class AppCell: UITableViewCell {
     lazy var appIdLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 10)
-        label.textColor = UIColor(.secondary)
+        label.textColor = .secondaryLabel
         label.numberOfLines = 1
         return label
     }()
@@ -93,7 +93,7 @@ class AppCell: UITableViewCell {
                 }
             }
         } else {
-            appIconImageView.layer.borderColor = UIColor(.secondary).cgColor
+            appIconImageView.layer.borderColor = UIColor.secondaryLabel.cgColor
             appIconImageView.layer.borderWidth = 1
         }
     }

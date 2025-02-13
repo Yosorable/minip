@@ -21,4 +21,7 @@ extension Defaults.Keys {
     
     // capsule button
     static let useCapsuleButton = Key<Bool>("useCapsuleButton", default: true)
+    
+    // first start app
+    static let firstStart = Key<Bool>("firstStart", default: true)
 }

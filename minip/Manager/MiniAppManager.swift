@@ -12,7 +12,7 @@ import FlyingFox
 
 class MiniAppManager {
     static let shared = MiniAppManager()
-    
+    let EmojiAppNames = ["🍇", "🍈", "🍉", "🍊", "🍋", "🍌", "🍍", "🥭", "🍎", "🍏", "🍐", "🍑", "🍒", "🍓", "🥝", "🍅", "🥥", "🥑", "🍆", "🥔", "🥕", "🌽", "🌶", "🥒", "🥬", "🥦", "🍄", "🥜", "🌰"]
     var appTmpStore: [String:String] = [String:String]()
     var openedApp: AppInfo? = nil
     var observedData = [String: Set<Int>]() // data key: webview id

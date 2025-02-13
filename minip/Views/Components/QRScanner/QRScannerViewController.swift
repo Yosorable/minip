@@ -35,6 +35,10 @@ class QRScannerViewController: UIViewController {
                     DispatchQueue.main.async { [weak self] in
                         self?.setupQRScannerView()
                     }
+                } else {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.showAlert()
+                    }
                 }
             }
         default:

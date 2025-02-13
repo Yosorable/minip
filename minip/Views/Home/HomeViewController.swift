@@ -21,8 +21,11 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     lazy var addProjectBtn: UIBarButtonItem = {
         let menu = UIMenu(children: [
             UIAction(title: "Create new project", image: UIImage(systemName: "folder.badge.plus")) {act in
-                ShowCreateNewProjectAlert(self, onCreatedSuccess: {
-                    self.refreshData()
+                ShowCreateNewProjectAlert(self, onCreatedSuccess: { newApp in
+                    self.apps.insert(newApp, at: 0)
+                    self.tableView.beginUpdates()
+                    self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                    self.tableView.endUpdates()
                 })
             },
             UIAction(title: "Load from web", image: UIImage(systemName: "network")) {act in
@@ -43,7 +46,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let addProjectBtn = UIBarButtonItem(image: UIImage(systemName: "plus.square"), menu: menu)
 
-        addProjectBtn.tintColor = UIColor(.primary)
+        addProjectBtn.tintColor = .label
         return addProjectBtn
     }()
     
@@ -55,7 +58,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     lazy var scanQRCodeButton: UIBarButtonItem = {
         let button = UIBarButtonItem(image: UIImage(systemName: "qrcode.viewfinder"), style: .plain, target: self, action: #selector(scanQRCode))
-        button.tintColor = UIColor(.primary)
+        button.tintColor = .label
         return button
     }()
     
@@ -65,7 +68,13 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.navigationController?.navigationBar.prefersLargeTitles = true
 
         self.apps = MiniAppManager.shared.getAppInfos()
-        
+        if Defaults[.firstStart] && self.apps.count == 0 {
+            Defaults[.firstStart] = false
+            if let newApp = try? MiniAppManager.shared.createMiniApp( ) {
+                self.apps.append(newApp)
+            }
+        }
+
         tableView.dataSource = self
         tableView.delegate = self
         tableView.allowsSelectionDuringEditing = true
@@ -80,7 +89,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
         
-        editButtonItem.tintColor = UIColor(.primary)
+        editButtonItem.tintColor = .label
         navigationItem.rightBarButtonItems = [addProjectBtn, editButtonItem]
         navigationItem.leftBarButtonItem = scanQRCodeButton
         

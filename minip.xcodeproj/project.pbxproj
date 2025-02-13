@@ -107,6 +107,7 @@
 		48D399872D06E88400BDD99F /* DownloadAndInstallMiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */; };
 		48D68D532D58DA56002303FD /* CreateProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D68D522D58DA4C002303FD /* CreateProject.swift */; };
 		48D68D552D58E894002303FD /* DeleteMiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D68D542D58E88D002303FD /* DeleteMiniApp.swift */; };
+		48DE4A242D5E23D8002D4653 /* CreateMiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE4A232D5E23D2002D4653 /* CreateMiniApp.swift */; };
 		48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA0288D32CA00D523C1 /* Assets.xcassets */; };
 		48DF6BA4288D32CA00D523C1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */; };
 		48E39B592D4D126400C4A3CD /* TabViewFIx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39B582D4D125D00C4A3CD /* TabViewFIx.swift */; };
@@ -177,6 +178,7 @@
 		48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadAndInstallMiniApp.swift; sourceTree = "<group>"; };
 		48D68D522D58DA4C002303FD /* CreateProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProject.swift; sourceTree = "<group>"; };
 		48D68D542D58E88D002303FD /* DeleteMiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteMiniApp.swift; sourceTree = "<group>"; };
+		48DE4A232D5E23D2002D4653 /* CreateMiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMiniApp.swift; sourceTree = "<group>"; };
 		48DF6B99288D32C800D523C1 /* minip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DF6BA0288D32CA00D523C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -509,6 +511,7 @@
 			children = (
 				482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */,
 				48D68D542D58E88D002303FD /* DeleteMiniApp.swift */,
+				48DE4A232D5E23D2002D4653 /* CreateMiniApp.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -708,6 +711,7 @@
 				2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */,
 				4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */,
 				48F6490F2D58CE9E00C9FD82 /* PromptCallApi.swift in Sources */,
+				48DE4A242D5E23D8002D4653 /* CreateMiniApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

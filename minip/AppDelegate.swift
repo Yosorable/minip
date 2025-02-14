@@ -5,12 +5,11 @@
 //  Created by LZY on 2023/9/23.
 //
 
-import UIKit
 import SwiftUI
+import UIKit
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate  {
-
+class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -53,10 +52,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
 
     func application(_ application: UIApplication,
                      open url: URL,
-                     options: [UIApplication.OpenURLOptionsKey : Any] = [:] ) -> Bool {
-
-        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
-              let host = components.host else {
+                     options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool
+    {
+        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true) else {
             return false
         }
 

@@ -28,6 +28,7 @@ class URLSchemeHandler {
             try open(url.path?.deletingPrefixSuffix("/") ?? "")
 
         case .install:
+            ProgressHUD.animate(interaction: false)
             try install(url.path?.deletingPrefixSuffix("/") ?? "")
 //        case .appdownloadlist:
 

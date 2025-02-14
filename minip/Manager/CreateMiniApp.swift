@@ -57,7 +57,7 @@ extension MiniAppManager {
           <button disabled id="btn">click me</button>
           <div id="msg"></div>
           <script type="module">
-            import * as minip from "https://cdn.jsdelivr.net/gh/yosorable/minip-bridge@main/dist/index.mjs"
+            import * as minip from "https://cdn.jsdelivr.net/npm/minip-bridge/dist/index.mjs"
             const msgDiv = document.querySelector("#msg")
             const btn = document.querySelector("#btn")
             function click() {

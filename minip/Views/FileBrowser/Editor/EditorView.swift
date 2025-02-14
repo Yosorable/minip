@@ -17,17 +17,17 @@ import TreeSitterYAMLRunestone
 
 struct EditorView: View {
     @Environment(\.dismissPolyfill) var dismiss
-    
+
     @State var text: String
     @State var originText: String
     var notTextFile = false
     var readFileError = false
     let fileInfo: FileInfo
-    
+
     @State var isLoading = true
-    
+
     @Environment(\.colorScheme) private var colorScheme: ColorScheme
-    
+
     init(fileInfo: FileInfo) {
         self.fileInfo = fileInfo
         guard let fileData = FileManager.default.contents(atPath: fileInfo.url.path) else {
@@ -36,7 +36,7 @@ struct EditorView: View {
             _originText = State(initialValue: "")
             return
         }
-        
+
         if let fileString = String(data: fileData, encoding: .utf8) {
             _text = State(initialValue: fileString)
             _originText = State(initialValue: fileString)
@@ -46,7 +46,7 @@ struct EditorView: View {
             _originText = State(initialValue: "")
         }
     }
-    
+
     var body: some View {
         if #available(iOS 16.0, *) {
             NavigationStack {
@@ -58,7 +58,7 @@ struct EditorView: View {
             }
         }
     }
-    
+
     var content: some View {
         ZStack {
             if notTextFile {

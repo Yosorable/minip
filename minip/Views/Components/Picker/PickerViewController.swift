@@ -15,11 +15,11 @@ class PickerViewController: UIViewController {
     var singlePickerData: SingleColumnPickerView.Data?
     var multiPickerData: MultiColumnsPickerView.Data?
     var datePickerData: DatePickerView.Data?
-    
+
     var singlePickerResult: Int?
     var multiPickerResult: [Int]?
     var datePickerResult: String?
-    
+
     var onConfirmed: (() -> Void)?
     var onCanceled: (() -> Void)?
 
@@ -28,16 +28,16 @@ class PickerViewController: UIViewController {
         modalPresentationStyle = .custom
         transitioningDelegate = self.transitioning
     }
-    
+
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let pickerType = self.pickerType else { return }
-        
+
         if pickerType == .singleColumn {
             guard let singlePickerData = singlePickerData else { return }
             let picker = SingleColumnPickerView(data: singlePickerData)
@@ -64,7 +64,7 @@ class PickerViewController: UIViewController {
             if pickerType == .time {
                 mode = .time
             }
-            
+
             let picker = DatePickerView(datePickerData, mode: mode)
             self.view = PickerContainerView(pickerView: picker, dismiss: { [weak self] in
                 self?.dismiss(animated: true)
@@ -75,7 +75,7 @@ class PickerViewController: UIViewController {
             })
         }
     }
-    
+
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
         super.dismiss(animated: flag, completion: completion)
         if self.confirmed {

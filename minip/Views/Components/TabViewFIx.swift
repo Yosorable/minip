@@ -24,7 +24,7 @@ class MainTabBarController: UITabBarController {
             super.selectedIndex
         }
     }
-    
+
     override var selectedViewController: UIViewController? {
         set {
             if #available(iOS 18.0, *) {
@@ -39,13 +39,13 @@ class MainTabBarController: UITabBarController {
             super.selectedViewController
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         // Do any additional setup after loading the view.
     }
-    
+
     /*
      // MARK: - Navigation
 

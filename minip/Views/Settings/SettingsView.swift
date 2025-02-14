@@ -26,10 +26,10 @@ struct SettingsView: View {
             }
         }
     }
-    
+
     @Default(.wkwebviewInspectable) var wkwebviewInspectable
     @Default(.useCapsuleButton) var useCapsuleButton
-    
+
     var content: some View {
         List {
             Section {
@@ -39,11 +39,11 @@ struct SettingsView: View {
                     WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: dateFrom) {
                         ProgressHUD.succeed("success")
                     }
-                    
+
                 } label: {
                     Text("Clear WKWebView cache")
                 }
-                
+
                 Button {
                     KingfisherManager.shared.cache.clearDiskCache(completion: {
                         KingfisherManager.shared.cache.clearMemoryCache()
@@ -55,19 +55,19 @@ struct SettingsView: View {
             } header: {
                 Text("Cache")
             }
-            
+
             Section {
                 Toggle(isOn: $wkwebviewInspectable, label: {
                     Text("Allow inspect WKWebView")
                 })
-                
+
                 Toggle(isOn: $useCapsuleButton, label: {
                     Text("Use capsule button")
                 })
             } header: {
                 Text("Preference")
             }
-            
+
             Section {
                 HStack {
                     Text("Version")

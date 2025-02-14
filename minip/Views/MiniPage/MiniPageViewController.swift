@@ -25,7 +25,7 @@ class MiniPageViewController: UIViewController {
     var refreshControl: UIRefreshControl?
     var initialTouchPoint: CGPoint = .init(x: 0, y: 0)
     var isRoot: Bool
-    
+
     init(app: AppInfo, page: String? = nil, title: String? = nil, isRoot: Bool = false) {
         self.app = app
         self.page = page ?? app.homepage
@@ -33,7 +33,7 @@ class MiniPageViewController: UIViewController {
         self.isRoot = isRoot
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     func redirectTo(page pg: String, title t: String? = nil) {
         page = pg
         if let t = t {
@@ -41,7 +41,7 @@ class MiniPageViewController: UIViewController {
         }
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        
+
         var url: URL
         if app.webServerEnabled == true, let addr = MiniAppManager.shared.serverAddress {
             if !page.starts(with: "/") {
@@ -58,12 +58,12 @@ class MiniPageViewController: UIViewController {
         }
         pageURL = url
     }
-    
+
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     deinit {
         if webview != nil {
             self.refreshControl?.endRefreshing()
@@ -71,31 +71,31 @@ class MiniPageViewController: UIViewController {
             self.refreshControl = nil
             self.webview.tintColor = .systemBlue
             self.webview.scrollView.contentInsetAdjustmentBehavior = .always
-            
+
             MWebViewPool.shared.recycleReusedWebView(self.webview)
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         webview = MWebViewPool.shared.getReusedWebView(forHolder: self)
         webview.uiDelegate = self
         if #available(iOS 16.4, *) {
             webview.isInspectable = Defaults[.wkwebviewInspectable]
         }
-        
+
         view = webview
-        
+
         if let bc = app.backgroundColor {
             view.backgroundColor = UIColor(hex: bc)
         } else {
             view.backgroundColor = .systemBackground
         }
-        
+
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        
+
         var url: URL
         if app.webServerEnabled == true, let addr = MiniAppManager.shared.serverAddress {
             if !page.starts(with: "/") {
@@ -111,16 +111,16 @@ class MiniPageViewController: UIViewController {
             webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
         }
         pageURL = url
-        
+
         let showNav = app.navigationBarStatus == "display"
-        
+
         title = _title ?? app.name
-        
+
         if let tc = app.tintColor {
             navigationController?.navigationBar.tintColor = UIColor(hex: tc)
             webview.tintColor = UIColor(hex: tc)
         }
-        
+
         if app.disableSwipeBackGesture == true {
             navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         }
@@ -139,7 +139,7 @@ class MiniPageViewController: UIViewController {
                 stackView.axis = .horizontal
                 stackView.spacing = 0
                 stackView.distribution = .equalSpacing
-                
+
                 NSLayoutConstraint.activate([
                     moreButton.widthAnchor.constraint(equalToConstant: 132 / 3),
                     moreButton.heightAnchor.constraint(equalToConstant: 96 / 3),
@@ -175,7 +175,7 @@ class MiniPageViewController: UIViewController {
             }
         }
     }
-    
+
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         if navigationController?.isNavigationBarHidden ?? false && motion == .motionShake {
             showAppDetail()
@@ -211,10 +211,10 @@ class MiniPageViewController: UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        
+
         webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"viewDidDisappear\"))")
     }
-    
+
     func addRefreshControl() {
         guard refreshControl == nil else {
             return
@@ -240,7 +240,7 @@ class MiniPageViewController: UIViewController {
             MiniAppManager.shared.clearOpenedApp()
         })
     }
-    
+
     @objc
     func showAppDetail() {
         var closeFnc: (() -> Void)?
@@ -250,7 +250,7 @@ class MiniPageViewController: UIViewController {
 //                self.close()
 //            }
 //        }
-        
+
         presentPanModal(AppDetailViewController(appInfo: app, reloadPageFunc: { [weak self] in
             self?.webview.reload()
         }, closeFunc: closeFnc, parentVC: self))

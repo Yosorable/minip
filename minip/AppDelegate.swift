@@ -17,12 +17,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
         let window = UIWindow()
         self.window = window
         let mainVC = UITabBarController()
-        
+
         // disable ipad top tabbar on ios 18
 //        if #available(iOS 18.0, *) {
 //            if UIDevice.current.userInterfaceIdiom == .pad {
 //                mainVC.traitOverrides.horizontalSizeClass = .compact
-//                
+//
 //            }
 //        }
         mainVC.viewControllers = [
@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
                 return vc
             }(),
         ]
-        
+
         window.rootViewController = mainVC
         window.makeKeyAndVisible()
         _ = MWebViewPool.shared
@@ -68,7 +68,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
             return false
         }
     }
-    
+
     func applicationWillEnterForeground(_ application: UIApplication) {
         guard let serv = MiniAppManager.shared.server else {
             logger.debug("[enter foreground] not create server")
@@ -78,7 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
             logger.debug("[enter foreground] no app opened")
             return
         }
-        
+
         // fix bug: 横屏自动变成竖屏
         if app.landscape == true {
             if #available(iOS 16.0, *) {

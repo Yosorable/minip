@@ -26,7 +26,7 @@ struct FileBrowserPageView: View {
     init(path: String) {
         viewModel = FileBrowserPageViewModel(path: path)
     }
-    
+
     var list: some View {
         if #available(iOS 15.0, *) {
             return List {
@@ -59,7 +59,7 @@ struct FileBrowserPageView: View {
             }
         }
     }
-    
+
     var body: some View {
         list
             .navigationTitle(Text(viewModel.path == "/" ? "Files" : (viewModel.path.splitPolyfill(separator: "/").last ?? "")))
@@ -94,7 +94,7 @@ struct FileBrowserPageView: View {
                 }
             }
     }
-    
+
     func fileItem(ele: FileInfo) -> some View {
         if #available(iOS 15.0, *) {
             return HStack {
@@ -195,7 +195,7 @@ struct FileBrowserPageView: View {
             }
         }
     }
-    
+
     func cleanTrash() {
         let alertController = UIAlertController(title: "Confirm", message: "Are you sure to clean the trash ?", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -209,7 +209,7 @@ struct FileBrowserPageView: View {
         }))
         alertController.show()
     }
-    
+
     func createFile() {
         let alertController = UIAlertController(title: "Create file", message: "Please input file name", preferredStyle: .alert)
         var textField: UITextField?
@@ -222,11 +222,11 @@ struct FileBrowserPageView: View {
             guard let fileName = textField?.text else {
                 return
             }
-            
+
             let fileManager = FileManager.default
             let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: viewModel.path)
             let newFileURL = folderURL.appendingPolyfill(component: fileName)
-            
+
             if !fileManager.fileExists(atPath: newFileURL.path) {
                 if fileManager.createFile(atPath: newFileURL.path, contents: nil) {
                     ShowSimpleSuccess(msg: "Created success")
@@ -240,7 +240,7 @@ struct FileBrowserPageView: View {
         }))
         alertController.show()
     }
-    
+
     func createFolder() {
         let alertController = UIAlertController(title: "Create folder", message: "Please input folder name", preferredStyle: .alert)
         var textField: UITextField?
@@ -253,11 +253,11 @@ struct FileBrowserPageView: View {
             guard let fileName = textField?.text else {
                 return
             }
-            
+
             let fileManager = FileManager.default
             let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: viewModel.path)
             let newFileURL = folderURL.appendingPolyfill(component: fileName)
-            
+
             if !fileManager.fileExists(atPath: newFileURL.path) {
                 do {
                     try fileManager.createDirectory(at: newFileURL, withIntermediateDirectories: false)
@@ -266,14 +266,14 @@ struct FileBrowserPageView: View {
                 } catch {
                     ShowSimpleError(err: error)
                 }
-                
+
             } else {
                 ShowSimpleError(err: ErrorMsg(errorDescription: "Folder exists"))
             }
         }))
         alertController.show()
     }
-    
+
     func deleteFolder(url: URL?) {
         guard let url = url else {
             return
@@ -282,7 +282,7 @@ struct FileBrowserPageView: View {
             ShowSimpleError(err: ErrorMsg(errorDescription: "You cannot delete this folder"))
             return
         }
-        
+
         let alertController = UIAlertController(title: "Confirm", message: "Are you sure to delete this folder: \(url.lastPathComponent) ?", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
@@ -296,7 +296,7 @@ struct FileBrowserPageView: View {
         }))
         alertController.show()
     }
-    
+
     func deleteFile(url: URL?) {
         guard let url = url else {
             return
@@ -320,7 +320,7 @@ struct FileInfo: Identifiable {
     var fileName: String
     var isFolder: Bool
     var url: URL
-    
+
     var id: String {
         return fileName
     }
@@ -330,11 +330,11 @@ class FileBrowserPageViewModel: ObservableObject {
     @Published var files: [FileInfo] = []
     @Published var selectFile: FileInfo? = nil
     var path: String
-    
+
     init(path: String) {
         self.path = path
     }
-    
+
     func fetchFiles() {
         logger.debug("[fetchFiles] fetch files")
         let fileManager = FileManager.default
@@ -353,14 +353,14 @@ class FileBrowserPageViewModel: ObservableObject {
             logger.error("[fetchFiles] \(error)")
         }
     }
-    
+
     func getFilesAndFolders(in directory: URL) throws -> (folders: [URL], files: [URL]) {
         var folders = [URL]()
         var files = [URL]()
-        
+
         let fileManager = FileManager.default
         let contents = try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
-        
+
         for content in contents {
             var isDirectory: ObjCBool = false
             if fileManager.fileExists(atPath: content.path, isDirectory: &isDirectory) {
@@ -371,11 +371,11 @@ class FileBrowserPageViewModel: ObservableObject {
                 }
             }
         }
-        
+
         folders.sort(by: { l, r in
             l.lastPathComponent < r.lastPathComponent
         })
-        
+
         files.sort(by: { l, r in
             l.lastPathComponent < r.lastPathComponent
         })

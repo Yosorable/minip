@@ -11,13 +11,13 @@ import UIKit
 
 class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var apps: [AppInfo] = []
-    
+
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: self.view.bounds, style: .insetGrouped)
         tableView.register(AppCell.self, forCellReuseIdentifier: AppCell.identifier)
         return tableView
     }()
-    
+
     lazy var addProjectBtn: UIBarButtonItem = {
         let menu = UIMenu(children: [
             UIAction(title: "Create new project", image: UIImage(systemName: "folder.badge.plus")) { _ in
@@ -39,19 +39,19 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.present(vc, animated: true)
             },
         ])
-        
+
         let addProjectBtn = UIBarButtonItem(image: UIImage(systemName: "plus.square"), menu: menu)
 
         addProjectBtn.tintColor = .label
         return addProjectBtn
     }()
-    
+
     lazy var refreshControl: UIRefreshControl = {
         let control = UIRefreshControl()
         control.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         return control
     }()
-    
+
     lazy var scanQRCodeButton: UIBarButtonItem = {
         let button = UIBarButtonItem(image: UIImage(systemName: "qrcode.viewfinder"), style: .plain, target: self, action: #selector(scanQRCode))
         button.tintColor = .label
@@ -87,14 +87,14 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
-        
+
         editButtonItem.tintColor = .label
         navigationItem.rightBarButtonItems = [addProjectBtn, editButtonItem]
         navigationItem.leftBarButtonItem = scanQRCodeButton
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: .appListUpdated, object: nil)
     }
-    
+
     @objc func refreshData() {
         logger.debug("[HomeViewController] refresh table view data")
         Task {
@@ -118,19 +118,19 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         present(qvc, animated: true)
     }
-    
+
     // MARK: - TableView DataSource
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return apps.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: AppCell.identifier, for: indexPath) as! AppCell
         cell.configure(with: apps[indexPath.row])
         return cell
     }
-    
+
     // MARK: - TableView Delegate
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -162,31 +162,31 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             alert.addAction(confirm)
             self.present(alert, animated: true)
         })
-        
+
         let settingsAction = UIContextualAction(style: .normal, title: "Settings", handler: { _, _, completion in
             let vc = MiniAppSettingsViewController(style: .insetGrouped, app: self.apps[indexPath.row])
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
             completion(true)
         })
-        
+
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [deleteAction, settingsAction])
         return swipeConfiguration
     }
-    
+
     // MARK: - move item
 
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-    
+
     func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
         let movedItem = apps.remove(at: fromIndexPath.row)
         apps.insert(movedItem, at: toIndexPath.row)
         let movedItemS = Defaults[.appSortList].remove(at: fromIndexPath.row)
         Defaults[.appSortList].insert(movedItemS, at: toIndexPath.row)
     }
-    
+
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         tableView.setEditing(editing, animated: animated)

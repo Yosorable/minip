@@ -20,7 +20,7 @@ class QRScannerViewController: UIViewController {
         super.viewDidLoad()
         setupQRScanner()
     }
-    
+
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         .portrait
     }
@@ -45,7 +45,7 @@ class QRScannerViewController: UIViewController {
             showAlert()
         }
     }
-    
+
     private func setupQRScannerView() {
         view.backgroundColor = .black
         qrScannerView = QRScannerView(frame: view.bounds)
@@ -53,29 +53,29 @@ class QRScannerViewController: UIViewController {
         qrScannerView.translatesAutoresizingMaskIntoConstraints = false
         qrScannerView.configure(delegate: self, input: .init(isBlurEffectEnabled: true))
         qrScannerView.startRunning()
-        
+
         flashButton = FlashButton()
         flashButton.addTarget(self, action: #selector(tapFlashButton(_:)), for: .touchUpInside)
         view.addSubview(flashButton)
         flashButton.translatesAutoresizingMaskIntoConstraints = false
         flashButton.layer.cornerRadius = 35
-        
+
         closeButton = UIButton()
         view.addSubview(closeButton)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         closeButton.layer.cornerRadius = 18
-        
+
         NSLayoutConstraint.activate([
             flashButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             flashButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             flashButton.widthAnchor.constraint(equalToConstant: 70),
             flashButton.heightAnchor.constraint(equalToConstant: 70),
-            
+
             qrScannerView.topAnchor.constraint(equalTo: view.topAnchor),
             qrScannerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             qrScannerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             qrScannerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
+
             closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             closeButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             closeButton.widthAnchor.constraint(equalToConstant: 36),
@@ -98,21 +98,21 @@ class QRScannerViewController: UIViewController {
             closeButton.bringSubviewToFront(imageView)
         }
     }
-    
+
     @objc func tapCloseButton() {
         dismiss(animated: true)
         onCanceled?()
     }
-    
+
     @objc func tapFlashButton(_ sender: UIButton) {
         sender.isSelected.toggle()
         qrScannerView.setTorchActive(isOn: sender.isSelected)
     }
-    
+
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
-    
+
     private func showAlert() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             let alert = UIAlertController(title: "Error", message: "Camera is required to use in this application", preferredStyle: .alert)
@@ -130,7 +130,7 @@ extension QRScannerViewController: QRScannerViewDelegate {
         onFailed?(error)
         dismiss(animated: true)
     }
-    
+
     func qrScannerView(_ qrScannerView: QRScannerView, didSuccess code: String) {
         qrScannerView.stopRunning()
         DispatchQueue.main.asyncAfter(deadline: .now() + qrScannerView.animationDuration + 0.1) { [weak self] in

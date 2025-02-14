@@ -14,7 +14,7 @@ class MiniAppSettingsViewController: UITableViewController {
         self.app = app
         super.init(style: style)
     }
-    
+
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -23,7 +23,7 @@ class MiniAppSettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Settings"
-        
+
 //        let hostingController = UIHostingController(rootView: ScrollView {
 //            VStack {
 //                Text("Swipe from left to go back")
@@ -47,16 +47,16 @@ class MiniAppSettingsViewController: UITableViewController {
 //        ])
 //
 //        hostingController.didMove(toParent: self)
-        
+
         if navigationController is BackableNavigationController {
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .done, target: self, action: #selector(closePage))
         } else {
             navigationItem.largeTitleDisplayMode = .never
         }
-        
+
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MiniAppSettingsCell")
     }
-    
+
     @objc func closePage() {
         if navigationController is BackableNavigationController {
             dismiss(animated: true)
@@ -64,13 +64,13 @@ class MiniAppSettingsViewController: UITableViewController {
             navigationController?.popViewController(animated: true)
         }
     }
-    
+
     // 用于存储布尔值的设置项
     var settings: [(title: String, isEnabled: Bool)] = [
         ("Enable Feature", false),
         ("Next Page", false)
     ]
-    
+
     // MARK: - TableView 数据源方法
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -79,10 +79,10 @@ class MiniAppSettingsViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MiniAppSettingsCell", for: indexPath)
-        
+
         let setting = settings[indexPath.row]
         cell.textLabel?.text = setting.title
-        
+
         // 如果是开关设置
         if setting.title == "Enable Feature" {
             let featureSwitch = UISwitch()
@@ -94,7 +94,7 @@ class MiniAppSettingsViewController: UITableViewController {
         } else {
             cell.accessoryType = .disclosureIndicator
         }
-        
+
         return cell
     }
 

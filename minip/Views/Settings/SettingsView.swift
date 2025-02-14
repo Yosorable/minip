@@ -41,7 +41,7 @@ struct SettingsView: View {
                     }
 
                 } label: {
-                    Text("Clear WKWebView cache")
+                    Text("Clear WKWebView Cache")
                 }
 
                 Button {
@@ -50,7 +50,7 @@ struct SettingsView: View {
                         ProgressHUD.succeed("success")
                     })
                 } label: {
-                    Text("Clear KFImage cache")
+                    Text("Clear KFImage Cache")
                 }
             } header: {
                 Text("Cache")
@@ -58,11 +58,11 @@ struct SettingsView: View {
 
             Section {
                 Toggle(isOn: $wkwebviewInspectable, label: {
-                    Text("Allow inspect WKWebView")
+                    Text("Allow Inspect WKWebView")
                 })
 
                 Toggle(isOn: $useCapsuleButton, label: {
-                    Text("Use capsule button")
+                    Text("Use Capsule Button")
                 })
             } header: {
                 Text("Preference")

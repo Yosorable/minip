@@ -45,7 +45,7 @@ class BottomSheetPresentationController: UIPresentationController {
     @objc private func dismissController() {
         presentedViewController.dismiss(animated: true, completion: nil)
     }
-    
+
     override func containerViewWillLayoutSubviews() {
         super.containerViewWillLayoutSubviews()
         dimmingView.frame = containerView!.bounds

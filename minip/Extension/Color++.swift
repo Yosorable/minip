@@ -15,8 +15,8 @@ extension Color {
         }
         if str.count == 3 {
             str = String(repeating: str[str.startIndex], count: 2)
-            + String(repeating: str[str.index(str.startIndex, offsetBy: 1)], count: 2)
-            + String(repeating: str[str.index(str.startIndex, offsetBy: 2)], count: 2)
+                + String(repeating: str[str.index(str.startIndex, offsetBy: 1)], count: 2)
+                + String(repeating: str[str.index(str.startIndex, offsetBy: 2)], count: 2)
         } else if !str.count.isMultiple(of: 2) || str.count > 8 {
             return nil
         }
@@ -47,16 +47,16 @@ extension Color {
     }
 }
 
-extension UIColor {
-    public convenience init?(hex: String) {
+public extension UIColor {
+    convenience init?(hex: String) {
         var str = hex
         if str.hasPrefix("#") {
             str.removeFirst()
         }
         if str.count == 3 {
             str = String(repeating: str[str.startIndex], count: 2)
-            + String(repeating: str[str.index(str.startIndex, offsetBy: 1)], count: 2)
-            + String(repeating: str[str.index(str.startIndex, offsetBy: 2)], count: 2)
+                + String(repeating: str[str.index(str.startIndex, offsetBy: 1)], count: 2)
+                + String(repeating: str[str.index(str.startIndex, offsetBy: 2)], count: 2)
         } else if !str.count.isMultiple(of: 2) || str.count > 8 {
             return nil
         }

@@ -5,11 +5,11 @@
 //  Created by LZY on 2024/12/9.
 //
 
+import Alamofire
 import Foundation
 import ZipArchive
-import Alamofire
 
-// todo: 安装位置和数据存储位置分离？
+// TODO: 安装位置和数据存储位置分离？
 func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((String)->Void)? = nil, singalAppListChangedOnSuccess: Bool = true) {
     let fileManager = FileManager.default
     // 获取临时目录
@@ -42,11 +42,11 @@ func DownloadMiniAppPackageToTmpFolder(_ downURL: String, onError: @escaping (Er
         onError(ErrorMsg(errorDescription: "Error URL"))
         return
     }
-    
+
     let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    let destination: (URL, HTTPURLResponse) -> (URL, DownloadRequest.Options) = { tmpURL, res in
+    let destination: (URL, HTTPURLResponse)->(URL, DownloadRequest.Options) = { _, res in
         let pathComponent = res.suggestedFilename ?? "default.zip"
-        
+
         let finalPath = docURL.appendingPolyfill(path: "tmp").appendingPathComponent(pathComponent)
         return (finalPath, [.createIntermediateDirectories, .removePreviousFile])
     }
@@ -61,10 +61,9 @@ func DownloadMiniAppPackageToTmpFolder(_ downURL: String, onError: @escaping (Er
             }
             onError(ErrorMsg(errorDescription: "Unknow error"))
         })
-    
 }
 
-private func findAppJSON(in directory: URL) throws -> URL? {
+private func findAppJSON(in directory: URL) throws->URL? {
     let fileManager = FileManager.default
 
     do {
@@ -115,12 +114,11 @@ private func installByAppJSON(in appJSONURL: URL) throws {
         let rootDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let targetFolderURL = rootDirectory.appendingPathComponent(newAppInfo.name)
 
-        
         // 删除旧文件: 存在旧列表中但在新列表中不存在的（不对比md5，因为会直接覆盖）
         if let filesList = newAppInfo.files {
             var toDeleteFiles = [URL]()
-            var mp = [String:AppInfo.File]()
-            filesList.forEach { ele in
+            var mp = [String: AppInfo.File]()
+            for ele in filesList {
                 mp[ele.path] = ele
             }
             // 读取原列表
@@ -128,8 +126,9 @@ private func installByAppJSON(in appJSONURL: URL) throws {
 
             if let oldAppJsonData = try? Data(contentsOf: oldAppJsonPath),
                let oldJson = try? decoder.decode(AppInfo.self, from: oldAppJsonData),
-               let oldFilesList = oldJson.files {
-                oldFilesList.forEach { ele in
+               let oldFilesList = oldJson.files
+            {
+                for ele in oldFilesList {
                     if !mp.keys.contains(ele.path) {
                         let tmpPath = targetFolderURL.appendingPolyfill(path: ele.path)
                         toDeleteFiles.append(tmpPath)
@@ -140,9 +139,7 @@ private func installByAppJSON(in appJSONURL: URL) throws {
                     try FileManager.default.removeItem(at: ele)
                 }
             }
-                
         }
-        
 
         // 移动文件夹
 //        try FileManager.default.moveItem(at: parentFolderURL, to: targetFolderURL)
@@ -156,7 +153,7 @@ private func installByAppJSON(in appJSONURL: URL) throws {
 
 private func deleteFolder(at url: URL) {
     let fileManager = FileManager.default
-    
+
     // 检查文件夹是否存在
     if fileManager.fileExists(atPath: url.path) {
         do {
@@ -172,21 +169,21 @@ private func deleteFolder(at url: URL) {
 
 private func copyFolder(from sourceURL: URL, to destinationURL: URL) throws {
     let fileManager = FileManager.default
-    
+
     // 确保目标文件夹存在
     if !fileManager.fileExists(atPath: destinationURL.path) {
         try fileManager.createDirectory(at: destinationURL, withIntermediateDirectories: true, attributes: nil)
     }
-    
+
     let sourceContents = try fileManager.contentsOfDirectory(at: sourceURL, includingPropertiesForKeys: nil, options: [])
-    
+
     for sourceFile in sourceContents {
         let destinationFile = destinationURL.appendingPathComponent(sourceFile.lastPathComponent)
-        
+
         // 判断源文件是文件还是文件夹
         var isDirectory: ObjCBool = false
         fileManager.fileExists(atPath: sourceFile.path, isDirectory: &isDirectory)
-        
+
         if isDirectory.boolValue {
             // 如果是文件夹，递归调用copyFolder
             try copyFolder(from: sourceFile, to: destinationFile)

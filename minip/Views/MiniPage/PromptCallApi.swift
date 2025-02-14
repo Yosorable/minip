@@ -22,7 +22,7 @@ extension MiniPageViewController: WKUIDelegate {
             completionHandler(MinipApi.InteropUtils.fail(msg: "Error request").toJsonString())
             return
         }
-        
+
         guard let apiName = MinipApi.APIName(rawValue: apiName) else {
             do {
                 let encoder = JSONEncoder()
@@ -34,7 +34,7 @@ extension MiniPageViewController: WKUIDelegate {
             }
             return
         }
-        
+
         let wid = (webView as? MWebView)?.id ?? -1
         logger.debug("[minip-api] call api [\(apiName.rawValue)] from [webview:\(wid == -1 ? "unknown" : "\(wid)")]")
 

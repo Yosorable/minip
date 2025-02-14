@@ -19,7 +19,7 @@ class MinipNativeInteraction: NSObject, WKScriptMessageHandlerWithReply {
             replyHandler(nil, "Error request")
             return
         }
-        
+
         guard let apiName = MinipApi.APIName(rawValue: apiName) else {
             do {
                 let encoder = JSONEncoder()
@@ -31,7 +31,7 @@ class MinipNativeInteraction: NSObject, WKScriptMessageHandlerWithReply {
             }
             return
         }
-        
+
         let wid = (message.webView as? MWebView)?.id ?? -1
         logger.debug("[minip-api-v3] call api [\(apiName.rawValue)] from [webview:\(wid == -1 ? "unknown" : "\(wid)")] with [\(body.count < 1000 ? body : "data length: \(body.count)")]")
 
@@ -111,5 +111,4 @@ class MinipNativeInteraction: NSObject, WKScriptMessageHandlerWithReply {
             replyHandler(nil, "API \(apiName.rawValue) is not implemented or not allowed")
         }
     }
-
 }

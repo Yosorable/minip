@@ -21,7 +21,9 @@ class MinipApi {
         case showAppDetail
         case closeApp
         case installApp
+
         // MARK: UI
+
         case setNavigationBarTitle
         case setNavigationBarColor
         case enablePullDownRefresh
@@ -34,22 +36,27 @@ class MinipApi {
         case showPicker
         case previewImage
         case previewVideo
+
         // MARK: Device
+
         case vibrate
         case getClipboardData
         case setClipboardData
         case scanQRCode
+
         // MARK: KVStorage async
+
         case getKVStorage
         case setKVStorage
         case deleteKVStorage
         case clearKVStorage
+
         // MARK: KYStorage sync, for prompt
+
         case getKVStorageSync
         case setKVStorageSync
         case deleteKVStorageSync
         case clearKVStorageSync
-        
     }
     
     struct Parameter {
@@ -70,7 +77,7 @@ class MinipApi {
         func toJsonString() -> String? {
             let encoder = JSONEncoder()
             do {
-                return String(data: try encoder.encode(self))
+                return try String(data: encoder.encode(self))
             } catch {
                 return "{\"code\": 7, \"msg\": \"Error occurs when encoding res data to json\"}"
             }

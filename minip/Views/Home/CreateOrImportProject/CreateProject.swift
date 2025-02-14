@@ -7,7 +7,7 @@
 
 import UIKit
 
-func ShowCreateNewProjectAlert(_ parentVC: UIViewController, onCreatedSuccess: @escaping (AppInfo)->Void) {
+func ShowCreateNewProjectAlert(_ parentVC: UIViewController, onCreatedSuccess: @escaping (AppInfo) -> Void) {
     let alert = UIAlertController(title: "Create Project", message: nil, preferredStyle: .alert)
     alert.addTextField(configurationHandler: { tf in
         tf.placeholder = "name"
@@ -15,7 +15,7 @@ func ShowCreateNewProjectAlert(_ parentVC: UIViewController, onCreatedSuccess: @
     alert.addTextField(configurationHandler: { tf in
         tf.placeholder = "display name"
     })
-    
+
     let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
     let confirmAction = UIAlertAction(title: "Create", style: .default) { _ in
         let nameTF = alert.textFields?[0]
@@ -31,7 +31,7 @@ func ShowCreateNewProjectAlert(_ parentVC: UIViewController, onCreatedSuccess: @
             ShowSimpleError(err: error)
         }
     }
-    
+
     alert.addAction(cancelAction)
     alert.addAction(confirmAction)
     parentVC.present(alert, animated: true)

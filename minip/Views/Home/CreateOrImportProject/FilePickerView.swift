@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-import SwiftUI
 import MobileCoreServices
+import ProgressHUD
+import SwiftUI
 import UniformTypeIdentifiers
 import ZipArchive
-import ProgressHUD
 
 struct FileImporterView: UIViewControllerRepresentable {
-    var onSuccess: (()->Void)?
+    var onSuccess: (() -> Void)?
     @Environment(\.presentationMode) var presentationMode
 
     func makeCoordinator() -> Coordinator {

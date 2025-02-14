@@ -5,9 +5,9 @@
 //  Created by ByteDance on 2023/7/15.
 //
 
-import UIKit
 import Kingfisher
 import Photos
+import UIKit
 
 class ImagePreviewViewController: UIViewController {
     var imageView: ZoomImageView!
@@ -19,13 +19,14 @@ class ImagePreviewViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         imageView = ZoomImageView()
-        self.imageView.zoomMode = .fit
+        imageView.zoomMode = .fit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
         NSLayoutConstraint.activate([
@@ -48,14 +49,14 @@ class ImagePreviewViewController: UIViewController {
         }
         view.backgroundColor = .black
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
-        self.view.addGestureRecognizer(tapGestureRecognizer)
+        view.addGestureRecognizer(tapGestureRecognizer)
 
         tapGestureRecognizer.require(toFail: imageView.doubleTapGesture)
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
-        self.view.addGestureRecognizer(longPressRecognizer)
+        view.addGestureRecognizer(longPressRecognizer)
     }
     
-    @objc func tapped(sender: UITapGestureRecognizer){
+    @objc func tapped(sender: UITapGestureRecognizer) {
         dismiss(animated: true)
     }
 
@@ -65,12 +66,12 @@ class ImagePreviewViewController: UIViewController {
             
             let alertController = UIAlertController(title: "Action", message: "Select one action", preferredStyle: .actionSheet)
             alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            alertController.addAction(UIAlertAction(title: "Save to album", style: .default, handler: { [weak self] action in
-                guard let img = self?.imageView.image  else  {
+            alertController.addAction(UIAlertAction(title: "Save to album", style: .default, handler: { [weak self] _ in
+                guard let img = self?.imageView.image else {
                     ShowSimpleError(err: ErrorMsg(errorDescription: "Error image"))
                     return
                 }
-                PHPhotoLibrary.requestAuthorization { (status) in
+                PHPhotoLibrary.requestAuthorization { status in
                     if status == .authorized {
                         UIImageWriteToSavedPhotosAlbum(img, nil, nil, nil)
                         DispatchQueue.main.async {
@@ -95,16 +96,15 @@ class ImagePreviewViewController: UIViewController {
             }
             
             if let ppc = alertController.popoverPresentationController {
-                ppc.sourceView = self.view
-                ppc.sourceRect = CGRectMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0, 1.0, 1.0)
+                ppc.sourceView = view
+                ppc.sourceRect = CGRectMake(view.bounds.size.width / 2.0, view.bounds.size.height / 2.0, 1.0, 1.0)
             }
             present(alertController, animated: true)
         }
     }
 }
 
-open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
-    
+open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
     public enum ZoomMode {
         case fit
         case fill
@@ -148,7 +148,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
         }
     }
     
-    open override var intrinsicContentSize: CGSize {
+    override open var intrinsicContentSize: CGSize {
         return imageView.intrinsicContentSize
     }
     
@@ -156,7 +156,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
     
     // MARK: - Initializers
     
-    public override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         setup()
     }
@@ -175,7 +175,6 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
     // MARK: - Functions
     
     open func scrollToCenter() {
-        
         let centerOffset = CGPoint(
             x: contentSize.width > bounds.width ? (contentSize.width / 2) - (bounds.width / 2) : 0,
             y: contentSize.height > bounds.height ? (contentSize.height / 2) - (bounds.height / 2) : 0
@@ -183,15 +182,11 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
         
         contentOffset = centerOffset
     }
+
     var doubleTapGesture: UITapGestureRecognizer!
     open func setup() {
-        
-#if swift(>=3.2)
-        if #available(iOS 11, *) {
-            contentInsetAdjustmentBehavior = .never
-        }
-#endif
-        
+        contentInsetAdjustmentBehavior = .never
+
         backgroundColor = UIColor.clear
         delegate = self
         imageView.contentMode = .scaleAspectFill
@@ -204,16 +199,14 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
         addGestureRecognizer(doubleTapGesture)
     }
     
-    open override func didMoveToSuperview() {
+    override open func didMoveToSuperview() {
         super.didMoveToSuperview()
     }
     
-    open override func layoutSubviews() {
-        
+    override open func layoutSubviews() {
         super.layoutSubviews()
         
         if imageView.image != nil && oldSize != bounds.size {
-            
             updateImageView()
             oldSize = bounds.size
         }
@@ -227,15 +220,13 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
         }
     }
     
-    open override func updateConstraints() {
+    override open func updateConstraints() {
         super.updateConstraints()
         updateImageView()
     }
     
     private func updateImageView() {
-        
         func fitSize(aspectRatio: CGSize, boundingSize: CGSize) -> CGSize {
-            
             let widthRatio = (boundingSize.width / aspectRatio.width)
             let heightRatio = (boundingSize.height / aspectRatio.height)
             
@@ -243,8 +234,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
             
             if widthRatio < heightRatio {
                 boundingSize.height = boundingSize.width / aspectRatio.width * aspectRatio.height
-            }
-            else if (heightRatio < widthRatio) {
+            } else if heightRatio < widthRatio {
                 boundingSize.width = boundingSize.height / aspectRatio.height * aspectRatio.width
             }
             return CGSize(width: ceil(boundingSize.width), height: ceil(boundingSize.height))
@@ -258,8 +248,7 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
             
             if widthRatio > heightRatio {
                 minimumSize.height = minimumSize.width / aspectRatio.width * aspectRatio.height
-            }
-            else if (heightRatio > widthRatio) {
+            } else if heightRatio > widthRatio {
                 minimumSize.width = minimumSize.height / aspectRatio.height * aspectRatio.width
             }
             return CGSize(width: ceil(minimumSize.width), height: ceil(minimumSize.height))
@@ -287,11 +276,12 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
     }
     
     @objc private func handleDoubleTap(_ gestureRecognizer: UITapGestureRecognizer) {
-        if self.zoomScale == 1 {
+        if zoomScale == 1 {
             zoom(
                 to: zoomRectFor(
                     scale: max(1, maximumZoomScale / 3),
-                    with: gestureRecognizer.location(in: gestureRecognizer.view)),
+                    with: gestureRecognizer.location(in: gestureRecognizer.view)
+                ),
                 animated: true
             )
         } else {
@@ -299,7 +289,6 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
         }
     }
     
-    // This function is borrowed from: https://stackoverflow.com/questions/3967971/how-to-zoom-in-out-photo-on-double-tap-in-the-iphone-wwdc-2010-104-photoscroll
     private func zoomRectFor(scale: CGFloat, with center: CGPoint) -> CGRect {
         let center = imageView.convert(center, from: self)
         
@@ -313,34 +302,30 @@ open class ZoomImageView : UIScrollView, UIScrollViewDelegate {
     }
     
     // MARK: - UIScrollViewDelegate
-    @objc dynamic public func scrollViewDidZoom(_ scrollView: UIScrollView) {
+
+    @objc public dynamic func scrollViewDidZoom(_ scrollView: UIScrollView) {
         imageView.center = ZoomImageView.contentCenter(forBoundingSize: bounds.size, contentSize: contentSize)
     }
     
-    @objc dynamic public func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
-        
-    }
+    @objc public dynamic func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {}
     
-    @objc dynamic public func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
-        
-    }
+    @objc public dynamic func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {}
     
-    @objc dynamic public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+    @objc public dynamic func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
     
     @inline(__always)
     private static func contentCenter(forBoundingSize boundingSize: CGSize, contentSize: CGSize) -> CGPoint {
-        
         /// When the zoom scale changes i.e. the image is zoomed in or out, the hypothetical center
         /// of content view changes too. But the default Apple implementation is keeping the last center
         /// value which doesn't make much sense. If the image ratio is not matching the screen
         /// ratio, there will be some empty space horizontaly or verticaly. This needs to be calculated
         /// so that we can get the correct new center value. When these are added, edges of contentView
         /// are aligned in realtime and always aligned with corners of scrollview.
-        let horizontalOffest = (boundingSize.width > contentSize.width) ? ((boundingSize.width - contentSize.width) * 0.5): 0.0
-        let verticalOffset = (boundingSize.height > contentSize.height) ? ((boundingSize.height - contentSize.height) * 0.5): 0.0
+        let horizontalOffest = (boundingSize.width > contentSize.width) ? ((boundingSize.width - contentSize.width) * 0.5) : 0.0
+        let verticalOffset = (boundingSize.height > contentSize.height) ? ((boundingSize.height - contentSize.height) * 0.5) : 0.0
         
-        return CGPoint(x: contentSize.width * 0.5 + horizontalOffest,  y: contentSize.height * 0.5 + verticalOffset)
+        return CGPoint(x: contentSize.width * 0.5 + horizontalOffest, y: contentSize.height * 0.5 + verticalOffset)
     }
 }

@@ -5,32 +5,34 @@
 //  Created by ByteDance on 2023/7/10.
 //
 
-import SwiftUI
-import UIKit
-import Runestone
-import TreeSitterJavaScriptRunestone
-import TreeSitterHTMLRunestone
 import KeyboardToolbar
+import Runestone
+import SwiftUI
+import TreeSitterHTMLRunestone
+import TreeSitterJavaScriptRunestone
+import UIKit
 
 class CodeEditorV2Controller: UIViewController {
     var textView: TextView?
     var fileString: String
     var language: TreeSitterLanguage
-    var onChange: (String)->Void
-    
+    var onChange: (String) -> Void
+
     let keyboardToolbarView = KeyboardToolbarView()
 
-    init(textView: TextView? = nil, fileString: String, language: TreeSitterLanguage, onChange: @escaping (String)->Void) {
+    init(textView: TextView? = nil, fileString: String, language: TreeSitterLanguage, onChange: @escaping (String) -> Void) {
         self.textView = textView
         self.fileString = fileString
         self.language = language
         self.onChange = onChange
         super.init(nibName: nil, bundle: nil)
     }
-    
+
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
@@ -39,9 +41,9 @@ class CodeEditorV2Controller: UIViewController {
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.editorDelegate = self
         textView.backgroundColor = .systemBackground
-        
+
         textView.inputAccessoryView = keyboardToolbarView
-        
+
         setCustomization(on: textView)
         setTextViewState(on: textView)
         view.addSubview(textView)
@@ -51,13 +53,12 @@ class CodeEditorV2Controller: UIViewController {
             textView.topAnchor.constraint(equalTo: view.topAnchor),
             textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
-        
+
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
-    
+
     @objc func adjustForKeyboard(notification: Notification) {
         guard let keyboardValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
 
@@ -92,18 +93,18 @@ class CodeEditorV2Controller: UIViewController {
         textView.showSoftLineBreaks = true
         // Set the line-height to 130%
         textView.lineHeightMultiplier = 1.3
-        
+
         if #available(iOS 16.0, *) {
             textView.isFindInteractionEnabled = true
         }
         textView.alwaysBounceVertical = true
-        
+
         // keyboard
-        self.setupKeyboardTools()
+        setupKeyboardTools()
         textView.autocorrectionType = .no
         textView.spellCheckingType = .no
         textView.autocapitalizationType = .none
-        
+
         textView.indentStrategy = .space(length: 2)
     }
 
@@ -113,7 +114,7 @@ class CodeEditorV2Controller: UIViewController {
 //                let theme = TomorrowTheme()
             // VSCodeDarkTheme()
             let state = TextViewState(text: text, theme: DefaultTheme(), language: self.language)
-            
+
 //                let state = TextViewState(text: text)
             DispatchQueue.main.async {
                 textView.setState(state)
@@ -125,7 +126,7 @@ class CodeEditorV2Controller: UIViewController {
 extension CodeEditorV2Controller: TextViewDelegate {
     func textViewDidChange(_ textView: TextView) {
 //        UserDefaults.standard.text = textView.text
-        self.onChange(textView.text)
+        onChange(textView.text)
         setupKeyboardTools()
     }
 }
@@ -137,12 +138,11 @@ struct CodeEditorV2View: UIViewControllerRepresentable {
         let vc = CodeEditorV2Controller(fileString: contentString, language: language, onChange: { newStr in
             contentString = newStr
         })
-        
+
         return vc
     }
-    
-    func updateUIViewController(_ uiViewController: CodeEditorV2Controller, context: Context) {
-    }
+
+    func updateUIViewController(_ uiViewController: CodeEditorV2Controller, context: Context) {}
 }
 
 extension UIColor {
@@ -150,36 +150,47 @@ extension UIColor {
         var background: UIColor {
             return .white
         }
+
         var selection: UIColor {
             return UIColor(red: 222 / 255, green: 222 / 255, blue: 222 / 255, alpha: 1)
         }
+
         var currentLine: UIColor {
             return UIColor(red: 242 / 255, green: 242 / 255, blue: 242 / 255, alpha: 1)
         }
+
         var foreground: UIColor {
             return UIColor(red: 96 / 255, green: 96 / 255, blue: 95 / 255, alpha: 1)
         }
+
         var comment: UIColor {
             return UIColor(red: 159 / 255, green: 161 / 255, blue: 158 / 255, alpha: 1)
         }
+
         var red: UIColor {
             return UIColor(red: 196 / 255, green: 74 / 255, blue: 62 / 255, alpha: 1)
         }
+
         var orange: UIColor {
             return UIColor(red: 236 / 255, green: 157 / 255, blue: 68 / 255, alpha: 1)
         }
+
         var yellow: UIColor {
             return UIColor(red: 232 / 255, green: 196 / 255, blue: 66 / 255, alpha: 1)
         }
+
         var green: UIColor {
             return UIColor(red: 136 / 255, green: 154 / 255, blue: 46 / 255, alpha: 1)
         }
+
         var aqua: UIColor {
             return UIColor(red: 100 / 255, green: 166 / 255, blue: 173 / 255, alpha: 1)
         }
+
         var blue: UIColor {
             return UIColor(red: 94 / 255, green: 133 / 255, blue: 184 / 255, alpha: 1)
         }
+
         var purple: UIColor {
             return UIColor(red: 149 / 255, green: 115 / 255, blue: 179 / 255, alpha: 1)
         }
@@ -291,7 +302,7 @@ private extension CodeEditorV2Controller {
                     if #available(iOS 16.0, *) {
                         self?.textView?.findInteraction?.presentFindNavigator(showingReplace: false)
                     } else {
-                        // todo: 显示不支持，或者移除
+                        // TODO: 显示不支持，或者移除
                     }
                 }),
                 KeyboardToolGroupItem(style: .secondary, representativeTool: BlockKeyboardTool(symbolName: "keyboard.chevron.compact.down") { [weak self] in
@@ -301,8 +312,3 @@ private extension CodeEditorV2Controller {
         ]
     }
 }
-
-
-
-
-

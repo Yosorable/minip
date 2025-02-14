@@ -5,12 +5,12 @@
 //  Created by LZY on 2025/2/13.
 //
 
-import UIKit
 import AVFoundation
+import UIKit
 
 public class QRScannerView: UIView {
-
     // MARK: - Input
+
     public struct Input {
         let focusImage: UIImage?
         let focusImagePadding: CGFloat?
@@ -30,6 +30,7 @@ public class QRScannerView: UIView {
     }
 
     // MARK: - Public Properties
+
     public var focusImage: UIImage?
 
     public var focusImagePadding: CGFloat = 8.0
@@ -95,11 +96,12 @@ public class QRScannerView: UIView {
 
     public func setTorchActive(isOn: Bool) {
         assert(Thread.isMainThread)
-        
+
         guard let videoDevice = AVCaptureDevice.default(for: .video),
-            videoDevice.hasTorch, videoDevice.isTorchAvailable,
-            (metadataOutputEnable || videoDataOutputEnable) else {
-                return
+              videoDevice.hasTorch, videoDevice.isTorchAvailable,
+              metadataOutputEnable || videoDataOutputEnable
+        else {
+            return
         }
         try? videoDevice.lockForConfiguration()
         videoDevice.torchMode = isOn ? .on : .off
@@ -226,12 +228,12 @@ public class QRScannerView: UIView {
     }
 
     private func setupImageViews() {
-        let w = min(self.bounds.width, self.bounds.height)
-        let h = max(self.bounds.height, self.bounds.width)
+        let w = min(bounds.width, bounds.height)
+        let h = max(bounds.height, bounds.width)
         let width = w * 0.618
         let x = w * 0.191
         let y = h * 0.191
-        
+
         focusImageView = UIImageView(frame: CGRect(x: x, y: y, width: width, height: width))
         focusImageView.image = focusImage ?? UIImage(systemName: "viewfinder", withConfiguration: UIImage.SymbolConfiguration(weight: .thin))
         focusImageView.tintColor = .white
@@ -245,12 +247,12 @@ public class QRScannerView: UIView {
     private func addPreviewLayer() {
         let previewLayer = AVCaptureVideoPreviewLayer(session: session)
         previewLayer.videoGravity = .resizeAspectFill
-        
-        let w = min(self.bounds.width, self.bounds.height)
-        let h = max(self.bounds.height, self.bounds.width)
+
+        let w = min(bounds.width, bounds.height)
+        let h = max(bounds.height, bounds.width)
         previewLayer.frame = CGRect(x: 0, y: 0, width: w, height: h)
         layer.addSublayer(previewLayer)
-        
+
         self.previewLayer = previewLayer
     }
 
@@ -260,11 +262,11 @@ public class QRScannerView: UIView {
 
     private func moveImageViews(qrCode: String, corners: [CGPoint]) {
         assert(Thread.isMainThread)
-        
+
         let path = UIBezierPath()
         path.move(to: corners[0])
-        corners[1..<corners.count].forEach() {
-            path.addLine(to: $0)
+        for corner in corners[1 ..< corners.count] {
+            path.addLine(to: corner)
         }
         path.close()
 
@@ -279,7 +281,7 @@ public class QRScannerView: UIView {
         }
         let degrees = atan(aSide / bSide)
 
-        var maxSide: CGFloat =  hypot(corners[3].x - corners[0].x, corners[3].y - corners[0].y)
+        var maxSide: CGFloat = hypot(corners[3].x - corners[0].x, corners[3].y - corners[0].y)
         for (i, _) in corners.enumerated() {
             if i == 3 { break }
             let side = hypot(corners[i].x - corners[i+1].x, corners[i].y - corners[i+1].y)
@@ -297,13 +299,13 @@ public class QRScannerView: UIView {
 
             strongSelf.qrCodeImageView.frame = path.bounds
             strongSelf.qrCodeImageView.center = center
-            }, completion: { [weak self] _ in
-                guard let strongSelf = self else { return }
-                strongSelf.qrCodeImageView.image = strongSelf.qrCodeImage
-                if strongSelf.isBlurEffectEnabled {
-                    strongSelf.blurEffectView.isHidden = false
-                }
-                strongSelf.success(qrCode)
+        }, completion: { [weak self] _ in
+            guard let strongSelf = self else { return }
+            strongSelf.qrCodeImageView.image = strongSelf.qrCodeImage
+            if strongSelf.isBlurEffectEnabled {
+                strongSelf.blurEffectView.isHidden = false
+            }
+            strongSelf.success(qrCode)
         })
     }
 

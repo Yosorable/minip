@@ -9,35 +9,35 @@ import Runestone
 import UIKit
 
 public class VSCodeDarkTheme: EditorTheme {
-    public var backgroundColor: UIColor = UIColor(hex: "#1f1f1f")!
+    public var backgroundColor: UIColor = .init(hex: "#1f1f1f")!
     
     public var userInterfaceStyle: UIUserInterfaceStyle = .dark
     
     public var font: UIFont = .monospacedSystemFont(ofSize: 14, weight: .regular)
     
-    public var textColor: UIColor = UIColor(hex: "#aeafad")!
+    public var textColor: UIColor = .init(hex: "#aeafad")!
     
-    public var gutterBackgroundColor: UIColor = .black//UIColor(hex: "#1f1f1f")!
+    public var gutterBackgroundColor: UIColor = .black // UIColor(hex: "#1f1f1f")!
     
-    public var gutterHairlineColor: UIColor = .black//UIColor(hex: "#1f1f1f")!
+    public var gutterHairlineColor: UIColor = .black // UIColor(hex: "#1f1f1f")!
     
-    public var lineNumberColor: UIColor = UIColor(hex: "#6f7680")!
+    public var lineNumberColor: UIColor = .init(hex: "#6f7680")!
     
     public var lineNumberFont: UIFont = .monospacedSystemFont(ofSize: 14, weight: .regular)
     
-    public var selectedLineBackgroundColor: UIColor = UIColor(hex: "#1f1f1f")!
+    public var selectedLineBackgroundColor: UIColor = .init(hex: "#1f1f1f")!
     
-    public var selectedLinesLineNumberColor: UIColor = UIColor(hex: "#cccccc")!
+    public var selectedLinesLineNumberColor: UIColor = .init(hex: "#cccccc")!
     
-    public var selectedLinesGutterBackgroundColor: UIColor = UIColor(hex: "#1f1f1f")!
+    public var selectedLinesGutterBackgroundColor: UIColor = .init(hex: "#1f1f1f")!
     
-    public var invisibleCharactersColor: UIColor = UIColor(hex: "#aeafad")!
+    public var invisibleCharactersColor: UIColor = .init(hex: "#aeafad")!
     
-    public var pageGuideHairlineColor: UIColor = UIColor(hex: "#aeafad")!
+    public var pageGuideHairlineColor: UIColor = .init(hex: "#aeafad")!
     
-    public var pageGuideBackgroundColor: UIColor = UIColor(hex: "#1f1f1f")!
+    public var pageGuideBackgroundColor: UIColor = .init(hex: "#1f1f1f")!
     
-    public var markedTextBackgroundColor: UIColor = UIColor(hex: "#304e75")!
+    public var markedTextBackgroundColor: UIColor = .init(hex: "#304e75")!
     
     public func textColor(for rawHighlightName: String) -> UIColor? {
         guard let highlightName = HighlightName(rawHighlightName) else {
@@ -67,7 +67,6 @@ public class VSCodeDarkTheme: EditorTheme {
         case .type:
             return UIColor(hex: "#71c6b1")
         }
-        
     }
     
     public func fontTraits(for rawHighlightName: String) -> FontTraits {

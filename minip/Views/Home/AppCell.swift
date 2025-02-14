@@ -5,8 +5,8 @@
 //  Created by LZY on 2025/2/1.
 //
 
-import UIKit
 import Kingfisher
+import UIKit
 
 class AppCell: UITableViewCell {
     static let identifier = "AppCell"
@@ -16,7 +16,7 @@ class AppCell: UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 12
         imageView.clipsToBounds = true
-        
+
         return imageView
     }()
 
@@ -25,7 +25,7 @@ class AppCell: UITableViewCell {
         label.numberOfLines = 1
         return label
     }()
-    
+
     lazy var authorLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 10)
@@ -33,7 +33,7 @@ class AppCell: UITableViewCell {
         label.numberOfLines = 1
         return label
     }()
-    
+
     lazy var appIdLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 10)
@@ -49,7 +49,6 @@ class AppCell: UITableViewCell {
         infoStackView.axis = .vertical
         infoStackView.alignment = .leading
         infoStackView.setCustomSpacing(10, after: appNameLabel)
-        
 
         let stackView = UIStackView(arrangedSubviews: [appIconImageView, infoStackView])
         stackView.axis = .horizontal
@@ -67,10 +66,11 @@ class AppCell: UITableViewCell {
             stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         ])
-        
+
         separatorInset = UIEdgeInsets(top: 0, left: 85, bottom: 0, right: 0)
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

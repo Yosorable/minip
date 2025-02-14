@@ -10,8 +10,8 @@ import SwiftLMDB
 
 class KVStoreManager {
     static let shared = KVStoreManager()
-    var environment: Environment? = nil
-    var dbMap: [String: Database] = [String: Database]()
+    var environment: Environment?
+    var dbMap: [String: Database] = .init()
     init() {
         let defaultURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: ".data")
         let (exist, _) = fileOrFolderExists(path: defaultURL.path)
@@ -24,7 +24,7 @@ class KVStoreManager {
             logger.error("[KVStoreManager] \(error)")
         }
     }
-    
+
     func getDB(dbName: String) -> Database? {
         guard let res = dbMap[dbName] else {
             let res = try? environment?.openDatabase(named: dbName, flags: [.create])
@@ -33,7 +33,7 @@ class KVStoreManager {
         }
         return res
     }
-    
+
     func removeDB(dbName: String) {
         dbMap.removeValue(forKey: dbName)
     }

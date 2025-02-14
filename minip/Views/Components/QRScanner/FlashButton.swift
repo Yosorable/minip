@@ -9,7 +9,9 @@ import UIKit
 
 final class FlashButton: UIButton {
     var blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterialDark))
+
     // MARK: - Initializer
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         settings()
@@ -21,17 +23,19 @@ final class FlashButton: UIButton {
     }
 
     // MARK: - Properties
+
     override var isSelected: Bool {
         didSet {
             UIView.animate(withDuration: 0.3, animations: {
                 self.blurEffectView.effect = self.isSelected ? UIBlurEffect(style: .systemMaterialLight) : UIBlurEffect(style: .systemMaterialDark)
             })
-            self.tintColor = self.isSelected ? UIColor(hex: "#5756CE") : .white
+            tintColor = isSelected ? UIColor(hex: "#5756CE") : .white
         }
     }
 }
 
 // MARK: - Private
+
 private extension FlashButton {
     func settings() {
         clipsToBounds = true
@@ -45,8 +49,8 @@ private extension FlashButton {
         setImage(UIImage(systemName: "flashlight.on.fill", withConfiguration: UIImage.SymbolConfiguration(textStyle: .title1)), for: .selected)
         tintColor = .white
 
-        if let imageView = self.imageView{
-            self.bringSubviewToFront(imageView)
+        if let imageView = imageView {
+            bringSubviewToFront(imageView)
         }
 
         isSelected = false

@@ -5,16 +5,16 @@
 //  Created by ByteDance on 2023/8/5.
 //
 
+import AVFoundation
+import AVKit
+import Defaults
+import Kingfisher
+import OSLog
+import PanModal
+import SafariServices
+import SwiftUI
 import UIKit
 import WebKit
-import PanModal
-import SwiftUI
-import Kingfisher
-import SafariServices
-import AVKit
-import AVFoundation
-import OSLog
-import Defaults
 
 class MiniPageViewController: UIViewController {
     var webview: MWebView!
@@ -23,7 +23,7 @@ class MiniPageViewController: UIViewController {
     var _title: String?
     var pageURL: URL?
     var refreshControl: UIRefreshControl?
-    var initialTouchPoint: CGPoint = CGPoint(x: 0, y: 0)
+    var initialTouchPoint: CGPoint = .init(x: 0, y: 0)
     var isRoot: Bool
     
     init(app: AppInfo, page: String? = nil, title: String? = nil, isRoot: Bool = false) {
@@ -35,9 +35,9 @@ class MiniPageViewController: UIViewController {
     }
     
     func redirectTo(page pg: String, title t: String? = nil) {
-        self.page = pg
+        page = pg
         if let t = t {
-            self.title = t
+            title = t
         }
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -56,9 +56,10 @@ class MiniPageViewController: UIViewController {
             logger.info("[webview] load \(url)")
             webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
         }
-        self.pageURL = url
+        pageURL = url
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -84,14 +85,13 @@ class MiniPageViewController: UIViewController {
             webview.isInspectable = Defaults[.wkwebviewInspectable]
         }
         
-        self.view = webview
+        view = webview
         
         if let bc = app.backgroundColor {
-            self.view.backgroundColor = UIColor(hex: bc)
+            view.backgroundColor = UIColor(hex: bc)
         } else {
-            self.view.backgroundColor = .systemBackground
+            view.backgroundColor = .systemBackground
         }
-        
         
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -110,20 +110,19 @@ class MiniPageViewController: UIViewController {
             logger.info("[webview] load \(url)")
             webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
         }
-        self.pageURL = url
+        pageURL = url
         
         let showNav = app.navigationBarStatus == "display"
         
-        self.title = _title ?? app.name
-        
+        title = _title ?? app.name
         
         if let tc = app.tintColor {
             navigationController?.navigationBar.tintColor = UIColor(hex: tc)
             webview.tintColor = UIColor(hex: tc)
         }
         
-        if self.app.disableSwipeBackGesture == true {
-            self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        if app.disableSwipeBackGesture == true {
+            navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         }
 
         if showNav {
@@ -192,10 +191,10 @@ class MiniPageViewController: UIViewController {
 
     // wkwebview的scrollview的滚动条颜色有问题（html里面的没问题），需要手动设置
     func adaptColorScheme() {
-        if self.isDarkMode {
-            self.webview.scrollView.indicatorStyle = .white
+        if isDarkMode {
+            webview.scrollView.indicatorStyle = .white
         } else {
-            self.webview.scrollView.indicatorStyle = .black
+            webview.scrollView.indicatorStyle = .black
         }
     }
 
@@ -228,7 +227,7 @@ class MiniPageViewController: UIViewController {
 
     @objc
     func close() {
-        self.dismiss(animated: true, completion: {
+        dismiss(animated: true, completion: {
             logger.info("[MiniPageViewController] clear open app info & reset orientation")
             if MiniAppManager.shared.openedApp?.landscape == true {
                 if #available(iOS 16.0, *) {
@@ -244,7 +243,7 @@ class MiniPageViewController: UIViewController {
     
     @objc
     func showAppDetail() {
-        var closeFnc: (()->Void)?
+        var closeFnc: (() -> Void)?
         // 暂时停用appdetail中的关闭按钮
 //        if self.navigationController?.isNavigationBarHidden ?? true {
 //            closeFnc = {
@@ -252,7 +251,7 @@ class MiniPageViewController: UIViewController {
 //            }
 //        }
         
-        self.presentPanModal(AppDetailViewController(appInfo: app, reloadPageFunc: { [weak self] in
+        presentPanModal(AppDetailViewController(appInfo: app, reloadPageFunc: { [weak self] in
             self?.webview.reload()
         }, closeFunc: closeFnc, parentVC: self))
     }

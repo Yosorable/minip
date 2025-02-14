@@ -5,8 +5,8 @@
 //  Created by LZY on 2025/2/13.
 //
 
-import UIKit
 import AVFoundation
+import UIKit
 
 class QRScannerViewController: UIViewController {
     var qrScannerView: QRScannerView!
@@ -55,7 +55,7 @@ class QRScannerViewController: UIViewController {
         qrScannerView.startRunning()
         
         flashButton = FlashButton()
-        flashButton.addTarget(self, action: #selector(self.tapFlashButton(_:)), for: .touchUpInside)
+        flashButton.addTarget(self, action: #selector(tapFlashButton(_:)), for: .touchUpInside)
         view.addSubview(flashButton)
         flashButton.translatesAutoresizingMaskIntoConstraints = false
         flashButton.layer.cornerRadius = 35
@@ -92,9 +92,9 @@ class QRScannerViewController: UIViewController {
 
         closeButton.setImage(UIImage(systemName: "xmark", withConfiguration: UIImage.SymbolConfiguration(textStyle: .body)), for: .normal)
         closeButton.tintColor = .white
-        closeButton.addTarget(self, action: #selector(self.tapCloseButton), for: .touchUpInside)
+        closeButton.addTarget(self, action: #selector(tapCloseButton), for: .touchUpInside)
 
-        if let imageView = closeButton.imageView{
+        if let imageView = closeButton.imageView {
             closeButton.bringSubviewToFront(imageView)
         }
     }
@@ -133,9 +133,9 @@ extension QRScannerViewController: QRScannerViewDelegate {
     
     func qrScannerView(_ qrScannerView: QRScannerView, didSuccess code: String) {
         qrScannerView.stopRunning()
-        DispatchQueue.main.asyncAfter(deadline: .now() + qrScannerView.animationDuration + 0.1, execute: { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + qrScannerView.animationDuration + 0.1) { [weak self] in
             self?.dismiss(animated: true)
             self?.onSucceed?(code)
-        })
+        }
     }
 }

@@ -24,11 +24,12 @@ class MultiColumnsPickerView: UIPickerView {
         self.delegate = self
         self.dataSource = self
         
-        for i in 0..<data.columns.count {
-            self.selectRow(currentIndex[i], inComponent: i, animated: false)
+        for i in 0 ..< data.columns.count {
+            selectRow(currentIndex[i], inComponent: i, animated: false)
         }
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

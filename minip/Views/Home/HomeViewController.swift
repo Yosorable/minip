@@ -5,9 +5,9 @@
 //  Created by LZY on 2025/2/1.
 //
 
-import UIKit
-import SwiftUI
 import Defaults
+import SwiftUI
+import UIKit
 
 class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     var apps: [AppInfo] = []
@@ -20,7 +20,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     lazy var addProjectBtn: UIBarButtonItem = {
         let menu = UIMenu(children: [
-            UIAction(title: "Create new project", image: UIImage(systemName: "folder.badge.plus")) {act in
+            UIAction(title: "Create new project", image: UIImage(systemName: "folder.badge.plus")) { _ in
                 ShowCreateNewProjectAlert(self, onCreatedSuccess: { newApp in
                     self.apps.insert(newApp, at: 0)
                     self.tableView.beginUpdates()
@@ -28,12 +28,12 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.tableView.endUpdates()
                 })
             },
-            UIAction(title: "Load from web", image: UIImage(systemName: "network")) {act in
+            UIAction(title: "Load from web", image: UIImage(systemName: "network")) { _ in
                 let vc = UIHostingController(rootView: DownloadProjectView())
                 vc.modalPresentationStyle = .fullScreen
                 self.present(vc, animated: true)
             },
-            UIAction(title: "Load from file", image: UIImage(systemName: "folder")) {act in
+            UIAction(title: "Load from file", image: UIImage(systemName: "folder")) { _ in
                 let vc = UIHostingController(rootView: ImportProjectFromFileView())
                 vc.modalPresentationStyle = .fullScreen
                 self.present(vc, animated: true)
@@ -66,11 +66,11 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewDidLoad()
         title = "Projects"
 
-        self.apps = MiniAppManager.shared.getAppInfos()
-        if Defaults[.firstStart] && self.apps.count == 0 {
+        apps = MiniAppManager.shared.getAppInfos()
+        if Defaults[.firstStart] && apps.count == 0 {
             Defaults[.firstStart] = false
-            if let newApp = try? MiniAppManager.shared.createMiniApp( ) {
-                self.apps.append(newApp)
+            if let newApp = try? MiniAppManager.shared.createMiniApp() {
+                apps.append(newApp)
             }
         }
 
@@ -85,7 +85,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
         
         editButtonItem.tintColor = .label
@@ -120,6 +120,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     // MARK: - TableView DataSource
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return apps.count
     }
@@ -131,6 +132,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     // MARK: - TableView Delegate
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         MiniAppManager.shared.openMiniApp(parent: self, appInfo: apps[indexPath.row], completion: {
             self.tableView.deselectRow(at: indexPath, animated: false)
@@ -138,8 +140,9 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 
     // MARK: - swipe actions
+
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete", handler: {_,_, completion in
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete", handler: { _, _, completion in
             let app = self.apps[indexPath.row]
             let alert = UIAlertController(title: "Delete Project", message: "Are to sure to delete \(app.displayName ?? app.name)", preferredStyle: .alert)
             let confirm = UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
@@ -160,7 +163,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.present(alert, animated: true)
         })
         
-        let settingsAction = UIContextualAction(style: .normal, title: "Settings", handler: { _,_, completion in
+        let settingsAction = UIContextualAction(style: .normal, title: "Settings", handler: { _, _, completion in
             let vc = MiniAppSettingsViewController(style: .insetGrouped, app: self.apps[indexPath.row])
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
@@ -172,13 +175,14 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     // MARK: - move item
+
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
     func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
-        let movedItem = self.apps.remove(at: fromIndexPath.row)
-        self.apps.insert(movedItem, at: toIndexPath.row)
+        let movedItem = apps.remove(at: fromIndexPath.row)
+        apps.insert(movedItem, at: toIndexPath.row)
         let movedItemS = Defaults[.appSortList].remove(at: fromIndexPath.row)
         Defaults[.appSortList].insert(movedItemS, at: toIndexPath.row)
     }

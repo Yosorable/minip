@@ -5,15 +5,15 @@
 //  Created by ByteDance on 2023/7/9.
 //
 
-import SwiftUI
 import Runestone
-import TreeSitterHTMLRunestone
-import TreeSitterJSONRunestone
+import SwiftUI
 import TreeSitterCSSRunestone
-import TreeSitterYAMLRunestone
-import TreeSitterMarkdownRunestone
+import TreeSitterHTMLRunestone
 import TreeSitterJavaScriptRunestone
+import TreeSitterJSONRunestone
+import TreeSitterMarkdownRunestone
 import TreeSitterPythonRunestone
+import TreeSitterYAMLRunestone
 
 struct EditorView: View {
     @Environment(\.dismissPolyfill) var dismiss
@@ -25,7 +25,6 @@ struct EditorView: View {
     let fileInfo: FileInfo
     
     @State var isLoading = true
-    
     
     @Environment(\.colorScheme) private var colorScheme: ColorScheme
     
@@ -73,7 +72,7 @@ struct EditorView: View {
                     }
                     return SourceCodeTypeV2[String(ext)] ?? .html
                 }())
-                .edgesIgnoringSafeArea(.all)
+                    .edgesIgnoringSafeArea(.all)
             }
         }
         .navigationTitle(Text(fileInfo.fileName))
@@ -91,8 +90,7 @@ struct EditorView: View {
                     do {
                         try text.write(to: fileInfo.url, atomically: true, encoding: .utf8)
                         originText = text
-                    } catch {
-                    }
+                    } catch {}
                 } label: {
                     Text("Save")
                 }
@@ -102,7 +100,7 @@ struct EditorView: View {
     }
 }
 
-let SourceCodeTypeV2: [String:TreeSitterLanguage] = [
+let SourceCodeTypeV2: [String: TreeSitterLanguage] = [
     "js": .javaScript,
     "html": .html,
     "json": .json,

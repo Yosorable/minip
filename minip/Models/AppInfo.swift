@@ -40,6 +40,7 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     var id: String {
         return appId
     }
+
     struct PageConfig: Hashable, Codable {
         var path: String
         var title: String?
@@ -62,4 +63,3 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
         var hash: String
     }
 }
-

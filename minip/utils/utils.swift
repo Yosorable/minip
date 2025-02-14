@@ -5,11 +5,11 @@
 //  Created by ByteDance on 2023/7/6.
 //
 
-import Foundation
-import UIKit
 import AudioToolbox
+import Foundation
 import os.log
 import ProgressHUD
+import UIKit
 
 func WriteToFile(data: Data, fileName: String) -> Bool {
     // get path of directory
@@ -17,14 +17,14 @@ func WriteToFile(data: Data, fileName: String) -> Bool {
         return false
     }
     // create file url
-    let fileurl =  directory.appendingPathComponent(fileName)
-    
+    let fileurl = directory.appendingPathComponent(fileName)
+
     logger.debug("[WriteToFile] file uri: \(fileurl)")
-    
-    do{
+
+    do {
         try data.write(to: fileurl, options: .atomic)
         return true
-    }catch {
+    } catch {
         logger.error("[WriteToFile] Unable to write in new file.")
         return false
     }
@@ -34,7 +34,7 @@ func readFile(fileName: String) -> [UInt8] {
     guard let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
         return [UInt8]()
     }
-    let fileurl =  directory.appendingPathComponent(fileName)
+    let fileurl = directory.appendingPathComponent(fileName)
     do {
         let rawData: Data = try Data(contentsOf: fileurl)
         return [UInt8](rawData)
@@ -42,25 +42,6 @@ func readFile(fileName: String) -> [UInt8] {
         return [UInt8]()
     }
 }
-
-
-//func getFile(forResource resource: String, withExtension fileExt: String?) -> [UInt8]? {
-//    // See if the file exists.
-//    guard let fileUrl: URL = Bundle.main.url(forResource: resource, withExtension: fileExt) else {
-//        return nil
-//    }
-//    
-//    do {
-//        // Get the raw data from the file.
-//        let rawData: Data = try Data(contentsOf: fileUrl)
-//
-//        // Return the raw data as an array of bytes.
-//        return [UInt8](rawData)
-//    } catch {
-//        // Couldn't read the file.
-//        return nil
-//    }
-//}
 
 func fileOrFolderExists(path: String) -> (Bool, Bool) {
     let fileManager = FileManager.default
@@ -107,10 +88,10 @@ func ShowSimpleError(err: Error? = nil) {
     ProgressHUD.failed(err?.localizedDescription ?? "Error")
 }
 
-func CleanTrashAsync(onComplete: (()->Void)? = nil, onError: ((Error)->Void)? = nil) {
+func CleanTrashAsync(onComplete: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil) {
     DispatchQueue.global().async {
-        let trashURL =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: ".Trash")
-        
+        let trashURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: ".Trash")
+
         do {
             let fileURLs = try FileManager.default.contentsOfDirectory(at: trashURL, includingPropertiesForKeys: nil)
             for fileURL in fileURLs {
@@ -119,14 +100,13 @@ func CleanTrashAsync(onComplete: (()->Void)? = nil, onError: ((Error)->Void)? = 
             DispatchQueue.main.async {
                 onComplete?()
             }
-        } catch let error  {
+        } catch {
             DispatchQueue.main.async {
                 onError?(error)
             }
         }
     }
 }
-
 
 // alert
 extension UIAlertController {
@@ -136,7 +116,7 @@ extension UIAlertController {
             .connectedScenes
             .flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
             .last { $0.isKeyWindow }
-        if var topController = kw?.rootViewController  {
+        if var topController = kw?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
             }
@@ -176,7 +156,7 @@ func PreviewImage(url: URL? = nil) {
         return
     }
     let tvc = GetTopViewController()
-    
+
 //    let videoSuffixs = ["mp4", "mov", "avi", "rmvb", "rm", "flv", "3gp", "wmv", "vob", "dat", "m4v", "f4v", "mkv"] // and more suffix
 //    let vc = ZLImagePreviewController(datas: [url], index: 0, showSelectBtn: false, showBottomView: false) { url -> ZLURLType in
 //        if let sf = url.absoluteString.split(separator: ".").last, videoSuffixs.contains(String(sf)) {
@@ -194,16 +174,14 @@ func PreviewImage(url: URL? = nil) {
 //        }
 //    }
 //
-//    
+//
 //    vc.doneBlock = { datas in
 //        // your code
 //    }
 //
 //    vc.modalPresentationStyle = .fullScreen
 //    tvc?.showDetailViewController(vc, sender: nil)
-    
-    
-    
+
     let vc = ImagePreviewViewController(imageURL: url)
     vc.modalPresentationStyle = .overFullScreen
     vc.modalTransitionStyle = .crossDissolve
@@ -216,7 +194,6 @@ func PreviewImage(url: URL? = nil) {
 }
 
 // sound
-
 func ShortShake() {
     let soundShort = SystemSoundID(1519)
     AudioServicesPlaySystemSound(soundShort)

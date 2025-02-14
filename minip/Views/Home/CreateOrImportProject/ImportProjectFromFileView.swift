@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ImportProjectFromFileView: View {
-    var onSuccess: (()->Void)?
+    var onSuccess: (() -> Void)?
     var body: some View {
         FileImporterView(onSuccess: onSuccess)
             .edgesIgnoringSafeArea(.all)

@@ -16,7 +16,7 @@ extension MinipApi {
             return
         }
         let title = data?["title"]
-        
+
         // released page
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
@@ -35,14 +35,14 @@ extension MinipApi {
         }
         var delta = ((param.data as? [String: Any])?["delta"] as? Int) ?? 1
         if vc.navigationController?.topViewController == vc {
-            while delta > 0 && (vc.navigationController?.viewControllers.count ?? 1) > 1 {
+            while delta > 0, (vc.navigationController?.viewControllers.count ?? 1) > 1 {
                 delta -= 1
                 vc.navigationController?.popViewController(animated: true)
             }
         }
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     func redirectTo(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         let data = (param.data as? [String: String])
         guard let page = data?["page"] else {
@@ -50,7 +50,7 @@ extension MinipApi {
             return
         }
         let title = data?["title"]
-        
+
         // released page
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
@@ -63,7 +63,7 @@ extension MinipApi {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
         }
-        guard let urlStr = (param.data as? [String:String])?["url"], let url = URL(string: urlStr) else {
+        guard let urlStr = (param.data as? [String: String])?["url"], let url = URL(string: urlStr) else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
         }

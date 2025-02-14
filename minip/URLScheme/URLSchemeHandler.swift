@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 import ProgressHUD
+import UIKit
 
 class URLSchemeHandler {
     public enum Methods: String {
@@ -15,20 +15,22 @@ class URLSchemeHandler {
         case install // minip://install/{url}
         case appdownloadlist // minip://appdownloadlist/{url}
     }
+
     static let shared = URLSchemeHandler()
-    
+
     public func handle(_ urlStr: String) throws {
         guard let url = NSURLComponents(string: urlStr), url.scheme?.lowercased() == "minip", let method = Methods(rawValue: url.host ?? "") else {
             throw ErrorMsg(errorDescription: "unsupported url scheme")
         }
-        
+
         switch method {
         case .open:
             try open(url.path?.deletingPrefixSuffix("/") ?? "")
+
         case .install:
             try install(url.path?.deletingPrefixSuffix("/") ?? "")
 //        case .appdownloadlist:
-            
+
         default:
             throw ErrorMsg(errorDescription: "unimplemented url scheme")
         }
@@ -57,22 +59,22 @@ extension URLSchemeHandler {
         }
 
         var foundApp: AppInfo?
-        
+
         for ele in MiniAppManager.shared.getAppInfos() {
             if ele.appId == appIdOrName || ele.name == appIdOrName {
                 foundApp = ele
                 break
             }
         }
-        
+
         guard let app = foundApp else {
             throw ErrorMsg(errorDescription: "app doesn't exist")
         }
-        
+
         guard let vc = appDelegate.window?.rootViewController else {
             throw ErrorMsg(errorDescription: "unknown error")
         }
-        
+
         MiniAppManager.shared.openMiniApp(parent: vc, appInfo: app, animated: false)
     }
 
@@ -80,8 +82,8 @@ extension URLSchemeHandler {
         guard let appDelegate = closeOpenedAppAndGetAooDelegate(), urlStr != "" else {
             throw ErrorMsg(errorDescription: "unknown error")
         }
-        
-        DownloadMiniAppPackageToTmpFolder(urlStr, onError: {err in
+
+        DownloadMiniAppPackageToTmpFolder(urlStr, onError: { err in
             ShowSimpleError(err: err)
         }, onSuccess: { pkgURL in
             InstallMiniApp(pkgFile: pkgURL, onSuccess: {

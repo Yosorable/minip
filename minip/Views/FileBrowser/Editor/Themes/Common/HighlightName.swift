@@ -21,11 +21,11 @@ public enum HighlightName: String {
     case punctuation
     case string
     case variableBuiltin = "variable.builtin"
-    
+
     // html
     case tag
     case attribute
-    
+
     // py
     case type
 
@@ -42,10 +42,10 @@ public enum HighlightName: String {
 #if DEBUG
         if !previousUnrecognizedHighlightNames.contains(rawHighlightName) {
             previousUnrecognizedHighlightNames.append(rawHighlightName)
-            
+
             let msg = "[HighlightName] Unrecognized highlight name: '\(rawHighlightName)'."
-            + " Add the highlight name to HighlightName.swift if you want to add support for syntax highlighting it."
-            + " This message will only be shown once per highlight name."
+                + " Add the highlight name to HighlightName.swift if you want to add support for syntax highlighting it."
+                + " This message will only be shown once per highlight name."
             logger.debug("\(msg)")
         }
 #endif

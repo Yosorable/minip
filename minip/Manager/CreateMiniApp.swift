@@ -5,18 +5,17 @@
 //  Created by LZY on 2025/2/13.
 //
 
-import Foundation
 import Defaults
+import Foundation
 
 extension MiniAppManager {
-
     func createMiniApp(name: String? = nil, displayName: String? = nil) throws -> AppInfo {
         // generate random name by emoji
         let name = (name != nil && name != "") ? name! : {
             var nameRange: [String] = []
             let fileManager = FileManager.default
             let documentDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
-            EmojiAppNames.forEach { ele in
+            for ele in EmojiAppNames {
                 if !fileManager.fileExists(atPath: documentDirectory.appendingPathComponent(ele).path) {
                     nameRange.append(ele)
                 }
@@ -33,7 +32,7 @@ extension MiniAppManager {
         if exist {
             throw ErrorMsg(errorDescription: "Invalid name")
         }
-        
+
         do {
             try fileManager.createDirectory(at: appFolder, withIntermediateDirectories: true, attributes: nil)
         } catch {
@@ -48,7 +47,7 @@ extension MiniAppManager {
           <meta name="format-detection" content="telephone=no,email=no,address=no" >
           <style>
             html { color-scheme: light dark; }
-            body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; }
+            body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; word-break: break-all; }
           </style>
         </head>
         <body>
@@ -82,7 +81,7 @@ extension MiniAppManager {
         </body>
         </html>
         """
-    
+
         let htmlFileURL = appFolder.appendingPathComponent("index.html")
         do {
             try htmlContent.write(to: htmlFileURL, atomically: true, encoding: .utf8)

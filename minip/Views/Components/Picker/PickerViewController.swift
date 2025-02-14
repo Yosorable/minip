@@ -5,8 +5,8 @@
 //  Created by LZY on 2025/2/12.
 //
 
-import UIKit
 import Foundation
+import UIKit
 
 class PickerViewController: UIViewController {
     let transitioning = BottomSheetTransitioningDelegate()
@@ -20,8 +20,8 @@ class PickerViewController: UIViewController {
     var multiPickerResult: [Int]?
     var datePickerResult: String?
     
-    var onConfirmed: (()->Void)?
-    var onCanceled: (()->Void)?
+    var onConfirmed: (() -> Void)?
+    var onCanceled: (() -> Void)?
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -29,6 +29,7 @@ class PickerViewController: UIViewController {
         transitioningDelegate = self.transitioning
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -77,10 +78,10 @@ class PickerViewController: UIViewController {
     
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
         super.dismiss(animated: flag, completion: completion)
-        if confirmed {
-            onConfirmed?()
+        if self.confirmed {
+            self.onConfirmed?()
         } else {
-            onCanceled?()
+            self.onCanceled?()
         }
     }
 }

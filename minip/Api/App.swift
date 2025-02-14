@@ -30,7 +30,7 @@ extension MinipApi {
         vc.close()
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     func installApp(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let _ = param.webView?.holderObject as? MiniPageViewController else {
             return
@@ -39,7 +39,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
         }
-        DownloadMiniAppPackageToTmpFolder(url, onError: {err in
+        DownloadMiniAppPackageToTmpFolder(url, onError: { err in
             replyHandler(InteropUtils.fail(msg: err.localizedDescription).toJsonString(), nil)
         }, onSuccess: { pkgURL in
             InstallMiniApp(pkgFile: pkgURL, onSuccess: {

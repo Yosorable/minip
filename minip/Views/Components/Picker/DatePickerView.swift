@@ -5,8 +5,8 @@
 //  Created by LZY on 2025/2/12.
 //
 
-import UIKit
 import Foundation
+import UIKit
 
 class DatePickerView: UIDatePicker {
     struct Data: Codable {
@@ -15,6 +15,7 @@ class DatePickerView: UIDatePicker {
         let value: String?
         let dateFormat: String // yyyy-MM-dd hh:mm:ss
     }
+
     let format = DateFormatter()
 
     init(_ data: Data, mode: UIDatePicker.Mode) {
@@ -42,6 +43,7 @@ class DatePickerView: UIDatePicker {
         return format.string(from: date)
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

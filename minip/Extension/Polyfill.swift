@@ -16,7 +16,7 @@ extension URL {
             return self.appendingPathComponent(path)
         }
     }
-    
+
     func appendingPolyfill(component: String) -> URL {
         if #available(iOS 16.0, *) {
             return self.appending(component: component)
@@ -37,7 +37,6 @@ extension EnvironmentValues {
         if #available(iOS 15.0, *) {
             return { self.dismiss() }
         } else {
-            
             return { presentationMode.wrappedValue.dismiss() }
         }
     }

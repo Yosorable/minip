@@ -20,6 +20,7 @@ class TextDisplayViewController: UIViewController {
         
         return textView
     }()
+
     var text: String
     init(text: String, title: String? = nil) {
         self.text = text
@@ -27,6 +28,7 @@ class TextDisplayViewController: UIViewController {
         self.title = title
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -35,7 +37,7 @@ class TextDisplayViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .systemBackground
-        textView.text = self.text
+        textView.text = text
         view = textView
         
         navigationItem.largeTitleDisplayMode = .never

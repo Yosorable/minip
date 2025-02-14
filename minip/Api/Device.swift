@@ -10,7 +10,8 @@ import UIKit
 extension MinipApi {
     func vibrate(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let data = param.data as? [String: String],
-              let tp = data["type"] else {
+              let tp = data["type"]
+        else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
         }
@@ -25,7 +26,7 @@ extension MinipApi {
         generator.impactOccurred()
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     func getClipboardData(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         if let txt = UIPasteboard.general.string {
             replyHandler(InteropUtils.succeedWithData(data: txt).toJsonString(), nil)
@@ -33,7 +34,7 @@ extension MinipApi {
         }
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     func setClipboardData(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let data = (param.data as? [String: Any])?["data"] as? String else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
@@ -42,7 +43,7 @@ extension MinipApi {
         UIPasteboard.general.string = data
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     func scanQRCode(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return

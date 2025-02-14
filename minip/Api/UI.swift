@@ -5,10 +5,10 @@
 //  Created by LZY on 2025/2/9.
 //
 
-import UIKit
 import AVFoundation
 import AVKit
 import ProgressHUD
+import UIKit
 
 extension MinipApi {
     func setNavigationBarTitle(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
@@ -54,7 +54,7 @@ extension MinipApi {
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
     
-    func disablePullDownRefresh(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void){
+    func disablePullDownRefresh(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
         }
@@ -162,12 +162,13 @@ extension MinipApi {
         let decoder = JSONDecoder()
         guard let data = param.data,
               let jsonData = try? JSONSerialization.data(withJSONObject: data, options: []),
-              let config = try? decoder.decode(AlertConfig.self, from: jsonData) else {
+              let config = try? decoder.decode(AlertConfig.self, from: jsonData)
+        else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
         }
         let alert = UIAlertController(title: config.title, message: config.message, preferredStyle: config.preferredStyle == "actionSheet" ? .actionSheet : .alert)
-        config.actions.forEach { act in
+        for act in config.actions {
             var style = UIAlertAction.Style.default
             if act.style == "cancel" {
                 style = .cancel
@@ -193,7 +194,8 @@ extension MinipApi {
             return
         }
         guard let urlStr = (param.data as? [String: String])?["url"],
-              let url = URL(string: urlStr) else {
+              let url = URL(string: urlStr)
+        else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
         }
@@ -206,7 +208,8 @@ extension MinipApi {
             return
         }
         guard let urlStr = (param.data as? [String: String])?["url"],
-              let url = URL(string: urlStr) else {
+              let url = URL(string: urlStr)
+        else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
         }
@@ -220,16 +223,18 @@ extension MinipApi {
     }
     
     // MARK: Picker
+
     func showPicker(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
         }
-        let data = param.data as? [String:Any]
+        let data = param.data as? [String: Any]
         guard
             let typeStr = data?["type"] as? String,
             let pickerType = PickerType(rawValue: typeStr),
             let pickerData = data?["data"],
-            let jsonPickerData = try? JSONSerialization.data(withJSONObject: pickerData, options: [])  else {
+            let jsonPickerData = try? JSONSerialization.data(withJSONObject: pickerData, options: [])
+        else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
         }

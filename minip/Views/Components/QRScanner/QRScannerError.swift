@@ -5,8 +5,8 @@
 //  Created by LZY on 2025/2/13.
 //
 
-import Foundation
 import AVFoundation
+import Foundation
 
 public enum QRScannerError: Error {
     case unauthorized(AVAuthorizationStatus)

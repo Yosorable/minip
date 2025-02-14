@@ -5,14 +5,14 @@
 //  Created by ByteDance on 2023/7/14.
 //
 
+import Alamofire
+import AVKit
+import Defaults
+import Kingfisher
+import ProgressHUD
+import SafariServices
 import SwiftUI
 import WebKit
-import Kingfisher
-import AVKit
-import Alamofire
-import Defaults
-import SafariServices
-import ProgressHUD
 
 struct SettingsView: View {
     var body: some View {

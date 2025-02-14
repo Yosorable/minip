@@ -20,7 +20,6 @@ public class MWebView: WKWebView {
         let config = WKWebViewConfiguration()
 
         config.preferences = WKPreferences()
-//        config.preferences.javaScriptEnabled = true
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         config.userContentController = WKUserContentController()
 
@@ -55,13 +54,10 @@ extension MWebView: MWebViewProtocol {
 }
 
 extension MWebView: MWebViewPoolProtocol {
+    /// will be reused
+    func webviewWillLeavePool() {}
 
-    /// 即将被复用
-    func webviewWillLeavePool() {
-
-    }
-
-    /// 被回收
+    /// be recycled
     func webviewWillEnterPool() {
         id = nil
         holderObject = nil
@@ -70,16 +66,15 @@ extension MWebView: MWebViewPoolProtocol {
         NSObject.cancelPreviousPerformRequests(withTarget: self)
         navigationDelegate = nil
         uiDelegate = nil
-        // 删除历史记录
+        // remove history
         let selStr = "_re" + "mov" + "eA" + "llIt" + "ems"
         let sel = Selector(selStr)
-        if self.backForwardList.responds(to: sel) {
-            self.backForwardList.perform(sel)
+        if backForwardList.responds(to: sel) {
+            backForwardList.perform(sel)
         }
-        #warning("使用自定义的移除占位图")
+        #warning("Use custom removal of placeholder image")
         loadHTMLString("", baseURL: nil)
-        
-        
+
         if #available(iOS 16.4, *) {
             isInspectable = false
         }

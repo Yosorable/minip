@@ -5,22 +5,22 @@
 //  Created by LZY on 2023/9/26.
 //
 
-import Foundation
 import Defaults
-import UIKit
 import FlyingFox
+import Foundation
+import UIKit
 
 class MiniAppManager {
     static let shared = MiniAppManager()
     let EmojiAppNames = ["🍇", "🍈", "🍉", "🍊", "🍋", "🍌", "🍍", "🥭", "🍎", "🍏", "🍐", "🍑", "🍒", "🍓", "🥝", "🍅", "🥥", "🥑", "🍆", "🥔", "🥕", "🌽", "🌶", "🥒", "🥬", "🥦", "🍄", "🥜", "🌰"]
-    var appTmpStore: [String:String] = [String:String]()
-    var openedApp: AppInfo? = nil
+    var appTmpStore: [String: String] = .init()
+    var openedApp: AppInfo?
     var observedData = [String: Set<Int>]() // data key: webview id
     
-    var server: HTTPServer? = nil
-    var serverAddress: String? = nil
+    var server: HTTPServer?
+    var serverAddress: String?
     
-    var openedDatabase: [String:SQLiteDatabase] = [String:SQLiteDatabase]()
+    var openedDatabase: [String: SQLiteDatabase] = .init()
 
     fileprivate let semaphore = DispatchSemaphore(value: 1)
 
@@ -31,28 +31,28 @@ class MiniAppManager {
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
             let decoder = JSONDecoder()
-            fileURLs.forEach { ele in
+            for ele in fileURLs {
                 let infoURL = ele.appendingPathComponent("app", conformingTo: .json)
-                if ele.lastPathComponent != ".Trash" && fileManager.fileExists(atPath: infoURL.path) {
+                if ele.lastPathComponent != ".Trash", fileManager.fileExists(atPath: infoURL.path) {
                     do {
                         let data = try Data(contentsOf: infoURL, options: .mappedIfSafe)
                         let appDetail = try? decoder.decode(AppInfo.self, from: data)
                         if let ad = appDetail {
                             tmpApps.append(ad)
                         }
-                    } catch let error {
+                    } catch {
                         logger.error("[getAppInfos] \(error.localizedDescription)")
                     }
                 }
             }
-        } catch let error {
+        } catch {
             logger.error("[getAppInfos] \(error.localizedDescription)")
         }
         
-        var appIdSortListIndexMap = [String:Int]()
+        var appIdSortListIndexMap = [String: Int]()
         let appIdSortList = Defaults[.appSortList]
         
-        for i in 0..<appIdSortList.count {
+        for i in 0 ..< appIdSortList.count {
             appIdSortListIndexMap[appIdSortList[i]] = i
         }
         
@@ -70,7 +70,7 @@ class MiniAppManager {
         })
         
         var newSortList = [String]()
-        tmpApps.forEach { ele in
+        for ele in tmpApps {
             newSortList.append(ele.appId)
         }
         if newSortList != appIdSortList {
@@ -97,7 +97,7 @@ class MiniAppManager {
             KVStoreManager.shared.removeDB(dbName: appId)
         }
         if !self.openedDatabase.isEmpty {
-            self.openedDatabase.forEach { k, v in
+            for (k, v) in self.openedDatabase {
                 v.close()
             }
             self.openedDatabase.removeAll()
@@ -122,7 +122,7 @@ extension MiniAppManager {
             
             if let tc = appInfo.tintColor {
                 let tint = UIColor(hex: tc)
-                pages.forEach { ele in
+                for ele in pages {
                     ele.navigationBar.tintColor = tint
                 }
                 tabc.tabBar.tintColor = tint
@@ -146,7 +146,7 @@ extension MiniAppManager {
         return vc
     }
     
-    func openMiniApp(parent: UIViewController, window: UIWindow? = nil, appInfo: AppInfo, animated: Bool = true, completion: (()->Void)? = nil) {
+    func openMiniApp(parent: UIViewController, window: UIWindow? = nil, appInfo: AppInfo, animated: Bool = true, completion: (() -> Void)? = nil) {
         let app = appInfo
         
         Task {
@@ -189,9 +189,7 @@ extension MiniAppManager {
                             let data = try await req.bodyData
                             res.append(" ".data(using: .utf8)!)
                             res.append(data)
-                        } catch {
-                            
-                        }
+                        } catch {}
                         return HTTPResponse(statusCode: .ok, body: res)
                     }
                 } else {
@@ -217,7 +215,7 @@ extension MiniAppManager {
             let vc = await self.createMiniAppRootViewController(appInfo: appInfo)
             
             await MainActor.run {
-                vc.modalPresentationStyle = .fullScreen //.overFullScreen
+                vc.modalPresentationStyle = .fullScreen // .overFullScreen
                 MiniAppManager.shared.openedApp = appInfo
             }
             

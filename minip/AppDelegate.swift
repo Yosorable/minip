@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
         window.rootViewController = mainVC
         window.makeKeyAndVisible()
         _ = MWebViewPool.shared
-        NotificationCenter.default.post(name: NSNotification.Name("kMainControllerInitSuccessNotiKey"), object: nil)
+        NotificationCenter.default.post(name: .mainControllerInitSuccess, object: nil)
         return true
     }
 

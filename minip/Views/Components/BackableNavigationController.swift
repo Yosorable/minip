@@ -11,7 +11,7 @@ class BackableNavigationController: UINavigationController {
     public var minimumScreenRatioToHide = 0.53 as CGFloat
     public var animationDuration = 0.2 as TimeInterval
     
-    private lazy var transitionDelegate: NavTransitionDelegate = NavTransitionDelegate()
+    private lazy var transitionDelegate: NavTransitionDelegate = .init()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +20,6 @@ class BackableNavigationController: UINavigationController {
     }
     
     @objc func onPan(_ panGesture: UIScreenEdgePanGestureRecognizer) {
-        
         let translation = panGesture.translation(in: self.view)
         let horizontalMovement = translation.x / self.view.bounds.width
         let downwardMovement = fmaxf(Float(horizontalMovement), 0.0)
@@ -65,10 +64,10 @@ class BackableNavigationController: UINavigationController {
     
     var edgePanGestures: [UIScreenEdgePanGestureRecognizer] = []
     func addPanGesture(vc: UIViewController) {
-        let panGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(onPan(_:)))
+        let panGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(self.onPan(_:)))
         panGesture.edges = .left
         vc.view.addGestureRecognizer(panGesture)
-        edgePanGestures.append(panGesture)
+        self.edgePanGestures.append(panGesture)
     }
 }
 
@@ -84,14 +83,13 @@ class NavTransition {
 }
 
 class NavTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
-    
-    lazy var transition: NavTransition = NavTransition()
-    lazy var interactiveTransition: NavInteractiveTransition = NavInteractiveTransition()
+    lazy var transition: NavTransition = .init()
+    lazy var interactiveTransition: NavInteractiveTransition = .init()
     
     func animationController(forPresented presented: UIViewController,
                              presenting: UIViewController,
-                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        
+                             source: UIViewController) -> UIViewControllerAnimatedTransitioning?
+    {
         self.transition.isPresenting = true
         return self
     }
@@ -106,17 +104,15 @@ class NavTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
     }
 }
 
-
-extension NavTransitionDelegate:  UIViewControllerAnimatedTransitioning {
-    
+extension NavTransitionDelegate: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return self.transition.isPresenting ? self.transition.presentDuration : self.transition.dismissDuration
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        
         guard let fromVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from),
-              let toVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to) else {
+              let toVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)
+        else {
             transitionContext.completeTransition(false)
             return
         }
@@ -124,7 +120,6 @@ extension NavTransitionDelegate:  UIViewControllerAnimatedTransitioning {
         let containerView = transitionContext.containerView
         
         if self.transition.isPresenting {
-            
             let finalFrameForVC = transitionContext.finalFrame(for: toVC)
             toVC.view.frame = finalFrameForVC.offsetBy(dx: UIScreen.main.bounds.size.width, dy: 0)
             containerView.addSubview(toVC.view)
@@ -134,11 +129,11 @@ extension NavTransitionDelegate:  UIViewControllerAnimatedTransitioning {
                            delay: 0.0,
                            options: .transitionCrossDissolve,
                            animations: {
-                toVC.view.frame = finalFrameForVC
-                fromVC.view.transform = CGAffineTransform(translationX: -UIScreen.main.bounds.size.width / 3, y: 0)
-            }, completion: { _ in
-                transitionContext.completeTransition(true)
-            })
+                               toVC.view.frame = finalFrameForVC
+                               fromVC.view.transform = CGAffineTransform(translationX: -UIScreen.main.bounds.size.width / 3, y: 0)
+                           }, completion: { _ in
+                               transitionContext.completeTransition(true)
+                           })
             
         } else {
             var finalFrame = fromVC.view.frame
@@ -149,12 +144,12 @@ extension NavTransitionDelegate:  UIViewControllerAnimatedTransitioning {
                            delay: 0.0,
                            options: self.interactiveTransition.hasStarted ? .curveLinear : .transitionCrossDissolve,
                            animations: {
-                fromVC.view.frame = finalFrame
-                toVC.view.transform = .identity
-            },
+                               fromVC.view.frame = finalFrame
+                               toVC.view.transform = .identity
+                           },
                            completion: { _ in
-                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-            })
+                               transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+                           })
         }
     }
 }

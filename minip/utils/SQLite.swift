@@ -45,15 +45,15 @@ class SQLiteDatabase {
     private func executeSelectQuery(sql: String) throws -> [[String: Any]]? {
         var queryStatement: OpaquePointer?
         var results: [[String: Any]] = []
-        
+
         // 准备 SQL 语句
         if sqlite3_prepare_v2(db, sql, -1, &queryStatement, nil) == SQLITE_OK {
             // 遍历查询结果
             while sqlite3_step(queryStatement) == SQLITE_ROW {
                 var row: [String: Any] = [:]
                 let columnCount = sqlite3_column_count(queryStatement)
-                
-                for columnIndex in 0..<columnCount {
+
+                for columnIndex in 0 ..< columnCount {
                     let columnName = String(cString: sqlite3_column_name(queryStatement, columnIndex))
                     let columnValue: Any
                     switch sqlite3_column_type(queryStatement, columnIndex) {
@@ -77,17 +77,17 @@ class SQLiteDatabase {
             sqlite3_finalize(queryStatement)
             throw ErrorMsg(errorDescription: "Failed to prepare query statement.")
         }
-        
+
         // 释放查询语句
         sqlite3_finalize(queryStatement)
-        
+
         return results.isEmpty ? nil : results
     }
 
     // 执行非查询操作（插入、更新、删除）
     private func executeNonQuery(sql: String) throws -> String {
         var errorMessage: UnsafeMutablePointer<Int8>?
-        
+
         // 执行 SQL 语句
         if sqlite3_exec(db, sql, nil, nil, &errorMessage) == SQLITE_OK {
             return "Operation completed successfully."
@@ -96,10 +96,9 @@ class SQLiteDatabase {
             throw ErrorMsg(errorDescription: "Error: \(errorMsg)")
         }
     }
-    
+
     deinit {
         close()
         logger.info("[SQLiteDatabase] instance is being deallocated and database connection is closed.")
     }
 }
-

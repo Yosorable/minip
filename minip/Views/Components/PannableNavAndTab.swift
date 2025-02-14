@@ -11,7 +11,7 @@ class PannableNavigationViewController: UINavigationController {
     public var minimumScreenRatioToHide = 0.5 as CGFloat
     public var animationDuration = 0.2 as TimeInterval
     
-    private lazy var transitionDelegate: SheetTransitionDelegate = SheetTransitionDelegate()
+    private lazy var transitionDelegate: SheetTransitionDelegate = .init()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,7 +20,6 @@ class PannableNavigationViewController: UINavigationController {
     }
     
     @objc func onPan(_ panGesture: UIScreenEdgePanGestureRecognizer) {
-        
         let translation = panGesture.translation(in: self.view)
         let horizontalMovement = translation.x / self.view.bounds.width
         let downwardMovement = fmaxf(Float(horizontalMovement), 0.0)
@@ -63,8 +62,8 @@ class PannableNavigationViewController: UINavigationController {
             gesture.view?.removeGestureRecognizer(gesture)
         }
         
-        // todo: clear twice when click close button
-        //logger.info("[PannableNavigationViewController] clear open app info & reset orientation")
+        // TODO: clear twice when click close button
+        // logger.info("[PannableNavigationViewController] clear open app info & reset orientation")
         if MiniAppManager.shared.openedApp?.landscape == true {
             if #available(iOS 16.0, *) {
                 let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
@@ -78,10 +77,10 @@ class PannableNavigationViewController: UINavigationController {
     
     var edgePanGestures: [UIScreenEdgePanGestureRecognizer] = []
     func addPanGesture(vc: UIViewController) {
-        let panGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(onPan(_:)))
+        let panGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(self.onPan(_:)))
         panGesture.edges = .left
         vc.view.addGestureRecognizer(panGesture)
-        edgePanGestures.append(panGesture)
+        self.edgePanGestures.append(panGesture)
     }
 }
 
@@ -89,7 +88,7 @@ class PannableTabBarController: UITabBarController {
     public var minimumScreenRatioToHide = 0.53 as CGFloat
     public var animationDuration = 0.2 as TimeInterval
     
-    private lazy var transitionDelegate: SheetTransitionDelegate = SheetTransitionDelegate()
+    private lazy var transitionDelegate: SheetTransitionDelegate = .init()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -98,7 +97,6 @@ class PannableTabBarController: UITabBarController {
     }
     
     @objc func onPan(_ panGesture: UIScreenEdgePanGestureRecognizer) {
-        
         let translation = panGesture.translation(in: self.view)
         let horizontalMovement = translation.x / self.view.bounds.width
         let downwardMovement = fmaxf(Float(horizontalMovement), 0.0)
@@ -141,8 +139,8 @@ class PannableTabBarController: UITabBarController {
             gesture.view?.removeGestureRecognizer(gesture)
         }
         
-        // todo: clear twice when click close button
-        //logger.info("[PannableNavigationViewController] clear open app info & reset orientation")
+        // TODO: clear twice when click close button
+        // logger.info("[PannableNavigationViewController] clear open app info & reset orientation")
         if MiniAppManager.shared.openedApp?.landscape == true {
             if #available(iOS 16.0, *) {
                 let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
@@ -156,13 +154,12 @@ class PannableTabBarController: UITabBarController {
     
     var edgePanGestures: [UIScreenEdgePanGestureRecognizer] = []
     func addPanGesture(vc: UIViewController) {
-        let panGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(onPan(_:)))
+        let panGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(self.onPan(_:)))
         panGesture.edges = .left
         vc.view.addGestureRecognizer(panGesture)
-        edgePanGestures.append(panGesture)
+        self.edgePanGestures.append(panGesture)
     }
 }
-
 
 class SheetInteractiveTransition: UIPercentDrivenInteractiveTransition {
     public var hasStarted: Bool = false
@@ -176,14 +173,13 @@ class SheetTransition {
 }
 
 class SheetTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
-    
-    lazy var transition: SheetTransition = SheetTransition()
-    lazy var interactiveTransition: SheetInteractiveTransition = SheetInteractiveTransition()
+    lazy var transition: SheetTransition = .init()
+    lazy var interactiveTransition: SheetInteractiveTransition = .init()
     
     func animationController(forPresented presented: UIViewController,
                              presenting: UIViewController,
-                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        
+                             source: UIViewController) -> UIViewControllerAnimatedTransitioning?
+    {
         self.transition.isPresenting = true
         // use default present animation
         return nil
@@ -199,15 +195,15 @@ class SheetTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
     }
 }
 
-
-extension SheetTransitionDelegate:  UIViewControllerAnimatedTransitioning {
+extension SheetTransitionDelegate: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return self.transition.isPresenting ? self.transition.presentDuration : self.transition.dismissDuration
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard let fromVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from),
-              let toVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to) else {
+              let toVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)
+        else {
             transitionContext.completeTransition(false)
             return
         }
@@ -222,10 +218,10 @@ extension SheetTransitionDelegate:  UIViewControllerAnimatedTransitioning {
                        delay: 0.0,
                        options: .transitionCrossDissolve,
                        animations: {
-            fromVC.view.frame = finalFrame
-        },
+                           fromVC.view.frame = finalFrame
+                       },
                        completion: { _ in
-            transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-        })
+                           transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+                       })
     }
 }

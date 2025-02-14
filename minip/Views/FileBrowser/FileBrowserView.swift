@@ -120,7 +120,7 @@ struct FileBrowserPageView: View {
                 viewModel.selectFile = ele
             }
         } else {
-            // todo: 支持滑动删除
+            // TODO: 支持滑动删除
             return HStack {
                 Image(systemName: FileManager.isImage(url: ele.url) ? "photo" : "doc")
                     .font(.title2)
@@ -138,7 +138,6 @@ struct FileBrowserPageView: View {
         }
     }
 
-    
     func folderItem(ele: FileInfo) -> some View {
         if #available(iOS 15.0, *) {
             return NavigationLink {
@@ -200,7 +199,7 @@ struct FileBrowserPageView: View {
     func cleanTrash() {
         let alertController = UIAlertController(title: "Confirm", message: "Are you sure to clean the trash ?", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Clean", style: .destructive, handler: { action in
+        alertController.addAction(UIAlertAction(title: "Clean", style: .destructive, handler: { _ in
             CleanTrashAsync {
                 ShowSimpleSuccess()
                 viewModel.fetchFiles()
@@ -219,7 +218,7 @@ struct FileBrowserPageView: View {
             textField = tf
         }
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: { action in
+        alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: { _ in
             guard let fileName = textField?.text else {
                 return
             }
@@ -250,7 +249,7 @@ struct FileBrowserPageView: View {
             textField = tf
         }
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: { action in
+        alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: { _ in
             guard let fileName = textField?.text else {
                 return
             }
@@ -264,7 +263,7 @@ struct FileBrowserPageView: View {
                     try fileManager.createDirectory(at: newFileURL, withIntermediateDirectories: false)
                     ShowSimpleSuccess(msg: "Created success")
                     viewModel.fetchFiles()
-                } catch let error {
+                } catch {
                     ShowSimpleError(err: error)
                 }
                 
@@ -274,7 +273,6 @@ struct FileBrowserPageView: View {
         }))
         alertController.show()
     }
-    
     
     func deleteFolder(url: URL?) {
         guard let url = url else {
@@ -287,12 +285,12 @@ struct FileBrowserPageView: View {
         
         let alertController = UIAlertController(title: "Confirm", message: "Are you sure to delete this folder: \(url.lastPathComponent) ?", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { action in
+        alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
             do {
                 try FileManager.default.trashItem(at: url, resultingItemURL: nil)
                 ShowSimpleSuccess(msg: "Moved to trash")
                 viewModel.fetchFiles()
-            } catch let error {
+            } catch {
                 ShowSimpleError(err: error)
             }
         }))
@@ -305,12 +303,12 @@ struct FileBrowserPageView: View {
         }
         let alertController = UIAlertController(title: "Confirm", message: "Are you sure to delete this file: \(url.lastPathComponent) ?", preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { action in
+        alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
             do {
                 try FileManager.default.trashItem(at: url, resultingItemURL: nil)
                 ShowSimpleSuccess(msg: "Moved to trash")
                 viewModel.fetchFiles()
-            } catch let error {
+            } catch {
                 ShowSimpleError(err: error)
             }
         }))
@@ -344,14 +342,14 @@ class FileBrowserPageViewModel: ObservableObject {
         var res = [FileInfo]()
         do {
             let (folderURLs, fileURLs) = try getFilesAndFolders(in: folderURL)
-            folderURLs.forEach {
-                res.append(FileInfo(fileName: $0.lastPathComponent, isFolder: true, url: $0))
+            for folderURL in folderURLs {
+                res.append(FileInfo(fileName: folderURL.lastPathComponent, isFolder: true, url: folderURL))
             }
-            fileURLs.forEach {
-                res.append(FileInfo(fileName: $0.lastPathComponent, isFolder: false, url: $0))
+            for fileURL in fileURLs {
+                res.append(FileInfo(fileName: fileURL.lastPathComponent, isFolder: false, url: fileURL))
             }
             files = res
-        } catch let error {
+        } catch {
             logger.error("[fetchFiles] \(error)")
         }
     }
@@ -375,14 +373,12 @@ class FileBrowserPageViewModel: ObservableObject {
         }
         
         folders.sort(by: { l, r in
-            return l.lastPathComponent < r.lastPathComponent
+            l.lastPathComponent < r.lastPathComponent
         })
         
         files.sort(by: { l, r in
-            return l.lastPathComponent < r.lastPathComponent
+            l.lastPathComponent < r.lastPathComponent
         })
         return (folders, files)
     }
 }
-
-

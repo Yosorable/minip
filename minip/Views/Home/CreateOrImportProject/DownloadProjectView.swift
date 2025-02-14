@@ -5,16 +5,16 @@
 //  Created by ByteDance on 2023/7/14.
 //
 
-import SwiftUI
 import Alamofire
-import ZipArchive
 import Defaults
 import ProgressHUD
+import SwiftUI
+import ZipArchive
 
 struct DownloadProjectView: View {
     @Environment(\.dismissPolyfill) var dismiss
     
-    var onSuccess: (()->Void)?
+    var onSuccess: (() -> Void)?
     
     @State var downURL: String = Defaults[.lastDownloadedURL]
     @State var downFilename: String = ""
@@ -88,7 +88,7 @@ struct DownloadProjectView: View {
                             downloadReq?.cancel()
                             downloading = false
                         }, label: {
-                            HStack{
+                            HStack {
                                 Spacer()
                                 Text("Cancel")
                                 Spacer()
@@ -100,7 +100,7 @@ struct DownloadProjectView: View {
                             downloadReq?.cancel()
                             downloading = false
                         } label: {
-                            HStack{
+                            HStack {
                                 Spacer()
                                 Text("Cancel")
                                     .foregroundColor(.red)
@@ -142,7 +142,7 @@ struct DownloadProjectView: View {
                 }
             }
         }
-        .onChange(of: showAlert, perform: {newValue in
+        .onChange(of: showAlert, perform: { newValue in
             if newValue {
                 let alert = UIAlertController(title: "Error", message: alertMsg, preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
@@ -159,7 +159,7 @@ struct DownloadProjectView: View {
         }
         downloading = true
         let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let destination: (URL, HTTPURLResponse) -> (URL, DownloadRequest.Options) = { tmpURL, res in
+        let destination: (URL, HTTPURLResponse) -> (URL, DownloadRequest.Options) = { _, res in
             let pathComponent = res.suggestedFilename ?? "default.zip"
             
             let finalPath = docURL.appendingPolyfill(path: "tmp").appendingPathComponent(pathComponent)
@@ -187,7 +187,6 @@ struct DownloadProjectView: View {
                 alertMsg = "Unknow error"
                 showAlert = true
             })
-        
     }
     
     func unCompress(file: URL) {

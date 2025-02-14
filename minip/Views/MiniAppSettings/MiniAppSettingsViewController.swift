@@ -5,8 +5,8 @@
 //  Created by LZY on 2025/2/2.
 //
 
-import UIKit
 import SwiftUI
+import UIKit
 
 class MiniAppSettingsViewController: UITableViewController {
     let app: AppInfo
@@ -15,7 +15,7 @@ class MiniAppSettingsViewController: UITableViewController {
         super.init(style: style)
     }
     
-    
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -45,11 +45,11 @@ class MiniAppSettingsViewController: UITableViewController {
 //            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 //            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
 //        ])
-//        
+//
 //        hostingController.didMove(toParent: self)
         
-        if self.navigationController is BackableNavigationController {
-            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .done, target: self, action: #selector(self.closePage))
+        if navigationController is BackableNavigationController {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .done, target: self, action: #selector(closePage))
         } else {
             navigationItem.largeTitleDisplayMode = .never
         }
@@ -58,10 +58,10 @@ class MiniAppSettingsViewController: UITableViewController {
     }
     
     @objc func closePage() {
-        if self.navigationController is BackableNavigationController {
+        if navigationController is BackableNavigationController {
             dismiss(animated: true)
         } else {
-            self.navigationController?.popViewController(animated: true)
+            navigationController?.popViewController(animated: true)
         }
     }
     

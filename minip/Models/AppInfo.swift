@@ -60,6 +60,5 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     struct File: Hashable, Codable {
         var name: String
         var path: String
-        var hash: String
     }
 }

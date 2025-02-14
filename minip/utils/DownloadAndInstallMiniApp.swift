@@ -10,7 +10,7 @@ import ZipArchive
 import Alamofire
 
 // todo: 安装位置和数据存储位置分离？
-func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((String)->Void)? = nil) {
+func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((String)->Void)? = nil, singalAppListChangedOnSuccess: Bool = true) {
     let fileManager = FileManager.default
     // 获取临时目录
     let tempDirURL = fileManager.temporaryDirectory
@@ -27,6 +27,9 @@ func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((Stri
         }
         try installByAppJSON(in: appJSONURL)
         onSuccess?()
+        if singalAppListChangedOnSuccess {
+            NotificationCenter.default.post(name: .appListUpdated, object: nil)
+        }
         deleteFolder(at: unzipDirURL)
     } catch {
         onFailed?(error.localizedDescription)

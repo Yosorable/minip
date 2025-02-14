@@ -252,8 +252,8 @@ class MiniPageViewController: UIViewController {
 //            }
 //        }
         
-        self.presentPanModal(AppDetailViewController(appInfo: app, reloadPageFunc: {
-            self.webview.reload()
+        self.presentPanModal(AppDetailViewController(appInfo: app, reloadPageFunc: { [weak self] in
+            self?.webview.reload()
         }, closeFunc: closeFnc, parentVC: self))
     }
 }

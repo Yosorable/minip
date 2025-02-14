@@ -29,16 +29,12 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 })
             },
             UIAction(title: "Load from web", image: UIImage(systemName: "network")) {act in
-                let vc = UIHostingController(rootView: DownloadProjectView(onSuccess: {
-                    self.refreshData()
-                }))
+                let vc = UIHostingController(rootView: DownloadProjectView())
                 vc.modalPresentationStyle = .fullScreen
                 self.present(vc, animated: true)
             },
             UIAction(title: "Load from file", image: UIImage(systemName: "folder")) {act in
-                let vc = UIHostingController(rootView: ImportProjectFromFileView(onSuccess: {
-                    self.refreshData()
-                }))
+                let vc = UIHostingController(rootView: ImportProjectFromFileView())
                 vc.modalPresentationStyle = .fullScreen
                 self.present(vc, animated: true)
             },
@@ -61,7 +57,11 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         button.tintColor = .label
         return button
     }()
-    
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Projects"
@@ -92,9 +92,11 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         navigationItem.rightBarButtonItems = [addProjectBtn, editButtonItem]
         navigationItem.leftBarButtonItem = scanQRCodeButton
         
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshData), name: .appListUpdated, object: nil)
     }
     
     @objc func refreshData() {
+        logger.debug("[HomeViewController] refresh table view data")
         Task {
             let newApps = MiniAppManager.shared.getAppInfos()
             await MainActor.run {
@@ -104,7 +106,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         }
     }
-    
+
     @objc func scanQRCode() {
         let qvc = QRScannerViewController()
         qvc.modalPresentationStyle = .fullScreen
@@ -159,7 +161,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         })
         
         let settingsAction = UIContextualAction(style: .normal, title: "Settings", handler: { _,_, completion in
-            let vc = MiniAppSettingsViewController(style: .insetGrouped)
+            let vc = MiniAppSettingsViewController(style: .insetGrouped, app: self.apps[indexPath.row])
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
             completion(true)

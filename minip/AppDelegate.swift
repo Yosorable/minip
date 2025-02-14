@@ -60,55 +60,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
             return false
         }
 
-        // minip://open/{appId | appName}
-        if host == "open" {
-            guard let appIdOrName = components.path?.deletingPrefixSuffix("/") else {
-                return false
-            }
-            if MiniAppManager.shared.openedApp?.appId == appIdOrName || MiniAppManager.shared.openedApp?.name == appIdOrName {
-                return true
-            }
-            window?.rootViewController?.children.first?.dismiss(animated: false)
-            if MiniAppManager.shared.openedApp != nil {
-                MiniAppManager.shared.clearOpenedApp()
-            }
-
-            var foundApp: AppInfo?
-
-            for ele in MiniAppManager.shared.getAppInfos() {
-                if ele.appId == appIdOrName || ele.name == appIdOrName {
-                    foundApp = ele
-                    break
-                }
-            }
-            
-            guard let app = foundApp else {
-                return false
-            }
-
-            guard let vc = window?.rootViewController else {
-                return false
-            }
-            MiniAppManager.shared.openMiniApp(parent: vc, appInfo: app, animated: false)
-
+        do {
+            try URLSchemeHandler.shared.handle(url.absoluteString)
             return true
-        } else {
-            print(components)
-            print(components.host)
-            print(components.path)
-
-//            encoded:
-//            minip://down/https%3A%2F%2Fabc.com%2F123.zip
-//            Optional("down")
-//            Optional("/https://abc.com/123.zip")
-
-//            not encode
-//            minip://down/https://123.com/123.zip
-//            Optional("down")
-//            Optional("/https://123.com/123.zip")
+        } catch {
+            logger.debug("[url scheme handler] \(error.localizedDescription)")
+            return false
         }
-
-        return false
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {

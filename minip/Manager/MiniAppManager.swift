@@ -21,7 +21,9 @@ class MiniAppManager {
     var serverAddress: String? = nil
     
     var openedDatabase: [String:SQLiteDatabase] = [String:SQLiteDatabase]()
-    
+
+    fileprivate let semaphore = DispatchSemaphore(value: 1)
+
     func getAppInfos() -> [AppInfo] {
         var tmpApps: [AppInfo] = []
         let fileManager = FileManager.default

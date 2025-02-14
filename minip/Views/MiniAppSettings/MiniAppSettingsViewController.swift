@@ -9,6 +9,17 @@ import UIKit
 import SwiftUI
 
 class MiniAppSettingsViewController: UITableViewController {
+    let app: AppInfo
+    init(style: UITableView.Style, app: AppInfo) {
+        self.app = app
+        super.init(style: style)
+    }
+    
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Settings"

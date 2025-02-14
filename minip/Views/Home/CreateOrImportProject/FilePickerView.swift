@@ -48,18 +48,12 @@ struct FileImporterView: UIViewControllerRepresentable {
             ProgressHUD.animate("Loading", interaction: false)
             let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
-            DispatchQueue.global().async {
-                InstallMiniApp(pkgFile: urls.first!, onSuccess: {
-                    DispatchQueue.main.async { [self] in
-                        ProgressHUD.succeed("Success")
-                        self.parent.onSuccess?()
-                    }
-                }, onFailed: { err in
-                    DispatchQueue.main.async {
-                        ProgressHUD.failed(err)
-                    }
-                })
-            }
+            InstallMiniApp(pkgFile: urls.first!, onSuccess: {
+                ProgressHUD.succeed("Success")
+                self.parent.onSuccess?()
+            }, onFailed: { err in
+                ProgressHUD.failed(err)
+            })
         }
 
         func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {

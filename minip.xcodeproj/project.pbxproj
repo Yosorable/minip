@@ -69,6 +69,8 @@
 		2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD9B1DA2A5C428700036AFD /* HighlightName.swift */; };
 		4800EA092CF1C93300F49842 /* FlyingFox in Frameworks */ = {isa = PBXBuildFile; productRef = 4800EA082CF1C93300F49842 /* FlyingFox */; };
 		4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */ = {isa = PBXBuildFile; productRef = 4800EA0A2CF1C93300F49842 /* FlyingSocks */; };
+		48021CBE2D5F3ED300C39F07 /* URLSchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48021CBD2D5F3ECD00C39F07 /* URLSchemeHandler.swift */; };
+		48021CC22D5F705100C39F07 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48021CC12D5F704700C39F07 /* Notification.swift */; };
 		480B06452D5B3AC500FFAAA5 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 480B06442D5B3AC500FFAAA5 /* ProgressHUD */; };
 		48248BC22AF1F4D0001097CC /* MWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC12AF1F4D0001097CC /* MWebView.swift */; };
 		48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC32AF1F6C1001097CC /* MWebViewPool.swift */; };
@@ -143,6 +145,8 @@
 		2BD9B1AB2A5BD4E600036AFD /* CodeEditorV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeEditorV2.swift; sourceTree = "<group>"; };
 		2BD9B1D82A5C426700036AFD /* EditorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTheme.swift; sourceTree = "<group>"; };
 		2BD9B1DA2A5C428700036AFD /* HighlightName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightName.swift; sourceTree = "<group>"; };
+		48021CBD2D5F3ECD00C39F07 /* URLSchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSchemeHandler.swift; sourceTree = "<group>"; };
+		48021CC12D5F704700C39F07 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		48248BC12AF1F4D0001097CC /* MWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWebView.swift; sourceTree = "<group>"; };
 		48248BC32AF1F6C1001097CC /* MWebViewPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWebViewPool.swift; sourceTree = "<group>"; };
 		482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppManager.swift; sourceTree = "<group>"; };
@@ -296,6 +300,7 @@
 		2B9003C12A81FE9B00ED360D /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				48021CC02D5F702D00C39F07 /* ImagePreview */,
 				48CA01742D5C20D8006A63DD /* Picker */,
 				485FEE732D5D072F00A0C430 /* QRScanner */,
 				2B9003C22A81FEB400ED360D /* LazyView.swift */,
@@ -317,10 +322,7 @@
 		2B9B57982A563986002E9D57 /* utils */ = {
 			isa = PBXGroup;
 			children = (
-				48B90EEB2D5DDB5600CCE103 /* QRCodeHandler.swift */,
 				2B9B57992A56399B002E9D57 /* utils.swift */,
-				2B6D0E4B2A623D93005BFEB9 /* ImagePreviewViewController.swift */,
-				485A75212BDCA43F00D887A4 /* logger.swift */,
 				48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */,
 				483E061E2D08227500140F13 /* SQLite.swift */,
 			);
@@ -395,6 +397,32 @@
 				2BD9B1DA2A5C428700036AFD /* HighlightName.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		48021CBC2D5F3EA700C39F07 /* URLScheme */ = {
+			isa = PBXGroup;
+			children = (
+				48021CBD2D5F3ECD00C39F07 /* URLSchemeHandler.swift */,
+			);
+			path = URLScheme;
+			sourceTree = "<group>";
+		};
+		48021CBF2D5F6A9400C39F07 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				48021CC12D5F704700C39F07 /* Notification.swift */,
+				485A75212BDCA43F00D887A4 /* logger.swift */,
+				48B90EEB2D5DDB5600CCE103 /* QRCodeHandler.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		48021CC02D5F702D00C39F07 /* ImagePreview */ = {
+			isa = PBXGroup;
+			children = (
+				2B6D0E4B2A623D93005BFEB9 /* ImagePreviewViewController.swift */,
+			);
+			path = ImagePreview;
 			sourceTree = "<group>";
 		};
 		48248BC02AF1F4B2001097CC /* MWebView */ = {
@@ -473,6 +501,8 @@
 			children = (
 				48F649012D589BA700C9FD82 /* Api */,
 				48F649022D589BAF00C9FD82 /* Manager */,
+				48021CBF2D5F6A9400C39F07 /* Common */,
+				48021CBC2D5F3EA700C39F07 /* URLScheme */,
 				48248BC02AF1F4B2001097CC /* MWebView */,
 				2B1B32D52A61783800DA573F /* DataStore */,
 				2B8F0B932A597C3700D9359F /* Extension */,
@@ -653,6 +683,7 @@
 			files = (
 				48CA017C2D5C28FB006A63DD /* Transition.swift in Sources */,
 				48CA01802D5C32F1006A63DD /* PickerType.swift in Sources */,
+				48021CC22D5F705100C39F07 /* Notification.swift in Sources */,
 				2B415A112A7E8FA900B3BF94 /* MiniPageViewController.swift in Sources */,
 				48CA01782D5C21F5006A63DD /* SingleColumnPickerView.swift in Sources */,
 				48F649002D589B7100C9FD82 /* MinipApi.swift in Sources */,
@@ -710,6 +741,7 @@
 				48D1FB7F2D4E97140093137D /* MiniAppSettingsViewController.swift in Sources */,
 				485FEE752D5D076900A0C430 /* QRScannerView.swift in Sources */,
 				48B90EEC2D5DDB5E00CCE103 /* QRCodeHandler.swift in Sources */,
+				48021CBE2D5F3ED300C39F07 /* URLSchemeHandler.swift in Sources */,
 				2B1B32D72A61784600DA573F /* Defaults.swift in Sources */,
 				48E39B592D4D126400C4A3CD /* TabViewFIx.swift in Sources */,
 				2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */,

@@ -12,13 +12,13 @@ import UIKit
 class ImagePreviewViewController: UIViewController {
     var imageView: ZoomImageView!
     var imageURL: URL?
-    
+
     init(imageURL: URL? = nil) {
         self.imageURL = imageURL
-        
+
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -35,10 +35,10 @@ class ImagePreviewViewController: UIViewController {
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
-        
+
         imageView.showsVerticalScrollIndicator = true
         imageView.showsHorizontalScrollIndicator = true
-        
+
         imageView.maximumZoomScale = 5
         if let url = imageURL {
             if url.scheme == "file" {
@@ -55,7 +55,7 @@ class ImagePreviewViewController: UIViewController {
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
         view.addGestureRecognizer(longPressRecognizer)
     }
-    
+
     @objc func tapped(sender: UITapGestureRecognizer) {
         dismiss(animated: true)
     }
@@ -63,7 +63,7 @@ class ImagePreviewViewController: UIViewController {
     @objc func longPressed(sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             ShortShake()
-            
+
             let alertController = UIAlertController(title: "Action", message: "Select one action", preferredStyle: .actionSheet)
             alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             alertController.addAction(UIAlertAction(title: "Save to album", style: .default, handler: { [weak self] _ in
@@ -94,7 +94,7 @@ class ImagePreviewViewController: UIViewController {
                     alertController.overrideUserInterfaceStyle = .light
                 }
             }
-            
+
             if let ppc = alertController.popoverPresentationController {
                 ppc.sourceView = view
                 ppc.sourceRect = CGRectMake(view.bounds.size.width / 2.0, view.bounds.size.height / 2.0, 1.0, 1.0)
@@ -109,22 +109,22 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
         case fit
         case fill
     }
-    
+
     // MARK: - Properties
-    
+
     public let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.allowsEdgeAntialiasing = true
         return imageView
     }()
-    
+
     public func setWebImage(url: URL?) {
         imageView.kf.setImage(with: url, completionHandler: { [weak self] _ in
             self?.updateImageView()
             self?.scrollToCenter()
         })
     }
-    
+
     public var zoomMode: ZoomMode = .fit {
         didSet {
             updateImageView()
@@ -288,7 +288,7 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
             setZoomScale(1, animated: true)
         }
     }
-    
+
     private func zoomRectFor(scale: CGFloat, with center: CGPoint) -> CGRect {
         let center = imageView.convert(center, from: self)
         
@@ -300,7 +300,7 @@ open class ZoomImageView: UIScrollView, UIScrollViewDelegate {
         
         return zoomRect
     }
-    
+
     // MARK: - UIScrollViewDelegate
 
     @objc public dynamic func scrollViewDidZoom(_ scrollView: UIScrollView) {

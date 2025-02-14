@@ -24,19 +24,19 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     var navigationBarStatus: String? // display, hidden(default)
     var colorScheme: String? // dark, light (default auto)
     var disableSwipeBackGesture: Bool?
-    
+
     // can be override in PageConfig
     var backgroundColor: String? // hex string
     var tintColor: String? // hex string
-    
+
     // web server
     var webServerEnabled: Bool?
     // orientation
     var landscape: Bool?
-    
+
     // file list
     var files: [File]?
-    
+
     var id: String {
         return appId
     }
@@ -45,7 +45,7 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
         var path: String
         var title: String?
         var scrollable: Bool?
-        
+
         // override
         var backgroundColor: String?
         var navigationBarColor: String?
@@ -56,7 +56,7 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
         var title: String
         var systemImage: String
     }
-    
+
     struct File: Hashable, Codable {
         var name: String
         var path: String

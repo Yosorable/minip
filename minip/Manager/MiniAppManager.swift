@@ -16,10 +16,10 @@ class MiniAppManager {
     var appTmpStore: [String: String] = .init()
     var openedApp: AppInfo?
     var observedData = [String: Set<Int>]() // data key: webview id
-    
+
     var server: HTTPServer?
     var serverAddress: String?
-    
+
     var openedDatabase: [String: SQLiteDatabase] = .init()
 
     fileprivate let semaphore = DispatchSemaphore(value: 1)
@@ -48,14 +48,14 @@ class MiniAppManager {
         } catch {
             logger.error("[getAppInfos] \(error.localizedDescription)")
         }
-        
+
         var appIdSortListIndexMap = [String: Int]()
         let appIdSortList = Defaults[.appSortList]
-        
+
         for i in 0 ..< appIdSortList.count {
             appIdSortListIndexMap[appIdSortList[i]] = i
         }
-        
+
         tmpApps.sort(by: { l, r in
             let idx1 = appIdSortListIndexMap[l.appId]
             let idx2 = appIdSortListIndexMap[r.appId]
@@ -68,7 +68,7 @@ class MiniAppManager {
             }
             return true
         })
-        
+
         var newSortList = [String]()
         for ele in tmpApps {
             newSortList.append(ele.appId)
@@ -76,18 +76,18 @@ class MiniAppManager {
         if newSortList != appIdSortList {
             Defaults[.appSortList] = newSortList
         }
-        
+
         if tmpApps != Defaults[.appInfoList] {
             Defaults[.appInfoList] = tmpApps
             logger.debug("[getAppInfos] not equal")
         }
         return tmpApps
     }
-    
+
     func getAppInfosFromCache() -> [AppInfo] {
         return Defaults[.appInfoList]
     }
-    
+
     func clearOpenedApp() {
         let appId = self.openedApp?.appId
         self.openedApp = nil
@@ -111,7 +111,7 @@ extension MiniAppManager {
         var vc: UIViewController
         if let tabs = appInfo.tabs, tabs.count > 0 {
             let tabc = PannableTabBarController()
-            
+
             var pages = [UINavigationController]()
             for (idx, ele) in tabs.enumerated() {
                 let page = UINavigationController(rootViewController: MiniPageViewController(app: appInfo, page: ele.path, title: ele.title, isRoot: true))
@@ -119,7 +119,7 @@ extension MiniAppManager {
                 pages.append(page)
             }
             tabc.viewControllers = pages
-            
+
             if let tc = appInfo.tintColor {
                 let tint = UIColor(hex: tc)
                 for ele in pages {
@@ -127,7 +127,7 @@ extension MiniAppManager {
                 }
                 tabc.tabBar.tintColor = tint
             }
-            
+
             vc = tabc
         } else {
             let nvc = PannableNavigationViewController(rootViewController: MiniPageViewController(app: appInfo, isRoot: true))
@@ -136,19 +136,19 @@ extension MiniAppManager {
             }
             vc = nvc
         }
-        
+
         if appInfo.colorScheme == "dark" {
             vc.overrideUserInterfaceStyle = .dark
         } else if appInfo.colorScheme == "light" {
             vc.overrideUserInterfaceStyle = .light
         }
-        
+
         return vc
     }
-    
+
     func openMiniApp(parent: UIViewController, window: UIWindow? = nil, appInfo: AppInfo, animated: Bool = true, completion: (() -> Void)? = nil) {
         let app = appInfo
-        
+
         Task {
             var addr = ""
             if app.webServerEnabled == true {
@@ -158,7 +158,7 @@ extension MiniAppManager {
                     MiniAppManager.shared.server = server
                     let fileManager = FileManager.default
                     let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-                    
+
                     let dirHandler = DirectoryHTTPHandler(root: documentsURL)
                     await server.appendRoute("GET /*") { req in
                         var _req: HTTPRequest = req
@@ -173,7 +173,7 @@ extension MiniAppManager {
                             return HTTPResponse(statusCode: .notFound)
                         }
                     }
-                    
+
                     await server.appendRoute("POST /closeApp") { _ in
                         DispatchQueue.main.async {
                             if let mvc = GetTopViewController() as? MiniPageViewController {
@@ -182,7 +182,7 @@ extension MiniAppManager {
                         }
                         return HTTPResponse(statusCode: .ok)
                     }
-                    
+
                     await server.appendRoute("POST /ping") { req in
                         var res = "pong".data(using: .utf8)!
                         do {
@@ -195,7 +195,7 @@ extension MiniAppManager {
                 } else {
                     server = MiniAppManager.shared.server!
                 }
-                
+
                 Task {
                     try? await server.run()
                 }
@@ -211,14 +211,14 @@ extension MiniAppManager {
                     MiniAppManager.shared.serverAddress = addr
                 }
             }
-            
+
             let vc = await self.createMiniAppRootViewController(appInfo: appInfo)
-            
+
             await MainActor.run {
                 vc.modalPresentationStyle = .fullScreen // .overFullScreen
                 MiniAppManager.shared.openedApp = appInfo
             }
-            
+
             if appInfo.landscape == true {
                 await MainActor.run {
                     vc.modalPresentationStyle = .fullScreen
@@ -231,7 +231,7 @@ extension MiniAppManager {
                 }
                 try? await Task.sleep(nanoseconds: 220_000_000)
             }
-            
+
             await parent.present(vc, animated: animated, completion: {
                 completion?()
             })

@@ -22,7 +22,7 @@ extension MinipApi {
         vc.title = title
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     func setNavigationBarColor(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
@@ -45,7 +45,7 @@ extension MinipApi {
         vc.navigationController?.navigationBar.scrollEdgeAppearance = appearance
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     func enablePullDownRefresh(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
@@ -53,7 +53,7 @@ extension MinipApi {
         vc.addRefreshControl()
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     func disablePullDownRefresh(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
@@ -65,7 +65,7 @@ extension MinipApi {
         }
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     func startPullDownRefresh(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
@@ -75,7 +75,7 @@ extension MinipApi {
         }
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     func stopPullDownRefresh(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
@@ -83,7 +83,7 @@ extension MinipApi {
         vc.refreshControl?.endRefreshing()
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     func showHUD(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let _ = param.webView?.holderObject as? MiniPageViewController else {
             return
@@ -132,7 +132,7 @@ extension MinipApi {
         }
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     func hideHUD(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let _ = param.webView?.holderObject as? MiniPageViewController else {
             return
@@ -141,7 +141,7 @@ extension MinipApi {
         ProgressHUD.dismiss()
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     struct AlertAction: Codable {
         var title: String?
         var style: String?
@@ -154,7 +154,7 @@ extension MinipApi {
         var preferredStyle: String?
         var actions: [AlertAction]
     }
-    
+
     func showAlert(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
@@ -181,14 +181,14 @@ extension MinipApi {
             })
         }
         alert.view.tintColor = vc.view.tintColor
-        
+
         if let ppc = alert.popoverPresentationController {
             ppc.sourceView = vc.view
             ppc.sourceRect = CGRectMake(vc.view.bounds.size.width / 2.0, vc.view.bounds.size.height / 2.0, 1.0, 1.0)
         }
         vc.present(alert, animated: true, completion: nil)
     }
-    
+
     func previewImage(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let _ = param.webView?.holderObject as? MiniPageViewController else {
             return
@@ -202,7 +202,7 @@ extension MinipApi {
         PreviewImage(url: url)
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     func previewVideo(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
@@ -221,7 +221,7 @@ extension MinipApi {
         }
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
-    
+
     // MARK: Picker
 
     func showPicker(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {

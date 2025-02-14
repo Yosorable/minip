@@ -27,6 +27,7 @@ class AppDetailViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     override func viewDidLoad() {
         
         if let colorScheme = MiniAppManager.shared.openedApp?.colorScheme {
@@ -119,14 +120,15 @@ class AppDetailViewController: UIViewController {
                     
                     ScrollView(.horizontal) {
                         HStack(spacing: 10) {
-                            Button {
-                                self.dismiss(animated: true, completion: {
-                                    let ss = MiniAppSettingsViewController(style: .insetGrouped)
+                            Button { [weak self] in
+                                self?.dismiss(animated: true, completion: { [weak self] in
+                                    guard let this = self else { return }
+                                    let ss = MiniAppSettingsViewController(style: .insetGrouped, app: this.appInfo)
                                     let vc = BackableNavigationController(rootViewController: ss)
-                                    vc.overrideUserInterfaceStyle = self.overrideUserInterfaceStyle
+                                    vc.overrideUserInterfaceStyle = this.overrideUserInterfaceStyle
                                     vc.addPanGesture(vc: ss)
                                     vc.modalPresentationStyle = .overFullScreen
-                                    self.parentVC.present(vc, animated: true)
+                                    this.parentVC.present(vc, animated: true)
                                 })
                                 
                             } label: {
@@ -140,8 +142,8 @@ class AppDetailViewController: UIViewController {
                                 }
                             }
                             
-                            Button {
-                                self.dismiss(animated: true, completion: self.reloadPageFunc)
+                            Button { [weak self] in
+                                self?.dismiss(animated: true, completion: { self?.reloadPageFunc?() })
                             } label: {
                                 VStack {
                                     Image(systemName: "arrow.triangle.2.circlepath").font(.system(size: 30))
@@ -154,8 +156,8 @@ class AppDetailViewController: UIViewController {
                             }
                             
                             if let cls = self.closeFunc {
-                                Button {
-                                    self.dismiss(animated: true, completion: cls)
+                                Button { [weak self] in
+                                    self?.dismiss(animated: true, completion: cls)
                                     cls()
                                 } label: {
                                     VStack {

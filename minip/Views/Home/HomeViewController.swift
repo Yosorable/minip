@@ -65,7 +65,6 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Projects"
-        self.navigationController?.navigationBar.prefersLargeTitles = true
 
         self.apps = MiniAppManager.shared.getAppInfos()
         if Defaults[.firstStart] && self.apps.count == 0 {

@@ -81,6 +81,16 @@ struct SettingsView: View {
                     Text((Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String) ?? "Unknown")
                         .foregroundColor(.secondary)
                 }
+                Button {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        if UIApplication.shared.canOpenURL(url) {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+                } label: {
+                    Text("Licenses")
+                }
+  
             } header: {
                 Text("About")
             } footer: {

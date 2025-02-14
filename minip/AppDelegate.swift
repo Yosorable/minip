@@ -17,10 +17,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
         let window = UIWindow()
         self.window = window
         let mainVC = UITabBarController()
+        
+        // disable ipad top tabbar on ios 18
+//        if #available(iOS 18.0, *) {
+//            if UIDevice.current.userInterfaceIdiom == .pad {
+//                mainVC.traitOverrides.horizontalSizeClass = .compact
+//                
+//            }
+//        }
         mainVC.viewControllers = [
             {
                 let vc = UINavigationController(rootViewController: HomeViewController())
-                vc.tabBarItem = UITabBarItem(title: "Projects", image: UIImage(systemName: "shippingbox.fill"), tag: 1)
+                vc.navigationBar.prefersLargeTitles = true
+                vc.tabBarItem = UITabBarItem(title: "Projects", image: UIImage(systemName: "shippingbox.fill"), tag: 0)
                 return vc
             }(),
             {

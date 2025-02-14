@@ -102,6 +102,7 @@
 		48CA01802D5C32F1006A63DD /* PickerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CA017F2D5C32E2006A63DD /* PickerType.swift */; };
 		48CA01842D5C3379006A63DD /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CA01832D5C3373006A63DD /* DatePickerView.swift */; };
 		48CA018B2D5C9E7B006A63DD /* MultiColumnsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CA018A2D5C9E74006A63DD /* MultiColumnsPickerView.swift */; };
+		48CE18432D5E760300F6F987 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 48CE18422D5E760300F6F987 /* Settings.bundle */; };
 		48D1FB7F2D4E97140093137D /* MiniAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D1FB7E2D4E97050093137D /* MiniAppSettingsViewController.swift */; };
 		48D1FB812D4E9C100093137D /* BackableNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D1FB802D4E9C080093137D /* BackableNavigationController.swift */; };
 		48D399872D06E88400BDD99F /* DownloadAndInstallMiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */; };
@@ -173,6 +174,7 @@
 		48CA017F2D5C32E2006A63DD /* PickerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerType.swift; sourceTree = "<group>"; };
 		48CA01832D5C3373006A63DD /* DatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerView.swift; sourceTree = "<group>"; };
 		48CA018A2D5C9E74006A63DD /* MultiColumnsPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiColumnsPickerView.swift; sourceTree = "<group>"; };
+		48CE18422D5E760300F6F987 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		48D1FB7E2D4E97050093137D /* MiniAppSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppSettingsViewController.swift; sourceTree = "<group>"; };
 		48D1FB802D4E9C080093137D /* BackableNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackableNavigationController.swift; sourceTree = "<group>"; };
 		48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadAndInstallMiniApp.swift; sourceTree = "<group>"; };
@@ -480,6 +482,7 @@
 				488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */,
 				48DF6BA0288D32CA00D523C1 /* Assets.xcassets */,
 				2B9B579E2A57D5B5002E9D57 /* Info.plist */,
+				48CE18422D5E760300F6F987 /* Settings.bundle */,
 				48DF6BA2288D32CA00D523C1 /* Preview Content */,
 			);
 			path = minip;
@@ -636,6 +639,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48DF6BA4288D32CA00D523C1 /* Preview Assets.xcassets in Resources */,
+				48CE18432D5E760300F6F987 /* Settings.bundle in Resources */,
 				48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

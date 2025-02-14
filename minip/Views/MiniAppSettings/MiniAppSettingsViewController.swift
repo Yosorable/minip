@@ -43,7 +43,7 @@ class MiniAppSettingsViewController: UITableViewController {
             navigationItem.largeTitleDisplayMode = .never
         }
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "SettingCell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MiniAppSettingsCell")
     }
     
     @objc func closePage() {
@@ -67,7 +67,7 @@ class MiniAppSettingsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SettingCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MiniAppSettingsCell", for: indexPath)
         
         let setting = settings[indexPath.row]
         cell.textLabel?.text = setting.title

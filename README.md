@@ -4,9 +4,7 @@ Minip is an app that allows you to run frontend applications on your phone, givi
 
 You can interact with native features via a JavaScript bridge.
 
-## Docs
-
-todo
+<a href="https://apps.apple.com/us/app/minip-editor/id6463115915" target="_blank"><img width="150" alt="Download on the App Store" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"/></a>
 
 ## Demo
 

@@ -16,7 +16,7 @@ For documentation, please refer to https://minip.lzyl.win/
 
 Scan this QR code using the Minip app to see a live demo:
 
-![](qrcode.jpg)
+![](qrcode.jpg?)
 
 ## minip-bridge
 

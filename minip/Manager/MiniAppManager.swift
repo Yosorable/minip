@@ -9,6 +9,7 @@ import Defaults
 import FlyingFox
 import Foundation
 import UIKit
+import SwiftLMDB
 
 class MiniAppManager {
     static let shared = MiniAppManager()
@@ -94,7 +95,7 @@ class MiniAppManager {
         self.appTmpStore.removeAll()
         self.observedData.removeAll()
         if let appId = appId {
-            KVStoreManager.shared.removeDB(dbName: appId)
+            KVStorageManager.shared.removeDB(dbName: appId)
         }
         if !self.openedDatabase.isEmpty {
             for (k, v) in self.openedDatabase {

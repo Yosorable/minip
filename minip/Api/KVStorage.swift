@@ -17,7 +17,7 @@ extension MinipApi {
         }
 
         do {
-            let res = try KVStoreManager.shared.getDB(dbName: appId)?.get(type: String.self, forKey: key)
+            let res = try KVStorageManager.shared.getDB(dbName: appId)?.get(type: String.self, forKey: key)
             return InteropUtils.succeedWithData(data: res).toJsonString()
         } catch {
             return InteropUtils.fail(msg: error.localizedDescription).toJsonString()
@@ -36,7 +36,7 @@ extension MinipApi {
         }
 
         do {
-            try KVStoreManager.shared.getDB(dbName: appId)?.put(value: value, forKey: key)
+            try KVStorageManager.shared.getDB(dbName: appId)?.put(value: value, forKey: key)
             return InteropUtils.succeed().toJsonString()
         } catch {
             return InteropUtils.fail(msg: error.localizedDescription).toJsonString()
@@ -54,7 +54,7 @@ extension MinipApi {
         }
 
         do {
-            try KVStoreManager.shared.getDB(dbName: appId)?.deleteValue(forKey: key)
+            try KVStorageManager.shared.getDB(dbName: appId)?.deleteValue(forKey: key)
             return InteropUtils.succeed().toJsonString()
         } catch {
             return InteropUtils.fail(msg: error.localizedDescription).toJsonString()
@@ -67,7 +67,7 @@ extension MinipApi {
         }
 
         do {
-            try KVStoreManager.shared.getDB(dbName: appId)?.empty()
+            try KVStorageManager.shared.getDB(dbName: appId)?.empty()
             return InteropUtils.succeed().toJsonString()
         } catch {
             return InteropUtils.fail(msg: error.localizedDescription).toJsonString()

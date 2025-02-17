@@ -13,7 +13,6 @@ class URLSchemeHandler {
     public enum Methods: String {
         case open // minip://open/{appname or appid}
         case install // minip://install/{url}
-        case appdownloadlist // minip://appdownloadlist/{url}
     }
 
     static let shared = URLSchemeHandler()
@@ -30,10 +29,6 @@ class URLSchemeHandler {
         case .install:
             ProgressHUD.animate(interaction: false)
             try install(url.path?.deletingPrefixSuffix("/") ?? "")
-//        case .appdownloadlist:
-
-        default:
-            throw ErrorMsg(errorDescription: "unimplemented url scheme")
         }
     }
 }

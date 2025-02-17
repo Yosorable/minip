@@ -8,8 +8,8 @@
 import Foundation
 import SwiftLMDB
 
-class KVStoreManager {
-    static let shared = KVStoreManager()
+class KVStorageManager {
+    static let shared = KVStorageManager()
     var environment: Environment?
     var dbMap: [String: Database] = .init()
     init() {

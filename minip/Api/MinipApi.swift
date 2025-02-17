@@ -57,6 +57,8 @@ class MinipApi {
         case setKVStorageSync
         case deleteKVStorageSync
         case clearKVStorageSync
+
+        static func isAuthorized(appId: String, api: APIName) {}
     }
 
     struct Parameter {

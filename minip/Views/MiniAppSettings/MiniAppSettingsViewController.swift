@@ -120,7 +120,7 @@ class MiniAppSettingsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
             UIPasteboard.general.string = "minip://open/\(app.appId)"
-            ShowSimpleSuccess(msg: "Copyed to\n clipboard")
+            ShowSimpleSuccess(msg: "Copied to clipboard successfully.")
             tableView.deselectRow(at: indexPath, animated: true)
         }
 //        else if indexPath.section == 2 {

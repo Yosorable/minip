@@ -14,6 +14,11 @@ extension MiniAppManager {
         let appFolder = documentsURL.appendingPolyfill(path: app.name)
         do {
             try fileManager.trashItem(at: appFolder, resultingItemURL: nil)
+            let db = KVStorageManager.shared.getPrivacyDB()
+            for per in MiniAppPermissionTypes.allCases {
+                let key = app.appId + "-" + per.rawValue
+                try db?.deleteValue(forKey: key)
+            }
         } catch {}
         completion()
     }

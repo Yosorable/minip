@@ -102,6 +102,7 @@
 		48CA01802D5C32F1006A63DD /* PickerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CA017F2D5C32E2006A63DD /* PickerType.swift */; };
 		48CA01842D5C3379006A63DD /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CA01832D5C3373006A63DD /* DatePickerView.swift */; };
 		48CA018B2D5C9E7B006A63DD /* MultiColumnsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CA018A2D5C9E74006A63DD /* MultiColumnsPickerView.swift */; };
+		48CD76DB2D65C9A70055A2C9 /* MiniAppPrivacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CD76DA2D65C9A00055A2C9 /* MiniAppPrivacy.swift */; };
 		48CE18432D5E760300F6F987 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 48CE18422D5E760300F6F987 /* Settings.bundle */; };
 		48D1FB7F2D4E97140093137D /* MiniAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D1FB7E2D4E97050093137D /* MiniAppSettingsViewController.swift */; };
 		48D1FB812D4E9C100093137D /* BackableNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D1FB802D4E9C080093137D /* BackableNavigationController.swift */; };
@@ -174,6 +175,7 @@
 		48CA017F2D5C32E2006A63DD /* PickerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerType.swift; sourceTree = "<group>"; };
 		48CA01832D5C3373006A63DD /* DatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerView.swift; sourceTree = "<group>"; };
 		48CA018A2D5C9E74006A63DD /* MultiColumnsPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiColumnsPickerView.swift; sourceTree = "<group>"; };
+		48CD76DA2D65C9A00055A2C9 /* MiniAppPrivacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppPrivacy.swift; sourceTree = "<group>"; };
 		48CE18422D5E760300F6F987 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		48D1FB7E2D4E97050093137D /* MiniAppSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppSettingsViewController.swift; sourceTree = "<group>"; };
 		48D1FB802D4E9C080093137D /* BackableNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackableNavigationController.swift; sourceTree = "<group>"; };
@@ -539,6 +541,7 @@
 				482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */,
 				48D68D542D58E88D002303FD /* DeleteMiniApp.swift */,
 				48DE4A232D5E23D2002D4653 /* CreateMiniApp.swift */,
+				48CD76DA2D65C9A00055A2C9 /* MiniAppPrivacy.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -686,6 +689,7 @@
 				488C2F3E2D4E1BDC00892E3A /* AppInfo.swift in Sources */,
 				48CA017A2D5C262F006A63DD /* PickerContainerView.swift in Sources */,
 				2B1B32CF2A61633000DA573F /* FilePickerView.swift in Sources */,
+				48CD76DB2D65C9A70055A2C9 /* MiniAppPrivacy.swift in Sources */,
 				48D1FB812D4E9C100093137D /* BackableNavigationController.swift in Sources */,
 				488DDFF52ABEEAEE00BAB280 /* AppDelegate.swift in Sources */,
 				2BC331B62A62D48C00441447 /* LMDB.swift in Sources */,
@@ -869,7 +873,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025021401;
+				CURRENT_PROJECT_VERSION = 2025021902;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
@@ -886,7 +890,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.11;
+				MARKETING_VERSION = 0.0.13;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -904,7 +908,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025021401;
+				CURRENT_PROJECT_VERSION = 2025021902;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
@@ -921,7 +925,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.11;
+				MARKETING_VERSION = 0.0.13;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

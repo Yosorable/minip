@@ -24,37 +24,14 @@ class MiniAppSettingsViewController: UITableViewController {
         super.viewDidLoad()
         title = "Settings"
 
-//        let hostingController = UIHostingController(rootView: ScrollView {
-//            VStack {
-//                Text("Swipe from left to go back")
-//                Button {
-//                    self.closePage()
-//                } label: {
-//                    Text("Close")
-//                }
-//            }
-//        })
-//
-//        addChild(hostingController)
-//        view.addSubview(hostingController.view)
-//
-//        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
-//            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-//            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-//        ])
-//
-//        hostingController.didMove(toParent: self)
-
         if navigationController is BackableNavigationController {
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .done, target: self, action: #selector(closePage))
         } else {
             navigationItem.largeTitleDisplayMode = .never
         }
 
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "MiniAppSettingsCell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "PrivacyCell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "URLSchemeCell")
     }
 
     @objc func closePage() {
@@ -65,56 +42,107 @@ class MiniAppSettingsViewController: UITableViewController {
         }
     }
 
-    // 用于存储布尔值的设置项
-    var settings: [(title: String, isEnabled: Bool)] = [
-        ("Enable Feature", false),
-        ("Next Page", false)
-    ]
+    lazy var privacySettings: [(title: String, key: String, isEnabled: Bool)] = {
+        var res: [(title: String, key: String, isEnabled: Bool)] = []
 
-    // MARK: - TableView 数据源方法
+        for per in MiniAppPermissionTypes.allCases {
+            let db = KVStorageManager.shared.getPrivacyDB()
+            let key = app.appId + "-" + per.rawValue
+            if let val = try? db?.get(type: Bool.self, forKey: key) {
+                res.append((per.getTitle(), key, val))
+            }
+        }
+
+        return res
+    }()
+
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return settings.count
+        switch section {
+        case 0:
+            return privacySettings.count
+        case 1:
+            return 1
+        default:
+            return 0
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case 0:
+            return "Privacy"
+        case 1:
+            return "URL Scheme"
+        default:
+            break
+        }
+        return nil
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MiniAppSettingsCell", for: indexPath)
-
-        let setting = settings[indexPath.row]
-        cell.textLabel?.text = setting.title
-
-        // 如果是开关设置
-        if setting.title == "Enable Feature" {
-            let featureSwitch = UISwitch()
-            featureSwitch.isOn = setting.isEnabled
-            featureSwitch.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
-            featureSwitch.tag = indexPath.row // 用tag标记是哪一个设置项
-            cell.accessoryView = featureSwitch
+        switch indexPath.section {
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "PrivacyCell", for: indexPath)
+            let privacyItem = privacySettings[indexPath.row]
+            let privacySwitch = UISwitch()
+            privacySwitch.isOn = privacyItem.isEnabled
+            privacySwitch.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
+            privacySwitch.tag = indexPath.row
+            cell.accessoryView = privacySwitch
             cell.selectionStyle = .none
-        } else {
-            cell.accessoryType = .disclosureIndicator
-        }
 
-        return cell
+            var content = cell.defaultContentConfiguration()
+            content.text = privacyItem.title
+            cell.contentConfiguration = content
+            return cell
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "URLSchemeCell", for: indexPath)
+            var content = cell.defaultContentConfiguration()
+            content.text = "Open"
+            content.secondaryText = "minip://open/\(app.appId)"
+            content.secondaryTextProperties.color = .secondaryLabel
+            cell.contentConfiguration = content
+            cell.accessoryType = .none
+            return cell
+        default:
+            break
+        }
+        return UITableViewCell()
     }
 
-    // MARK: - TableView Delegate 方法
+    // MARK: - TableView Delegate
 
-    // 点击进入下一层设置页面
+    // cell tap
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == settings.count - 1 { // 如果点击的是“Go to Next Settings”
-            let nextSettingsVC = UIViewController()
-            nextSettingsVC.view.backgroundColor = .darkGray
-            nextSettingsVC.title = "New Page"
-            navigationController?.pushViewController(nextSettingsVC, animated: true)
+        if indexPath.section == 1 {
+            UIPasteboard.general.string = "minip://open/\(app.appId)"
+            ShowSimpleSuccess(msg: "Copyed to\n clipboard")
+            tableView.deselectRow(at: indexPath, animated: true)
         }
+//        else if indexPath.section == 2 {
+//            let nextSettingsVC = UIViewController()
+//            nextSettingsVC.view.backgroundColor = .darkGray
+//            nextSettingsVC.title = "New Page"
+//            navigationController?.pushViewController(nextSettingsVC, animated: true)
+//        }
     }
 
-    // MARK: - Switch 状态变化处理方法
+    // MARK: - Privacy Switch
 
     @objc func switchChanged(_ sender: UISwitch) {
         let index = sender.tag
-        settings[index].isEnabled = sender.isOn
-        print("\(settings[index].title) is now \(sender.isOn ? "Enabled" : "Disabled")")
+        let item = privacySettings[index]
+        privacySettings[index].isEnabled = sender.isOn
+        if let db = KVStorageManager.shared.getPrivacyDB() {
+            do {
+                try db.put(value: sender.isOn, forKey: item.key)
+            } catch {
+                logger.error("[MiniAppPermission] \(error.localizedDescription)")
+            }
+        }
     }
 }

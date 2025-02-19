@@ -58,7 +58,21 @@ class MinipApi {
         case deleteKVStorageSync
         case clearKVStorageSync
 
-        static func isAuthorized(appId: String, api: APIName) {}
+        func requestPermissionType() -> MiniAppPermissionTypes? {
+            switch self {
+            case .scanQRCode:
+                return .camera
+            case .getClipboardData, .setClipboardData:
+                return .clipboard
+            case .installApp:
+                return .installProject
+            case .getInstalledAppList:
+                return .getInstalledProjectsList
+            default:
+                break
+            }
+            return nil
+        }
     }
 
     struct Parameter {

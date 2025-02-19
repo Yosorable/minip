@@ -26,6 +26,20 @@ class KVStorageManager {
     }
 
     func getDB(dbName: String) -> Database? {
+        // built in db
+        if dbName == ".privacy" {
+            return nil
+        }
+        guard let res = dbMap[dbName] else {
+            let res = try? environment?.openDatabase(named: dbName, flags: [.create])
+            dbMap[dbName] = res
+            return res
+        }
+        return res
+    }
+    
+    func getPrivacyDB() -> Database? {
+        let dbName = ".privacy"
         guard let res = dbMap[dbName] else {
             let res = try? environment?.openDatabase(named: dbName, flags: [.create])
             dbMap[dbName] = res

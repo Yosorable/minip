@@ -35,9 +35,21 @@ class MinipNativeInteraction: NSObject, WKScriptMessageHandlerWithReply {
         let wid = (message.webView as? MWebView)?.id ?? -1
         logger.debug("[minip-api-v3] call api [\(apiName.rawValue)] from [webview:\(wid == -1 ? "unknown" : "\(wid)")] with [\(body.count < 1000 ? body : "data length: \(body.count)")]")
 
-        let api = MinipApi.shared
         let param = MinipApi.Parameter(webView: message.webView as? MWebView, data: jsonObj["data"])
 
+        if let permission = apiName.requestPermissionType() {
+            MiniAppManager.shared.getOrRequestPermission(permissionType: permission, onSuccess: { [weak self] in
+                self?.callApi(replyHandler: replyHandler, apiName: apiName, jsonObj: jsonObj, param: param)
+            }, onFailed: { error in
+                replyHandler(nil, "No permission")
+            }, parentVC: (message.webView as? MWebView)?.holderObject as? UIViewController)
+        } else {
+            self.callApi(replyHandler: replyHandler, apiName: apiName, jsonObj: jsonObj, param: param)
+        }
+    }
+    
+    func callApi(replyHandler: @escaping (Any?, String?) -> Void, apiName: MinipApi.APIName, jsonObj: [String:Any], param: MinipApi.Parameter) {
+        let api = MinipApi.shared
         switch apiName {
         case .ping:
             var res = MinipApi.InteropUtils.succeed()

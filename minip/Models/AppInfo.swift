@@ -24,6 +24,7 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     var navigationBarStatus: String? // display, hidden(default)
     var colorScheme: String? // dark, light (default auto)
     var disableSwipeBackGesture: Bool?
+    var alwaysInSafeArea: Bool? // webview safearea layout
 
     // can be override in PageConfig
     var backgroundColor: String? // hex string

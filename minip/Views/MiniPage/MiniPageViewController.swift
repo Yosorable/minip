@@ -52,9 +52,16 @@ class MiniPageViewController: UIViewController {
             let req = URLRequest(url: url)
             webview.load(req)
         } else {
-            url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
-            logger.info("[webview] load \(url)")
-            webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
+            if page.hasPrefix("http://") || page.hasPrefix("https://") {
+                url = URL(string: page)!
+                logger.info("[webview] load \(url)")
+                let req = URLRequest(url: url)
+                webview.load(req)
+            } else {
+                url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
+                logger.info("[webview] load \(url)")
+                webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
+            }
         }
         pageURL = url
     }
@@ -71,6 +78,7 @@ class MiniPageViewController: UIViewController {
             self.refreshControl = nil
             self.webview.tintColor = .systemBlue
             self.webview.scrollView.contentInsetAdjustmentBehavior = .always
+            self.webview.translatesAutoresizingMaskIntoConstraints = true
 
             MWebViewPool.shared.recycleReusedWebView(self.webview)
         }
@@ -85,7 +93,18 @@ class MiniPageViewController: UIViewController {
             webview.isInspectable = Defaults[.wkwebviewInspectable]
         }
 
-        view = webview
+        if app.alwaysInSafeArea == true {
+            view.addSubview(webview)
+            webview.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                webview.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                webview.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                webview.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                webview.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            ])
+        } else {
+            view = webview
+        }
 
         if let bc = app.backgroundColor {
             view.backgroundColor = UIColor(hex: bc)
@@ -106,9 +125,16 @@ class MiniPageViewController: UIViewController {
             let req = URLRequest(url: url)
             webview.load(req)
         } else {
-            url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
-            logger.info("[webview] load \(url)")
-            webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
+            if page.hasPrefix("http://") || page.hasPrefix("https://") {
+                url = URL(string: page)!
+                logger.info("[webview] load \(url)")
+                let req = URLRequest(url: url)
+                webview.load(req)
+            } else {
+                url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
+                logger.info("[webview] load \(url)")
+                webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
+            }
         }
         pageURL = url
 

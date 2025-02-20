@@ -40,15 +40,15 @@ class MinipNativeInteraction: NSObject, WKScriptMessageHandlerWithReply {
         if let permission = apiName.requestPermissionType() {
             MiniAppManager.shared.getOrRequestPermission(permissionType: permission, onSuccess: { [weak self] in
                 self?.callApi(replyHandler: replyHandler, apiName: apiName, jsonObj: jsonObj, param: param)
-            }, onFailed: { error in
+            }, onFailed: { _ in
                 replyHandler(nil, "No permission")
             }, parentVC: (message.webView as? MWebView)?.holderObject as? UIViewController)
         } else {
             self.callApi(replyHandler: replyHandler, apiName: apiName, jsonObj: jsonObj, param: param)
         }
     }
-    
-    func callApi(replyHandler: @escaping (Any?, String?) -> Void, apiName: MinipApi.APIName, jsonObj: [String:Any], param: MinipApi.Parameter) {
+
+    func callApi(replyHandler: @escaping (Any?, String?) -> Void, apiName: MinipApi.APIName, jsonObj: [String: Any], param: MinipApi.Parameter) {
         let api = MinipApi.shared
         switch apiName {
         case .ping:
@@ -73,6 +73,8 @@ class MinipNativeInteraction: NSObject, WKScriptMessageHandlerWithReply {
             api.redirectTo(param: param, replyHandler: replyHandler)
         case .openWebsite:
             api.openWebsite(param: param, replyHandler: replyHandler)
+        case .openSettings:
+            api.openSettings(param: param, replyHandler: replyHandler)
         case .showAppDetail:
             api.showAppDetail(param: param, replyHandler: replyHandler)
         case .closeApp:

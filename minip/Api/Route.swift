@@ -74,4 +74,15 @@ extension MinipApi {
         vc.present(safariVC, animated: true)
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
+
+    func openSettings(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
+            return
+        }
+        let ss = MiniAppSettingsViewController(style: .insetGrouped, app: vc.app)
+        let navVC = BackableNavigationController(rootViewController: ss)
+        navVC.addPanGesture(vc: ss)
+        navVC.modalPresentationStyle = .overFullScreen
+        vc.present(navVC, animated: true)
+    }
 }

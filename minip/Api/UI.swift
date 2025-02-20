@@ -275,6 +275,8 @@ extension MinipApi {
         pvc.onCanceled = {
             replyHandler(InteropUtils.succeed(msg: "Canceled").toJsonString(), nil)
         }
+
+        pvc.view.tintColor = vc.view.tintColor
         vc.present(pvc, animated: true)
     }
 }

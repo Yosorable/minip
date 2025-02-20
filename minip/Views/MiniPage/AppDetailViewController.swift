@@ -125,7 +125,6 @@ class AppDetailViewController: UIViewController {
                                 guard let this = self else { return }
                                 let ss = MiniAppSettingsViewController(style: .insetGrouped, app: this.appInfo)
                                 let vc = BackableNavigationController(rootViewController: ss)
-                                vc.overrideUserInterfaceStyle = this.overrideUserInterfaceStyle
                                 vc.addPanGesture(vc: ss)
                                 vc.modalPresentationStyle = .overFullScreen
                                 this.parentVC.present(vc, animated: true)

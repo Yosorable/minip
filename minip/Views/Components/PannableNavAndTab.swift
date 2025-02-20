@@ -28,7 +28,7 @@ class PannableNavigationViewController: UINavigationController {
         let progress = CGFloat(downwardMovementPercent)
 
         let velocity = panGesture.velocity(in: self.view)
-        let shouldFinish = progress > self.minimumScreenRatioToHide
+        let shouldFinish = progress > self.minimumScreenRatioToHide || velocity.x >= 800
 
         switch panGesture.state {
         case .began:
@@ -105,7 +105,7 @@ class PannableTabBarController: UITabBarController {
         let progress = CGFloat(downwardMovementPercent)
 
         let velocity = panGesture.velocity(in: self.view)
-        let shouldFinish = progress > self.minimumScreenRatioToHide
+        let shouldFinish = progress > self.minimumScreenRatioToHide || velocity.x >= 800
 
         switch panGesture.state {
         case .began:

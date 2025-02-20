@@ -14,10 +14,15 @@ class MinipApi {
     enum APIName: String, Codable {
         case ping
         case getInstalledAppList
+
+        // MARK: route
+
         case navigateTo
         case navigateBack
         case redirectTo
         case openWebsite
+        case openSettings
+
         case showAppDetail
         case closeApp
         case installApp

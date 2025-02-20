@@ -53,7 +53,7 @@ extension MiniAppManager {
         <body>
           <h1>Hello, world!</h1>
           <p>This is demo file.</p>
-          <p>Go to "Files -> \(name)/index.html" to edit it.</p>
+          <p>Go to "Files -&gt; \(name)/index.html" to edit it.</p>
           <button disabled id="btn">click me</button>
           <div id="msg"></div>
           <script type="module">

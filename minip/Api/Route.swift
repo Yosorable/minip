@@ -84,5 +84,6 @@ extension MinipApi {
         navVC.addPanGesture(vc: ss)
         navVC.modalPresentationStyle = .overFullScreen
         vc.present(navVC, animated: true)
+        replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
 }

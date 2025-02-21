@@ -123,7 +123,7 @@ struct DownloadProjectView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(Text("Load from web"))
+        .navigationTitle(Text("home.menu.load_from_web"))
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
@@ -191,7 +191,7 @@ struct DownloadProjectView: View {
 
     func unCompress(file: URL) {
         InstallMiniApp(pkgFile: file, onSuccess: {
-            ProgressHUD.succeed("Success")
+            ProgressHUD.succeed(i18n("Success"))
             dismiss()
             onSuccess?()
         }, onFailed: { err in

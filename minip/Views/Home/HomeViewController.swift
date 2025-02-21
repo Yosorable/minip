@@ -20,7 +20,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     lazy var addProjectBtn: UIBarButtonItem = {
         let menu = UIMenu(children: [
-            UIAction(title: "Create new project", image: UIImage(systemName: "folder.badge.plus")) { _ in
+            UIAction(title: i18n("home.menu.create_project"), image: UIImage(systemName: "folder.badge.plus")) { _ in
                 ShowCreateNewProjectAlert(self, onCreatedSuccess: { newApp in
                     self.apps.insert(newApp, at: 0)
                     self.tableView.beginUpdates()
@@ -28,12 +28,12 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.tableView.endUpdates()
                 })
             },
-            UIAction(title: "Load from web", image: UIImage(systemName: "network")) { _ in
+            UIAction(title: i18n("home.menu.load_from_web"), image: UIImage(systemName: "network")) { _ in
                 let vc = UIHostingController(rootView: DownloadProjectView())
                 vc.modalPresentationStyle = .fullScreen
                 self.present(vc, animated: true)
             },
-            UIAction(title: "Load from file", image: UIImage(systemName: "folder")) { _ in
+            UIAction(title: i18n("home.menu.load_from_file"), image: UIImage(systemName: "folder")) { _ in
                 let vc = UIHostingController(rootView: ImportProjectFromFileView())
                 vc.modalPresentationStyle = .fullScreen
                 self.present(vc, animated: true)
@@ -64,7 +64,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Projects"
+        title = i18n("Projects")
 
         apps = MiniAppManager.shared.getAppInfos()
         if Defaults[.firstStart] && apps.count == 0 {
@@ -142,20 +142,20 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - swipe actions
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete", handler: { _, _, completion in
+        let deleteAction = UIContextualAction(style: .destructive, title: i18n("Delete"), handler: { _, _, completion in
             let app = self.apps[indexPath.row]
-            let alert = UIAlertController(title: "Delete Project", message: "Are to sure to delete \(app.displayName ?? app.name)", preferredStyle: .alert)
-            let confirm = UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+            let alert = UIAlertController(title: i18n("home.delete_alert_title"), message: i18nF("delete_alert_confirm_message", app.displayName ?? app.name), preferredStyle: .alert)
+            let confirm = UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in
                 MiniAppManager.shared.deleteMiniAPp(app: self.apps[indexPath.row], completion: {
                     self.apps.remove(at: indexPath.row)
                     tableView.beginUpdates()
                     tableView.deleteRows(at: [indexPath], with: .automatic)
                     tableView.endUpdates()
                     completion(true)
-                    ShowSimpleSuccess(msg: "Project deleted successfully.")
+                    ShowSimpleSuccess(msg: i18n("delete_successfully"))
                 })
             })
-            let cancel = UIAlertAction(title: "Cancel", style: .default, handler: { _ in
+            let cancel = UIAlertAction(title: i18n("Cancel"), style: .default, handler: { _ in
                 completion(false)
             })
             alert.addAction(cancel)
@@ -163,7 +163,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.present(alert, animated: true)
         })
 
-        let settingsAction = UIContextualAction(style: .normal, title: "Settings", handler: { _, _, completion in
+        let settingsAction = UIContextualAction(style: .normal, title: i18n("Settings"), handler: { _, _, completion in
             let vc = MiniAppSettingsViewController(style: .insetGrouped, app: self.apps[indexPath.row])
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)

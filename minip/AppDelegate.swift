@@ -28,17 +28,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             {
                 let vc = UINavigationController(rootViewController: HomeViewController())
                 vc.navigationBar.prefersLargeTitles = true
-                vc.tabBarItem = UITabBarItem(title: "Projects", image: UIImage(systemName: "shippingbox.fill"), tag: 0)
+                vc.tabBarItem = UITabBarItem(title: i18n("Projects"), image: UIImage(systemName: "shippingbox.fill"), tag: 0)
                 return vc
             }(),
             {
                 let vc = UIHostingController(rootView: FileBrowserView())
-                vc.tabBarItem = UITabBarItem(title: "Files", image: UIImage(systemName: "folder.fill"), tag: 1)
+                vc.tabBarItem = UITabBarItem(title: i18n("Files"), image: UIImage(systemName: "folder.fill"), tag: 1)
                 return vc
             }(),
             {
                 let vc = UIHostingController(rootView: SettingsView())
-                vc.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gear"), tag: 2)
+                vc.tabBarItem = UITabBarItem(title: i18n("Settings"), image: UIImage(systemName: "gear"), tag: 2)
                 return vc
             }(),
         ]

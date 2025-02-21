@@ -49,7 +49,7 @@ struct FileImporterView: UIViewControllerRepresentable {
             let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
             InstallMiniApp(pkgFile: urls.first!, onSuccess: {
-                ProgressHUD.succeed("Success")
+                ProgressHUD.succeed(i18n("project_created_successfully"))
                 self.parent.onSuccess?()
             }, onFailed: { err in
                 ProgressHUD.failed(err)

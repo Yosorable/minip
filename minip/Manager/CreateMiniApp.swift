@@ -55,28 +55,34 @@ extension MiniAppManager {
           <p>This is demo file.</p>
           <p>Go to "Files -&gt; \(name)/index.html" to edit it.</p>
           <button disabled id="btn">click me</button>
+          <button disabled id="st-btn">go to Settings page</button>
           <div id="msg"></div>
           <script type="module">
             import * as minip from "https://cdn.jsdelivr.net/npm/minip-bridge/dist/index.mjs"
             const msgDiv = document.querySelector("#msg")
             const btn = document.querySelector("#btn")
+            const stBtn = document.querySelector("#st-btn")
+            function showError(err) { 
+                let message = err ? (err.message ?? err.msg ?? err.data ?? JSON.stringify(err)) : "Unknown error"
+                msgDiv.innerText = `Some error occurs, message: ${message}` 
+            }
             function click() {
               minip.showAlert({
                 title: "Alert",
                 message: "This is an alert.",
                 actions: [
                   { title: "Ok", key: "Ok" },
-                  { title: "Cancel", key: "Cancel", style: "cancel" }
+                  { title: "Cancel", key: "Cancel", style: "cancel" },
+                  { title: "Do Nothing", key: "DoNothing", style: "destructive" }
                 ]
               })
               .then(res => msgDiv.innerText = `You clicked ${res.data}.`)
-              .catch(err => {
-                let message = err ? (err.message ?? err.msg ?? err.data ?? JSON.stringify(err)) : "Unknown error"
-                msgDiv.innerText = `Some error occurs, message: ${message}`
-              })
+              .catch(showError)
             }
             btn.disabled = false
             btn.onclick = click
+            stBtn.disabled = false
+            stBtn.onclick = function() { minip.openSettings().catch(showError) }
           </script>
         </body>
         </html>

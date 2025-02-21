@@ -8,16 +8,16 @@
 import UIKit
 
 func ShowCreateNewProjectAlert(_ parentVC: UIViewController, onCreatedSuccess: @escaping (AppInfo) -> Void) {
-    let alert = UIAlertController(title: "Create Project", message: nil, preferredStyle: .alert)
+    let alert = UIAlertController(title: i18n("cp.create_project"), message: nil, preferredStyle: .alert)
     alert.addTextField(configurationHandler: { tf in
-        tf.placeholder = "name"
+        tf.placeholder = i18n("cp.name")
     })
     alert.addTextField(configurationHandler: { tf in
-        tf.placeholder = "display name"
+        tf.placeholder = i18n("cp.display_name")
     })
 
-    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-    let confirmAction = UIAlertAction(title: "Create", style: .default) { _ in
+    let cancelAction = UIAlertAction(title: i18n("Cancel"), style: .cancel)
+    let confirmAction = UIAlertAction(title: i18n("Create"), style: .default) { _ in
         let nameTF = alert.textFields?[0]
         let displayNameTF = alert.textFields?[1]
         let name = nameTF?.text
@@ -25,7 +25,7 @@ func ShowCreateNewProjectAlert(_ parentVC: UIViewController, onCreatedSuccess: @
 
         do {
             let newApp = try MiniAppManager.shared.createMiniApp(name: name, displayName: displayName)
-            ShowSimpleSuccess(msg: "Project created successfully.")
+            ShowSimpleSuccess(msg: i18n("project_created_successfully"))
             onCreatedSuccess(newApp)
         } catch {
             ShowSimpleError(err: error)

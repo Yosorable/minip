@@ -37,20 +37,20 @@ struct SettingsView: View {
                     let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
                     let dateFrom = Date(timeIntervalSince1970: 0)
                     WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: dateFrom) {
-                        ProgressHUD.succeed("success")
+                        ProgressHUD.succeed(i18n("success"))
                     }
 
                 } label: {
-                    Text("Clear WKWebView Cache")
+                    Text(i18n("s.clear_wkwebview_cache"))
                 }
 
                 Button {
                     KingfisherManager.shared.cache.clearDiskCache(completion: {
                         KingfisherManager.shared.cache.clearMemoryCache()
-                        ProgressHUD.succeed("success")
+                        ProgressHUD.succeed(i18n("success"))
                     })
                 } label: {
-                    Text("Clear KFImage Cache")
+                    Text(i18n("s.clear_kfimage_cache"))
                 }
             } header: {
                 Text("Cache")
@@ -58,11 +58,11 @@ struct SettingsView: View {
 
             Section {
                 Toggle(isOn: $wkwebviewInspectable, label: {
-                    Text("Allow Inspect WKWebView")
+                    Text(i18n("s.allow_inspect_wkwebview"))
                 })
 
                 Toggle(isOn: $useCapsuleButton, label: {
-                    Text("Use Capsule Button")
+                    Text(i18n("s.use_capsule_button"))
                 })
             } header: {
                 Text("Preference")
@@ -94,9 +94,13 @@ struct SettingsView: View {
             } header: {
                 Text("About")
             } footer: {
-                Text("Documentation and source code: [GitHub - yosorable/minip](https://github.com/yosorable/minip)")
+                if #available(iOS 15, *) {
+                    Text(try! AttributedString(markdown: i18n("s.documentation_source_code")))
+                } else {
+                    Text(i18n("s.documentation_source_code"))
+                }
             }
         }
-        .navigationTitle(Text("Settings"))
+        .navigationTitle(Text(i18n("Settings")))
     }
 }

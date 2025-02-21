@@ -62,7 +62,7 @@ struct FileBrowserPageView: View {
 
     var body: some View {
         list
-            .navigationTitle(Text(viewModel.path == "/" ? "Files" : (viewModel.path.splitPolyfill(separator: "/").last ?? "")))
+            .navigationTitle(Text(viewModel.path == "/" ? i18n("Files") : (viewModel.path.splitPolyfill(separator: "/").last ?? "")))
             .fullScreenCover(item: $viewModel.selectFile) { item in
                 EditorView(fileInfo: item)
             }
@@ -72,7 +72,7 @@ struct FileBrowserPageView: View {
                         Button {
                             cleanTrash()
                         } label: {
-                            Text("Clean")
+                            Text(i18n("f.clean_trash"))
                                 .foregroundColor(.red)
                         }
                     } else if !viewModel.path.contains("/.Trash") {
@@ -80,12 +80,12 @@ struct FileBrowserPageView: View {
                             Button {
                                 createFile()
                             } label: {
-                                Label("Create file", systemImage: "doc")
+                                Label(i18n("f.create_file"), systemImage: "doc")
                             }
                             Button {
                                 createFolder()
                             } label: {
-                                Label("Create folder", systemImage: "folder")
+                                Label(i18n("f.create_folder"), systemImage: "folder")
                             }
                         } label: {
                             Image(systemName: "plus.app.fill")
@@ -111,7 +111,7 @@ struct FileBrowserPageView: View {
                 Button {
                     deleteFile(url: ele.url)
                 } label: {
-                    Text("Delete")
+                    Text(i18n("Delete"))
                 }
                 .tint(.red)
             }
@@ -165,7 +165,7 @@ struct FileBrowserPageView: View {
                     Button {
                         deleteFolder(url: ele.url)
                     } label: {
-                        Text("Delete")
+                        Text(i18n("Delete"))
                     }
                     .tint(.red)
                 }
@@ -197,9 +197,9 @@ struct FileBrowserPageView: View {
     }
 
     func cleanTrash() {
-        let alertController = UIAlertController(title: "Confirm", message: "Are you sure to clean the trash ?", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Clean", style: .destructive, handler: { _ in
+        let alertController = UIAlertController(title: i18n("Confirm"), message: i18n("f.clean_trash_confirm"), preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: i18n("f.clean_trash"), style: .destructive, handler: { _ in
             CleanTrashAsync {
                 ShowSimpleSuccess()
                 viewModel.fetchFiles()
@@ -211,14 +211,14 @@ struct FileBrowserPageView: View {
     }
 
     func createFile() {
-        let alertController = UIAlertController(title: "Create file", message: "Please input file name", preferredStyle: .alert)
+        let alertController = UIAlertController(title: i18n("f.create_file"), message: i18n("f.create_file_tip"), preferredStyle: .alert)
         var textField: UITextField?
         alertController.addTextField { tf in
-            tf.placeholder = "File name"
+            tf.placeholder = i18n("f.file_name")
             textField = tf
         }
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: { _ in
+        alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: i18n("Create"), style: .default, handler: { _ in
             guard let fileName = textField?.text else {
                 return
             }
@@ -229,7 +229,7 @@ struct FileBrowserPageView: View {
 
             if !fileManager.fileExists(atPath: newFileURL.path) {
                 if fileManager.createFile(atPath: newFileURL.path, contents: nil) {
-                    ShowSimpleSuccess(msg: "Created success")
+                    ShowSimpleSuccess(msg: i18n("created_successfully"))
                     viewModel.fetchFiles()
                 } else {
                     ShowSimpleError()
@@ -242,14 +242,14 @@ struct FileBrowserPageView: View {
     }
 
     func createFolder() {
-        let alertController = UIAlertController(title: "Create folder", message: "Please input folder name", preferredStyle: .alert)
+        let alertController = UIAlertController(title: i18n("f.create_folder"), message: i18n("f.create_folder_tip"), preferredStyle: .alert)
         var textField: UITextField?
         alertController.addTextField { tf in
-            tf.placeholder = "Folder name"
+            tf.placeholder = i18n("f.folder_name")
             textField = tf
         }
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: { _ in
+        alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: i18n("Create"), style: .default, handler: { _ in
             guard let fileName = textField?.text else {
                 return
             }
@@ -261,7 +261,7 @@ struct FileBrowserPageView: View {
             if !fileManager.fileExists(atPath: newFileURL.path) {
                 do {
                     try fileManager.createDirectory(at: newFileURL, withIntermediateDirectories: false)
-                    ShowSimpleSuccess(msg: "Created success")
+                    ShowSimpleSuccess(msg: i18n("created_successfully"))
                     viewModel.fetchFiles()
                 } catch {
                     ShowSimpleError(err: error)
@@ -283,12 +283,12 @@ struct FileBrowserPageView: View {
             return
         }
 
-        let alertController = UIAlertController(title: "Confirm", message: "Are you sure to delete this folder: \(url.lastPathComponent) ?", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+        let alertController = UIAlertController(title: i18n("Confirm"), message: i18nF("f.delete_folder_confirm_message", url.lastPathComponent), preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in
             do {
                 try FileManager.default.trashItem(at: url, resultingItemURL: nil)
-                ShowSimpleSuccess(msg: "Moved to trash")
+                ShowSimpleSuccess(msg: i18n("f.moved_to_trash"))
                 viewModel.fetchFiles()
             } catch {
                 ShowSimpleError(err: error)
@@ -301,12 +301,12 @@ struct FileBrowserPageView: View {
         guard let url = url else {
             return
         }
-        let alertController = UIAlertController(title: "Confirm", message: "Are you sure to delete this file: \(url.lastPathComponent) ?", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
+        let alertController = UIAlertController(title: i18n("Confirm"), message: i18nF("f.delete_file_confirm_message", url.lastPathComponent), preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in
             do {
                 try FileManager.default.trashItem(at: url, resultingItemURL: nil)
-                ShowSimpleSuccess(msg: "Moved to trash")
+                ShowSimpleSuccess(msg: i18n("f.moved_to_trash"))
                 viewModel.fetchFiles()
             } catch {
                 ShowSimpleError(err: error)

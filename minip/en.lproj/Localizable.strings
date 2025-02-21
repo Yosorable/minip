@@ -1,0 +1,73 @@
+/*
+  Localizable.strings
+  minip
+
+  Created by LZY on 2025/2/21.
+  
+*/
+
+"Projects" = "Projects";
+"Files" = "Files";
+"Settings" = "Settings";
+"Delete" = "Delete";
+"Cancel" = "Cancel";
+"Create" = "Create";
+"Download" = "Download";
+"Success" = "Success";
+"success" = "Success";
+"created_successfully" = "Created successfully.";
+"project_created_successfully" = "Project created successfully.";
+"delete_alert_confirm_message" = "Are to sure to delete %1$@ ?";
+"delete_successfully" = "Project deleted successfully.";
+"Confirm" = "Confirm";
+"Privacy" = "Privacy";
+"Permission" = "Permission";
+"Allow" = "Allow";
+"Deny" = "Deny";
+"Save" = "Save";
+"Reload" = "Reload";
+
+// MARK: home
+"home.menu.create_project" = "Create new project";
+"home.menu.load_from_web" = "Load from web";
+"home.menu.load_from_file" = "Load from file";
+"home.delete_alert_title" = "Delete Project";
+
+"cp.create_project" = "Create Project";
+"cp.name" = "name";
+"cp.display_name" = "display name";
+
+// MARK: files
+"f.create_file" = "Create file";
+"f.create_folder" = "Create folder";
+"f.create_file_tip" = "Please input file name";
+"f.create_folder_tip" = "Please input folder name";
+"f.file_name" = "File name";
+"f.folder_name" = "Folder name";
+
+"f.clean_trash" = "Clean";
+"f.clean_trash_confirm" = "Are you sure to clean the trash ?";
+
+"f.delete_file_confirm_message" = "Are you sure to delete this file:  %1$@ ?";
+"f.delete_folder_confirm_message" = "Are you sure to delete this folder:  %1$@ ?";
+"f.moved_to_trash" = "Moved to trash";
+
+// MARK: settings
+"s.clear_wkwebview_cache" = "Clear WKWebView Cache";
+"s.clear_kfimage_cache" = "Clear KFImage Cache";
+"s.allow_inspect_wkwebview" = "Allow Inspect WKWebView";
+"s.use_capsule_button" = "Use Capsule Button";
+"s.documentation_source_code" = "Documentation and source code: [GitHub - yosorable/minip](https://github.com/yosorable/minip)";
+
+// MARK: MiniApp Privacy
+"mp.camera" = "Camera";
+"mp.clipboard" = "Clipboard";
+"mp.install_project" = "Install Project";
+"mp.get_projects_list" = "Get Projects List";
+"mp.open_project" = "Open Project";
+
+"mp.request_camera_permission" = "%1$@ requests camera permission";
+"mp.request_clipboard_permission" = "%1$@ requests clipboard permission";
+"mp.request_install_project_permission" = "%1$@ requests permission to install project";
+"mp.request_read_projects_list_permission" = "%1$@ requests permission to read the project list";
+"mp.request_open_project_permission" = "%1$@ requests permission to open another project";

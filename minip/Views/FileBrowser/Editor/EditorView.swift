@@ -92,7 +92,7 @@ struct EditorView: View {
                         originText = text
                     } catch {}
                 } label: {
-                    Text("Save")
+                    Text(i18n("Save"))
                 }
                 .disabled(originText == text)
             }

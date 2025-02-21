@@ -41,6 +41,7 @@
 		48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC32AF1F6C1001097CC /* MWebViewPool.swift */; };
 		482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */; };
 		482F03BE2D4C528E00D6CA6B /* PannableNavAndTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482F03BD2D4C528E00D6CA6B /* PannableNavAndTab.swift */; };
+		48328F5E2D6870330031C4D3 /* i18n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48328F5D2D6870290031C4D3 /* i18n.swift */; };
 		483E061F2D08227500140F13 /* SQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483E061E2D08227500140F13 /* SQLite.swift */; };
 		484E08312B96D6DD0018DCF0 /* AppDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */; };
 		485A75222BDCA43F00D887A4 /* logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485A75212BDCA43F00D887A4 /* logger.swift */; };
@@ -92,6 +93,7 @@
 		48C22D1F2D6831B80000F74F /* TreeSitterYAML in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22D1E2D6831B80000F74F /* TreeSitterYAML */; };
 		48C22D212D6831B80000F74F /* TreeSitterYAMLQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22D202D6831B80000F74F /* TreeSitterYAMLQueries */; };
 		48C22D232D6831B80000F74F /* TreeSitterYAMLRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22D222D6831B80000F74F /* TreeSitterYAMLRunestone */; };
+		48C22D2A2D683C260000F74F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48C22D282D683C260000F74F /* Localizable.strings */; };
 		48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C385AC2A978520006BEE35 /* Polyfill.swift */; };
 		48CA01762D5C216E006A63DD /* PickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CA01752D5C20F2006A63DD /* PickerViewController.swift */; };
 		48CA01782D5C21F5006A63DD /* SingleColumnPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CA01772D5C21EB006A63DD /* SingleColumnPickerView.swift */; };
@@ -147,6 +149,7 @@
 		48248BC32AF1F6C1001097CC /* MWebViewPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MWebViewPool.swift; sourceTree = "<group>"; };
 		482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppManager.swift; sourceTree = "<group>"; };
 		482F03BD2D4C528E00D6CA6B /* PannableNavAndTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PannableNavAndTab.swift; sourceTree = "<group>"; };
+		48328F5D2D6870290031C4D3 /* i18n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = i18n.swift; sourceTree = "<group>"; };
 		483E061E2D08227500140F13 /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLite.swift; sourceTree = "<group>"; };
 		484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
 		485A75212BDCA43F00D887A4 /* logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = logger.swift; sourceTree = "<group>"; };
@@ -166,6 +169,8 @@
 		48B90EEB2D5DDB5600CCE103 /* QRCodeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeHandler.swift; sourceTree = "<group>"; };
 		48B90EED2D5DDF4000CCE103 /* TextDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplayViewController.swift; sourceTree = "<group>"; };
 		48C22D0E2D6823920000F74F /* LanguageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageProvider.swift; sourceTree = "<group>"; };
+		48C22D292D683C260000F74F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		48C22D2B2D683C370000F74F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		48C385AC2A978520006BEE35 /* Polyfill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polyfill.swift; sourceTree = "<group>"; };
 		48CA01752D5C20F2006A63DD /* PickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerViewController.swift; sourceTree = "<group>"; };
 		48CA01772D5C21EB006A63DD /* SingleColumnPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleColumnPickerView.swift; sourceTree = "<group>"; };
@@ -314,6 +319,7 @@
 		2B9B57982A563986002E9D57 /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				48328F5D2D6870290031C4D3 /* i18n.swift */,
 				2B9B57992A56399B002E9D57 /* utils.swift */,
 				48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */,
 				483E061E2D08227500140F13 /* SQLite.swift */,
@@ -507,6 +513,7 @@
 				2B9B579E2A57D5B5002E9D57 /* Info.plist */,
 				48CE18422D5E760300F6F987 /* Settings.bundle */,
 				48DF6BA2288D32CA00D523C1 /* Preview Content */,
+				48C22D282D683C260000F74F /* Localizable.strings */,
 			);
 			path = minip;
 			sourceTree = "<group>";
@@ -630,6 +637,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 48DF6B90288D32C800D523C1;
 			packageReferences = (
@@ -660,6 +668,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48DF6BA4288D32CA00D523C1 /* Preview Assets.xcassets in Resources */,
+				48C22D2A2D683C260000F74F /* Localizable.strings in Resources */,
 				48CE18432D5E760300F6F987 /* Settings.bundle in Resources */,
 				48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */,
 			);
@@ -694,6 +703,7 @@
 				482F03BE2D4C528E00D6CA6B /* PannableNavAndTab.swift in Sources */,
 				2B9CF4242A5A6A6100BD2C7F /* FileBrowserView.swift in Sources */,
 				2B1B32C72A6135D300DA573F /* DownloadProjectView.swift in Sources */,
+				48328F5E2D6870330031C4D3 /* i18n.swift in Sources */,
 				2B9B579A2A56399B002E9D57 /* utils.swift in Sources */,
 				48947C422BE2963E00EE9F82 /* MinipRequest.swift in Sources */,
 				2BD9B1AC2A5BD4E600036AFD /* CodeEditorV2.swift in Sources */,
@@ -744,11 +754,24 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXVariantGroup section */
+		48C22D282D683C260000F74F /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				48C22D292D683C260000F74F /* en */,
+				48C22D2B2D683C370000F74F /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		48DF6BA5288D32CA00D523C1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -802,6 +825,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -810,6 +834,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -856,6 +881,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -868,7 +894,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025021903;
+				CURRENT_PROJECT_VERSION = 2025022102;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
@@ -885,7 +911,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.15;
+				MARKETING_VERSION = 0.0.17;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -903,7 +929,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025021903;
+				CURRENT_PROJECT_VERSION = 2025022102;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
@@ -920,7 +946,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.15;
+				MARKETING_VERSION = 0.0.17;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

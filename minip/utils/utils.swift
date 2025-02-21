@@ -81,7 +81,7 @@ func saveFile(url: URL?, content: String) {
 }
 
 func ShowSimpleSuccess(msg: String? = nil) {
-    ProgressHUD.succeed(msg ?? "Success")
+    ProgressHUD.succeed(msg ?? i18n("Success"))
 }
 
 func ShowSimpleError(err: Error? = nil) {

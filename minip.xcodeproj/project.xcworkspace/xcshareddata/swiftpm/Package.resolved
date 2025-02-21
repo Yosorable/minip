@@ -1,5 +1,5 @@
 {
-  "originHash" : "13953d89e47387f3abf5d573db4b6919adc6a5d4b84d948e5a2cef709c9a71dc",
+  "originHash" : "8a8adc32b2ec9b861d19239542fa9ff349b175bcfe188704bbbbe87051797410",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/simonbs/treesitterlanguages",
       "state" : {
-        "revision" : "a15ab30453d14097355d7d78ec7c0feb008cfbba",
-        "version" : "0.1.7"
+        "revision" : "15cf3a9ec3ab95e0d058b7df9f35619123c9e02d",
+        "version" : "0.1.10"
       }
     },
     {

@@ -70,7 +70,7 @@ struct EditorView: View {
                     guard let ext = fileInfo.fileName.split(separator: ".").last else {
                         return .html
                     }
-                    return SourceCodeTypeV2[String(ext)] ?? .html
+                    return SourceCodeTypeV2[String(ext)]
                 }())
                     .edgesIgnoringSafeArea(.all)
             }

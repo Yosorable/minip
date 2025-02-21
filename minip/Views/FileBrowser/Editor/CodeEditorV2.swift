@@ -15,12 +15,12 @@ import UIKit
 class CodeEditorV2Controller: UIViewController {
     var textView: TextView?
     var fileString: String
-    var language: TreeSitterLanguage
+    var language: TreeSitterLanguage?
     var onChange: (String) -> Void
 
     let keyboardToolbarView = KeyboardToolbarView()
 
-    init(textView: TextView? = nil, fileString: String, language: TreeSitterLanguage, onChange: @escaping (String) -> Void) {
+    init(textView: TextView? = nil, fileString: String, language: TreeSitterLanguage?, onChange: @escaping (String) -> Void) {
         self.textView = textView
         self.fileString = fileString
         self.language = language
@@ -105,17 +105,37 @@ class CodeEditorV2Controller: UIViewController {
         textView.spellCheckingType = .no
         textView.autocapitalizationType = .none
 
+        textView.smartDashesType = .no
+        textView.smartQuotesType = .no
+        textView.smartInsertDeleteType = .no
+
+        struct BasicCharacterPair: CharacterPair {
+            let leading: String
+            let trailing: String
+        }
+
+        textView.characterPairs = [
+            BasicCharacterPair(leading: "(", trailing: ")"),
+            BasicCharacterPair(leading: "{", trailing: "}"),
+            BasicCharacterPair(leading: "[", trailing: "]"),
+            BasicCharacterPair(leading: "\"", trailing: "\""),
+            BasicCharacterPair(leading: "'", trailing: "'")
+        ]
+
         textView.indentStrategy = .space(length: 2)
     }
 
     private func setTextViewState(on textView: TextView) {
+        let text = self.fileString
+        guard let lang = self.language else {
+            textView.text = text
+            return
+        }
         DispatchQueue.global(qos: .userInitiated).async {
-            let text = self.fileString
-//                let theme = TomorrowTheme()
+//           let theme = TomorrowTheme()
             // VSCodeDarkTheme()
-            let state = TextViewState(text: text, theme: DefaultTheme(), language: self.language)
+            let state = TextViewState(text: text, theme: DefaultTheme(), language: lang, languageProvider: LanguageProvider())
 
-//                let state = TextViewState(text: text)
             DispatchQueue.main.async {
                 textView.setState(state)
             }
@@ -133,7 +153,7 @@ extension CodeEditorV2Controller: TextViewDelegate {
 
 struct CodeEditorV2View: UIViewControllerRepresentable {
     @Binding var contentString: String
-    var language: TreeSitterLanguage
+    var language: TreeSitterLanguage?
     func makeUIViewController(context: Context) -> CodeEditorV2Controller {
         let vc = CodeEditorV2Controller(fileString: contentString, language: language, onChange: { newStr in
             contentString = newStr

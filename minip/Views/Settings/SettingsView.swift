@@ -32,6 +32,18 @@ struct SettingsView: View {
 
     var content: some View {
         List {
+            #if DEBUG
+            Section {
+                Button {
+                    MiniAppManager.shared.clearAllPermissions()
+                    ShowSimpleSuccess(msg: "Cleared successfully.")
+                } label: {
+                    Text("Clear All Permissions")
+                }
+            } header: {
+                Text("Debug")
+            }
+            #endif
             Section {
                 Button {
                     let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
@@ -90,7 +102,7 @@ struct SettingsView: View {
                 } label: {
                     Text("Licenses")
                 }
-  
+
             } header: {
                 Text("About")
             } footer: {

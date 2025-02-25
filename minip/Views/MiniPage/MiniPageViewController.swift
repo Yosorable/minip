@@ -133,7 +133,7 @@ class MiniPageViewController: UIViewController {
             } else {
                 url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
                 logger.info("[webview] load \(url)")
-                webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
+                webview.loadFileURL(url, allowingReadAccessTo: documentsURL.appendingPathComponent(app.name))
             }
         }
         pageURL = url

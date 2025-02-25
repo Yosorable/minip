@@ -62,7 +62,7 @@
 "mp.camera" = "相机";
 "mp.clipboard" = "剪切板";
 "mp.install_project" = "安装项目";
-"mp.get_projects_list" = "获取项目列表";
+"mp.get_projects_list" = "项目列表";
 "mp.open_project" = "打开项目";
 
 "mp.request_camera_permission" = "%1$@ 请求相机权限";

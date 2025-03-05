@@ -48,6 +48,11 @@ class MinipApi {
         case getClipboardData
         case setClipboardData
         case scanQRCode
+        case getDeviceInfo
+
+        // MARK: for prompt
+
+        case getDeviceInfoSync
 
         // MARK: KVStorage async
 

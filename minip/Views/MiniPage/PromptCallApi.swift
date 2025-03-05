@@ -49,6 +49,8 @@ extension MiniPageViewController: WKUIDelegate {
             completionHandler(api.deleteKVStorageSync(param: param))
         case .clearKVStorageSync:
             completionHandler(api.clearKVStorageSync(param: param))
+        case .getDeviceInfoSync:
+            completionHandler(MinipApi.InteropUtils.succeedWithData(data: api.getDeviceInfoSync(param: param)).toJsonString())
         default:
             completionHandler("API \(apiName.rawValue) is not implemented or not allowed")
         }

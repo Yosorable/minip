@@ -61,4 +61,58 @@ extension MinipApi {
         }
         vc.present(qvc, animated: true)
     }
+
+    struct DeviceInfo: Codable {
+        let language: String
+        let brand: String
+        let model: String
+        let system: String
+        let screen: ScreenInfo
+        let safeAreaInfo: SafeAreaInfo
+
+        struct ScreenInfo: Codable {
+            let width: Double
+            let height: Double
+        }
+
+        struct SafeAreaInfo: Codable {
+            let left: Double
+            let right: Double
+            let top: Double
+            let bottom: Double
+        }
+    }
+
+    func getDeviceInfoSync(param: Parameter) -> DeviceInfo? {
+        guard let vc = param.webView?.holderObject as? MiniPageViewController, let window = (UIApplication.shared.delegate as? AppDelegate)?.window else {
+            return nil
+        }
+        let language = Locale.preferredLanguages.first ?? "Unknown"
+
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let identifier = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        let model = identifier
+
+        let system = "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
+        let screenSize = UIScreen.main.bounds.size
+        let screen = DeviceInfo.ScreenInfo(width: Double(screenSize.width), height: Double(screenSize.height))
+        var safeArea = DeviceInfo.SafeAreaInfo(left: 0, right: 0, top: 0, bottom: 0)
+        let safeInsets = window.safeAreaInsets
+        safeArea = DeviceInfo.SafeAreaInfo(left: Double(safeInsets.left),
+                                           right: Double(safeInsets.right),
+                                           top: Double(safeInsets.top),
+                                           bottom: Double(safeInsets.bottom))
+
+        return DeviceInfo(language: language, brand: "Apple", model: model, system: system, screen: screen, safeAreaInfo: safeArea)
+    }
+
+    func getDeviceInfo(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let res = getDeviceInfoSync(param: param) else { return }
+        replyHandler(InteropUtils.succeedWithData(data: res), nil)
+    }
 }

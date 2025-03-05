@@ -121,6 +121,8 @@ class MinipNativeInteraction: NSObject, WKScriptMessageHandlerWithReply {
             api.showPicker(param: param, replyHandler: replyHandler)
         case .scanQRCode:
             api.scanQRCode(param: param, replyHandler: replyHandler)
+        case .getDeviceInfo:
+            api.getDeviceInfo(param: param, replyHandler: replyHandler)
         default:
             replyHandler(nil, "API \(apiName.rawValue) is not implemented or not allowed")
         }

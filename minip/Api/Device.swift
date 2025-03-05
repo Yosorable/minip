@@ -83,7 +83,7 @@ extension MinipApi {
         }
     }
 
-    func getDeviceInfoSync(param: Parameter) -> DeviceInfo? {
+    func getDeviceInfoSync(param: Parameter) -> String? {
         guard let vc = param.webView?.holderObject as? MiniPageViewController, let window = (UIApplication.shared.delegate as? AppDelegate)?.window else {
             return nil
         }
@@ -108,11 +108,11 @@ extension MinipApi {
                                            top: Double(safeInsets.top),
                                            bottom: Double(safeInsets.bottom))
 
-        return DeviceInfo(language: language, brand: "Apple", model: model, system: system, screen: screen, safeAreaInfo: safeArea)
+        return InteropUtils.succeedWithData(data: DeviceInfo(language: language, brand: "Apple", model: model, system: system, screen: screen, safeAreaInfo: safeArea)).toJsonString()
     }
 
     func getDeviceInfo(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let res = getDeviceInfoSync(param: param) else { return }
-        replyHandler(InteropUtils.succeedWithData(data: res), nil)
+        replyHandler(res, nil)
     }
 }

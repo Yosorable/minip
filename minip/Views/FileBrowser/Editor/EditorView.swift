@@ -68,7 +68,7 @@ struct EditorView: View {
             } else {
                 CodeEditorV2View(contentString: $text, language: {
                     guard let ext = fileInfo.fileName.split(separator: ".").last else {
-                        return .html
+                        return nil
                     }
                     return SourceCodeTypeV2[String(ext)]
                 }())

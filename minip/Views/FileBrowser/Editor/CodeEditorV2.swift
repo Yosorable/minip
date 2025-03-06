@@ -12,7 +12,7 @@ import TreeSitterHTMLRunestone
 import TreeSitterJavaScriptRunestone
 import UIKit
 
-class CodeEditorV2Controller: UIViewController {
+class CodeEditorController: UIViewController {
     var textView: TextView?
     var fileString: String
     var language: TreeSitterLanguage?
@@ -143,7 +143,7 @@ class CodeEditorV2Controller: UIViewController {
     }
 }
 
-extension CodeEditorV2Controller: TextViewDelegate {
+extension CodeEditorController: TextViewDelegate {
     func textViewDidChange(_ textView: TextView) {
 //        UserDefaults.standard.text = textView.text
         onChange(textView.text)
@@ -154,15 +154,15 @@ extension CodeEditorV2Controller: TextViewDelegate {
 struct CodeEditorV2View: UIViewControllerRepresentable {
     @Binding var contentString: String
     var language: TreeSitterLanguage?
-    func makeUIViewController(context: Context) -> CodeEditorV2Controller {
-        let vc = CodeEditorV2Controller(fileString: contentString, language: language, onChange: { newStr in
+    func makeUIViewController(context: Context) -> CodeEditorController {
+        let vc = CodeEditorController(fileString: contentString, language: language, onChange: { newStr in
             contentString = newStr
         })
 
         return vc
     }
 
-    func updateUIViewController(_ uiViewController: CodeEditorV2Controller, context: Context) {}
+    func updateUIViewController(_ uiViewController: CodeEditorController, context: Context) {}
 }
 
 extension UIColor {
@@ -264,7 +264,7 @@ struct InsertTextKeyboardTool: KeyboardTool {
     }
 }
 
-private extension CodeEditorV2Controller {
+private extension CodeEditorController {
     private func setupKeyboardTools() {
         textView?.inputAccessoryView = keyboardToolbarView
         let canUndo = textView?.undoManager?.canUndo ?? false

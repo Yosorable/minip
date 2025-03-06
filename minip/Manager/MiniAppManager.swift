@@ -8,8 +8,8 @@
 import Defaults
 import FlyingFox
 import Foundation
-import UIKit
 import SwiftLMDB
+import UIKit
 
 class MiniAppManager {
     static let shared = MiniAppManager()

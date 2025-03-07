@@ -86,7 +86,10 @@ class MiniPageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        // todo: why nil?
+        if MiniAppManager.shared.openedApp == nil {
+            MiniAppManager.shared.openedApp = self.app
+        }
         webview = MWebViewPool.shared.getReusedWebView(forHolder: self)
         webview.uiDelegate = self
         if #available(iOS 16.4, *) {

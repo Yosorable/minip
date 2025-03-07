@@ -14,9 +14,7 @@ import UIKit
 class MiniAppManager {
     static let shared = MiniAppManager()
     let EmojiAppNames = ["🍇", "🍈", "🍉", "🍊", "🍋", "🍌", "🍍", "🥭", "🍎", "🍏", "🍐", "🍑", "🍒", "🍓", "🥝", "🍅", "🥥", "🥑", "🍆", "🥔", "🥕", "🌽", "🌶", "🥒", "🥬", "🥦", "🍄", "🥜", "🌰"]
-    var appTmpStore: [String: String] = .init()
     var openedApp: AppInfo?
-    var observedData = [String: Set<Int>]() // data key: webview id
 
     var server: HTTPServer?
     var serverAddress: String?
@@ -92,8 +90,6 @@ class MiniAppManager {
     func clearOpenedApp() {
         let appId = self.openedApp?.appId
         self.openedApp = nil
-        self.appTmpStore.removeAll()
-        self.observedData.removeAll()
         if let appId = appId {
             KVStorageManager.shared.removeDB(dbName: appId)
         }

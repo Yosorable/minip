@@ -19,37 +19,27 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     var displayMode: String? // multiple-webview, signle-webview(default)
     var homepage: String
     var title: String? // homepage title
-    var pages: [PageConfig]? // unuse
     var tabs: [TabConfig]?
     var navigationBarStatus: String? // display, hidden(default)
     var colorScheme: String? // dark, light (default auto)
     var disableSwipeBackGesture: Bool?
     var alwaysInSafeArea: Bool? // webview safearea layout
 
-    // can be override in PageConfig
     var backgroundColor: String? // hex string
     var tintColor: String? // hex string
 
     // web server
     var webServerEnabled: Bool?
     // orientation
+    @available(*, deprecated, message: "This property is deprecated. Use orientation instead.")
     var landscape: Bool?
+    var orientation: String? // landscape, portrait, all by default
 
     // file list
     var files: [File]?
 
     var id: String {
         return appId
-    }
-
-    struct PageConfig: Hashable, Codable {
-        var path: String
-        var title: String?
-        var scrollable: Bool?
-
-        // override
-        var backgroundColor: String?
-        var navigationBarColor: String?
     }
 
     struct TabConfig: Hashable, Codable {

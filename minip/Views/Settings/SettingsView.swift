@@ -13,6 +13,7 @@ import ProgressHUD
 import SafariServices
 import SwiftUI
 import WebKit
+import LocalConsole
 
 struct SettingsView: View {
     var body: some View {

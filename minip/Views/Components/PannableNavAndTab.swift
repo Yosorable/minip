@@ -13,6 +13,8 @@ class PannableNavigationViewController: UINavigationController {
 
     private lazy var transitionDelegate: SheetTransitionDelegate = .init()
 
+    private var orientations: UIInterfaceOrientationMask? = nil
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -52,8 +54,13 @@ class PannableNavigationViewController: UINavigationController {
         super.init(coder: aDecoder)
     }
 
-    override init(rootViewController: UIViewController) {
+    init(rootViewController: UIViewController, orientations: UIInterfaceOrientationMask? = nil) {
+        self.orientations = orientations
         super.init(rootViewController: rootViewController)
+    }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return self.orientations ?? .all
     }
 
     deinit {
@@ -90,6 +97,8 @@ class PannableTabBarController: UITabBarController {
 
     private lazy var transitionDelegate: SheetTransitionDelegate = .init()
 
+    private var orientations: UIInterfaceOrientationMask? = nil
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -129,8 +138,13 @@ class PannableTabBarController: UITabBarController {
         super.init(coder: aDecoder)
     }
 
-    init() {
+    init(orientations: UIInterfaceOrientationMask? = nil) {
+        self.orientations = orientations
         super.init(nibName: nil, bundle: nil)
+    }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return self.orientations ?? .all
     }
 
     deinit {

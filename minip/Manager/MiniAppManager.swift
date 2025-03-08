@@ -15,6 +15,7 @@ class MiniAppManager {
     static let shared = MiniAppManager()
     let EmojiAppNames = ["🍇", "🍈", "🍉", "🍊", "🍋", "🍌", "🍍", "🥭", "🍎", "🍏", "🍐", "🍑", "🍒", "🍓", "🥝", "🍅", "🥥", "🥑", "🍆", "🥔", "🥕", "🌽", "🌶", "🥒", "🥬", "🥦", "🍄", "🥜", "🌰"]
     var openedApp: AppInfo?
+    var webViewLogs = [String]()
 
     var server: HTTPServer?
     var serverAddress: String?
@@ -22,6 +23,13 @@ class MiniAppManager {
     var openedDatabase: [String: SQLiteDatabase] = .init()
 
     fileprivate let semaphore = DispatchSemaphore(value: 1)
+    
+    func appendWebViewLog(_ msg: String) {
+        while webViewLogs.count >= 500 {
+            webViewLogs.remove(at: 0)
+        }
+        webViewLogs.append(msg)
+    }
 
     func getAppInfos() -> [AppInfo] {
         var tmpApps: [AppInfo] = []
@@ -90,6 +98,7 @@ class MiniAppManager {
     func clearOpenedApp() {
         let appId = self.openedApp?.appId
         self.openedApp = nil
+        self.webViewLogs.removeAll()
         if let appId = appId {
             KVStorageManager.shared.removeDB(dbName: appId)
         }
@@ -106,8 +115,19 @@ extension MiniAppManager {
     @MainActor
     private func createMiniAppRootViewController(appInfo: AppInfo) -> UIViewController {
         var vc: UIViewController
+        var orientations: UIInterfaceOrientationMask?
+        if let ori = appInfo.orientation {
+            if ori == "landscape" {
+                orientations = .landscape
+            } else if ori == "portrait" {
+                orientations = .portrait
+            }
+        } else if appInfo.landscape == true {
+            orientations = .landscape
+        }
+
         if let tabs = appInfo.tabs, tabs.count > 0 {
-            let tabc = PannableTabBarController()
+            let tabc = PannableTabBarController(orientations: orientations)
 
             var pages = [UINavigationController]()
             for (idx, ele) in tabs.enumerated() {
@@ -127,7 +147,7 @@ extension MiniAppManager {
 
             vc = tabc
         } else {
-            let nvc = PannableNavigationViewController(rootViewController: MiniPageViewController(app: appInfo, isRoot: true))
+            let nvc = PannableNavigationViewController(rootViewController: MiniPageViewController(app: appInfo, isRoot: true), orientations: orientations)
             if let tc = appInfo.tintColor {
                 nvc.navigationBar.tintColor = UIColor(hex: tc)
             }

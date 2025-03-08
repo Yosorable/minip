@@ -154,6 +154,25 @@ class AppDetailViewController: UIViewController {
                             }
                         }
 
+                        Button { [weak self] in
+                            let pvc = self?.parentVC
+                            self?.dismiss(animated: true, completion: {
+                                let vc = ConsoleViewController()
+                                vc.view.tintColor = pvc?.view.tintColor
+                                let nvc = UINavigationController(rootViewController: vc)
+                                pvc?.present(nvc, animated: true)
+                            })
+                        } label: {
+                            VStack {
+                                Image(systemName: "apple.terminal").font(.system(size: 30))
+                                    .frame(width: 55, height: 55)
+                                    .background(Color("BlockButtonBackground", bundle: nil))
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                Text("Console")
+                                    .font(.caption)
+                            }
+                        }
+
                         if let cls = self.closeFunc {
                             Button { [weak self] in
                                 self?.dismiss(animated: true, completion: cls)

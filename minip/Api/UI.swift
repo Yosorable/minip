@@ -41,8 +41,20 @@ extension MinipApi {
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = bColor
         appearance.titleTextAttributes = [.foregroundColor: fColor]
-        vc.navigationController?.navigationBar.standardAppearance = appearance
-        vc.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        if let tabVC = vc.tabBarController {
+            tabVC.viewControllers?.forEach { ele in
+                if let navc = ele as? UINavigationController {
+                    navc.navigationBar.standardAppearance = appearance
+                    navc.navigationBar.scrollEdgeAppearance = appearance
+                } else {
+                    ele.navigationController?.navigationBar.standardAppearance = appearance
+                    ele.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+                }
+            }
+        } else {
+            vc.navigationController?.navigationBar.standardAppearance = appearance
+            vc.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        }
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
 

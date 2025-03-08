@@ -14,12 +14,10 @@ import UIKit
 class AppDetailViewController: UIViewController {
     var appInfo: AppInfo
     var reloadPageFunc: (()->Void)?
-    var closeFunc: (()->Void)?
     var parentVC: UIViewController
-    init(appInfo: AppInfo, reloadPageFunc: (()->Void)? = nil, closeFunc: (()->Void)? = nil, parentVC: UIViewController) {
+    init(appInfo: AppInfo, reloadPageFunc: (()->Void)? = nil, parentVC: UIViewController) {
         self.appInfo = appInfo
         self.reloadPageFunc = reloadPageFunc
-        self.closeFunc = closeFunc
         self.parentVC = parentVC
         super.init(nibName: nil, bundle: nil)
     }
@@ -170,22 +168,6 @@ class AppDetailViewController: UIViewController {
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                 Text("Console")
                                     .font(.caption)
-                            }
-                        }
-
-                        if let cls = self.closeFunc {
-                            Button { [weak self] in
-                                self?.dismiss(animated: true, completion: cls)
-                                cls()
-                            } label: {
-                                VStack {
-                                    Image(systemName: "xmark").font(.system(size: 30))
-                                        .frame(width: 55, height: 55)
-                                        .background(Color("BlockButtonBackground", bundle: nil))
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                    Text("Close")
-                                        .font(.caption)
-                                }
                             }
                         }
                     }

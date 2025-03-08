@@ -78,14 +78,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         // fix bug: 横屏自动变成竖屏
-        if app.landscape == true {
-            if #available(iOS 16.0, *) {
-                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscape))
-            } else {
-                UIDevice.current.setValue(UIInterfaceOrientation.landscapeLeft.rawValue, forKey: "orientation")
-            }
-        }
+//        if app.landscape == true {
+//            if #available(iOS 16.0, *) {
+//                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+//                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscape))
+//            } else {
+//                UIDevice.current.setValue(UIInterfaceOrientation.landscapeLeft.rawValue, forKey: "orientation")
+//            }
+//        }
 
         Task {
             if await serv.isListening {

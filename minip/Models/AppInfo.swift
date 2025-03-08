@@ -31,8 +31,6 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     // web server
     var webServerEnabled: Bool?
     // orientation
-    @available(*, deprecated, message: "This property is deprecated. Use orientation instead.")
-    var landscape: Bool?
     var orientation: String? // landscape, portrait, all by default
 
     // file list

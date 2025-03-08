@@ -71,7 +71,7 @@ class PannableNavigationViewController: UINavigationController {
 
         // TODO: clear twice when click close button
         // logger.info("[PannableNavigationViewController] clear open app info & reset orientation")
-        if MiniAppManager.shared.openedApp?.landscape == true {
+        if MiniAppManager.shared.openedApp?.orientation == "landscape" {
             if #available(iOS 16.0, *) {
                 let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
                 windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .all))
@@ -155,7 +155,7 @@ class PannableTabBarController: UITabBarController {
 
         // TODO: clear twice when click close button
         // logger.info("[PannableNavigationViewController] clear open app info & reset orientation")
-        if MiniAppManager.shared.openedApp?.landscape == true {
+        if MiniAppManager.shared.openedApp?.orientation == "landscape" {
             if #available(iOS 16.0, *) {
                 let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
                 windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .all))

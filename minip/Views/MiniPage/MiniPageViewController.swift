@@ -141,7 +141,7 @@ class MiniPageViewController: UIViewController {
         }
         pageURL = url
 
-        let showNav = app.navigationBarStatus == "display"
+        let showNav = app.navigationBarStatus != "hidden"
 
         title = _title ?? app.name
 
@@ -196,7 +196,7 @@ class MiniPageViewController: UIViewController {
 
         adaptColorScheme()
 
-        if isRoot && app.landscape != true {
+        if isRoot && app.orientation != "landscape" && app.navigationBarStatus != "hidden" {
             if let tabVC = tabBarController as? PannableTabBarController {
                 tabVC.addPanGesture(vc: self)
             } else if let navVC = navigationController as? PannableNavigationViewController {
@@ -258,7 +258,7 @@ class MiniPageViewController: UIViewController {
     func close() {
         dismiss(animated: true, completion: {
             logger.info("[MiniPageViewController] clear open app info & reset orientation")
-            if MiniAppManager.shared.openedApp?.landscape == true {
+            if MiniAppManager.shared.openedApp?.orientation == "landscape" {
                 if #available(iOS 16.0, *) {
                     let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
                     windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .all))
@@ -272,16 +272,8 @@ class MiniPageViewController: UIViewController {
 
     @objc
     func showAppDetail() {
-        var closeFnc: (() -> Void)?
-        // 暂时停用appdetail中的关闭按钮
-//        if self.navigationController?.isNavigationBarHidden ?? true {
-//            closeFnc = {
-//                self.close()
-//            }
-//        }
-
         presentPanModal(AppDetailViewController(appInfo: app, reloadPageFunc: { [weak self] in
             self?.webview.reload()
-        }, closeFunc: closeFnc, parentVC: self))
+        }, parentVC: self))
     }
 }

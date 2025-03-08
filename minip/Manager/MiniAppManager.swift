@@ -122,8 +122,6 @@ extension MiniAppManager {
             } else if ori == "portrait" {
                 orientations = .portrait
             }
-        } else if appInfo.landscape == true {
-            orientations = .landscape
         }
 
         if let tabs = appInfo.tabs, tabs.count > 0 {
@@ -236,7 +234,7 @@ extension MiniAppManager {
                 MiniAppManager.shared.openedApp = appInfo
             }
 
-            if appInfo.landscape == true {
+            if appInfo.orientation == "landscape" {
                 await MainActor.run {
                     vc.modalPresentationStyle = .fullScreen
                     if #available(iOS 16.0, *) {

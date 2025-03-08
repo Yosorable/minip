@@ -196,7 +196,7 @@ class MiniPageViewController: UIViewController {
 
         adaptColorScheme()
 
-        if isRoot && app.orientation != "landscape" && app.navigationBarStatus != "hidden" {
+        if isRoot && (app.orientation != "landscape" || app.navigationBarStatus != "hidden") {
             if let tabVC = tabBarController as? PannableTabBarController {
                 tabVC.addPanGesture(vc: self)
             } else if let navVC = navigationController as? PannableNavigationViewController {

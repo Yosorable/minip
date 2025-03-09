@@ -47,7 +47,7 @@ class AppDetailViewController: UIViewController {
             if icon.starts(with: "http://") || icon.starts(with: "https://") {
                 iconURL = URL(string: icon)
             } else {
-                iconURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPolyfill(path: appInfo.name).appendingPolyfill(path: icon)
+                iconURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPolyfill(path: self.appInfo.name).appendingPolyfill(path: icon)
             }
         }
 
@@ -85,19 +85,19 @@ class AppDetailViewController: UIViewController {
                 .padding(.top)
 
                 VStack {
-                    Text(appInfo.name)
+                    Text(self.appInfo.name)
                         .lineLimit(1)
                         .padding(.top)
                     Spacer()
-                    Text("v" + (appInfo.version ?? "0.0.0"))
+                    Text("v" + (self.appInfo.version ?? "0.0.0"))
                         .font(.system(size: 10))
                         .lineLimit(1)
                         .foregroundColor(.secondary)
-                    Text("@\(appInfo.author ?? "no_author")")
+                    Text("@\(self.appInfo.author ?? "no_author")")
                         .font(.system(size: 10))
                         .lineLimit(1)
                         .foregroundColor(.secondary)
-                    Text(appInfo.appId)
+                    Text(self.appInfo.appId)
                         .font(.system(size: 10))
                         .lineLimit(1)
                         .foregroundColor(.secondary)
@@ -109,7 +109,7 @@ class AppDetailViewController: UIViewController {
                         .font(.system(size: 13))
                 }
                 VStack {
-                    Text(appInfo.description ?? "No description"
+                    Text(self.appInfo.description ?? "No description"
                     )
                     .font(.system(size: 14))
                     .foregroundColor(.secondary)
@@ -156,8 +156,13 @@ class AppDetailViewController: UIViewController {
                             let pvc = self?.parentVC
                             self?.dismiss(animated: true, completion: {
                                 let vc = ConsoleViewController()
-                                vc.view.tintColor = pvc?.view.tintColor
                                 let nvc = UINavigationController(rootViewController: vc)
+                                nvc.view.tintColor = pvc?.view.tintColor
+                                if #available(iOS 15.0, *) {
+                                    if let presentVC = nvc.sheetPresentationController {
+                                        presentVC.detents = [.medium(), .large()]
+                                    }
+                                }
                                 pvc?.present(nvc, animated: true)
                             })
                         } label: {
@@ -191,6 +196,15 @@ class AppDetailViewController: UIViewController {
             subview.topAnchor.constraint(equalTo: view.topAnchor),
             subview.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        if self.appInfo.orientation == "landscape" {
+            return .landscape
+        } else if self.appInfo.orientation == "portrait" {
+            return .portrait
+        }
+        return .all
     }
 }
 

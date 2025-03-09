@@ -31,7 +31,6 @@ class ConsoleViewController: UIViewController {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(appendLog), name: .logAppended, object: nil)
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.alwaysBounceVertical = true
         view.backgroundColor = .systemBackground
         view.addSubview(textView)
         NSLayoutConstraint.activate([
@@ -51,7 +50,7 @@ class ConsoleViewController: UIViewController {
     }
 
     func scrollToBottom() {
-        let newVal = textView.contentSize.height - textView.bounds.height + ((UIApplication.shared.delegate as? AppDelegate)?.window?.safeAreaInsets.bottom ?? 0)
+        let newVal = textView.contentSize.height - textView.bounds.height + textView.contentInset.bottom + textView.safeAreaInsets.bottom
         if newVal > 0 {
             textView.contentOffset.y = newVal
         }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIKit
+import Defaults
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let window = UIWindow()
         self.window = window
         let mainVC = UITabBarController()
+        
+        window.overrideUserInterfaceStyle = if Defaults[.colorScheme] == 1 { .light } else if Defaults[.colorScheme] == 2 { .dark } else { .unspecified }
 
         // disable ipad top tabbar on ios 18
 //        if #available(iOS 18.0, *) {

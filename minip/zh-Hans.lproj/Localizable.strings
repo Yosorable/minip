@@ -26,6 +26,11 @@
 "Deny" = "拒绝";
 "Save" = "保存";
 "Reload" = "刷新";
+"Appearance" = "外观";
+"Follow System" = "跟随系统";
+"Light" = "浅色";
+"Dark" = "深色";
+
 
 // MARK: home
 "home.menu.create_project" = "创建新项目";

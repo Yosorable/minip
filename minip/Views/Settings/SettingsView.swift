@@ -29,11 +29,16 @@ struct SettingsView: View {
 
     @Default(.wkwebviewInspectable) var wkwebviewInspectable
     @Default(.useCapsuleButton) var useCapsuleButton
+    @Default(.colorScheme) var colorScheme
 
     var content: some View {
         List {
             #if DEBUG
             Section {
+                Toggle(isOn: $wkwebviewInspectable, label: {
+                    Text(i18n("s.allow_inspect_wkwebview"))
+                })
+
                 Button {
                     MiniAppManager.shared.clearAllPermissions()
                     ShowSimpleSuccess(msg: "Cleared successfully.")
@@ -69,12 +74,18 @@ struct SettingsView: View {
             }
 
             Section {
-                Toggle(isOn: $wkwebviewInspectable, label: {
-                    Text(i18n("s.allow_inspect_wkwebview"))
-                })
-
                 Toggle(isOn: $useCapsuleButton, label: {
                     Text(i18n("s.use_capsule_button"))
+                })
+
+                Picker("Appearance", selection: $colorScheme) {
+                    Text("Follow System").tag(0)
+                    Text("Light").tag(1)
+                    Text("Dark").tag(2)
+                }
+                .onChange(of: colorScheme, perform: { val in
+                    let del = UIApplication.shared.delegate as? AppDelegate
+                    del?.window?.overrideUserInterfaceStyle = if val == 1 { .light } else if val == 2 { .dark } else { .unspecified }
                 })
             } header: {
                 Text("Preference")

@@ -26,6 +26,10 @@
 "Deny" = "Deny";
 "Save" = "Save";
 "Reload" = "Reload";
+"Appearance" = "Appearance";
+"Follow System" = "Follow System";
+"Light" = "Light";
+"Dark" = "Dark";
 
 // MARK: home
 "home.menu.create_project" = "Create new project";

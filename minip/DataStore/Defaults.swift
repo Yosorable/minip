@@ -24,4 +24,7 @@ extension Defaults.Keys {
 
     // first start app
     static let firstStart = Key<Bool>("firstStart", default: true)
+    
+    // color scheme, 0: system, 1: light, 2: dark
+    static let colorScheme = Key<Int>("colorScheme", default: 0)
 }

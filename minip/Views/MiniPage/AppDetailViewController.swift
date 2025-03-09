@@ -106,13 +106,18 @@ class AppDetailViewController: UIViewController {
                 .frame(height: 60)
                 if let website = appInfo.website, let url = URL(string: website) {
                     Link(website, destination: url)
-                        .font(.system(size: 13))
+                        .font(.system(size: 10))
                 }
                 VStack {
-                    Text(self.appInfo.description ?? "No description"
-                    )
-                    .font(.system(size: 14))
-                    .foregroundColor(.secondary)
+                    if #available(iOS 15, *), let desc = self.appInfo.description, let md = try? AttributedString(markdown: desc) {
+                        Text(md)
+                            .font(.system(size: 14))
+                            .foregroundColor(.secondary)
+                    } else {
+                        Text(self.appInfo.description ?? "No description")
+                            .font(.system(size: 14))
+                            .foregroundColor(.secondary)
+                    }
                 }
                 .padding(.top, 3)
 

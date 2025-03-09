@@ -16,7 +16,6 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     var icon: String?
     var version: String? // x.x.x (0.0.1)
     var description: String?
-    var displayMode: String? // multiple-webview, signle-webview(default)
     var homepage: String
     var title: String? // homepage title
     var tabs: [TabConfig]?

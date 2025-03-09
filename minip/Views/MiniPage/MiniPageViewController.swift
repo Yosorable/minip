@@ -79,6 +79,9 @@ class MiniPageViewController: UIViewController {
             self.webview.tintColor = .systemBlue
             self.webview.scrollView.contentInsetAdjustmentBehavior = .always
             self.webview.translatesAutoresizingMaskIntoConstraints = true
+            if #available(iOS 14.5, *) {
+                self.webview.configuration.preferences.isTextInteractionEnabled = true
+            }
 
             MWebViewPool.shared.recycleReusedWebView(self.webview)
         }
@@ -86,14 +89,22 @@ class MiniPageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // todo: why nil?
+        // TODO: why nil?
         if MiniAppManager.shared.openedApp == nil {
-            MiniAppManager.shared.openedApp = self.app
+            MiniAppManager.shared.openedApp = app
         }
         webview = MWebViewPool.shared.getReusedWebView(forHolder: self)
         webview.uiDelegate = self
         if #available(iOS 16.4, *) {
             webview.isInspectable = Defaults[.wkwebviewInspectable]
+        }
+
+        if #available(iOS 14.5, *) {
+            if app.iOS_disableTextInteraction == true {
+                webview.configuration.preferences.isTextInteractionEnabled = false
+            } else {
+                webview.configuration.preferences.isTextInteractionEnabled = true
+            }
         }
 
         if app.alwaysInSafeArea == true {

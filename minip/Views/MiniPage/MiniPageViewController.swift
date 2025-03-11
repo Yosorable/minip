@@ -82,6 +82,8 @@ class MiniPageViewController: UIViewController {
             if #available(iOS 14.5, *) {
                 self.webview.configuration.preferences.isTextInteractionEnabled = true
             }
+            self.webview.uiDelegate = nil
+            self.webview.navigationDelegate = nil
 
             MWebViewPool.shared.recycleReusedWebView(self.webview)
         }
@@ -95,6 +97,7 @@ class MiniPageViewController: UIViewController {
         }
         webview = MWebViewPool.shared.getReusedWebView(forHolder: self)
         webview.uiDelegate = self
+        webview.navigationDelegate = self
         if #available(iOS 16.4, *) {
             webview.isInspectable = Defaults[.wkwebviewInspectable]
         }

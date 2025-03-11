@@ -121,7 +121,7 @@
 		48F6490B2D58C64D00C9FD82 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F6490A2D58C64A00C9FD82 /* Device.swift */; };
 		48F6490D2D58C81700C9FD82 /* KVStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F6490C2D58C81400C9FD82 /* KVStorage.swift */; };
 		48F6490F2D58CE9E00C9FD82 /* PromptCallApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F6490E2D58CE9B00C9FD82 /* PromptCallApi.swift */; };
-		48F91E1A2D7B1086001D5BEA /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F91E192D7B107B001D5BEA /* Alert.swift */; };
+		48F91E1A2D7B1086001D5BEA /* WebViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F91E192D7B107B001D5BEA /* WebViewDelegate.swift */; };
 		48FB5A052B95CD9400D2DFCC /* UIViewController++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FB5A042B95CD9400D2DFCC /* UIViewController++.swift */; };
 /* End PBXBuildFile section */
 
@@ -201,7 +201,7 @@
 		48F6490A2D58C64A00C9FD82 /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		48F6490C2D58C81400C9FD82 /* KVStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVStorage.swift; sourceTree = "<group>"; };
 		48F6490E2D58CE9B00C9FD82 /* PromptCallApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptCallApi.swift; sourceTree = "<group>"; };
-		48F91E192D7B107B001D5BEA /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		48F91E192D7B107B001D5BEA /* WebViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDelegate.swift; sourceTree = "<group>"; };
 		48FB5A042B95CD9400D2DFCC /* UIViewController++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController++.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -380,8 +380,8 @@
 				2B415A102A7E8FA900B3BF94 /* MiniPageViewController.swift */,
 				484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */,
 				482092F02D7C257F009E9BB8 /* ConsoleViewController.swift */,
+				48F91E192D7B107B001D5BEA /* WebViewDelegate.swift */,
 				48F6490E2D58CE9B00C9FD82 /* PromptCallApi.swift */,
-				48F91E192D7B107B001D5BEA /* Alert.swift */,
 			);
 			path = MiniPage;
 			sourceTree = "<group>";
@@ -721,7 +721,7 @@
 				48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */,
 				48248BC22AF1F4D0001097CC /* MWebView.swift in Sources */,
 				485FEE7D2D5D09B800A0C430 /* FlashButton.swift in Sources */,
-				48F91E1A2D7B1086001D5BEA /* Alert.swift in Sources */,
+				48F91E1A2D7B1086001D5BEA /* WebViewDelegate.swift in Sources */,
 				484E08312B96D6DD0018DCF0 /* AppDetailViewController.swift in Sources */,
 				48F649092D58A94200C9FD82 /* UI.swift in Sources */,
 				2B9003C32A81FEB400ED360D /* LazyView.swift in Sources */,
@@ -902,7 +902,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025030801;
+				CURRENT_PROJECT_VERSION = 2025031001;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
@@ -919,7 +919,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.20;
+				MARKETING_VERSION = 0.0.21;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -937,7 +937,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025030801;
+				CURRENT_PROJECT_VERSION = 2025031001;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
@@ -954,7 +954,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.20;
+				MARKETING_VERSION = 0.0.21;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

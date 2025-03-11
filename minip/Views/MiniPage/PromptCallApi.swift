@@ -7,7 +7,7 @@
 
 import WebKit
 
-extension MiniPageViewController: WKUIDelegate {
+extension MiniPageViewController {
     func webView(
         _ webView: WKWebView,
         runJavaScriptTextInputPanelWithPrompt prompt: String,

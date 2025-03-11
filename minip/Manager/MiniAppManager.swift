@@ -169,7 +169,7 @@ extension MiniAppManager {
             if app.webServerEnabled == true {
                 var server: HTTPServer
                 if MiniAppManager.shared.server == nil {
-                    server = HTTPServer(address: try! .inet(ip4: "127.0.0.1", port: 60008))
+                    server = HTTPServer(address: try! .inet(ip4: "127.0.0.1", port: 60008), logger: LoggerForFlyingFox())
                     MiniAppManager.shared.server = server
                     let fileManager = FileManager.default
                     let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -181,7 +181,6 @@ extension MiniAppManager {
                             return HTTPResponse(statusCode: .notFound)
                         }
                         _req.path = "/\(appName)" + req.path
-                        print(_req.path)
                         do {
                             return try await dirHandler.handleRequest(_req)
                         } catch {

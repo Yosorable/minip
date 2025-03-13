@@ -6,6 +6,7 @@
 //
 
 import Kingfisher
+import SwiftUI
 import UIKit
 
 class AppCell: UITableViewCell {
@@ -95,6 +96,14 @@ class AppCell: UITableViewCell {
         } else {
             appIconImageView.layer.borderColor = UIColor.secondaryLabel.cgColor
             appIconImageView.layer.borderWidth = 1
+        }
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            if appIconImageView.layer.borderColor != nil {
+                appIconImageView.layer.borderColor = UIColor.secondaryLabel.cgColor
+            }
         }
     }
 }

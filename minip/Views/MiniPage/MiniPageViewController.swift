@@ -43,25 +43,24 @@ class MiniPageViewController: UIViewController {
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
         var url: URL
-        if app.webServerEnabled == true, let addr = MiniAppManager.shared.serverAddress {
+        // todo: Relative path like (based on previous page)
+        if page.hasPrefix("http://") || page.hasPrefix("https://") {
+            url = URL(string: page)!
+            logger.info("[webview] load remote: \(url)")
+            let req = URLRequest(url: url)
+            webview.load(req)
+        } else if app.webServerEnabled == true, let addr = MiniAppManager.shared.serverAddress {
             if !page.starts(with: "/") {
                 page = "/" + page
             }
             url = URL(string: addr + "\(page)")!
-            logger.info("[webview] load \(url)")
+            logger.info("[webview] load localhost: \(url)")
             let req = URLRequest(url: url)
             webview.load(req)
         } else {
-            if page.hasPrefix("http://") || page.hasPrefix("https://") {
-                url = URL(string: page)!
-                logger.info("[webview] load \(url)")
-                let req = URLRequest(url: url)
-                webview.load(req)
-            } else {
-                url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
-                logger.info("[webview] load \(url)")
-                webview.loadFileURL(url, allowingReadAccessTo: documentsURL)
-            }
+            url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
+            logger.info("[webview] load file: \(url)")
+            webview.loadFileURL(url, allowingReadAccessTo: documentsURL.appendingPathComponent(app.name))
         }
         pageURL = url
     }

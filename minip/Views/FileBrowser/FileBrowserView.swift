@@ -5,9 +5,9 @@
 //  Created by ByteDance on 2023/7/9.
 //
 
+import ProgressHUD
 import SwiftUI
 import UniformTypeIdentifiers
-import ProgressHUD
 
 struct FileBrowserView: View {
     var body: some View {
@@ -96,6 +96,7 @@ struct FileBrowserPageView: View {
 
     func fileItem(ele: FileInfo) -> some View {
         let openFileFunc = {
+            var cannotOpen = false
             if let utType = try? ele.url.resourceValues(forKeys: [.contentTypeKey]).contentType {
                 if utType.conforms(to: .text) {
                     let vc = CodeEditorViewController(fileInfo: ele)
@@ -110,9 +111,13 @@ struct FileBrowserPageView: View {
                     nvc.overrideUserInterfaceStyle = .dark
                     GetTopViewController()?.present(nvc, animated: true)
                 } else {
-                    ProgressHUD.failed("Cannot open this file.")
+                    cannotOpen = true
                 }
             } else {
+                cannotOpen = true
+            }
+
+            if cannotOpen {
                 ProgressHUD.failed("Cannot open this file.")
             }
         }

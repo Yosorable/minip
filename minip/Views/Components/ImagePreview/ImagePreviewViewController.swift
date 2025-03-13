@@ -25,6 +25,7 @@ class ImagePreviewViewController: UIViewController {
     }
 
     override func viewDidLoad() {
+        super.viewDidLoad()
         imageView = ZoomImageView()
         imageView.zoomMode = .fit
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -48,12 +49,24 @@ class ImagePreviewViewController: UIViewController {
             }
         }
         view.backgroundColor = .black
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
-        view.addGestureRecognizer(tapGestureRecognizer)
 
-        tapGestureRecognizer.require(toFail: imageView.doubleTapGesture)
+        // not in a navigation view
+        if navigationController == nil {
+            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
+            view.addGestureRecognizer(tapGestureRecognizer)
+            tapGestureRecognizer.require(toFail: imageView.doubleTapGesture)
+        }
+
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
         view.addGestureRecognizer(longPressRecognizer)
+
+        if let pnv = navigationController as? PannableNavigationViewController {
+            pnv.addPanGesture(vc: self)
+            navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), primaryAction: UIAction(handler: { [weak self] _ in
+                self?.dismiss(animated: true)
+            }))
+        }
     }
 
     @objc func tapped(sender: UITapGestureRecognizer) {

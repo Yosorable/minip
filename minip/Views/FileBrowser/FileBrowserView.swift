@@ -102,14 +102,15 @@ struct FileBrowserPageView: View {
                     let nvc = PannableNavigationViewController(rootViewController: vc)
                     nvc.modalPresentationStyle = .fullScreen
                     GetTopViewController()?.present(nvc, animated: true)
-                } else if utType.conforms(to: .jpeg) {
-                    print("这是一个JPEG图片文件")
-                } else if utType.conforms(to: .png) {
-                    print("这是一个PNG图片文件")
-                } else if utType.conforms(to: .pdf) {
-                    print("这是一个PDF文件")
+                } else if utType.conforms(to: .image) {
+                    let imageVC = ImagePreviewViewController(imageURL: ele.url)
+                    imageVC.title = ele.fileName
+                    let nvc = PannableNavigationViewController(rootViewController: imageVC)
+                    nvc.modalPresentationStyle = .fullScreen
+                    nvc.overrideUserInterfaceStyle = .dark
+                    GetTopViewController()?.present(nvc, animated: true)
                 } else {
-                    print("未知文件类型")
+                    ProgressHUD.failed("Cannot open this file.")
                 }
             } else {
                 ProgressHUD.failed("Cannot open this file.")

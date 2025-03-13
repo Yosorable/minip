@@ -365,6 +365,10 @@ class FileBrowserPageViewModel: ObservableObject {
             folderURLs.sort {
                 $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
             }
+            // set trash folder to first
+            if let idx = folderURLs.firstIndex(where: { $0.lastPathComponent == ".Trash" }) {
+                folderURLs.insert(folderURLs.remove(at: idx), at: 0)
+            }
             fileURLs.sort {
                 $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
             }

@@ -47,7 +47,7 @@ func DownloadMiniAppPackageToTmpFolder(_ downURL: String, onError: @escaping (Er
     let destination: (URL, HTTPURLResponse)->(URL, DownloadRequest.Options) = { _, res in
         let pathComponent = res.suggestedFilename ?? "default.zip"
 
-        let finalPath = docURL.appendingPolyfill(path: "tmp").appendingPathComponent(pathComponent)
+        let finalPath = docURL.appendingPolyfill(path: ".tmp").appendingPathComponent(pathComponent)
         return (finalPath, [.createIntermediateDirectories, .removePreviousFile])
     }
     let downloadReq = AF.download(downurl, to: destination)

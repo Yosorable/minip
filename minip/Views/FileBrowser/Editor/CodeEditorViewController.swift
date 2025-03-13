@@ -1,8 +1,8 @@
 //
-//  CodeEditorV2.swift
+//  CodeEditorViewController.swift
 //  minip
 //
-//  Created by ByteDance on 2023/7/10.
+//  Created by LZY on 2025/3/13.
 //
 
 import KeyboardToolbar
@@ -12,19 +12,54 @@ import TreeSitterHTMLRunestone
 import TreeSitterJavaScriptRunestone
 import UIKit
 
-class CodeEditorController: UIViewController {
-    var textView: TextView?
-    var fileString: String
-    var language: TreeSitterLanguage?
-    var onChange: (String) -> Void
+struct InsertTextKeyboardTool: KeyboardTool {
+    let displayRepresentation: KeyboardToolDisplayRepresentation
 
-    let keyboardToolbarView = KeyboardToolbarView()
+    private let text: String
+    private weak var textView: TextView?
 
-    init(textView: TextView? = nil, fileString: String, language: TreeSitterLanguage?, onChange: @escaping (String) -> Void) {
+    init(text: String, textView: TextView?) {
+        self.displayRepresentation = .text(text)
+        self.text = text
         self.textView = textView
-        self.fileString = fileString
-        self.language = language
-        self.onChange = onChange
+    }
+
+    func performAction() {
+        textView?.insertText(text)
+    }
+}
+
+let SourceCodeType: [String: TreeSitterLanguage] = [
+    "js": .javaScript,
+    "html": .html,
+    "json": .json,
+    "css": .css,
+    "yaml": .yaml,
+    "yml": .yaml,
+    "md": .markdown,
+    "py": .python
+]
+
+class CodeEditorViewController: UIViewController {
+    var textView: TextView?
+    var fileString: String = ""
+    var language: TreeSitterLanguage?
+    var fileInfo: FileInfo
+
+    lazy var keyboardToolbarView = KeyboardToolbarView()
+    lazy var saveButton = {
+        var btn = UIBarButtonItem(title: i18n("Save"), style: .plain, target: self, action: #selector(save))
+        btn.isEnabled = false
+        return btn
+    }()
+
+    init(fileInfo: FileInfo) {
+        self.fileInfo = fileInfo
+
+        if let ext = fileInfo.fileName.split(separator: ".").last {
+            self.language = SourceCodeType[String(ext)]
+        }
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -35,28 +70,64 @@ class CodeEditorController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
-        let textView = TextView()
-        self.textView = textView
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.editorDelegate = self
-        textView.backgroundColor = .systemBackground
+//        navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(close))
+        title = fileInfo.fileName
 
-        textView.inputAccessoryView = keyboardToolbarView
+        if let fileData = FileManager.default.contents(atPath: fileInfo.url.path), let txt = String(data: fileData, encoding: .utf8) {
+            fileString = txt
+            navigationItem.rightBarButtonItem = saveButton
+            let textView = TextView()
+            self.textView = textView
+            textView.translatesAutoresizingMaskIntoConstraints = false
+            textView.editorDelegate = self
+            textView.backgroundColor = .systemBackground
 
-        setCustomization(on: textView)
-        setTextViewState(on: textView)
-        view.addSubview(textView)
-        NSLayoutConstraint.activate([
-            textView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            textView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            textView.topAnchor.constraint(equalTo: view.topAnchor),
-            textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+            textView.inputAccessoryView = keyboardToolbarView
 
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+            setCustomization(on: textView)
+            setTextViewState(on: textView)
+            view.addSubview(textView)
+            NSLayoutConstraint.activate([
+                textView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                textView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                textView.topAnchor.constraint(equalTo: view.topAnchor),
+                textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+
+            let notificationCenter = NotificationCenter.default
+            notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+            notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        } else {
+            let label = UILabel()
+            label.text = "Cannot read this file as a text file."
+            label.translatesAutoresizingMaskIntoConstraints = false
+            view.backgroundColor = .systemBackground
+            view.addSubview(label)
+            NSLayoutConstraint.activate([
+                label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            ])
+        }
+
+        if let pnv = navigationController as? PannableNavigationViewController {
+            pnv.addPanGesture(vc: self)
+        }
+    }
+
+    @objc func close() {
+        dismiss(animated: true)
+    }
+
+    @objc func save() {
+        guard let text = textView?.text else {
+            return
+        }
+        do {
+            try text.write(to: fileInfo.url, atomically: true, encoding: .utf8)
+            fileString = text
+            saveButton.isEnabled = false
+        } catch {}
     }
 
     @objc func adjustForKeyboard(notification: Notification) {
@@ -78,20 +149,14 @@ class CodeEditorController: UIViewController {
     }
 
     private func setCustomization(on textView: TextView) {
-        // ...
-        // Show line numbers.
         textView.showLineNumbers = true
-        // Highlight the selected line.
         textView.lineSelectionDisplayType = .line
-        // Show a page guide after the 80th character.
         textView.showPageGuide = true
         textView.pageGuideColumn = 80
-        // Show all invisible characters.
         textView.showTabs = true
         textView.showSpaces = true
         textView.showLineBreaks = true
         textView.showSoftLineBreaks = true
-        // Set the line-height to 130%
         textView.lineHeightMultiplier = 1.3
 
         if #available(iOS 16.0, *) {
@@ -99,7 +164,6 @@ class CodeEditorController: UIViewController {
         }
         textView.alwaysBounceVertical = true
 
-        // keyboard
         setupKeyboardTools()
         textView.autocorrectionType = .no
         textView.spellCheckingType = .no
@@ -126,14 +190,13 @@ class CodeEditorController: UIViewController {
     }
 
     private func setTextViewState(on textView: TextView) {
-        let text = self.fileString
-        guard let lang = self.language else {
+        let text = fileString
+        guard let lang = language else {
             textView.text = text
             return
         }
+        // MARK: todo: large file or minified file
         DispatchQueue.global(qos: .userInitiated).async {
-//           let theme = TomorrowTheme()
-            // VSCodeDarkTheme()
             let state = TextViewState(text: text, theme: DefaultTheme(), language: lang, languageProvider: LanguageProvider())
 
             DispatchQueue.main.async {
@@ -143,128 +206,14 @@ class CodeEditorController: UIViewController {
     }
 }
 
-extension CodeEditorController: TextViewDelegate {
+extension CodeEditorViewController: TextViewDelegate {
     func textViewDidChange(_ textView: TextView) {
-//        UserDefaults.standard.text = textView.text
-        onChange(textView.text)
+        saveButton.isEnabled = textView.text != fileString
         setupKeyboardTools()
     }
 }
 
-struct CodeEditorV2View: UIViewControllerRepresentable {
-    @Binding var contentString: String
-    var language: TreeSitterLanguage?
-    func makeUIViewController(context: Context) -> CodeEditorController {
-        let vc = CodeEditorController(fileString: contentString, language: language, onChange: { newStr in
-            contentString = newStr
-        })
-
-        return vc
-    }
-
-    func updateUIViewController(_ uiViewController: CodeEditorController, context: Context) {}
-}
-
-extension UIColor {
-    struct Tomorrow {
-        var background: UIColor {
-            return .white
-        }
-
-        var selection: UIColor {
-            return UIColor(red: 222 / 255, green: 222 / 255, blue: 222 / 255, alpha: 1)
-        }
-
-        var currentLine: UIColor {
-            return UIColor(red: 242 / 255, green: 242 / 255, blue: 242 / 255, alpha: 1)
-        }
-
-        var foreground: UIColor {
-            return UIColor(red: 96 / 255, green: 96 / 255, blue: 95 / 255, alpha: 1)
-        }
-
-        var comment: UIColor {
-            return UIColor(red: 159 / 255, green: 161 / 255, blue: 158 / 255, alpha: 1)
-        }
-
-        var red: UIColor {
-            return UIColor(red: 196 / 255, green: 74 / 255, blue: 62 / 255, alpha: 1)
-        }
-
-        var orange: UIColor {
-            return UIColor(red: 236 / 255, green: 157 / 255, blue: 68 / 255, alpha: 1)
-        }
-
-        var yellow: UIColor {
-            return UIColor(red: 232 / 255, green: 196 / 255, blue: 66 / 255, alpha: 1)
-        }
-
-        var green: UIColor {
-            return UIColor(red: 136 / 255, green: 154 / 255, blue: 46 / 255, alpha: 1)
-        }
-
-        var aqua: UIColor {
-            return UIColor(red: 100 / 255, green: 166 / 255, blue: 173 / 255, alpha: 1)
-        }
-
-        var blue: UIColor {
-            return UIColor(red: 94 / 255, green: 133 / 255, blue: 184 / 255, alpha: 1)
-        }
-
-        var purple: UIColor {
-            return UIColor(red: 149 / 255, green: 115 / 255, blue: 179 / 255, alpha: 1)
-        }
-
-        fileprivate init() {}
-    }
-
-    static let tomorrow = Tomorrow()
-}
-
-class TomorrowTheme: Theme {
-    let font: UIFont = .monospacedSystemFont(ofSize: 14, weight: .regular)
-    let textColor: UIColor = .tomorrow.foreground
-
-    let gutterBackgroundColor: UIColor = .tomorrow.background
-    let gutterHairlineColor: UIColor = .tomorrow.background
-
-    let lineNumberColor: UIColor = .tomorrow.comment
-    let lineNumberFont: UIFont = .monospacedSystemFont(ofSize: 14, weight: .regular)
-
-    let selectedLineBackgroundColor: UIColor = .tomorrow.currentLine
-    let selectedLinesLineNumberColor: UIColor = .tomorrow.foreground
-    let selectedLinesGutterBackgroundColor: UIColor = .tomorrow.background
-
-    let invisibleCharactersColor: UIColor = .tomorrow.comment
-
-    let pageGuideHairlineColor: UIColor = .tomorrow.foreground.withAlphaComponent(0.1)
-    let pageGuideBackgroundColor: UIColor = .tomorrow.foreground.withAlphaComponent(0.2)
-
-    let markedTextBackgroundColor: UIColor = .tomorrow.foreground.withAlphaComponent(0.2)
-
-    func textColor(for highlightName: String) -> UIColor? {
-        return nil
-    }
-}
-
-struct InsertTextKeyboardTool: KeyboardTool {
-    let displayRepresentation: KeyboardToolDisplayRepresentation
-
-    private let text: String
-    private weak var textView: TextView?
-
-    init(text: String, textView: TextView?) {
-        self.displayRepresentation = .text(text)
-        self.text = text
-        self.textView = textView
-    }
-
-    func performAction() {
-        textView?.insertText(text)
-    }
-}
-
-private extension CodeEditorController {
+private extension CodeEditorViewController {
     private func setupKeyboardTools() {
         textView?.inputAccessoryView = keyboardToolbarView
         let canUndo = textView?.undoManager?.canUndo ?? false

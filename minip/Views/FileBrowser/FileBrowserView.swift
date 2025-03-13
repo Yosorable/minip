@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
+import ProgressHUD
 
 struct FileBrowserView: View {
     var body: some View {
@@ -63,9 +65,6 @@ struct FileBrowserPageView: View {
     var body: some View {
         list
             .navigationTitle(Text(viewModel.path == "/" ? i18n("Files") : (viewModel.path.splitPolyfill(separator: "/").last ?? "")))
-            .fullScreenCover(item: $viewModel.selectFile) { item in
-                EditorView(fileInfo: item)
-            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if viewModel.path == "/.Trash" {
@@ -96,6 +95,26 @@ struct FileBrowserPageView: View {
     }
 
     func fileItem(ele: FileInfo) -> some View {
+        let openFileFunc = {
+            if let utType = try? ele.url.resourceValues(forKeys: [.contentTypeKey]).contentType {
+                if utType.conforms(to: .text) {
+                    let vc = CodeEditorViewController(fileInfo: ele)
+                    let nvc = PannableNavigationViewController(rootViewController: vc)
+                    nvc.modalPresentationStyle = .fullScreen
+                    GetTopViewController()?.present(nvc, animated: true)
+                } else if utType.conforms(to: .jpeg) {
+                    print("这是一个JPEG图片文件")
+                } else if utType.conforms(to: .png) {
+                    print("这是一个PNG图片文件")
+                } else if utType.conforms(to: .pdf) {
+                    print("这是一个PDF文件")
+                } else {
+                    print("未知文件类型")
+                }
+            } else {
+                ProgressHUD.failed("Cannot open this file.")
+            }
+        }
         if #available(iOS 15.0, *) {
             return HStack {
                 Image(systemName: FileManager.isImage(url: ele.url) ? "photo" : "doc")
@@ -116,9 +135,7 @@ struct FileBrowserPageView: View {
                 .tint(.red)
             }
             .contentShape(Rectangle())
-            .onTapGesture {
-                viewModel.selectFile = ele
-            }
+            .onTapGesture { openFileFunc() }
         } else {
             // TODO: 支持滑动删除
             return HStack {
@@ -132,9 +149,7 @@ struct FileBrowserPageView: View {
                 Spacer()
             }
             .contentShape(Rectangle())
-            .onTapGesture {
-                viewModel.selectFile = ele
-            }
+            .onTapGesture { openFileFunc() }
         }
     }
 
@@ -328,7 +343,6 @@ struct FileInfo: Identifiable {
 
 class FileBrowserPageViewModel: ObservableObject {
     @Published var files: [FileInfo] = []
-    @Published var selectFile: FileInfo? = nil
     var path: String
 
     init(path: String) {

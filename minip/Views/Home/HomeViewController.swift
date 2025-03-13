@@ -29,9 +29,10 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 })
             },
             UIAction(title: i18n("home.menu.load_from_web"), image: UIImage(systemName: "network")) { _ in
-                let vc = UIHostingController(rootView: DownloadProjectView())
-                vc.modalPresentationStyle = .fullScreen
-                self.present(vc, animated: true)
+                let vc = DownloadProjectViewController()
+                let nvc = PannableNavigationViewController(rootViewController: vc)
+                nvc.modalPresentationStyle = .fullScreen
+                self.present(nvc, animated: true)
             },
             UIAction(title: i18n("home.menu.load_from_file"), image: UIImage(systemName: "folder")) { _ in
                 let vc = UIHostingController(rootView: ImportProjectFromFileView())

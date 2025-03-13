@@ -11,10 +11,30 @@ import ProgressHUD
 import SwiftUI
 import ZipArchive
 
-struct DownloadProjectView: View {
-    @Environment(\.dismissPolyfill) var dismiss
+class DownloadProjectViewController: UIHostingController<DownloadProjectView> {
+    init() {
+        super.init(rootView: DownloadProjectView())
+    }
 
+    @available(*, unavailable)
+    @MainActor @preconcurrency dynamic required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        rootView.closeFunc = { [weak self] in
+            self?.dismiss(animated: true)
+        }
+        if let nvc = navigationController as? PannableNavigationViewController {
+            nvc.addPanGesture(vc: self)
+        }
+    }
+}
+
+struct DownloadProjectView: View {
     var onSuccess: (() -> Void)?
+    var closeFunc: (() -> Void)?
 
     @State var downURL: String = Defaults[.lastDownloadedURL]
     @State var downFilename: String = ""
@@ -29,15 +49,7 @@ struct DownloadProjectView: View {
     @State var downloadReq: DownloadRequest? = nil
 
     var body: some View {
-        if #available(iOS 16.0, *) {
-            NavigationStack {
-                content
-            }
-        } else {
-            NavigationView {
-                content
-            }
-        }
+        content
     }
 
     var content: some View {
@@ -127,7 +139,7 @@ struct DownloadProjectView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
-                    dismiss()
+                    closeFunc?()
                 } label: {
                     Text("Cancel")
                 }
@@ -192,7 +204,7 @@ struct DownloadProjectView: View {
     func unCompress(file: URL) {
         InstallMiniApp(pkgFile: file, onSuccess: {
             ProgressHUD.succeed(i18n("Success"))
-            dismiss()
+            closeFunc?()
             onSuccess?()
         }, onFailed: { err in
             alertMsg = err

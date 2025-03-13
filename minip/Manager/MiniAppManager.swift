@@ -17,18 +17,18 @@ class MiniAppManager {
     var openedApp: AppInfo?
     var webViewLogs = [String]()
 
-    var server: HTTPServer?
+    var httpServer: HTTPServer?
     var serverAddress: String?
 
     var openedDatabase: [String: SQLiteDatabase] = .init()
 
     fileprivate let semaphore = DispatchSemaphore(value: 1)
-    
+
     func appendWebViewLog(_ msg: String) {
-        while webViewLogs.count >= 500 {
-            webViewLogs.remove(at: 0)
+        while self.webViewLogs.count >= 500 {
+            self.webViewLogs.remove(at: 0)
         }
-        webViewLogs.append(msg)
+        self.webViewLogs.append(msg)
     }
 
     func getAppInfos() -> [AppInfo] {
@@ -168,9 +168,9 @@ extension MiniAppManager {
             var addr = ""
             if app.webServerEnabled == true {
                 var server: HTTPServer
-                if MiniAppManager.shared.server == nil {
+                if self.httpServer == nil {
                     server = HTTPServer(address: try! .inet(ip4: "127.0.0.1", port: 60008), logger: LoggerForFlyingFox())
-                    MiniAppManager.shared.server = server
+                    self.httpServer = server
                     let fileManager = FileManager.default
                     let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
@@ -207,11 +207,13 @@ extension MiniAppManager {
                         return HTTPResponse(statusCode: .ok, body: res)
                     }
                 } else {
-                    server = MiniAppManager.shared.server!
+                    server = self.httpServer!
                 }
 
                 Task {
-                    try? await server.run()
+                    if await !server.isListening {
+                        try? await server.run()
+                    }
                 }
                 try? await server.waitUntilListening()
                 if let ipPort = await server.listeningAddress {
@@ -222,7 +224,7 @@ extension MiniAppManager {
                         addr = "http://" + unixAddr
                     }
                     logger.info("[getAddress] \(addr)")
-                    MiniAppManager.shared.serverAddress = addr
+                    self.serverAddress = addr
                 }
             }
 

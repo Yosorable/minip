@@ -71,7 +71,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        guard let serv = MiniAppManager.shared.server else {
+        guard let serv = MiniAppManager.shared.httpServer else {
             logger.debug("[enter foreground] not create server")
             return
         }

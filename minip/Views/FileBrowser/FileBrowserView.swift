@@ -361,7 +361,13 @@ class FileBrowserPageViewModel: ObservableObject {
         let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: path)
         var res = [FileInfo]()
         do {
-            let (folderURLs, fileURLs) = try getFilesAndFolders(in: folderURL)
+            var (folderURLs, fileURLs) = try getFilesAndFolders(in: folderURL)
+            folderURLs.sort {
+                $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
+            }
+            fileURLs.sort {
+                $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
+            }
             for folderURL in folderURLs {
                 res.append(FileInfo(fileName: folderURL.lastPathComponent, isFolder: true, url: folderURL))
             }

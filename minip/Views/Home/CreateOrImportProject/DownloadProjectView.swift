@@ -49,10 +49,6 @@ struct DownloadProjectView: View {
     @State var downloadReq: DownloadRequest? = nil
 
     var body: some View {
-        content
-    }
-
-    var content: some View {
         List {
             Section {
                 HStack {

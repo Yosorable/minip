@@ -48,14 +48,29 @@ extension MiniAppManager {
           <style>
             html { color-scheme: light dark; }
             body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; word-break: break-all; }
+            .logo { max-width: 100%; overflow: auto; }
           </style>
         </head>
         <body>
+          <div class="logo">
+              <pre>$$\\      $$\\ $$\\           $$\\
+        $$$\\    $$$ |\\__|          \\__|
+        $$$$\\  $$$$ |$$\\ $$$$$$$\\  $$\\  $$$$$$\\
+        $$\\$$\\$$ $$ |$$ |$$  __$$\\ $$ |$$  __$$\\
+        $$ \\$$$  $$ |$$ |$$ |  $$ |$$ |$$ /  $$ |
+        $$ |\\$  /$$ |$$ |$$ |  $$ |$$ |$$ |  $$ |
+        $$ | \\_/ $$ |$$ |$$ |  $$ |$$ |$$$$$$$  |
+        \\__|     \\__|\\__|\\__|  \\__|\\__|$$  ____/
+                                       $$ |
+                                       $$ |
+                                       \\__|</pre>
+          </div>
           <h1>Hello, world!</h1>
           <p>This is demo file.</p>
           <p>Go to "Files -&gt; \(name)/index.html" to edit it.</p>
-          <button disabled id="btn">click me</button>
-          <button disabled id="st-btn">go to Settings page</button>
+          <button onclick="alert('This is message.')">Original Alert</button>
+          <button disabled id="btn">Minip Alert</button>
+          <button disabled id="st-btn">Go to Settings Page</button>
           <div id="msg"></div>
           <script type="module">
             import * as minip from "https://cdn.jsdelivr.net/npm/minip-bridge/dist/index.mjs"
@@ -84,6 +99,14 @@ extension MiniAppManager {
             stBtn.disabled = false
             stBtn.onclick = function() { minip.openSettings().catch(showError) }
           </script>
+          <script>
+            const preventDefault = (e) => e.preventDefault();
+            // Prevent double tap scroll behave on iOS WKWebView.
+            document.addEventListener("dblclick", preventDefault);
+            // Enable tap to hide keyboard.
+            document.addEventListener("click", preventDefault);
+            console.log(`\n        _       _       \n  /\\\\/\\\\ (_)_ __ (_)_ __  \n /    \\\\| | '_ \\\\| | '_ \\\\ \n/ /\\\\/\\\\ \\\\ | | | | | |_) |\n\\\\/    \\\\/_|_| |_|_| .__/ \n                 |_|    \n`)
+          </script>
         </body>
         </html>
         """
@@ -100,7 +123,8 @@ extension MiniAppManager {
             displayName: displayName == "" ? nil : displayName,
             appId: UUID().uuidString.lowercased(),
             homepage: "index.html",
-            navigationBarStatus: "display"
+            navigationBarStatus: "display",
+            files: [AppInfo.File(name: "index.html", path: "index.html")]
         )
         let jsonFileURL = appFolder.appendingPathComponent("app.json")
         do {

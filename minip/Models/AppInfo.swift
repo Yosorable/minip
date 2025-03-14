@@ -21,7 +21,6 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     var tabs: [TabConfig]?
     var navigationBarStatus: String? // display, hidden(default)
     var colorScheme: String? // dark, light (default auto)
-    var disableSwipeBackGesture: Bool?
     var alwaysInSafeArea: Bool? // webview safearea layout
 
     var backgroundColor: String? // hex string
@@ -33,6 +32,7 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     var orientation: String? // landscape, portrait, all by default
     
     // MARK: For iOS
+    var iOS_disableSwipeBackGesture: Bool?
     var iOS_disableTextInteraction: Bool? // iOS 14.5+
     var iOS_hideScrollbar: Bool?
 

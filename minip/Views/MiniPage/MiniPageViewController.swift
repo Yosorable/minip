@@ -83,7 +83,8 @@ class MiniPageViewController: UIViewController {
             }
             self.webview.uiDelegate = nil
             self.webview.navigationDelegate = nil
-            self.webview.scrollView.indexDisplayMode = .automatic
+            self.webview.scrollView.showsVerticalScrollIndicator = true
+            self.webview.scrollView.showsHorizontalScrollIndicator = true
 
             MWebViewPool.shared.recycleReusedWebView(self.webview)
         }
@@ -146,7 +147,8 @@ class MiniPageViewController: UIViewController {
         }
 
         if app.iOS_hideScrollbar == true {
-            webview.scrollView.indexDisplayMode = .alwaysHidden
+            self.webview.scrollView.showsVerticalScrollIndicator = false
+            self.webview.scrollView.showsHorizontalScrollIndicator = false
         }
 
         let fileManager = FileManager.default
@@ -181,7 +183,7 @@ class MiniPageViewController: UIViewController {
             webview.tintColor = UIColor(hex: tc)
         }
 
-        if app.disableSwipeBackGesture == true {
+        if app.iOS_disableSwipeBackGesture == true {
             navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         }
 

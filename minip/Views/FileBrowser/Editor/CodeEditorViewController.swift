@@ -191,16 +191,29 @@ class CodeEditorViewController: UIViewController {
 
     private func setTextViewState(on textView: TextView) {
         let text = fileString
+        textView.text = text
+
         guard let lang = language else {
-            textView.text = text
             return
         }
-        // MARK: todo: large file or minified file
-        DispatchQueue.global(qos: .userInitiated).async {
-            let state = TextViewState(text: text, theme: DefaultTheme(), language: lang, languageProvider: LanguageProvider())
 
-            DispatchQueue.main.async {
-                textView.setState(state)
+        // MARK: todo: large file or minified file, optimize disable hight strategy
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            let tTxt = text.trimmingCharacters(in: .whitespacesAndNewlines)
+            let sps = tTxt.splitPolyfill(separator: "\n")
+            var mx = 0
+            sps.forEach { ele in
+                mx = max(ele.count, mx)
+            }
+            let lineCnt = sps.count
+            let charCnt = tTxt.count
+            if charCnt / lineCnt < 2000, lineCnt < 20000, mx < 10000 {
+                let state = TextViewState(text: text, theme: DefaultTheme(), language: lang, languageProvider: LanguageProvider())
+
+                DispatchQueue.main.async {
+                    textView.setState(state)
+                }
             }
         }
     }

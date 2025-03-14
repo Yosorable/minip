@@ -35,6 +35,7 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     var iOS_disableSwipeBackGesture: Bool?
     var iOS_disableTextInteraction: Bool? // iOS 14.5+
     var iOS_hideScrollbar: Bool?
+    var iOS_disableScroll: Bool?
 
     // file list
     var files: [File]?

@@ -16,6 +16,11 @@ public class MWebView: WKWebView {
     weak var holderObject: AnyObject?
     var id: Int?
 
+    // hide keyboard tool bar
+    override public var inputAccessoryView: UIView? {
+        return nil
+    }
+
     static func defaultConfiguration() -> WKWebViewConfiguration {
         let config = WKWebViewConfiguration()
 

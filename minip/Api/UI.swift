@@ -41,6 +41,7 @@ extension MinipApi {
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = bColor
         appearance.titleTextAttributes = [.foregroundColor: fColor]
+        appearance.shadowColor = .clear
         if let tabVC = vc.tabBarController {
             tabVC.viewControllers?.forEach { ele in
                 if let navc = ele as? UINavigationController {

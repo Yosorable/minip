@@ -85,6 +85,7 @@ class MiniPageViewController: UIViewController {
             self.webview.navigationDelegate = nil
             self.webview.scrollView.showsVerticalScrollIndicator = true
             self.webview.scrollView.showsHorizontalScrollIndicator = true
+            self.webview.scrollView.isScrollEnabled = true
 
             MWebViewPool.shared.recycleReusedWebView(self.webview)
         }
@@ -147,8 +148,12 @@ class MiniPageViewController: UIViewController {
         }
 
         if app.iOS_hideScrollbar == true {
-            self.webview.scrollView.showsVerticalScrollIndicator = false
-            self.webview.scrollView.showsHorizontalScrollIndicator = false
+            webview.scrollView.showsVerticalScrollIndicator = false
+            webview.scrollView.showsHorizontalScrollIndicator = false
+        }
+
+        if app.iOS_disableScroll == true {
+            webview.scrollView.isScrollEnabled = false
         }
 
         let fileManager = FileManager.default
@@ -176,7 +181,7 @@ class MiniPageViewController: UIViewController {
         }
         pageURL = url
 
-        title = _title ?? app.name
+        title = _title ?? app.displayName ?? app.name
 
         if let tc = app.tintColor {
             navigationController?.navigationBar.tintColor = UIColor(hex: tc)

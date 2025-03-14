@@ -43,7 +43,7 @@ class MiniPageViewController: UIViewController {
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
         var url: URL
-        // todo: Relative path like (based on previous page)
+        // TODO: Relative path like (based on previous page)
         if page.hasPrefix("http://") || page.hasPrefix("https://") {
             url = URL(string: page)!
             logger.info("[webview] load remote: \(url)")
@@ -83,6 +83,7 @@ class MiniPageViewController: UIViewController {
             }
             self.webview.uiDelegate = nil
             self.webview.navigationDelegate = nil
+            self.webview.scrollView.indexDisplayMode = .automatic
 
             MWebViewPool.shared.recycleReusedWebView(self.webview)
         }
@@ -94,6 +95,9 @@ class MiniPageViewController: UIViewController {
         if MiniAppManager.shared.openedApp == nil {
             MiniAppManager.shared.openedApp = app
         }
+
+        let showNav = app.navigationBarStatus != "hidden"
+
         webview = MWebViewPool.shared.getReusedWebView(forHolder: self)
         webview.uiDelegate = self
         webview.navigationDelegate = self
@@ -110,6 +114,17 @@ class MiniPageViewController: UIViewController {
         }
 
         if app.alwaysInSafeArea == true {
+            if showNav {
+                let appearance = UINavigationBarAppearance()
+                appearance.backgroundEffect = .none
+                appearance.shadowColor = .clear
+                navigationController?.navigationBar.standardAppearance = appearance
+                navigationController?.navigationBar.scrollEdgeAppearance = appearance
+                navigationController?.navigationBar.compactAppearance = appearance
+                if #available(iOS 15.0, *) {
+                    navigationController?.navigationBar.compactScrollEdgeAppearance = appearance
+                }
+            }
             view.addSubview(webview)
             webview.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
@@ -124,15 +139,21 @@ class MiniPageViewController: UIViewController {
 
         if let bc = app.backgroundColor {
             view.backgroundColor = UIColor(hex: bc)
+            webview.backgroundColor = UIColor(hex: bc)
         } else {
             view.backgroundColor = .systemBackground
+            webview.backgroundColor = .systemBackground
+        }
+
+        if app.iOS_hideScrollbar == true {
+            webview.scrollView.indexDisplayMode = .alwaysHidden
         }
 
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
         var url: URL
-        // todo: Relative path like (based on previous page)
+        // TODO: Relative path like (based on previous page)
         if page.hasPrefix("http://") || page.hasPrefix("https://") {
             url = URL(string: page)!
             logger.info("[webview] load remote: \(url)")
@@ -152,8 +173,6 @@ class MiniPageViewController: UIViewController {
             webview.loadFileURL(url, allowingReadAccessTo: documentsURL.appendingPathComponent(app.name))
         }
         pageURL = url
-
-        let showNav = app.navigationBarStatus != "hidden"
 
         title = _title ?? app.name
 

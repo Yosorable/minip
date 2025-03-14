@@ -32,8 +32,9 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     // orientation
     var orientation: String? // landscape, portrait, all by default
     
-    // MARK: For iOS (14.5)
-    var iOS_disableTextInteraction: Bool?
+    // MARK: For iOS
+    var iOS_disableTextInteraction: Bool? // iOS 14.5+
+    var iOS_hideScrollbar: Bool?
 
     // file list
     var files: [File]?

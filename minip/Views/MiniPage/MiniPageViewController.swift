@@ -152,10 +152,6 @@ class MiniPageViewController: UIViewController {
             webview.scrollView.showsHorizontalScrollIndicator = false
         }
 
-        if app.iOS_disableScroll == true {
-            webview.scrollView.isScrollEnabled = false
-        }
-
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
 

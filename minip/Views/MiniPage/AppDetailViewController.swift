@@ -37,7 +37,7 @@ class AppDetailViewController: UIViewController {
         }
 
         if let tintColor = MiniAppManager.shared.openedApp?.tintColor {
-            view.tintColor = UIColor(hex: tintColor)
+            view.tintColor = UIColor(hexOrCSSName: tintColor)
         }
 
         panModalSetNeedsLayoutUpdate()

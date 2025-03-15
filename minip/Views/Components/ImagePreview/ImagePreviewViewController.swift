@@ -98,7 +98,7 @@ class ImagePreviewViewController: UIViewController {
                 }
             }))
             if let tintColor = MiniAppManager.shared.openedApp?.tintColor {
-                alertController.view.tintColor = UIColor(hex: tintColor)
+                alertController.view.tintColor = UIColor(hexOrCSSName: tintColor)
             }
             if let colorScheme = MiniAppManager.shared.openedApp?.colorScheme {
                 if colorScheme == "dark" {

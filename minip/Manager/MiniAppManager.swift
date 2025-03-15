@@ -136,7 +136,7 @@ extension MiniAppManager {
             tabc.viewControllers = pages
 
             if let tc = appInfo.tintColor {
-                let tint = UIColor(hex: tc)
+                let tint = UIColor(hexOrCSSName: tc)
                 for ele in pages {
                     ele.navigationBar.tintColor = tint
                 }
@@ -147,7 +147,7 @@ extension MiniAppManager {
         } else {
             let nvc = PannableNavigationViewController(rootViewController: MiniPageViewController(app: appInfo, isRoot: true), orientations: orientations)
             if let tc = appInfo.tintColor {
-                nvc.navigationBar.tintColor = UIColor(hex: tc)
+                nvc.navigationBar.tintColor = UIColor(hexOrCSSName: tc)
             }
             vc = nvc
         }

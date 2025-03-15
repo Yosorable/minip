@@ -68,7 +68,7 @@ extension MinipApi {
             return
         }
         let safariVC = SFSafariViewController(url: url)
-        if let tc = vc.app.tintColor, let co = UIColor(hex: tc) {
+        if let tc = vc.app.tintColor, let co = UIColor(hexOrCSSName: tc) {
             safariVC.preferredControlTintColor = co
         }
         vc.present(safariVC, animated: true)

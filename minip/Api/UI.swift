@@ -31,8 +31,8 @@ extension MinipApi {
         guard
             let foregroundColor = (data?["foregroundColor"] as? String),
             let backgroundColor = (data?["backgroundColor"] as? String),
-            let fColor = UIColor(hex: foregroundColor),
-            let bColor = UIColor(hex: backgroundColor)
+            let fColor = UIColor(hexOrCSSName: foregroundColor),
+            let bColor = UIColor(hexOrCSSName: backgroundColor)
         else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return

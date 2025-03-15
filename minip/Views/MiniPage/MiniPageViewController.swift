@@ -142,8 +142,8 @@ class MiniPageViewController: UIViewController {
         }
 
         if let bc = app.backgroundColor {
-            view.backgroundColor = UIColor(hex: bc)
-            webview.backgroundColor = UIColor(hex: bc)
+            view.backgroundColor = UIColor(hexOrCSSName: bc)
+            webview.backgroundColor = UIColor(hexOrCSSName: bc)
         } else {
             view.backgroundColor = .systemBackground
             webview.backgroundColor = .systemBackground
@@ -186,8 +186,8 @@ class MiniPageViewController: UIViewController {
         title = _title ?? app.displayName ?? app.name
 
         if let tc = app.tintColor {
-            navigationController?.navigationBar.tintColor = UIColor(hex: tc)
-            webview.tintColor = UIColor(hex: tc)
+            navigationController?.navigationBar.tintColor = UIColor(hexOrCSSName: tc)
+            webview.tintColor = UIColor(hexOrCSSName: tc)
         }
 
         if app.iOS_disableSwipeBackGesture == true {

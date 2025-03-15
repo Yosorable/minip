@@ -29,7 +29,7 @@ final class FlashButton: UIButton {
             UIView.animate(withDuration: 0.3, animations: {
                 self.blurEffectView.effect = self.isSelected ? UIBlurEffect(style: .systemMaterialLight) : UIBlurEffect(style: .systemMaterialDark)
             })
-            tintColor = isSelected ? UIColor(hex: "#5756CE") : .white
+            tintColor = isSelected ? UIColor(hexOrCSSName: "#5756CE") : .white
         }
     }
 }

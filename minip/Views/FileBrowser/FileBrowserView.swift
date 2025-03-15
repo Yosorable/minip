@@ -131,6 +131,9 @@ struct FileBrowserPageView: View {
                     .lineLimit(1)
                     .truncationMode(.middle)
                 Spacer()
+                Text(ele.size ?? "unknown size")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
             .swipeActions {
                 Button {
@@ -153,6 +156,9 @@ struct FileBrowserPageView: View {
                     .lineLimit(1)
                     .truncationMode(.middle)
                 Spacer()
+                Text(ele.size ?? "unknown size")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
             .contentShape(Rectangle())
             .onTapGesture { openFileFunc() }
@@ -334,81 +340,5 @@ struct FileBrowserPageView: View {
             }
         }))
         alertController.show()
-    }
-}
-
-struct FileInfo: Identifiable {
-    var fileName: String
-    var isFolder: Bool
-    var url: URL
-
-    var id: String {
-        return fileName
-    }
-}
-
-class FileBrowserPageViewModel: ObservableObject {
-    @Published var files: [FileInfo] = []
-    var path: String
-
-    init(path: String) {
-        self.path = path
-    }
-
-    func fetchFiles() {
-        logger.debug("[fetchFiles] fetch files")
-        let fileManager = FileManager.default
-        let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: path)
-        var res = [FileInfo]()
-        do {
-            var (folderURLs, fileURLs) = try getFilesAndFolders(in: folderURL)
-            folderURLs.sort {
-                $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
-            }
-            // set trash folder to first
-            if let idx = folderURLs.firstIndex(where: { $0.lastPathComponent == ".Trash" }) {
-                folderURLs.insert(folderURLs.remove(at: idx), at: 0)
-            }
-            fileURLs.sort {
-                $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
-            }
-            for folderURL in folderURLs {
-                res.append(FileInfo(fileName: folderURL.lastPathComponent, isFolder: true, url: folderURL))
-            }
-            for fileURL in fileURLs {
-                res.append(FileInfo(fileName: fileURL.lastPathComponent, isFolder: false, url: fileURL))
-            }
-            files = res
-        } catch {
-            logger.error("[fetchFiles] \(error)")
-        }
-    }
-
-    func getFilesAndFolders(in directory: URL) throws -> (folders: [URL], files: [URL]) {
-        var folders = [URL]()
-        var files = [URL]()
-
-        let fileManager = FileManager.default
-        let contents = try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
-
-        for content in contents {
-            var isDirectory: ObjCBool = false
-            if fileManager.fileExists(atPath: content.path, isDirectory: &isDirectory) {
-                if isDirectory.boolValue {
-                    folders.append(content)
-                } else {
-                    files.append(content)
-                }
-            }
-        }
-
-        folders.sort(by: { l, r in
-            l.lastPathComponent < r.lastPathComponent
-        })
-
-        files.sort(by: { l, r in
-            l.lastPathComponent < r.lastPathComponent
-        })
-        return (folders, files)
     }
 }

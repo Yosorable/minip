@@ -34,15 +34,16 @@ class URLSchemeHandler {
 }
 
 extension URLSchemeHandler {
-    private func closeOpenedAppAndGetAooDelegate() -> AppDelegate? {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+    private func closeOpenedAppAndGetSceneDelegate() -> SceneDelegate? {
+        guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let sceneDelegate = scene.delegate as? SceneDelegate else {
             return nil
         }
         if MiniAppManager.shared.openedApp != nil {
-            appDelegate.window?.rootViewController?.children.first?.dismiss(animated: false)
+            sceneDelegate.window?.rootViewController?.children.first?.dismiss(animated: false)
             MiniAppManager.shared.clearOpenedApp()
         }
-        return appDelegate
+        return sceneDelegate
     }
 
     private func open(_ appIdOrName: String) throws {
@@ -50,7 +51,7 @@ extension URLSchemeHandler {
             return
         }
 
-        guard let appDelegate = closeOpenedAppAndGetAooDelegate() else {
+        guard let sceneDelegate = closeOpenedAppAndGetSceneDelegate() else {
             throw ErrorMsg(errorDescription: "unknown error")
         }
 
@@ -67,7 +68,7 @@ extension URLSchemeHandler {
             throw ErrorMsg(errorDescription: "app doesn't exist")
         }
 
-        guard let vc = appDelegate.window?.rootViewController else {
+        guard let vc = sceneDelegate.window?.rootViewController else {
             throw ErrorMsg(errorDescription: "unknown error")
         }
 
@@ -75,7 +76,7 @@ extension URLSchemeHandler {
     }
 
     private func install(_ urlStr: String) throws {
-        guard let appDelegate = closeOpenedAppAndGetAooDelegate(), urlStr != "" else {
+        guard let _ = closeOpenedAppAndGetSceneDelegate(), urlStr != "" else {
             throw ErrorMsg(errorDescription: "unknown error")
         }
 

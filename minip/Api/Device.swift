@@ -84,7 +84,11 @@ extension MinipApi {
     }
 
     func getDeviceInfoSync(param: Parameter) -> String? {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController, let window = (UIApplication.shared.delegate as? AppDelegate)?.window else {
+        guard let _ = param.webView?.holderObject as? MiniPageViewController,
+              let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let sceneDelegate = scene.delegate as? SceneDelegate,
+              let window = sceneDelegate.window
+        else {
             return nil
         }
         let language = Locale.preferredLanguages.first ?? "Unknown"
@@ -99,7 +103,7 @@ extension MinipApi {
         let model = identifier
 
         let system = "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
-        let screenSize = UIScreen.main.bounds.size
+        let screenSize = window.screen.bounds.size
         let screen = DeviceInfo.ScreenInfo(width: Double(screenSize.width), height: Double(screenSize.height))
         var safeArea = DeviceInfo.SafeAreaInfo(left: 0, right: 0, top: 0, bottom: 0)
         let safeInsets = window.safeAreaInsets

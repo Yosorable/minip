@@ -84,7 +84,7 @@ struct SettingsView: View {
                     Text("Dark").tag(2)
                 }
                 .onChange(of: colorScheme, perform: { val in
-                    let del = UIApplication.shared.delegate as? AppDelegate
+                    let del = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.delegate as? SceneDelegate
                     del?.window?.overrideUserInterfaceStyle = if val == 1 { .light } else if val == 2 { .dark } else { .unspecified }
                 })
             } header: {

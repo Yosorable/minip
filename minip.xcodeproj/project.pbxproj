@@ -58,6 +58,7 @@
 		488DDFF52ABEEAEE00BAB280 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */; };
 		488DDFF72ABEF81400BAB280 /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488DDFF62ABEF81400BAB280 /* String++.swift */; };
 		48947C422BE2963E00EE9F82 /* MinipRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48947C412BE2963E00EE9F82 /* MinipRequest.swift */; };
+		489837242D85E3700027650E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489837232D85E3690027650E /* SceneDelegate.swift */; };
 		48B90EEC2D5DDB5E00CCE103 /* QRCodeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B90EEB2D5DDB5600CCE103 /* QRCodeHandler.swift */; };
 		48B90EEE2D5DDF4D00CCE103 /* TextDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B90EED2D5DDF4000CCE103 /* TextDisplayViewController.swift */; };
 		48BDB1EB2D8264F000C6A100 /* CodeEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BDB1EA2D8264E100C6A100 /* CodeEditorViewController.swift */; };
@@ -167,6 +168,7 @@
 		488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		488DDFF62ABEF81400BAB280 /* String++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String++.swift"; sourceTree = "<group>"; };
 		48947C412BE2963E00EE9F82 /* MinipRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipRequest.swift; sourceTree = "<group>"; };
+		489837232D85E3690027650E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		48B90EEB2D5DDB5600CCE103 /* QRCodeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeHandler.swift; sourceTree = "<group>"; };
 		48B90EED2D5DDF4000CCE103 /* TextDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplayViewController.swift; sourceTree = "<group>"; };
 		48BDB1EA2D8264E100C6A100 /* CodeEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeEditorViewController.swift; sourceTree = "<group>"; };
@@ -515,6 +517,7 @@
 				488C2F3C2D4E1BC600892E3A /* Models */,
 				2BB920172A52FEB800D4BE3C /* Views */,
 				488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */,
+				489837232D85E3690027650E /* SceneDelegate.swift */,
 				48DF6BA0288D32CA00D523C1 /* Assets.xcassets */,
 				2B9B579E2A57D5B5002E9D57 /* Info.plist */,
 				48CE18422D5E760300F6F987 /* Settings.bundle */,
@@ -735,6 +738,7 @@
 				488C2F392D4DECDE00892E3A /* HomeViewController.swift in Sources */,
 				2BD9B1D92A5C426700036AFD /* EditorTheme.swift in Sources */,
 				48D399872D06E88400BDD99F /* DownloadAndInstallMiniApp.swift in Sources */,
+				489837242D85E3700027650E /* SceneDelegate.swift in Sources */,
 				488C2F3B2D4DED9700892E3A /* AppCell.swift in Sources */,
 				488C2F402D4E287A00892E3A /* ErrorMsg.swift in Sources */,
 				48D68D552D58E894002303FD /* DeleteMiniApp.swift in Sources */,

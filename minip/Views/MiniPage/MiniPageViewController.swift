@@ -85,7 +85,9 @@ class MiniPageViewController: UIViewController {
             self.webview.navigationDelegate = nil
             self.webview.scrollView.showsVerticalScrollIndicator = true
             self.webview.scrollView.showsHorizontalScrollIndicator = true
-            webview.scrollView.bounces = true
+            self.webview.scrollView.bounces = true
+            self.webview.scrollView.verticalScrollIndicatorInsets = .zero
+            self.webview.scrollView.horizontalScrollIndicatorInsets = .zero
 
             MWebViewPool.shared.recycleReusedWebView(self.webview)
         }
@@ -147,10 +149,13 @@ class MiniPageViewController: UIViewController {
             webview.backgroundColor = .systemBackground
         }
 
-        if app.iOS_hideScrollbar == true {
+        if app.iOS_scrollbar?.hide == true {
             webview.scrollView.showsVerticalScrollIndicator = false
             webview.scrollView.showsHorizontalScrollIndicator = false
             webview.scrollView.bounces = false
+        } else if let scrollBarConfig = app.iOS_scrollbar {
+            webview.scrollView.verticalScrollIndicatorInsets = scrollBarConfig.verticalInsets?.toUIEdgeInsets() ?? .zero
+            webview.scrollView.horizontalScrollIndicatorInsets = scrollBarConfig.horizontalInsets?.toUIEdgeInsets() ?? .zero
         }
 
         let fileManager = FileManager.default

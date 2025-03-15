@@ -6,8 +6,9 @@
 //
 
 import Defaults
+import UIKit
 
-struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
+struct AppInfo: Hashable, Codable, Defaults.Serializable {
     var name: String
     var displayName: String?
     var appId: String
@@ -22,27 +23,20 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     var navigationBarStatus: String? // display, hidden(default)
     var colorScheme: String? // dark, light (default auto)
     var alwaysInSafeArea: Bool? // webview safearea layout
-
     var backgroundColor: String? // hex string
     var tintColor: String? // hex string
-
-    // web server
-    var webServerEnabled: Bool?
-    // orientation
+    var webServerEnabled: Bool? // web server
     var orientation: String? // landscape, portrait, all by default
-    
+    var files: [File]? // file list
+
     // MARK: For iOS
+
     var iOS_disableSwipeBackGesture: Bool?
     var iOS_disableTextInteraction: Bool? // iOS 14.5+
-    var iOS_hideScrollbar: Bool?
+    var iOS_scrollbar: ScrollbarConfig?
+}
 
-    // file list
-    var files: [File]?
-
-    var id: String {
-        return appId
-    }
-
+extension AppInfo {
     struct TabConfig: Hashable, Codable {
         var path: String
         var title: String
@@ -52,5 +46,22 @@ struct AppInfo: Hashable, Identifiable, Codable, Defaults.Serializable {
     struct File: Hashable, Codable {
         var name: String
         var path: String
+    }
+
+    struct ScrollbarConfig: Hashable, Codable {
+        var hide: Bool?
+        var verticalInsets: EdgeInsets?
+        var horizontalInsets: EdgeInsets?
+    }
+
+    struct EdgeInsets: Hashable, Codable {
+        var top: CGFloat?
+        var left: CGFloat?
+        var bottom: CGFloat?
+        var right: CGFloat?
+
+        func toUIEdgeInsets() -> UIEdgeInsets {
+            UIEdgeInsets(top: top ?? .zero, left: left ?? .zero, bottom: bottom ?? .zero, right: right ?? .zero)
+        }
     }
 }

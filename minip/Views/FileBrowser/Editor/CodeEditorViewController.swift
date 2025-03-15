@@ -6,6 +6,7 @@
 //
 
 import KeyboardToolbar
+import ProgressHUD
 import Runestone
 import SwiftUI
 import TreeSitterHTMLRunestone
@@ -203,19 +204,29 @@ class CodeEditorViewController: UIViewController {
             let tTxt = text.trimmingCharacters(in: .whitespacesAndNewlines)
             let sps = tTxt.splitPolyfill(separator: "\n")
             var mx = 0
-            sps.forEach { ele in
+            for ele in sps {
                 mx = max(ele.count, mx)
             }
             let lineCnt = sps.count
             let charCnt = tTxt.count
-            if charCnt / lineCnt < 2000, lineCnt < 20000, mx < 10000 {
+            logger.debug("[Code Editor]: toal char: \(charCnt), total line: \(lineCnt), max char line: \(mx), average char line: \(charCnt / lineCnt)")
+            if charCnt / lineCnt < 5000, lineCnt < 20000, mx < 10000 {
                 let state = TextViewState(text: text, theme: DefaultTheme(), language: lang, languageProvider: LanguageProvider())
 
                 DispatchQueue.main.async {
                     textView.setState(state)
                 }
+            } else {
+                DispatchQueue.main.async {
+                    ProgressHUD.banner("Warning", "This file contains long lines, disable hightligh.", delay: 1.5)
+                }
             }
         }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        ProgressHUD.bannerHide()
     }
 }
 

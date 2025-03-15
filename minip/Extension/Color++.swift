@@ -178,7 +178,7 @@ extension UIColor {
         }
     }
 
-    convenience init?(hex: String) {
+    private convenience init?(hex: String) {
         var str = hex
         if str.hasPrefix("#") {
             str.removeFirst()

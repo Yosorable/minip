@@ -23,8 +23,8 @@ struct AppInfo: Hashable, Codable, Defaults.Serializable {
     var navigationBarStatus: String? // display, hidden(default)
     var colorScheme: String? // dark, light (default auto)
     var alwaysInSafeArea: Bool? // webview safearea layout
-    var backgroundColor: String? // hex string
-    var tintColor: String? // hex string
+    var backgroundColor: String? // css name or hex
+    var tintColor: String? // css name or hex
     var webServerEnabled: Bool? // web server
     var orientation: String? // landscape, portrait, all by default
     var files: [File]? // file list

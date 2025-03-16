@@ -21,6 +21,8 @@ class FileItemCell: UITableViewCell {
         let label = UILabel()
         label.numberOfLines = 1
         label.lineBreakMode = .byTruncatingMiddle
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
 
@@ -39,45 +41,39 @@ class FileItemCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        let spacer = UIView()
-        spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        spacer.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        let stackView = UIStackView(arrangedSubviews: [itemImageView, nameLabel, spacer, sizeLabel])
-        stackView.axis = .horizontal
-        stackView.spacing = 8
-        stackView.distribution = .fill
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        contentView.addSubview(stackView)
-
+        contentView.addSubview(itemImageView)
+        contentView.addSubview(nameLabel)
+        contentView.addSubview(sizeLabel)
+        itemImageView.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        sizeLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8.6),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8.6),
+            itemImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            itemImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            itemImageView.widthAnchor.constraint(equalToConstant: 30),
+            itemImageView.heightAnchor.constraint(equalToConstant: 30),
 
-            itemImageView.widthAnchor.constraint(equalToConstant: 35),
-            itemImageView.widthAnchor.constraint(equalToConstant: 35),
+            nameLabel.leadingAnchor.constraint(equalTo: itemImageView.trailingAnchor, constant: 8),
+            nameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+
+            sizeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            sizeLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+
+            nameLabel.trailingAnchor.constraint(lessThanOrEqualTo: sizeLabel.leadingAnchor, constant: -8)
         ])
-        separatorInset = UIEdgeInsets(top: 0, left: 59, bottom: 0, right: 0)
+        separatorInset = UIEdgeInsets(top: 0, left: 55, bottom: 0, right: 0)
     }
 
     func configure(with info: FileInfo, isRoot: Bool) {
         if info.isFolder {
             sizeLabel.isHidden = true
-            itemImageView.image = UIImage(
-                systemName: (isRoot && info.fileName == ".Trash") ? "trash" : "folder",
-                withConfiguration: UIImage.SymbolConfiguration(textStyle: .title2)
-            )
+            itemImageView.image = UIImage(systemName: (isRoot && info.fileName == ".Trash") ? "trash" : "folder")
             accessoryType = .disclosureIndicator
         } else {
             sizeLabel.isHidden = false
             sizeLabel.text = info.size ?? "unknown size"
-            itemImageView.image = UIImage(
-                systemName: FileManager.isImage(url: info.url) ? "photo" : "doc",
-                withConfiguration: UIImage.SymbolConfiguration(textStyle: .title2)
-            )
+            itemImageView.image = UIImage(systemName: FileManager.isImage(url: info.url) ? "photo" : "doc")
             accessoryType = .none
         }
         nameLabel.text = info.fileName

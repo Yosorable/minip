@@ -135,6 +135,7 @@ extension FileBrowserViewController {
                 tableView.beginUpdates()
                 tableView.deleteRows(at: [indexPath], with: .automatic)
                 tableView.endUpdates()
+                ShowSimpleSuccess(msg: i18n("f.moved_to_trash"))
                 completion(true)
             }
             let onError = { err in

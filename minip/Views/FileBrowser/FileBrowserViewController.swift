@@ -48,6 +48,7 @@ class FileBrowserViewController: UITableViewController {
 
         fetchFiles(reloadTableView: false)
 
+        tableView.rowHeight = 44
         tableView.register(FileItemCell.self, forCellReuseIdentifier: FileItemCell.identifier)
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)

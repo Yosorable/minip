@@ -154,7 +154,7 @@ extension FileBrowserViewController {
 
 extension FileBrowserViewController {
     func fetchFiles(reloadTableView: Bool, insertedItemName: String? = nil) {
-        logger.debug("[fetchFiles] fetch files")
+        logger.debug("[FileBrowser] fetching files")
         let fileManager = FileManager.default
         let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: path)
         var res = [FileInfo]()
@@ -181,18 +181,23 @@ extension FileBrowserViewController {
                 }
                 res.append(fileInfo)
             }
-            files = res
-            if reloadTableView {
-                if let insertedItemName = insertedItemName, let idx = res.firstIndex(where: { $0.fileName == insertedItemName }) {
-                    tableView.beginUpdates()
-                    tableView.insertRows(at: [IndexPath(row: idx, section: 0)], with: .automatic)
-                    tableView.endUpdates()
-                } else {
-                    tableView.reloadData()
+            if files != res {
+                files = res
+                if reloadTableView {
+                    logger.debug("[FileBrowser] reload table view")
+                    if let insertedItemName = insertedItemName, let idx = res.firstIndex(where: { $0.fileName == insertedItemName }) {
+                        tableView.beginUpdates()
+                        tableView.insertRows(at: [IndexPath(row: idx, section: 0)], with: .automatic)
+                        tableView.endUpdates()
+                    } else {
+                        tableView.reloadData()
+                    }
                 }
+            } else {
+                logger.debug("[FileBrowser] no changes")
             }
         } catch {
-            logger.error("[fetchFiles] \(error)")
+            logger.error("[FileBrowser] fetching error: \(error)")
         }
         refreshControl?.endRefreshing()
     }

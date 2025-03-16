@@ -38,7 +38,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 return vc
             }(),
             {
-                let vc = UIHostingController(rootView: FileBrowserView())
+                let vc = UINavigationController(rootViewController: FileBrowserViewController(path: "/"))
+                vc.navigationBar.prefersLargeTitles = true
                 vc.tabBarItem = UITabBarItem(title: i18n("Files"), image: UIImage(systemName: "folder.fill"), tag: 1)
                 return vc
             }(),

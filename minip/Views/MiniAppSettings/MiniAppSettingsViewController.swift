@@ -123,12 +123,6 @@ class MiniAppSettingsViewController: UITableViewController {
             ShowSimpleSuccess(msg: "Copied to clipboard successfully.")
             tableView.deselectRow(at: indexPath, animated: true)
         }
-//        else if indexPath.section == 2 {
-//            let nextSettingsVC = UIViewController()
-//            nextSettingsVC.view.backgroundColor = .darkGray
-//            nextSettingsVC.title = "New Page"
-//            navigationController?.pushViewController(nextSettingsVC, animated: true)
-//        }
     }
 
     // MARK: - Privacy Switch

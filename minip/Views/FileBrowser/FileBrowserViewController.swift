@@ -53,7 +53,11 @@ class FileBrowserViewController: UITableViewController {
         self.confirmText = confirmText
         self.onCancel = onCancel
         super.init(style: .insetGrouped)
-        title = path == "/" ? i18n("Files") : (path.splitPolyfill(separator: "/").last ?? "")
+        if path == "/", isModal {
+            title = "/"
+        } else {
+            title = path == "/" ? i18n("Files") : (path.splitPolyfill(separator: "/").last ?? "")
+        }
     }
 
     @available(*, unavailable)

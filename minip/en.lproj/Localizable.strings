@@ -66,6 +66,8 @@
 
 "f.delete_selected_confirm_message" = "Are you sure to delete %1$@ selected items ?";
 
+"Renamed successfully" = "Renamed successfully";
+
 // MARK: settings
 "s.clear_wkwebview_cache" = "Clear WKWebView Cache";
 "s.clear_kfimage_cache" = "Clear KFImage Cache";

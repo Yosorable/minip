@@ -58,7 +58,8 @@
 		488DDFF72ABEF81400BAB280 /* String++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488DDFF62ABEF81400BAB280 /* String++.swift */; };
 		48947C422BE2963E00EE9F82 /* MinipRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48947C412BE2963E00EE9F82 /* MinipRequest.swift */; };
 		489837242D85E3700027650E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489837232D85E3690027650E /* SceneDelegate.swift */; };
-		48B172A32D87BD68008127EE /* FileBrowserToolbarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B172A22D87BD59008127EE /* FileBrowserToolbarAction.swift */; };
+		48B172A32D87BD68008127EE /* ToolbarActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B172A22D87BD59008127EE /* ToolbarActions.swift */; };
+		48B172A52D87E86A008127EE /* ActionSheetActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B172A42D87E845008127EE /* ActionSheetActions.swift */; };
 		48B90EEC2D5DDB5E00CCE103 /* QRCodeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B90EEB2D5DDB5600CCE103 /* QRCodeHandler.swift */; };
 		48B90EEE2D5DDF4D00CCE103 /* TextDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B90EED2D5DDF4000CCE103 /* TextDisplayViewController.swift */; };
 		48BDB1EB2D8264F000C6A100 /* CodeEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BDB1EA2D8264E100C6A100 /* CodeEditorViewController.swift */; };
@@ -170,7 +171,8 @@
 		488DDFF62ABEF81400BAB280 /* String++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String++.swift"; sourceTree = "<group>"; };
 		48947C412BE2963E00EE9F82 /* MinipRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipRequest.swift; sourceTree = "<group>"; };
 		489837232D85E3690027650E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		48B172A22D87BD59008127EE /* FileBrowserToolbarAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserToolbarAction.swift; sourceTree = "<group>"; };
+		48B172A22D87BD59008127EE /* ToolbarActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarActions.swift; sourceTree = "<group>"; };
+		48B172A42D87E845008127EE /* ActionSheetActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionSheetActions.swift; sourceTree = "<group>"; };
 		48B90EEB2D5DDB5600CCE103 /* QRCodeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeHandler.swift; sourceTree = "<group>"; };
 		48B90EED2D5DDF4000CCE103 /* TextDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplayViewController.swift; sourceTree = "<group>"; };
 		48BDB1EA2D8264E100C6A100 /* CodeEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeEditorViewController.swift; sourceTree = "<group>"; };
@@ -353,7 +355,8 @@
 				2B9CF4102A5A558D00BD2C7F /* Editor */,
 				48F6B35E2D86A5BF0026D64F /* FileItemCell.swift */,
 				48F6B35C2D86A58A0026D64F /* FileBrowserViewController.swift */,
-				48B172A22D87BD59008127EE /* FileBrowserToolbarAction.swift */,
+				48B172A22D87BD59008127EE /* ToolbarActions.swift */,
+				48B172A42D87E845008127EE /* ActionSheetActions.swift */,
 			);
 			path = FileBrowser;
 			sourceTree = "<group>";
@@ -729,6 +732,7 @@
 				48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */,
 				48C385AD2A978520006BEE35 /* Polyfill.swift in Sources */,
 				48248BC22AF1F4D0001097CC /* MWebView.swift in Sources */,
+				48B172A52D87E86A008127EE /* ActionSheetActions.swift in Sources */,
 				485FEE7D2D5D09B800A0C430 /* FlashButton.swift in Sources */,
 				48F91E1A2D7B1086001D5BEA /* WebViewDelegate.swift in Sources */,
 				484E08312B96D6DD0018DCF0 /* AppDetailViewController.swift in Sources */,
@@ -766,7 +770,7 @@
 				48E39B592D4D126400C4A3CD /* TabViewFIx.swift in Sources */,
 				2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */,
 				4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */,
-				48B172A32D87BD68008127EE /* FileBrowserToolbarAction.swift in Sources */,
+				48B172A32D87BD68008127EE /* ToolbarActions.swift in Sources */,
 				48F6490F2D58CE9E00C9FD82 /* PromptCallApi.swift in Sources */,
 				48DE4A242D5E23D8002D4653 /* CreateMiniApp.swift in Sources */,
 			);

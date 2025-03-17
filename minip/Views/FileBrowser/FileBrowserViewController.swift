@@ -12,6 +12,11 @@ class FileBrowserViewController: UITableViewController {
     let path: String
     var files: [FileInfo] = []
 
+    lazy var openWebServerBtn = {
+        let btn = UIBarButtonItem(image: UIImage(systemName: "server.rack"), style: .plain, target: self, action: #selector(openWebServer))
+        return btn
+    }()
+
     lazy var selectAllBtn = {
         let btn = UIBarButtonItem(title: i18n("Select All"), style: .plain, target: self, action: #selector(selectOrDeselectAll))
         return btn
@@ -67,6 +72,9 @@ class FileBrowserViewController: UITableViewController {
             let btn = UIBarButtonItem(image: UIImage(systemName: "trash.fill"), style: .plain, target: self, action: #selector(cleanTrash))
             navigationItem.rightBarButtonItems = [btn, selectButton]
         } else {
+            if path == "/" {
+                navigationItem.leftBarButtonItem = openWebServerBtn
+            }
             navigationItem.rightBarButtonItems = [createFileBtn, selectButton]
         }
 
@@ -106,7 +114,11 @@ class FileBrowserViewController: UITableViewController {
             selectButton.title = i18n("Cancel")
         }
         updateToobarButtonStatus()
-        navigationController?.setToolbarHidden(!tableView.isEditing, animated: false)
+        navigationController?.setToolbarHidden(!tableView.isEditing, animated: true)
+    }
+
+    @objc func openWebServer() {
+        ShowSimpleError(err: ErrorMsg(errorDescription: "Not implemented"))
     }
 
     deinit {
@@ -172,7 +184,7 @@ extension FileBrowserViewController {
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let fileInfo = files[indexPath.row]
         let cell = tableView.cellForRow(at: indexPath)
-        let cannotDelete = fileInfo.isFolder && path == "/" && fileInfo.fileName == ".Trash"
+        let cannotDelete = fileInfo.isFolder && path == "/" && (fileInfo.fileName == ".Trash" || fileInfo.fileName == ".data")
         let isInTrashRoot = path == "/.Trash"
 
         let onDeleteSuccess = { [weak self] in
@@ -224,11 +236,7 @@ extension FileBrowserViewController {
                 ShowSimpleError(err: ErrorMsg(errorDescription: "Not Implemented"))
             }))
             alert.addAction(UIAlertAction(title: i18n("Rename"), style: .default, handler: { _ in
-                if cannotDelete {
-                    ShowSimpleError(err: ErrorMsg(errorDescription: "You cannot rename this folder"))
-                    return
-                }
-                ShowSimpleError(err: ErrorMsg(errorDescription: "Not Implemented"))
+                self?.rename(fileInfo: fileInfo)
             }))
             alert.addAction(UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in
                 if cannotDelete {
@@ -377,6 +385,10 @@ extension FileBrowserViewController {
         alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
         alertController.addAction(UIAlertAction(title: i18n("Create"), style: .default, handler: { [weak self] _ in
             guard let fileName = textField?.text, let strongSelf = self else {
+                return
+            }
+            if fileName == "" {
+                ShowSimpleError(err: ErrorMsg(errorDescription: "Invalid file name"))
                 return
             }
 

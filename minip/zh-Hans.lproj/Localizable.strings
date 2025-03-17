@@ -67,6 +67,8 @@
 
 "f.delete_selected_confirm_message" = "确认删除选中的%1$@项 ?";
 
+"Renamed successfully" = "重命名成功";
+
 // MARK: settings
 "s.clear_wkwebview_cache" = "清除WKWebView缓存";
 "s.clear_kfimage_cache" = "清除KFImage缓存";

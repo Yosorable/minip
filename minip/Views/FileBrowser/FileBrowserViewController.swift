@@ -12,6 +12,31 @@ class FileBrowserViewController: UITableViewController {
     let path: String
     var files: [FileInfo] = []
 
+    lazy var selectAllBtn = {
+        let btn = UIBarButtonItem(title: i18n("Select All"), style: .plain, target: self, action: #selector(selectOrDeselectAll))
+        return btn
+    }()
+
+    lazy var copyBtn = {
+        let btn = UIBarButtonItem(title: i18n("Copy"), style: .plain, target: self, action: #selector(copySelected))
+        return btn
+    }()
+
+    lazy var moveBtn = {
+        let btn = UIBarButtonItem(title: i18n("Move"), style: .plain, target: self, action: #selector(moveSelected))
+        return btn
+    }()
+
+    lazy var deleteBtn = {
+        let btn = UIBarButtonItem(image: UIImage(systemName: "trash.fill"), style: .plain, target: self, action: #selector(deleteSelected))
+        return btn
+    }()
+
+    lazy var selectButton = {
+        let btn = UIBarButtonItem(title: i18n("Select"), style: .plain, target: self, action: #selector(toggleSelectMode))
+        return btn
+    }()
+
     init(path: String) {
         self.path = path
         super.init(style: .insetGrouped)
@@ -39,17 +64,18 @@ class FileBrowserViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if path == "/.Trash" {
-            let btn = UIBarButtonItem(title: i18n("f.clean_trash"), style: .plain, target: self, action: #selector(cleanTrash))
-            btn.tintColor = .red
-            navigationItem.rightBarButtonItem = btn
-        } else if !path.contains("/.Trash") {
-            navigationItem.rightBarButtonItem = createFileBtn
+            let btn = UIBarButtonItem(image: UIImage(systemName: "trash.fill"), style: .plain, target: self, action: #selector(cleanTrash))
+            navigationItem.rightBarButtonItems = [btn, selectButton]
+        } else {
+            navigationItem.rightBarButtonItems = [createFileBtn, selectButton]
         }
 
         fetchFiles(reloadTableView: false)
 
         tableView.rowHeight = 44
+        tableView.allowsMultipleSelectionDuringEditing = true
         tableView.register(FileItemCell.self, forCellReuseIdentifier: FileItemCell.identifier)
+
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
     }
@@ -61,7 +87,7 @@ class FileBrowserViewController: UITableViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         if needCheckFileUpdates {
-            logger.debug("[FileBrowser] \(self.path): checking file updates")
+            logger.debug("[FileBrowser] \"\(self.path)\": checking file updates")
             needCheckFileUpdates = false
             fetchFiles(reloadTableView: true)
         }
@@ -69,6 +95,18 @@ class FileBrowserViewController: UITableViewController {
 
     @objc func refreshTableView() {
         fetchFiles(reloadTableView: true)
+    }
+
+    @objc func toggleSelectMode() {
+        if tableView.isEditing {
+            tableView.setEditing(false, animated: true)
+            selectButton.title = i18n("Select")
+        } else {
+            tableView.setEditing(true, animated: true)
+            selectButton.title = i18n("Cancel")
+        }
+        updateToobarButtonStatus()
+        navigationController?.setToolbarHidden(!tableView.isEditing, animated: false)
     }
 
     deinit {
@@ -87,8 +125,18 @@ extension FileBrowserViewController {
         return cell
     }
 
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if tableView.isEditing {
+            updateToobarButtonStatus()
+        }
+    }
+
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let fileInfo = files[indexPath.row]
+        if tableView.isEditing {
+            updateToobarButtonStatus()
+            return
+        }
         if fileInfo.isFolder {
             let vc = FileBrowserViewController(path: "\(path == "/" ? "" : path)/\(fileInfo.fileName)")
             navigationController?.pushViewController(vc, animated: true)
@@ -123,32 +171,79 @@ extension FileBrowserViewController {
 
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let fileInfo = files[indexPath.row]
+        let cell = tableView.cellForRow(at: indexPath)
         let cannotDelete = fileInfo.isFolder && path == "/" && fileInfo.fileName == ".Trash"
+        let isInTrashRoot = path == "/.Trash"
+
+        let onDeleteSuccess = { [weak self] in
+            self?.files.remove(at: indexPath.row)
+            tableView.beginUpdates()
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            tableView.endUpdates()
+            ShowSimpleSuccess(msg: i18n(isInTrashRoot ? "f.deleted_success" : "f.moved_to_trash"))
+        }
+        let onDeleteError = { err in
+            ShowSimpleError(err: err)
+        }
+
         let deleteAction = UIContextualAction(style: .destructive, title: i18n("Delete"), handler: { [weak self] _, _, completion in
             if cannotDelete {
                 ShowSimpleError(err: ErrorMsg(errorDescription: "You cannot delete this folder"))
                 completion(false)
                 return
             }
-            let onSuccess = {
-                self?.files.remove(at: indexPath.row)
-                tableView.beginUpdates()
-                tableView.deleteRows(at: [indexPath], with: .automatic)
-                tableView.endUpdates()
-                ShowSimpleSuccess(msg: i18n("f.moved_to_trash"))
-                completion(true)
-            }
-            let onError = { err in
-                ShowSimpleError(err: err)
-                completion(false)
-            }
+
             if fileInfo.isFolder {
-                self?.deleteFolder(url: fileInfo.url, onSuccess: onSuccess, onFailed: onError, onCanceled: { completion(false) })
+                self?.deleteFolder(url: fileInfo.url, onSuccess: {
+                    onDeleteSuccess()
+                    completion(true)
+                }, onFailed: {
+                    onDeleteError($0)
+                    completion(false)
+                }, onCanceled: { completion(false) })
             } else {
-                self?.deleteFile(url: fileInfo.url, onSuccess: onSuccess, onFailed: onError, onCanceled: { completion(false) })
+                self?.deleteFile(url: fileInfo.url, onSuccess: {
+                    onDeleteSuccess()
+                    completion(true)
+                }, onFailed: {
+                    onDeleteError($0)
+                    completion(false)
+                }, onCanceled: { completion(false) })
             }
         })
-        return UISwipeActionsConfiguration(actions: [deleteAction])
+        let moreAction = UIContextualAction(style: .normal, title: i18n("More"), handler: { [weak self] _, _, completion in
+            let alert = UIAlertController(title: fileInfo.fileName, message: nil, preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: i18n("Copy"), style: .default, handler: { _ in
+                ShowSimpleError(err: ErrorMsg(errorDescription: "Not Implemented"))
+            }))
+            alert.addAction(UIAlertAction(title: i18n("Move"), style: .default, handler: { _ in
+                if cannotDelete {
+                    ShowSimpleError(err: ErrorMsg(errorDescription: "You cannot move this folder"))
+                    return
+                }
+                ShowSimpleError(err: ErrorMsg(errorDescription: "Not Implemented"))
+            }))
+            alert.addAction(UIAlertAction(title: i18n("Rename"), style: .default, handler: { _ in
+                if cannotDelete {
+                    ShowSimpleError(err: ErrorMsg(errorDescription: "You cannot rename this folder"))
+                    return
+                }
+                ShowSimpleError(err: ErrorMsg(errorDescription: "Not Implemented"))
+            }))
+            alert.addAction(UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in
+                if cannotDelete {
+                    ShowSimpleError(err: ErrorMsg(errorDescription: "You cannot delete this folder"))
+                    return
+                }
+                self?.deleteFile(url: fileInfo.url, onSuccess: onDeleteSuccess, onFailed: onDeleteError, onCanceled: {})
+            }))
+            alert.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel))
+            alert.popoverPresentationController?.sourceView = cell
+            alert.popoverPresentationController?.sourceRect = cell?.bounds ?? .zero
+            self?.present(alert, animated: true)
+            completion(true)
+        })
+        return UISwipeActionsConfiguration(actions: [deleteAction, moreAction])
     }
 }
 
@@ -246,17 +341,30 @@ extension FileBrowserViewController {
     }
 
     @objc func cleanTrash() {
+        if tableView.isEditing, (tableView.indexPathsForSelectedRows?.count ?? 0) > 0 {
+            deleteSelected()
+            return
+        }
         let alertController = UIAlertController(title: i18n("Confirm"), message: i18n("f.clean_trash_confirm"), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
         alertController.addAction(UIAlertAction(title: i18n("f.clean_trash"), style: .destructive, handler: { [weak self] _ in
             CleanTrashAsync {
                 ShowSimpleSuccess()
-                self?.fetchFiles(reloadTableView: true)
+                self?.fetchFiles(reloadTableView: false)
+                let deletedRows = self?.tableView.indexPathsForVisibleRows ?? []
+                if deletedRows.count > 0 {
+                    self?.tableView.beginUpdates()
+                    self?.tableView.deleteRows(at: deletedRows, with: .automatic)
+                    self?.tableView.endUpdates()
+                }
+                if self?.tableView.isEditing == true {
+                    self?.toggleSelectMode()
+                }
             } onError: { err in
                 ShowSimpleError(err: err)
             }
         }))
-        alertController.show()
+        present(alertController, animated: true)
     }
 
     func createFile() {
@@ -287,7 +395,7 @@ extension FileBrowserViewController {
                 ShowSimpleError(err: ErrorMsg(errorDescription: "File exists"))
             }
         }))
-        alertController.show()
+        present(alertController, animated: true)
     }
 
     func createFolder() {
@@ -320,43 +428,52 @@ extension FileBrowserViewController {
                 ShowSimpleError(err: ErrorMsg(errorDescription: "Folder exists"))
             }
         }))
-        alertController.show()
+        present(alertController, animated: true)
     }
 
     func deleteFolder(url: URL?, onSuccess: @escaping () -> Void, onFailed: @escaping (Error) -> Void, onCanceled: @escaping () -> Void) {
         guard let url = url else {
             return
         }
-
+        let isInTrashRoot = path == "/.Trash"
         let alertController = UIAlertController(title: i18n("Confirm"), message: i18nF("f.delete_folder_confirm_message", url.lastPathComponent), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: { _ in
             onCanceled()
         }))
         alertController.addAction(UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in
             do {
-                try FileManager.default.trashItem(at: url, resultingItemURL: nil)
+                if isInTrashRoot {
+                    try FileManager.default.removeItem(at: url)
+                } else {
+                    try FileManager.default.trashItem(at: url, resultingItemURL: nil)
+                }
                 onSuccess()
             } catch {
                 onFailed(error)
             }
         }))
-        alertController.show()
+        present(alertController, animated: true)
     }
 
     func deleteFile(url: URL?, onSuccess: @escaping () -> Void, onFailed: @escaping (Error) -> Void, onCanceled: @escaping () -> Void) {
         guard let url = url else {
             return
         }
+        let isInTrashRoot = path == "/.Trash"
         let alertController = UIAlertController(title: i18n("Confirm"), message: i18nF("f.delete_file_confirm_message", url.lastPathComponent), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: { _ in onCanceled() }))
         alertController.addAction(UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in
             do {
-                try FileManager.default.trashItem(at: url, resultingItemURL: nil)
+                if isInTrashRoot {
+                    try FileManager.default.removeItem(at: url)
+                } else {
+                    try FileManager.default.trashItem(at: url, resultingItemURL: nil)
+                }
                 onSuccess()
             } catch {
                 onFailed(error)
             }
         }))
-        alertController.show()
+        present(alertController, animated: true)
     }
 }

@@ -30,6 +30,13 @@
 "Follow System" = "跟随系统";
 "Light" = "浅色";
 "Dark" = "深色";
+"More" = "更多";
+"Copy" = "拷贝";
+"Move" = "移动";
+"Rename" = "重命名";
+"Select"= "选择";
+"Select All"= "全选";
+"Deselect All" = "取消全选";
 
 
 // MARK: home
@@ -49,12 +56,16 @@
 "f.create_folder_tip" = "请输入文件夹名称";
 "f.file_name" = "文件名";
 "f.folder_name" = "文件夹名称";
+
 "f.clean_trash" = "清空";
 "f.clean_trash_confirm" = "确认清空垃圾箱 ?";
 
 "f.delete_file_confirm_message" = "删除该文件:  %1$@ ?";
 "f.delete_folder_confirm_message" = "删除该文件夹:  %1$@ ?";
 "f.moved_to_trash" = "已移动至垃圾箱";
+"f.deleted_success" = "删除成功";
+
+"f.delete_selected_confirm_message" = "确认删除选中的%1$@项 ?";
 
 // MARK: settings
 "s.clear_wkwebview_cache" = "清除WKWebView缓存";

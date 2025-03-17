@@ -110,7 +110,7 @@ func CleanTrashAsync(onComplete: (() -> Void)? = nil, onError: ((Error) -> Void)
 
 // alert
 extension UIAlertController {
-    func show(completion: (() -> Void)? = nil) {
+    func showOnTopViewController(completion: (() -> Void)? = nil) {
         let kw = UIApplication
             .shared
             .connectedScenes

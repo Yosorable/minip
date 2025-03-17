@@ -8,9 +8,21 @@
 import Foundation
 
 func i18n(_ key: String) -> String {
-    return Bundle.main.localizedString(forKey: key, value: nil, table: nil)
+    let localizedString = Bundle.main.localizedString(forKey: key, value: nil, table: nil)
+
+    // set fall back to english
+    if localizedString == key,
+       let preferredLanguage = Locale.preferredLanguages.first,
+       preferredLanguage != "en", // todo: multiple languages cause not equal (like: en-CN)
+       let enBundlePath = Bundle.main.path(forResource: "en", ofType: "lproj"),
+       let enBundle = Bundle(path: enBundlePath)
+    {
+        return enBundle.localizedString(forKey: key, value: nil, table: nil)
+    }
+
+    return localizedString
 }
 
 func i18nF(_ fmtKey: String, _ arguments: any CVarArg ...) -> String {
-    String(format: NSLocalizedString(fmtKey, comment: ""), arguments)
+    String(format: i18n(fmtKey), arguments)
 }

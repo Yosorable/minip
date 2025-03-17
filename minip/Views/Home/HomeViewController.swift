@@ -123,6 +123,24 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView DataSource
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if apps.count == 0 {
+            let messageAttributedString = NSMutableAttributedString(string: i18n("home.no_project_msg_part1"))
+
+            if let symbolImage = UIImage(systemName: "plus.square") {
+                let attachment = NSTextAttachment()
+                attachment.image = symbolImage.withTintColor(.label)
+
+                let imageString = NSAttributedString(attachment: attachment)
+                messageAttributedString.append(imageString)
+            }
+            messageAttributedString.append(NSAttributedString(string: i18n("home.no_project_msg_part2")))
+            tableView.setEmptyView(
+                title: NSAttributedString(string: i18n("home.no_project")),
+                message: messageAttributedString
+            )
+        } else {
+            tableView.restore()
+        }
         return apps.count
     }
 

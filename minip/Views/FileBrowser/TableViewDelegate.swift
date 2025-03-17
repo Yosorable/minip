@@ -10,7 +10,25 @@ import UIKit
 
 extension FileBrowserViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        files.count
+        if files.count == 0 {
+            let messageAttributedString = NSMutableAttributedString(string: i18n("f.empty_folder_msg_p1"))
+
+            if let symbolImage = UIImage(systemName: "plus.app.fill") {
+                let attachment = NSTextAttachment()
+                attachment.image = symbolImage.withTintColor(view.tintColor)
+
+                let imageString = NSAttributedString(attachment: attachment)
+                messageAttributedString.append(imageString)
+            }
+            messageAttributedString.append(NSAttributedString(string: i18n("f.empty_folder_msg_p2")))
+            tableView.setEmptyView(
+                title: NSAttributedString(string: i18n("f.empty_folder")),
+                message: self.path == "/.Trash" ? NSAttributedString(string: i18n("f.empty_trash_msg")) : messageAttributedString
+            )
+        } else {
+            tableView.restore()
+        }
+        return files.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

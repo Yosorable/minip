@@ -49,6 +49,7 @@
 		485FEE792D5D07AE00A0C430 /* QRScannerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FEE782D5D07A800A0C430 /* QRScannerError.swift */; };
 		485FEE7B2D5D07ED00A0C430 /* QRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FEE7A2D5D07E500A0C430 /* QRScannerViewController.swift */; };
 		485FEE7D2D5D09B800A0C430 /* FlashButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FEE7C2D5D09B400A0C430 /* FlashButton.swift */; };
+		4863BF482D88753400029FAA /* UITableView++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4863BF472D88752E00029FAA /* UITableView++.swift */; };
 		4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869E8072D0D345600E2B080 /* MinipNativeInteraction.swift */; };
 		487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 487E38922A8FBA48003464D7 /* Kingfisher */; };
 		488C2F392D4DECDE00892E3A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488C2F382D4DECD200892E3A /* HomeViewController.swift */; };
@@ -166,6 +167,7 @@
 		485FEE782D5D07A800A0C430 /* QRScannerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerError.swift; sourceTree = "<group>"; };
 		485FEE7A2D5D07E500A0C430 /* QRScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewController.swift; sourceTree = "<group>"; };
 		485FEE7C2D5D09B400A0C430 /* FlashButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashButton.swift; sourceTree = "<group>"; };
+		4863BF472D88752E00029FAA /* UITableView++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView++.swift"; sourceTree = "<group>"; };
 		4869E8072D0D345600E2B080 /* MinipNativeInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipNativeInteraction.swift; sourceTree = "<group>"; };
 		488C2F382D4DECD200892E3A /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		488C2F3A2D4DED9200892E3A /* AppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCell.swift; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 				48C385AC2A978520006BEE35 /* Polyfill.swift */,
 				488DDFF62ABEF81400BAB280 /* String++.swift */,
 				48FB5A042B95CD9400D2DFCC /* UIViewController++.swift */,
+				4863BF472D88752E00029FAA /* UITableView++.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -779,6 +782,7 @@
 				48B90EEC2D5DDB5E00CCE103 /* QRCodeHandler.swift in Sources */,
 				48021CBE2D5F3ED300C39F07 /* URLSchemeHandler.swift in Sources */,
 				2B1B32D72A61784600DA573F /* Defaults.swift in Sources */,
+				4863BF482D88753400029FAA /* UITableView++.swift in Sources */,
 				48E39B592D4D126400C4A3CD /* TabViewFIx.swift in Sources */,
 				2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */,
 				4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */,

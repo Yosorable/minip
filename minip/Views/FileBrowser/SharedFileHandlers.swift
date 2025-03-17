@@ -38,6 +38,9 @@ extension FileBrowserViewController {
                             if fileManager.fileExists(atPath: destinationURL.path) {
                                 throw ErrorMsg(errorDescription: i18n("Some files with same names already exist"))
                             }
+                            if self?.isDestinationInsideSource(sourceURL: sourceURL, destinationURL: destinationURL) == true {
+                                throw ErrorMsg(errorDescription: "Cannot \(isMove ? "move" : "copy") a folder into itself")
+                            }
                         }
 
                         // move or copy
@@ -50,17 +53,32 @@ extension FileBrowserViewController {
                             }
                         }
                         ShowSimpleSuccess(msg: i18n(isMove ? "Moved successfully" : "Copied successfully"))
-                        if self?.tableView.isEditing == true {
-                            self?.toggleSelectMode()
-                        }
-                        self?.fetchFiles(reloadTableView: true)
                     } catch {
                         ShowSimpleError(err: error)
                     }
+                    if self?.tableView.isEditing == true {
+                        self?.toggleSelectMode()
+                    }
+                    self?.fetchFiles(reloadTableView: true)
                 },
                 confirmText: i18n(isMove ? "Move" : "Copy")
             )
         )
         present(vc, animated: true)
+    }
+
+    fileprivate func isDestinationInsideSource(sourceURL: URL, destinationURL: URL) -> Bool {
+        let standardizedSourceURL = sourceURL.standardizedFileURL
+        let standardizedDestinationURL = destinationURL.standardizedFileURL
+
+        var currentURL = standardizedDestinationURL
+
+        while currentURL.pathComponents.count > 1 {
+            currentURL.deleteLastPathComponent()
+            if currentURL == standardizedSourceURL {
+                return true
+            }
+        }
+        return false
     }
 }

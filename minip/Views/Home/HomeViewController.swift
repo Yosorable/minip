@@ -77,7 +77,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.allowsSelectionDuringEditing = true
+        tableView.allowsSelectionDuringEditing = false
         tableView.refreshControl = refreshControl
         view.addSubview(tableView)
 

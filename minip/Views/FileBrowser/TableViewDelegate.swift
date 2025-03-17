@@ -23,7 +23,7 @@ extension FileBrowserViewController {
             messageAttributedString.append(NSAttributedString(string: i18n("f.empty_folder_msg_p2")))
             tableView.setEmptyView(
                 title: NSAttributedString(string: i18n("f.empty_folder")),
-                message: self.path == "/.Trash" ? NSAttributedString(string: i18n("f.empty_trash_msg")) : messageAttributedString
+                message: self.isModal ? NSAttributedString() : (self.path == "/.Trash" ? NSAttributedString(string: i18n("f.empty_trash_msg")) : messageAttributedString)
             )
         } else {
             tableView.restore()

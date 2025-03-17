@@ -47,7 +47,7 @@
 "home.menu.load_from_file" = "选择文件";
 "home.delete_alert_title" = "删除项目";
 "home.no_project" = "这里空空如也";
-"home.no_project_msg_part1" = "点击 ";
+"home.no_project_msg_part1" = "点击右上角的 ";
 "home.no_project_msg_part2" = " 按钮来新建项目。";
 
 "cp.create_project" = "创建项目";
@@ -73,7 +73,7 @@
 "f.delete_selected_confirm_message" = "确认删除选中的%1$@项 ?";
 
 "f.empty_folder" = "空文件夹";
-"f.empty_folder_msg_p1" = "点击 ";
+"f.empty_folder_msg_p1" = "点击右上角的 ";
 "f.empty_folder_msg_p2" = " 按钮来新建文件或文件夹。";
 "f.empty_trash_msg" = "已经清理干净啦。";
 

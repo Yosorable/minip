@@ -47,7 +47,7 @@
 "home.delete_alert_title" = "Delete Project";
 "home.no_project" = "Nothing here";
 "home.no_project_msg_part1" = "Tap the ";
-"home.no_project_msg_part2" = " button to create new projects.";
+"home.no_project_msg_part2" = " button in the upper right corner to create new projects.";
 
 "cp.create_project" = "Create Project";
 "cp.name" = "name";
@@ -73,7 +73,7 @@
 
 "f.empty_folder" = "Empty folder";
 "f.empty_folder_msg_p1" = "Tap the ";
-"f.empty_folder_msg_p2" = " button to create new files or folders.";
+"f.empty_folder_msg_p2" = " button in the upper right corner to create new files or folders.";
 "f.empty_trash_msg" = "Already cleaned up.";
 
 "Renamed successfully" = "Renamed successfully";

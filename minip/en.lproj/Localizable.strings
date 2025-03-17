@@ -37,6 +37,8 @@
 "Select" = "Select";
 "Select All" = "Select All";
 "Deselect All" = "Deselect All";
+"File" = "File";
+"Folder" = "Folder";
 
 // MARK: home
 "home.menu.create_project" = "Create new project";

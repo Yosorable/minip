@@ -51,18 +51,20 @@ extension FileBrowserViewController {
     }
 
     // isValid, selected item urls, selected item indexes
-    fileprivate func checkSelectedItems() -> (isValid: Bool, selectedItemURL: [URL], selectedItemIndex: [Int]) {
+    fileprivate func checkSelectedItems() -> (isValid: Bool, selectedItemURL: [URL], selectedItemIndex: [Int], selectedItemFileInfo: [FileInfo]) {
         var isValid = true
         var selectedItemIndexInTableView = [Int]()
+        var selectedItemFileInfo = [FileInfo]()
         let selectedItemURL: [URL] = tableView.indexPathsForSelectedRows?.map {
             let fileInfo = self.files[$0.row]
+            selectedItemFileInfo.append(fileInfo)
             selectedItemIndexInTableView.append($0.row)
-            if path == "/", fileInfo.fileName == ".Trash" {
+            if path == "/", fileInfo.fileName == ".Trash" || fileInfo.fileName == ".data" {
                 isValid = false
             }
             return fileInfo.url
         } ?? []
-        return (isValid, selectedItemURL, selectedItemIndexInTableView)
+        return (isValid, selectedItemURL, selectedItemIndexInTableView, selectedItemFileInfo)
     }
 
     @objc func deleteSelected() {
@@ -111,10 +113,12 @@ extension FileBrowserViewController {
     }
 
     @objc func copySelected() {
-        ShowSimpleError(err: ErrorMsg(errorDescription: "Not implemented"))
+        let res = checkSelectedItems()
+        moveOrCopyFiles(files: res.selectedItemFileInfo, isMove: false)
     }
 
     @objc func moveSelected() {
-        ShowSimpleError(err: ErrorMsg(errorDescription: "Not implemented"))
+        let res = checkSelectedItems()
+        moveOrCopyFiles(files: res.selectedItemFileInfo, isMove: true)
     }
 }

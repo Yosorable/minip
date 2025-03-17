@@ -44,4 +44,12 @@ extension FileBrowserViewController {
         }))
         present(alert, animated: true)
     }
+
+    func copyItem(fileInfo: FileInfo) {
+        moveOrCopyFiles(files: [fileInfo], isMove: false)
+    }
+
+    func moveItem(fileInfo: FileInfo) {
+        moveOrCopyFiles(files: [fileInfo], isMove: true)
+    }
 }

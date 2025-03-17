@@ -10,6 +10,9 @@ import UIKit
 
 class FileBrowserViewController: UITableViewController {
     let path: String
+    let isModal: Bool
+    var onConfirm: ((URL) -> Void)?
+    var confirmText: String?
     var files: [FileInfo] = []
 
     lazy var openWebServerBtn = {
@@ -42,8 +45,11 @@ class FileBrowserViewController: UITableViewController {
         return btn
     }()
 
-    init(path: String) {
+    init(path: String, isModal: Bool = false, onConfirm: ((URL) -> Void)? = nil, confirmText: String? = nil) {
         self.path = path
+        self.isModal = isModal
+        self.onConfirm = onConfirm
+        self.confirmText = confirmText
         super.init(style: .insetGrouped)
         title = path == "/" ? i18n("Files") : (path.splitPolyfill(separator: "/").last ?? "")
     }
@@ -54,34 +60,51 @@ class FileBrowserViewController: UITableViewController {
     }
 
     lazy var createFileBtn: UIBarButtonItem = {
-        let menu = UIMenu(children: [
-            UIAction(title: i18n("f.create_file"), image: UIImage(systemName: "doc")) { [weak self] _ in
-                self?.createFile()
-            },
+        var actions = [UIAction]()
+        if !isModal {
+            actions.append(
+                UIAction(title: i18n("f.create_file"), image: UIImage(systemName: "doc")) { [weak self] _ in
+                    self?.createFile()
+                }
+            )
+        }
+        actions.append(
             UIAction(title: i18n("f.create_folder"), image: UIImage(systemName: "folder")) { [weak self] _ in
                 self?.createFolder()
-            },
-        ])
+            }
+        )
+        let menu = UIMenu(children: actions)
         let btn = UIBarButtonItem(image: UIImage(systemName: "plus.app.fill"), menu: menu)
         return btn
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if path == "/.Trash" {
-            let btn = UIBarButtonItem(image: UIImage(systemName: "trash.fill"), style: .plain, target: self, action: #selector(cleanTrash))
-            navigationItem.rightBarButtonItems = [btn, selectButton]
-        } else {
-            if path == "/" {
-                navigationItem.leftBarButtonItem = openWebServerBtn
+        if !isModal {
+            if path == "/.Trash" {
+                let btn = UIBarButtonItem(image: UIImage(systemName: "trash.fill"), style: .plain, target: self, action: #selector(cleanTrash))
+                navigationItem.rightBarButtonItems = [btn, selectButton]
+            } else {
+                if path == "/" {
+                    navigationItem.leftBarButtonItem = openWebServerBtn
+                }
+                navigationItem.rightBarButtonItems = [createFileBtn, selectButton]
             }
-            navigationItem.rightBarButtonItems = [createFileBtn, selectButton]
+        } else {
+            navigationItem.rightBarButtonItems = [createFileBtn]
+            let modalCancelBtn = UIBarButtonItem(title: i18n("Cancel"), style: .plain, target: self, action: #selector(dismissModal))
+            let modalConfirmBtn = UIBarButtonItem(title: confirmText ?? i18n("Confirm"), style: .plain, target: self, action: #selector(confirmModal))
+            let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            toolbarItems = [modalCancelBtn, flexibleSpace, modalConfirmBtn]
+            navigationController?.setToolbarHidden(false, animated: false)
         }
 
         fetchFiles(reloadTableView: false)
 
         tableView.rowHeight = 44
-        tableView.allowsMultipleSelectionDuringEditing = true
+        if !isModal {
+            tableView.allowsMultipleSelectionDuringEditing = true
+        }
         tableView.register(FileItemCell.self, forCellReuseIdentifier: FileItemCell.identifier)
 
         refreshControl = UIRefreshControl()
@@ -95,9 +118,14 @@ class FileBrowserViewController: UITableViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         if needCheckFileUpdates {
-            logger.debug("[FileBrowser] \"\(self.path)\": checking file updates")
+            let pathStr = path
+            logger.debug("[FileBrowser] \"\(pathStr)\": checking file updates")
             needCheckFileUpdates = false
             fetchFiles(reloadTableView: true)
+        }
+        if !isModal && !tableView.isEditing {
+            updateToobarButtonStatus()
+            navigationController?.setToolbarHidden(true, animated: true)
         }
     }
 
@@ -119,6 +147,17 @@ class FileBrowserViewController: UITableViewController {
 
     @objc func openWebServer() {
         ShowSimpleError(err: ErrorMsg(errorDescription: "Not implemented"))
+    }
+
+    @objc func dismissModal() {
+        dismiss(animated: true)
+    }
+
+    @objc func confirmModal() {
+        dismiss(animated: true)
+        let fileManager = FileManager.default
+        let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: path)
+        onConfirm?(folderURL)
     }
 
     deinit {
@@ -150,38 +189,44 @@ extension FileBrowserViewController {
             return
         }
         if fileInfo.isFolder {
-            let vc = FileBrowserViewController(path: "\(path == "/" ? "" : path)/\(fileInfo.fileName)")
+            let vc = FileBrowserViewController(path: "\(path == "/" ? "" : path)/\(fileInfo.fileName)", isModal: isModal, onConfirm: onConfirm, confirmText: confirmText)
             navigationController?.pushViewController(vc, animated: true)
         } else {
-            var cannotOpen = false
-            if let utType = try? fileInfo.url.resourceValues(forKeys: [.contentTypeKey]).contentType {
-                if utType.conforms(to: .text) {
-                    let vc = CodeEditorViewController(fileInfo: fileInfo)
-                    let nvc = PannableNavigationViewController(rootViewController: vc)
-                    nvc.modalPresentationStyle = .fullScreen
-                    present(nvc, animated: true)
-                } else if utType.conforms(to: .image) {
-                    let imageVC = ImagePreviewViewController(imageURL: fileInfo.url)
-                    imageVC.title = fileInfo.fileName
-                    let nvc = PannableNavigationViewController(rootViewController: imageVC)
-                    nvc.modalPresentationStyle = .fullScreen
-                    nvc.overrideUserInterfaceStyle = .dark
-                    present(nvc, animated: true)
+            if !isModal {
+                var cannotOpen = false
+                if let utType = try? fileInfo.url.resourceValues(forKeys: [.contentTypeKey]).contentType {
+                    if utType.conforms(to: .text) {
+                        let vc = CodeEditorViewController(fileInfo: fileInfo)
+                        let nvc = PannableNavigationViewController(rootViewController: vc)
+                        nvc.modalPresentationStyle = .fullScreen
+                        present(nvc, animated: true)
+                    } else if utType.conforms(to: .image) {
+                        let imageVC = ImagePreviewViewController(imageURL: fileInfo.url)
+                        imageVC.title = fileInfo.fileName
+                        let nvc = PannableNavigationViewController(rootViewController: imageVC)
+                        nvc.modalPresentationStyle = .fullScreen
+                        nvc.overrideUserInterfaceStyle = .dark
+                        present(nvc, animated: true)
+                    } else {
+                        cannotOpen = true
+                    }
                 } else {
                     cannotOpen = true
                 }
-            } else {
-                cannotOpen = true
-            }
 
-            if cannotOpen {
-                ProgressHUD.failed("Cannot open this file.")
+                if cannotOpen {
+                    ProgressHUD.failed("Cannot open this file.")
+                }
             }
             tableView.deselectRow(at: indexPath, animated: true)
         }
     }
 
     override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        if isModal {
+            return nil
+        }
+
         let fileInfo = files[indexPath.row]
         let cell = tableView.cellForRow(at: indexPath)
         let cannotDelete = fileInfo.isFolder && path == "/" && (fileInfo.fileName == ".Trash" || fileInfo.fileName == ".data")
@@ -226,14 +271,10 @@ extension FileBrowserViewController {
         let moreAction = UIContextualAction(style: .normal, title: i18n("More"), handler: { [weak self] _, _, completion in
             let alert = UIAlertController(title: fileInfo.fileName, message: nil, preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: i18n("Copy"), style: .default, handler: { _ in
-                ShowSimpleError(err: ErrorMsg(errorDescription: "Not Implemented"))
+                self?.copyItem(fileInfo: fileInfo)
             }))
             alert.addAction(UIAlertAction(title: i18n("Move"), style: .default, handler: { _ in
-                if cannotDelete {
-                    ShowSimpleError(err: ErrorMsg(errorDescription: "You cannot move this folder"))
-                    return
-                }
-                ShowSimpleError(err: ErrorMsg(errorDescription: "Not Implemented"))
+                self?.moveItem(fileInfo: fileInfo)
             }))
             alert.addAction(UIAlertAction(title: i18n("Rename"), style: .default, handler: { _ in
                 self?.rename(fileInfo: fileInfo)

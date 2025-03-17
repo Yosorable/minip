@@ -61,9 +61,16 @@ extension FileBrowserViewController {
                     }
                     self?.fetchFiles(reloadTableView: true)
                 },
-                confirmText: i18n(isMove ? "Move" : "Copy")
+                confirmText: i18n(isMove ? "Move" : "Copy"),
+                onCancel: { [weak self] in
+                    if self?.tableView.isEditing == true {
+                        self?.toggleSelectMode()
+                    }
+                    self?.fetchFiles(reloadTableView: true)
+                }
             )
         )
+        vc.presentationController?.delegate = self
         present(vc, animated: true)
     }
 

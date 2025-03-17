@@ -13,6 +13,7 @@ class FileBrowserViewController: UITableViewController {
     let isModal: Bool
     var onConfirm: ((URL) -> Void)?
     var confirmText: String?
+    var onCancel: (() -> Void)?
     var files: [FileInfo] = []
 
     lazy var openWebServerBtn = {
@@ -45,11 +46,12 @@ class FileBrowserViewController: UITableViewController {
         return btn
     }()
 
-    init(path: String, isModal: Bool = false, onConfirm: ((URL) -> Void)? = nil, confirmText: String? = nil) {
+    init(path: String, isModal: Bool = false, onConfirm: ((URL) -> Void)? = nil, confirmText: String? = nil, onCancel: (()->Void)? = nil) {
         self.path = path
         self.isModal = isModal
         self.onConfirm = onConfirm
         self.confirmText = confirmText
+        self.onCancel = onCancel
         super.init(style: .insetGrouped)
         title = path == "/" ? i18n("Files") : (path.splitPolyfill(separator: "/").last ?? "")
     }
@@ -151,6 +153,7 @@ class FileBrowserViewController: UITableViewController {
 
     @objc func dismissModal() {
         dismiss(animated: true)
+        onCancel?()
     }
 
     @objc func confirmModal() {

@@ -26,7 +26,7 @@ extension FileBrowserViewController {
             guard let fileName = textField?.text, let strongSelf = self else {
                 return
             }
-            if fileName == "" {
+            if fileName == "" || fileName.contains("/") {
                 ShowSimpleError(err: ErrorMsg(errorDescription: "Invalid file name"))
                 return
             }

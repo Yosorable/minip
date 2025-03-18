@@ -22,7 +22,7 @@ extension MiniAppManager {
             }
             return nameRange.randomElement() ?? ""
         }()
-        if name == "" || name.contains("/") || name.contains(".") {
+        if name == "" || name.contains("/") {
             throw ErrorMsg(errorDescription: "Invalid name")
         }
         let fileManager = FileManager.default

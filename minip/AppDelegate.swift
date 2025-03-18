@@ -35,10 +35,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         Task {
             if await serv.isListening {
-                print("[enter foreground] server is running")
+                logger.debug("[Enter foreground] server is running")
                 return
             }
-            print("[enter foreground] server not run, try to run")
+            logger.debug("[Enter foreground] server not run, try to run")
             try? await serv.run()
         }
     }

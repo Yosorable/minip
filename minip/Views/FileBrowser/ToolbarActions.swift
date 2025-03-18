@@ -100,7 +100,6 @@ extension FileBrowserViewController {
                     ShowSimpleError(err: error)
                 }
                 self?.toggleSelectMode()
-                print(successDeleted)
                 if successDeleted.count > 0 {
                     self?.fetchFiles(reloadTableView: false)
                     self?.tableView.beginUpdates()

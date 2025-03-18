@@ -39,6 +39,7 @@
 "Deselect All" = "Deselect All";
 "File" = "File";
 "Folder" = "Folder";
+"Share" = "Share";
 
 // MARK: home
 "home.menu.create_project" = "Create new project";

@@ -132,6 +132,14 @@ extension FileBrowserViewController {
         let moreAction = UIContextualAction(style: .normal, title: i18n("More"), handler: { [weak self] _, _, completion in
             let alert = UIAlertController(title: fileInfo.fileName, message: i18n(fileInfo.isFolder ? "Folder" : "File") + (fileInfo.isFolder ? "" : " (\(fileInfo.size ?? "unknown size"))"), preferredStyle: .actionSheet)
 
+            alert.addAction(UIAlertAction(title: i18n("Share"), style: .default, handler: { _ in
+                let avc = UIActivityViewController(activityItems: [fileInfo.url], applicationActivities: nil)
+
+                avc.popoverPresentationController?.sourceView = cell
+                avc.popoverPresentationController?.sourceRect = cell?.bounds ?? .zero
+
+                self?.present(avc, animated: true)
+            }))
             alert.addAction(UIAlertAction(title: i18n("Copy"), style: .default, handler: { _ in
                 self?.copyItem(fileInfo: fileInfo)
             }))

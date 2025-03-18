@@ -31,12 +31,13 @@ extension FileBrowserViewController {
         if tableView.isEditing {
             if toolbarItems == nil {
                 let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-                toolbarItems = [selectAllBtn, flexibleSpace, copyBtn, flexibleSpace, moveBtn, flexibleSpace, deleteBtn]
+                toolbarItems = [selectAllBtn, flexibleSpace, shareSelectedBtn, copyBtn, moveBtn, deleteBtn]
             }
             let enableBtn = (tableView.indexPathsForSelectedRows?.count ?? 0) != 0
             copyBtn.isEnabled = enableBtn
             moveBtn.isEnabled = enableBtn
             deleteBtn.isEnabled = enableBtn
+            shareSelectedBtn.isEnabled = enableBtn
             if files.count == 0 {
                 selectAllBtn.title = i18n("Select All")
                 selectAllBtn.isEnabled = false
@@ -119,5 +120,15 @@ extension FileBrowserViewController {
     @objc func moveSelected() {
         let res = checkSelectedItems()
         moveOrCopyFiles(files: res.selectedItemFileInfo, isMove: true)
+    }
+
+    @objc func shareSelected() {
+        let res = checkSelectedItems()
+        let avc = UIActivityViewController(activityItems: res.selectedItemURL, applicationActivities: nil)
+
+        avc.popoverPresentationController?.sourceView = view
+        avc.popoverPresentationController?.sourceRect = view.bounds
+
+        self.present(avc, animated: true)
     }
 }

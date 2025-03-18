@@ -186,6 +186,7 @@
 		48B90EED2D5DDF4000CCE103 /* TextDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplayViewController.swift; sourceTree = "<group>"; };
 		48BDB1EA2D8264E100C6A100 /* CodeEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeEditorViewController.swift; sourceTree = "<group>"; };
 		48BF62D52D89B56600060589 /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
+		48BF62D72D89E07800060589 /* minip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = minip.entitlements; sourceTree = "<group>"; };
 		48C22D0E2D6823920000F74F /* LanguageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageProvider.swift; sourceTree = "<group>"; };
 		48C22D292D683C260000F74F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		48C22D2B2D683C370000F74F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -530,6 +531,7 @@
 		48DF6B9B288D32C800D523C1 /* minip */ = {
 			isa = PBXGroup;
 			children = (
+				48BF62D72D89E07800060589 /* minip.entitlements */,
 				48F649012D589BA700C9FD82 /* Api */,
 				48F649022D589BAF00C9FD82 /* Manager */,
 				48021CBF2D5F6A9400C39F07 /* Common */,
@@ -937,6 +939,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = minip/minip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2025031702;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
@@ -972,6 +975,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = minip/minip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2025031702;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";

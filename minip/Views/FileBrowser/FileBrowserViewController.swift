@@ -27,6 +27,11 @@ class FileBrowserViewController: UITableViewController {
         return btn
     }()
 
+    lazy var shareSelectedBtn = {
+        let btn = UIBarButtonItem(title: i18n("Share"), style: .plain, target: self, action: #selector(shareSelected))
+        return btn
+    }()
+
     lazy var copyBtn = {
         let btn = UIBarButtonItem(title: i18n("Copy"), style: .plain, target: self, action: #selector(copySelected))
         return btn

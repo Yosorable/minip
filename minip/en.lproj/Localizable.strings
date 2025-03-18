@@ -71,6 +71,13 @@
 
 "f.delete_selected_confirm_message" = "Are you sure to delete %1$@ selected items ?";
 
+"f.copy_files_message" = "Copy %@ files";
+"f.copy_folders_message" = "Copy %@ folders";
+"f.copy_files_folders_message" = "Copy %@ files and folders";
+"f.move_files_message" = "Move %@ files";
+"f.move_folders_message" = "Move %@ folders";
+"f.move_files_folders_message" = "Move %@ files and folders";
+
 "f.empty_folder" = "Empty folder";
 "f.empty_folder_msg_p1" = "Tap the ";
 "f.empty_folder_msg_p2" = " button in the upper right corner to create new files or folders.";

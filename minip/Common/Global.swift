@@ -10,8 +10,22 @@ import Foundation
 final class Global {
     static let shared = Global()
 
-    let documentsRootURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-    let sandboxRootURL = URL(string: NSHomeDirectory())!
+    // MARK: const
 
-    private init() {}
+    let documentsRootURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    let documentsTrashURL: URL
+    let projectsDataFolderURL: URL
+
+    let sandboxRootURL = URL(fileURLWithPath: NSHomeDirectory())
+
+    // MARK: variable
+
+    var fileBrowserRootURL: URL
+
+    private init() {
+        documentsTrashURL = documentsRootURL.appendingPolyfill(path: ".Trash/")
+        projectsDataFolderURL = documentsRootURL.appendingPolyfill(path: ".data/")
+
+        fileBrowserRootURL = sandboxRootURL // documentsRootURL
+    }
 }

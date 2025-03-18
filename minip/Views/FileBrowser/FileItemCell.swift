@@ -65,10 +65,10 @@ class FileItemCell: UITableViewCell {
         separatorInset = UIEdgeInsets(top: 0, left: 55, bottom: 0, right: 0)
     }
 
-    func configure(with info: FileInfo, isRoot: Bool) {
+    func configure(with info: FileInfo) {
         if info.isFolder {
             sizeLabel.isHidden = true
-            itemImageView.image = UIImage(systemName: (isRoot && info.fileName == ".Trash") ? "trash" : "folder")
+            itemImageView.image = UIImage(systemName: (info.url == Global.shared.documentsTrashURL) ? "trash" : "folder")
             accessoryType = .disclosureIndicator
         } else {
             sizeLabel.isHidden = false

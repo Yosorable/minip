@@ -23,7 +23,7 @@ extension FileBrowserViewController {
             messageAttributedString.append(NSAttributedString(string: i18n("f.empty_folder_msg_p2")))
             tableView.setEmptyView(
                 title: NSAttributedString(string: i18n("f.empty_folder")),
-                message: self.isModal ? NSAttributedString() : (self.path == "/.Trash" ? NSAttributedString(string: i18n("f.empty_trash_msg")) : messageAttributedString)
+                message: self.isModal ? NSAttributedString() : (self.folderURL == Global.shared.documentsTrashURL ? NSAttributedString(string: i18n("f.empty_trash_msg")) : messageAttributedString)
             )
         } else {
             tableView.restore()
@@ -33,7 +33,7 @@ extension FileBrowserViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FileItemCell.identifier, for: indexPath) as! FileItemCell
-        cell.configure(with: files[indexPath.row], isRoot: path == "/")
+        cell.configure(with: files[indexPath.row])
         return cell
     }
 
@@ -50,7 +50,7 @@ extension FileBrowserViewController {
             return
         }
         if fileInfo.isFolder {
-            let vc = FileBrowserViewController(path: "\(path == "/" ? "" : path)/\(fileInfo.fileName)", folderURL: fileInfo.url, isModal: isModal, onConfirm: onConfirm, confirmText: confirmText, onCancel: onCancel)
+            let vc = FileBrowserViewController(folderURL: fileInfo.url, isModal: isModal, modalMessage: modalMessage, onConfirm: onConfirm, confirmText: confirmText, onCancel: onCancel)
             navigationController?.pushViewController(vc, animated: true)
         } else {
             if !isModal {
@@ -90,8 +90,8 @@ extension FileBrowserViewController {
 
         let fileInfo = files[indexPath.row]
         let cell = tableView.cellForRow(at: indexPath)
-        let cannotDelete = fileInfo.isFolder && path == "/" && (fileInfo.fileName == ".Trash" || fileInfo.fileName == ".data")
-        let isInTrashRoot = path == "/.Trash"
+        let cannotDelete = fileInfo.url == Global.shared.documentsTrashURL || fileInfo.url == Global.shared.projectsDataFolderURL
+        let isInTrashRoot = folderURL == Global.shared.documentsTrashURL
 
         let onDeleteSuccess = { [weak self] in
             self?.files.remove(at: indexPath.row)

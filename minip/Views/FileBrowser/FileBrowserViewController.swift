@@ -10,8 +10,8 @@ import UIKit
 
 class FileBrowserViewController: UITableViewController {
     let folderURL: URL
-    let path: String
     let isModal: Bool
+    let modalMessage: String?
     var onConfirm: ((URL) -> Void)?
     var confirmText: String?
     var onCancel: (() -> Void)?
@@ -47,18 +47,20 @@ class FileBrowserViewController: UITableViewController {
         return btn
     }()
 
-    init(path: String, folderURL: URL,isModal: Bool = false, onConfirm: ((URL) -> Void)? = nil, confirmText: String? = nil, onCancel: (() -> Void)? = nil) {
-        self.path = path
+    init(folderURL: URL, isModal: Bool = false, modalMessage: String? = nil, onConfirm: ((URL) -> Void)? = nil, confirmText: String? = nil, onCancel: (() -> Void)? = nil) {
         self.folderURL = folderURL
         self.isModal = isModal
+        self.modalMessage = modalMessage
         self.onConfirm = onConfirm
         self.confirmText = confirmText
         self.onCancel = onCancel
         super.init(style: .insetGrouped)
-        if path == "/", isModal {
+
+        let isInRoot = folderURL == Global.shared.fileBrowserRootURL
+        if isInRoot, isModal {
             title = "/"
         } else {
-            title = path == "/" ? i18n("Files") : (path.splitPolyfill(separator: "/").last ?? "")
+            title = isInRoot ? i18n("Files") : folderURL.lastPathComponent
         }
     }
 
@@ -88,12 +90,14 @@ class FileBrowserViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(folderURL)
+        print(Global.shared.documentsTrashURL)
         if !isModal {
-            if path == "/.Trash" {
+            if folderURL == Global.shared.documentsTrashURL {
                 let btn = UIBarButtonItem(image: UIImage(systemName: "trash.fill"), style: .plain, target: self, action: #selector(cleanTrash))
                 navigationItem.rightBarButtonItems = [btn, selectButton]
             } else {
-                if path == "/" {
+                if folderURL == Global.shared.fileBrowserRootURL {
                     navigationItem.leftBarButtonItem = openWebServerBtn
                 }
                 navigationItem.rightBarButtonItems = [createFileBtn, selectButton]
@@ -103,7 +107,17 @@ class FileBrowserViewController: UITableViewController {
             let modalCancelBtn = UIBarButtonItem(title: i18n("Cancel"), style: .plain, target: self, action: #selector(dismissModal))
             let modalConfirmBtn = UIBarButtonItem(title: confirmText ?? i18n("Confirm"), style: .plain, target: self, action: #selector(confirmModal))
             let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-            toolbarItems = [modalCancelBtn, flexibleSpace, modalConfirmBtn]
+            if let msg = modalMessage {
+                let msgLabel = UILabel()
+                msgLabel.text = msg
+                msgLabel.textColor = .secondaryLabel
+                msgLabel.font = UIFont.preferredFont(forTextStyle: .footnote)
+                let msgBtn = UIBarButtonItem()
+                msgBtn.customView = msgLabel
+                toolbarItems = [modalCancelBtn, flexibleSpace, msgBtn, flexibleSpace, modalConfirmBtn]
+            } else {
+                toolbarItems = [modalCancelBtn, flexibleSpace, modalConfirmBtn]
+            }
             navigationController?.setToolbarHidden(false, animated: false)
         }
 
@@ -128,8 +142,11 @@ class FileBrowserViewController: UITableViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         if needCheckFileUpdates {
-            let pathStr = path
-            logger.debug("[FileBrowser] \"\(pathStr)\": checking file updates")
+            lazy var fn = { [weak self] in
+                var res = self?.folderURL.path.splitPolyfill(separator: Global.shared.fileBrowserRootURL.path).last ?? "unknown path"
+                return res == "" ? "/" : res
+            }
+            logger.debug("[FileBrowser] \"\(fn())\": checking file updates")
             needCheckFileUpdates = false
             fetchFiles(reloadTableView: true)
         }
@@ -166,8 +183,6 @@ class FileBrowserViewController: UITableViewController {
 
     @objc func confirmModal() {
         dismiss(animated: true)
-        let fileManager = FileManager.default
-        let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: path)
         onConfirm?(folderURL)
     }
 
@@ -182,7 +197,6 @@ extension FileBrowserViewController {
     func fetchFiles(reloadTableView: Bool, insertedItemName: String? = nil) {
         logger.debug("[FileBrowser] fetching files")
         let fileManager = FileManager.default
-        let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: path)
         var res = [FileInfo]()
         do {
             var (folderURLs, fileURLs) = try getFilesAndFolders(in: folderURL)
@@ -197,10 +211,10 @@ extension FileBrowserViewController {
                 $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
             }
             for folderURL in folderURLs {
-                res.append(FileInfo(fileName: folderURL.lastPathComponent, isFolder: true, url: folderURL))
+                res.append(FileInfo(fileName: folderURL.lastPathComponent, isFolder: true, url: folderURL.standardizedFileURL))
             }
             for fileURL in fileURLs {
-                var fileInfo = FileInfo(fileName: fileURL.lastPathComponent, isFolder: false, url: fileURL)
+                var fileInfo = FileInfo(fileName: fileURL.lastPathComponent, isFolder: false, url: fileURL.standardizedFileURL)
                 let attributes = try fileManager.attributesOfItem(atPath: fileURL.path)
                 if let fileSize = attributes[.size] as? UInt64 {
                     fileInfo.size = formatFileSize(fileSize)
@@ -218,6 +232,10 @@ extension FileBrowserViewController {
                     } else {
                         tableView.reloadData()
                     }
+                }
+
+                if tableView.isEditing == true {
+                    toggleSelectMode()
                 }
             } else {
                 logger.debug("[FileBrowser] no changes")
@@ -314,8 +332,7 @@ extension FileBrowserViewController {
             }
 
             let fileManager = FileManager.default
-            let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: strongSelf.path)
-            let newFileURL = folderURL.appendingPolyfill(component: fileName)
+            let newFileURL = strongSelf.folderURL.appendingPolyfill(component: fileName)
 
             if !fileManager.fileExists(atPath: newFileURL.path) {
                 if fileManager.createFile(atPath: newFileURL.path, contents: nil) {
@@ -345,8 +362,7 @@ extension FileBrowserViewController {
             }
 
             let fileManager = FileManager.default
-            let folderURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: strongSelf.path)
-            let newFileURL = folderURL.appendingPolyfill(component: fileName)
+            let newFileURL = strongSelf.folderURL.appendingPolyfill(component: fileName)
 
             if !fileManager.fileExists(atPath: newFileURL.path) {
                 do {
@@ -368,7 +384,7 @@ extension FileBrowserViewController {
         guard let url = url else {
             return
         }
-        let isInTrashRoot = path == "/.Trash"
+        let isInTrashRoot = folderURL == Global.shared.documentsTrashURL
         let alertController = UIAlertController(title: i18n("Confirm"), message: i18nF("f.delete_folder_confirm_message", url.lastPathComponent), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: { _ in
             onCanceled()
@@ -392,7 +408,7 @@ extension FileBrowserViewController {
         guard let url = url else {
             return
         }
-        let isInTrashRoot = path == "/.Trash"
+        let isInTrashRoot = folderURL == Global.shared.documentsTrashURL
         let alertController = UIAlertController(title: i18n("Confirm"), message: i18nF("f.delete_file_confirm_message", url.lastPathComponent), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: { _ in onCanceled() }))
         alertController.addAction(UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in

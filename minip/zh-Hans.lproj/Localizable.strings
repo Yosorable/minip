@@ -72,6 +72,13 @@
 
 "f.delete_selected_confirm_message" = "确认删除选中的%1$@项 ?";
 
+"f.copy_files_message" = "拷贝%@个文件";
+"f.copy_folders_message" = "拷贝%@个文件夹";
+"f.copy_files_folders_message" = "拷贝%@个文件和文件夹";
+"f.move_files_message" = "移动%@个文件";
+"f.move_folders_message" = "移动%@个文件夹";
+"f.move_files_folders_message" = "移动%@个文件和文件夹";
+
 "f.empty_folder" = "空文件夹";
 "f.empty_folder_msg_p1" = "点击右上角的 ";
 "f.empty_folder_msg_p2" = " 按钮来新建文件或文件夹。";

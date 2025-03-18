@@ -9,13 +9,38 @@ import UIKit
 
 extension FileBrowserViewController {
     func moveOrCopyFiles(files: [FileInfo], isMove: Bool) {
+        var message: String
+        if files.count == 1 {
+            message = i18n(isMove ? "Move" : "Copy") + " " + files.first!.fileName
+        } else {
+            var fmtStr = ""
+            let foldersCnt = files.filter { $0.isFolder }.count
+            let filesCnt = files.count - foldersCnt
+            if !isMove {
+                if foldersCnt == 0 {
+                    fmtStr = "f.copy_files_message"
+                } else if filesCnt == 0 {
+                    fmtStr = "f.copy_folders_message"
+                } else {
+                    fmtStr = "f.copy_files_folders_message"
+                }
+            } else {
+                if foldersCnt == 0 {
+                    fmtStr = "f.move_files_message"
+                } else if filesCnt == 0 {
+                    fmtStr = "f.move_folders_message"
+                } else {
+                    fmtStr = "f.move_files_folders_message"
+                }
+            }
+            message = i18nF(fmtStr, "\(files.count)")
+        }
         if isMove {
-            if path == "/" {
-                for ele in files {
-                    if ele.isFolder, ele.fileName == ".Trash" || ele.fileName == ".data" {
-                        ShowSimpleError(err: ErrorMsg(errorDescription: files.count == 1 ? "This \(files.first!.isFolder ? "folder" : "file") cannot move" : "Some files or folders cannot move"))
-                        return
-                    }
+            // check if the files or folder can be moved
+            for ele in files {
+                if ele.url == Global.shared.documentsTrashURL || ele.url == Global.shared.projectsDataFolderURL {
+                    ShowSimpleError(err: ErrorMsg(errorDescription: files.count == 1 ? "This \(files.first!.isFolder ? "folder" : "file") cannot move" : "Some files or folders cannot move"))
+                    return
                 }
             }
         }
@@ -23,9 +48,9 @@ extension FileBrowserViewController {
         let vc = UINavigationController(
             rootViewController:
             FileBrowserViewController(
-                path: "/",
-                folderURL: Global.shared.documentsRootURL,
+                folderURL: Global.shared.fileBrowserRootURL,
                 isModal: true,
+                modalMessage: message,
                 onConfirm: { [weak self] destinationDirectoryURL in
                     logger.debug("[FileBrowser] \(isMove ? "move" : "copy") to path: \(destinationDirectoryURL)")
                     let sourceURLs = files.map { $0.url }
@@ -54,19 +79,16 @@ extension FileBrowserViewController {
                             }
                         }
                         ShowSimpleSuccess(msg: i18n(isMove ? "Moved successfully" : "Copied successfully"))
+                        if self?.tableView.isEditing == true {
+                            self?.toggleSelectMode()
+                        }
                     } catch {
                         ShowSimpleError(err: error)
-                    }
-                    if self?.tableView.isEditing == true {
-                        self?.toggleSelectMode()
                     }
                     self?.fetchFiles(reloadTableView: true)
                 },
                 confirmText: i18n(isMove ? "Move" : "Copy"),
                 onCancel: { [weak self] in
-                    if self?.tableView.isEditing == true {
-                        self?.toggleSelectMode()
-                    }
                     self?.fetchFiles(reloadTableView: true)
                 }
             )

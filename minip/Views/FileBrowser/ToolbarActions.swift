@@ -59,7 +59,7 @@ extension FileBrowserViewController {
             let fileInfo = self.files[$0.row]
             selectedItemFileInfo.append(fileInfo)
             selectedItemIndexInTableView.append($0.row)
-            if path == "/", fileInfo.fileName == ".Trash" || fileInfo.fileName == ".data" {
+            if fileInfo.url == Global.shared.documentsTrashURL || fileInfo.url == Global.shared.projectsDataFolderURL {
                 isValid = false
             }
             return fileInfo.url
@@ -80,7 +80,7 @@ extension FileBrowserViewController {
             return
         }
 
-        let isInTrashRoot = path == "/.Trash"
+        let isInTrashRoot = folderURL == Global.shared.documentsTrashURL
         if toDeleteURLs.count != 0 {
             let alertController = UIAlertController(title: i18n("Confirm"), message: i18nF("f.delete_selected_confirm_message", "\(toDeleteURLs.count)"), preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))

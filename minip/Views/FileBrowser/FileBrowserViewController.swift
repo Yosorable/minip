@@ -80,7 +80,7 @@ class FileBrowserViewController: UITableViewController {
             }
         )
         let menu = UIMenu(children: actions)
-        let btn = UIBarButtonItem(image: UIImage(systemName: "plus.app.fill"), menu: menu)
+        let btn = UIBarButtonItem(image: UIImage(systemName: isModal ? "plus" : "plus.app.fill"), menu: menu)
         return btn
     }()
 

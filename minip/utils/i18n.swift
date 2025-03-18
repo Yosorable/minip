@@ -13,7 +13,8 @@ func i18n(_ key: String) -> String {
     // set fall back to english
     if localizedString == key,
        let preferredLanguage = Locale.preferredLanguages.first,
-       preferredLanguage != "en", // todo: multiple languages cause not equal (like: en-CN)
+       preferredLanguage != "en",
+       !preferredLanguage.hasPrefix("en-"),
        let enBundlePath = Bundle.main.path(forResource: "en", ofType: "lproj"),
        let enBundle = Bundle(path: enBundlePath)
     {

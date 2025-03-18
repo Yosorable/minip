@@ -50,7 +50,7 @@ extension FileBrowserViewController {
             return
         }
         if fileInfo.isFolder {
-            let vc = FileBrowserViewController(path: "\(path == "/" ? "" : path)/\(fileInfo.fileName)", isModal: isModal, onConfirm: onConfirm, confirmText: confirmText, onCancel: onCancel)
+            let vc = FileBrowserViewController(path: "\(path == "/" ? "" : path)/\(fileInfo.fileName)", folderURL: fileInfo.url, isModal: isModal, onConfirm: onConfirm, confirmText: confirmText, onCancel: onCancel)
             navigationController?.pushViewController(vc, animated: true)
         } else {
             if !isModal {

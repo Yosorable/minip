@@ -9,6 +9,7 @@ import ProgressHUD
 import UIKit
 
 class FileBrowserViewController: UITableViewController {
+    let folderURL: URL
     let path: String
     let isModal: Bool
     var onConfirm: ((URL) -> Void)?
@@ -46,8 +47,9 @@ class FileBrowserViewController: UITableViewController {
         return btn
     }()
 
-    init(path: String, isModal: Bool = false, onConfirm: ((URL) -> Void)? = nil, confirmText: String? = nil, onCancel: (() -> Void)? = nil) {
+    init(path: String, folderURL: URL,isModal: Bool = false, onConfirm: ((URL) -> Void)? = nil, confirmText: String? = nil, onCancel: (() -> Void)? = nil) {
         self.path = path
+        self.folderURL = folderURL
         self.isModal = isModal
         self.onConfirm = onConfirm
         self.confirmText = confirmText

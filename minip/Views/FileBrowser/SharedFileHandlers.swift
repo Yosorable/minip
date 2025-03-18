@@ -24,6 +24,7 @@ extension FileBrowserViewController {
             rootViewController:
             FileBrowserViewController(
                 path: "/",
+                folderURL: Global.shared.documentsRootURL,
                 isModal: true,
                 onConfirm: { [weak self] destinationDirectoryURL in
                     logger.debug("[FileBrowser] \(isMove ? "move" : "copy") to path: \(destinationDirectoryURL)")

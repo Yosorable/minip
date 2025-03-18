@@ -67,6 +67,7 @@
 		48B90EEC2D5DDB5E00CCE103 /* QRCodeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B90EEB2D5DDB5600CCE103 /* QRCodeHandler.swift */; };
 		48B90EEE2D5DDF4D00CCE103 /* TextDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48B90EED2D5DDF4000CCE103 /* TextDisplayViewController.swift */; };
 		48BDB1EB2D8264F000C6A100 /* CodeEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BDB1EA2D8264E100C6A100 /* CodeEditorViewController.swift */; };
+		48BF62D62D89B56B00060589 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48BF62D52D89B56600060589 /* Global.swift */; };
 		48C22CCB2D67FEA20000F74F /* TreeSitterCSS in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CCA2D67FEA20000F74F /* TreeSitterCSS */; };
 		48C22CCD2D67FEA20000F74F /* TreeSitterCSSQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CCC2D67FEA20000F74F /* TreeSitterCSSQueries */; };
 		48C22CCF2D67FEA20000F74F /* TreeSitterCSSRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CCE2D67FEA20000F74F /* TreeSitterCSSRunestone */; };
@@ -184,6 +185,7 @@
 		48B90EEB2D5DDB5600CCE103 /* QRCodeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeHandler.swift; sourceTree = "<group>"; };
 		48B90EED2D5DDF4000CCE103 /* TextDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDisplayViewController.swift; sourceTree = "<group>"; };
 		48BDB1EA2D8264E100C6A100 /* CodeEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeEditorViewController.swift; sourceTree = "<group>"; };
+		48BF62D52D89B56600060589 /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		48C22D0E2D6823920000F74F /* LanguageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageProvider.swift; sourceTree = "<group>"; };
 		48C22D292D683C260000F74F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		48C22D2B2D683C370000F74F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -440,6 +442,7 @@
 				48021CC12D5F704700C39F07 /* Notification.swift */,
 				485A75212BDCA43F00D887A4 /* logger.swift */,
 				48B90EEB2D5DDB5600CCE103 /* QRCodeHandler.swift */,
+				48BF62D52D89B56600060589 /* Global.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -762,6 +765,7 @@
 				48F6B35F2D86A5C60026D64F /* FileItemCell.swift in Sources */,
 				48B172A72D87F043008127EE /* SharedFileHandlers.swift in Sources */,
 				488C2F392D4DECDE00892E3A /* HomeViewController.swift in Sources */,
+				48BF62D62D89B56B00060589 /* Global.swift in Sources */,
 				2BD9B1D92A5C426700036AFD /* EditorTheme.swift in Sources */,
 				48D399872D06E88400BDD99F /* DownloadAndInstallMiniApp.swift in Sources */,
 				489837242D85E3700027650E /* SceneDelegate.swift in Sources */,

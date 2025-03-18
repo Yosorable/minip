@@ -46,7 +46,7 @@ class FileBrowserViewController: UITableViewController {
         return btn
     }()
 
-    init(path: String, isModal: Bool = false, onConfirm: ((URL) -> Void)? = nil, confirmText: String? = nil, onCancel: (()->Void)? = nil) {
+    init(path: String, isModal: Bool = false, onConfirm: ((URL) -> Void)? = nil, confirmText: String? = nil, onCancel: (() -> Void)? = nil) {
         self.path = path
         self.isModal = isModal
         self.onConfirm = onConfirm
@@ -113,8 +113,10 @@ class FileBrowserViewController: UITableViewController {
         }
         tableView.register(FileItemCell.self, forCellReuseIdentifier: FileItemCell.identifier)
 
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
+        if !isModal {
+            refreshControl = UIRefreshControl()
+            refreshControl?.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
+        }
     }
 
     var needCheckFileUpdates = false

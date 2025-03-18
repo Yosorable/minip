@@ -90,8 +90,6 @@ class FileBrowserViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(folderURL)
-        print(Global.shared.documentsTrashURL)
         if !isModal {
             if folderURL == Global.shared.documentsTrashURL {
                 let btn = UIBarButtonItem(image: UIImage(systemName: "trash.fill"), style: .plain, target: self, action: #selector(cleanTrash))
@@ -143,7 +141,7 @@ class FileBrowserViewController: UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         if needCheckFileUpdates {
             lazy var fn = { [weak self] in
-                var res = self?.folderURL.path.splitPolyfill(separator: Global.shared.fileBrowserRootURL.path).last ?? "unknown path"
+                let res = self?.folderURL.path.splitPolyfill(separator: Global.shared.fileBrowserRootURL.path).last ?? "unknown path"
                 return res == "" ? "/" : res
             }
             logger.debug("[FileBrowser] \"\(fn())\": checking file updates")
@@ -196,36 +194,20 @@ class FileBrowserViewController: UITableViewController {
 extension FileBrowserViewController {
     func fetchFiles(reloadTableView: Bool, insertedItemName: String? = nil) {
         logger.debug("[FileBrowser] fetching files")
-        let fileManager = FileManager.default
-        var res = [FileInfo]()
         do {
             var (folderURLs, fileURLs) = try getFilesAndFolders(in: folderURL)
-            folderURLs.sort {
-                $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
-            }
-            // set trash folder to first
-            if let idx = folderURLs.firstIndex(where: { $0.lastPathComponent == ".Trash" }) {
-                folderURLs.insert(folderURLs.remove(at: idx), at: 0)
-            }
-            fileURLs.sort {
-                $0.lastPathComponent.localizedStandardCompare($1.lastPathComponent) == .orderedAscending
-            }
-            for folderURL in folderURLs {
-                res.append(FileInfo(fileName: folderURL.lastPathComponent, isFolder: true, url: folderURL.standardizedFileURL))
-            }
-            for fileURL in fileURLs {
-                var fileInfo = FileInfo(fileName: fileURL.lastPathComponent, isFolder: false, url: fileURL.standardizedFileURL)
-                let attributes = try fileManager.attributesOfItem(atPath: fileURL.path)
-                if let fileSize = attributes[.size] as? UInt64 {
-                    fileInfo.size = formatFileSize(fileSize)
+            if folderURL == Global.shared.documentsRootURL {
+                if let idx = folderURLs.firstIndex(where: { $0.url == Global.shared.documentsTrashURL }) {
+                    folderURLs.insert(folderURLs.remove(at: idx), at: 0)
                 }
-                res.append(fileInfo)
             }
-            if files != res {
-                files = res
+            let allFilesAndFolders = folderURLs + fileURLs
+
+            if files != allFilesAndFolders {
+                files = allFilesAndFolders
                 if reloadTableView {
                     logger.debug("[FileBrowser] reload table view")
-                    if let insertedItemName = insertedItemName, let idx = res.firstIndex(where: { $0.fileName == insertedItemName }) {
+                    if let insertedItemName = insertedItemName, let idx = allFilesAndFolders.firstIndex(where: { $0.fileName == insertedItemName }) {
                         tableView.beginUpdates()
                         tableView.insertRows(at: [IndexPath(row: idx, section: 0)], with: .automatic)
                         tableView.endUpdates()
@@ -246,31 +228,36 @@ extension FileBrowserViewController {
         refreshControl?.endRefreshing()
     }
 
-    func getFilesAndFolders(in directory: URL) throws -> (folders: [URL], files: [URL]) {
-        var folders = [URL]()
-        var files = [URL]()
+    func getFilesAndFolders(in directory: URL) throws -> (folders: [FileInfo], files: [FileInfo]) {
+        var folders = [FileInfo]()
+        var files = [FileInfo]()
 
         let fileManager = FileManager.default
-        let contents = try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
-
-        for content in contents {
-            var isDirectory: ObjCBool = false
-            if fileManager.fileExists(atPath: content.path, isDirectory: &isDirectory) {
-                if isDirectory.boolValue {
-                    folders.append(content)
+        let metaDataKeys: Set<URLResourceKey> = [.fileSizeKey, .isDirectoryKey]
+        let contents = try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: metaDataKeys.map { $0 })
+        for ele in contents {
+            let resource = try ele.resourceValues(forKeys: metaDataKeys)
+            if let isDir = resource.isDirectory {
+                let url = ele.standardizedFileURL
+                if isDir {
+                    folders.append(FileInfo(fileName: url.lastPathComponent, isFolder: true, url: url))
                 } else {
-                    files.append(content)
+                    var sizeStr = "unknown size"
+                    if let size = resource.fileSize {
+                        sizeStr = formatFileSize(UInt64(size))
+                    }
+                    files.append(FileInfo(fileName: url.lastPathComponent, isFolder: false, url: url, size: sizeStr))
                 }
+            } else {
+                throw ErrorMsg(errorDescription: "Cannot read files or folders meta data")
             }
         }
-
-        folders.sort(by: { l, r in
-            l.lastPathComponent < r.lastPathComponent
-        })
-
-        files.sort(by: { l, r in
-            l.lastPathComponent < r.lastPathComponent
-        })
+        files.sort {
+            $0.url.lastPathComponent.localizedStandardCompare($1.url.lastPathComponent) == .orderedAscending
+        }
+        folders.sort {
+            $0.url.lastPathComponent.localizedStandardCompare($1.url.lastPathComponent) == .orderedAscending
+        }
         return (folders, files)
     }
 

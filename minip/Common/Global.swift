@@ -25,7 +25,10 @@ final class Global {
     private init() {
         documentsTrashURL = documentsRootURL.appendingPolyfill(path: ".Trash/")
         projectsDataFolderURL = documentsRootURL.appendingPolyfill(path: ".data/")
-
-        fileBrowserRootURL = sandboxRootURL // documentsRootURL
+#if DEBUG
+        fileBrowserRootURL = sandboxRootURL
+#else
+        fileBrowserRootURL = documentsRootURL
+#endif
     }
 }

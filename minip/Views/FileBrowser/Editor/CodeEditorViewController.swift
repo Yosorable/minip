@@ -251,7 +251,7 @@ class CodeEditorViewController: UIViewController {
                 }
             } else {
                 DispatchQueue.main.async {
-                    ProgressHUD.banner("Warning", "This file contains long lines, disable hightligh.", delay: 1.5)
+                    ProgressHUD.banner("Warning", "This file contains long lines, disable highlight.", delay: 1.5)
                 }
             }
         }

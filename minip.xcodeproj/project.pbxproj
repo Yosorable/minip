@@ -52,6 +52,7 @@
 		4863BF482D88753400029FAA /* UITableView++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4863BF472D88752E00029FAA /* UITableView++.swift */; };
 		4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869E8072D0D345600E2B080 /* MinipNativeInteraction.swift */; };
 		487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 487E38922A8FBA48003464D7 /* Kingfisher */; };
+		488942162D8B2CC80059CF31 /* AppDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488942152D8B2CC20059CF31 /* AppDetailView.swift */; };
 		488C2F392D4DECDE00892E3A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488C2F382D4DECD200892E3A /* HomeViewController.swift */; };
 		488C2F3B2D4DED9700892E3A /* AppCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488C2F3A2D4DED9200892E3A /* AppCell.swift */; };
 		488C2F3E2D4E1BDC00892E3A /* AppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488C2F3D2D4E1BD900892E3A /* AppInfo.swift */; };
@@ -171,6 +172,7 @@
 		485FEE7C2D5D09B400A0C430 /* FlashButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashButton.swift; sourceTree = "<group>"; };
 		4863BF472D88752E00029FAA /* UITableView++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView++.swift"; sourceTree = "<group>"; };
 		4869E8072D0D345600E2B080 /* MinipNativeInteraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipNativeInteraction.swift; sourceTree = "<group>"; };
+		488942152D8B2CC20059CF31 /* AppDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailView.swift; sourceTree = "<group>"; };
 		488C2F382D4DECD200892E3A /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		488C2F3A2D4DED9200892E3A /* AppCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCell.swift; sourceTree = "<group>"; };
 		488C2F3D2D4E1BD900892E3A /* AppInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfo.swift; sourceTree = "<group>"; };
@@ -405,6 +407,7 @@
 			isa = PBXGroup;
 			children = (
 				2B415A102A7E8FA900B3BF94 /* MiniPageViewController.swift */,
+				488942152D8B2CC20059CF31 /* AppDetailView.swift */,
 				484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */,
 				482092F02D7C257F009E9BB8 /* ConsoleViewController.swift */,
 				48F91E192D7B107B001D5BEA /* WebViewDelegate.swift */,
@@ -795,6 +798,7 @@
 				4863BF482D88753400029FAA /* UITableView++.swift in Sources */,
 				48E39B592D4D126400C4A3CD /* TabViewFIx.swift in Sources */,
 				2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */,
+				488942162D8B2CC80059CF31 /* AppDetailView.swift in Sources */,
 				4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */,
 				48B172A32D87BD68008127EE /* ToolbarActions.swift in Sources */,
 				48F6490F2D58CE9E00C9FD82 /* PromptCallApi.swift in Sources */,

@@ -26,6 +26,8 @@ class MiniPageViewController: UIViewController {
     var initialTouchPoint: CGPoint = .init(x: 0, y: 0)
     var isRoot: Bool
 
+    var capsuleMoreButton: UIView?
+
     init(app: AppInfo, page: String? = nil, title: String? = nil, isRoot: Bool = false) {
         self.app = app
         self.page = page ?? app.homepage
@@ -200,6 +202,8 @@ class MiniPageViewController: UIViewController {
                 moreButton.setImage(UIImage(named: "capsule-more"), for: .normal)
                 moreButton.addTarget(self, action: #selector(showAppDetail), for: .touchUpInside)
 
+                capsuleMoreButton = moreButton
+
                 let closeButton = UIButton(type: .system)
                 closeButton.setImage(UIImage(named: "capsule-close"), for: .normal)
                 closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
@@ -312,8 +316,14 @@ class MiniPageViewController: UIViewController {
 
     @objc
     func showAppDetail() {
-        presentPanModal(AppDetailViewController(appInfo: app, reloadPageFunc: { [weak self] in
+        let detailVC = AppDetailViewController(appInfo: app, reloadPageFunc: { [weak self] in
             self?.webview.reload()
-        }, parentVC: self))
+        }, parentVC: self)
+
+        if let moreBtn = capsuleMoreButton ?? (navigationItem.rightBarButtonItems?.last?.value(forKey: "view") as? UIView) {
+            presentPanModal(detailVC, sourceView: moreBtn, sourceRect: moreBtn.bounds)
+        } else {
+            presentPanModal(detailVC)
+        }
     }
 }

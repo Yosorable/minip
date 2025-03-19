@@ -45,7 +45,8 @@ class CodeEditorViewController: UIViewController {
     var textView: TextView?
     var fileString: String = ""
     var language: TreeSitterLanguage?
-    var fileInfo: FileInfo
+    let fileInfo: FileInfo
+    let readyOnlyText: String?
 
     lazy var keyboardToolbarView = KeyboardToolbarView()
     lazy var saveButton = {
@@ -54,8 +55,9 @@ class CodeEditorViewController: UIViewController {
         return btn
     }()
 
-    init(fileInfo: FileInfo) {
+    init(fileInfo: FileInfo, readyOnlyText: String? = nil) {
         self.fileInfo = fileInfo
+        self.readyOnlyText = readyOnlyText
 
         if let ext = fileInfo.fileName.split(separator: ".").last {
             self.language = SourceCodeType[String(ext)]
@@ -75,16 +77,40 @@ class CodeEditorViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(close))
         title = fileInfo.fileName
 
-        if let fileData = FileManager.default.contents(atPath: fileInfo.url.path), let txt = String(data: fileData, encoding: .utf8) {
+        var txt = readyOnlyText
+        let readonly = readyOnlyText != nil
+        var err: Error? = nil
+
+        if txt == nil {
+            do {
+                let fileData = try Data(contentsOf: fileInfo.url)
+                if let tmp = String(data: fileData, encoding: .utf8) {
+                    txt = tmp
+                } else {
+                    throw ErrorMsg(errorDescription: "Cannot read this file as a text file.")
+                }
+            } catch {
+                err = error
+            }
+        }
+
+        if let txt = txt {
             fileString = txt
-            navigationItem.rightBarButtonItem = saveButton
             let textView = TextView()
             self.textView = textView
             textView.translatesAutoresizingMaskIntoConstraints = false
-            textView.editorDelegate = self
             textView.backgroundColor = .systemBackground
 
-            textView.inputAccessoryView = keyboardToolbarView
+            if !readonly {
+                navigationItem.rightBarButtonItem = saveButton
+                textView.editorDelegate = self
+                textView.inputAccessoryView = keyboardToolbarView
+                let notificationCenter = NotificationCenter.default
+                notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+                notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+            } else {
+                textView.isEditable = false
+            }
 
             setCustomization(on: textView)
             setTextViewState(on: textView)
@@ -95,20 +121,25 @@ class CodeEditorViewController: UIViewController {
                 textView.topAnchor.constraint(equalTo: view.topAnchor),
                 textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             ])
-
-            let notificationCenter = NotificationCenter.default
-            notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
-            notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         } else {
             let label = UILabel()
-            label.text = "Cannot read this file as a text file."
+            label.text = "Cannot read this file."
+            label.textColor = .secondaryLabel
+            label.font = UIFont.systemFont(ofSize: 17)
+            label.textAlignment = .center
+            label.numberOfLines = 0
             label.translatesAutoresizingMaskIntoConstraints = false
             view.backgroundColor = .systemBackground
             view.addSubview(label)
             NSLayoutConstraint.activate([
                 label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+                label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                label.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, constant: -50)
             ])
+
+            if let err = err {
+                ShowSimpleError(err: err)
+            }
         }
 
         if let pnv = navigationController as? PannableNavigationViewController {
@@ -128,7 +159,9 @@ class CodeEditorViewController: UIViewController {
             try text.write(to: fileInfo.url, atomically: true, encoding: .utf8)
             fileString = text
             saveButton.isEnabled = false
-        } catch {}
+        } catch {
+            ShowSimpleError(err: error)
+        }
     }
 
     @objc func adjustForKeyboard(notification: Notification) {
@@ -227,6 +260,7 @@ class CodeEditorViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         ProgressHUD.bannerHide()
+        ProgressHUD.dismiss()
     }
 }
 

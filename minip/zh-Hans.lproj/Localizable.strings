@@ -40,6 +40,8 @@
 "File" = "文件";
 "Folder" = "文件夹";
 "Share" = "共享";
+"Text" = "文本";
+"Image" = "图像";
 
 
 // MARK: home
@@ -84,6 +86,8 @@
 "f.empty_folder_msg_p1" = "点击右上角的 ";
 "f.empty_folder_msg_p2" = " 按钮来新建文件或文件夹。";
 "f.empty_trash_msg" = "已经清理干净啦。";
+
+"f.select_file_type" = "文件类型未知，请选择打开方式";
 
 "Renamed successfully" = "重命名成功";
 

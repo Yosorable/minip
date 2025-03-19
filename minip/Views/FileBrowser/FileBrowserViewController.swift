@@ -228,7 +228,7 @@ extension FileBrowserViewController {
                 logger.debug("[FileBrowser] no changes")
             }
         } catch {
-            logger.error("[FileBrowser] fetching error: \(error)")
+            ShowSimpleError(err: error)
         }
         refreshControl?.endRefreshing()
     }

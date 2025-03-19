@@ -40,6 +40,8 @@
 "File" = "File";
 "Folder" = "Folder";
 "Share" = "Share";
+"Text" = "Text";
+"Image" = "Image";
 
 // MARK: home
 "home.menu.create_project" = "Create new project";
@@ -83,6 +85,8 @@
 "f.empty_folder_msg_p1" = "Tap the ";
 "f.empty_folder_msg_p2" = " button in the upper right corner to create new files or folders.";
 "f.empty_trash_msg" = "Already cleaned up.";
+
+"f.select_file_type" = "Unknown file type, please specify the type to open it.";
 
 "Renamed successfully" = "Renamed successfully";
 

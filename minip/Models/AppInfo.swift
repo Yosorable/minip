@@ -27,6 +27,8 @@ struct AppInfo: Hashable, Codable, Defaults.Serializable {
     var tintColor: String? // css name or hex
     var webServerEnabled: Bool? // web server
     var orientation: String? // landscape, portrait, all by default
+
+    @available(*, deprecated, message: "This value only stored in the app.json file, not in UserDefaults")
     var files: [File]? // file list
 
     // MARK: For iOS

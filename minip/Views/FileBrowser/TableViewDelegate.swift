@@ -45,6 +45,7 @@ extension FileBrowserViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let fileInfo = files[indexPath.row]
+        let cell = tableView.cellForRow(at: indexPath)
         if tableView.isEditing {
             updateToobarButtonStatus()
             return
@@ -61,6 +62,23 @@ extension FileBrowserViewController {
                         let nvc = PannableNavigationViewController(rootViewController: vc)
                         nvc.modalPresentationStyle = .fullScreen
                         present(nvc, animated: true)
+                    } else if utType.conforms(to: .propertyList) {
+                        do {
+                            var data = try Data(contentsOf: fileInfo.url)
+                            if let plist = try? PropertyListSerialization.propertyList(from: data, options: [], format: nil) {
+                                data = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+                            }
+
+                            if let xmlString = String(data: data, encoding: .utf8) {
+                                let vc = PannableNavigationViewController(rootViewController: CodeEditorViewController(fileInfo: fileInfo, readyOnlyText: xmlString))
+                                vc.modalPresentationStyle = .fullScreen
+                                self.present(vc, animated: true)
+                            } else {
+                                throw ErrorMsg()
+                            }
+                        } catch {
+                            cannotOpen = true
+                        }
                     } else if utType.conforms(to: .image) {
                         let imageVC = ImagePreviewViewController(imageURL: fileInfo.url)
                         imageVC.title = fileInfo.fileName
@@ -76,7 +94,27 @@ extension FileBrowserViewController {
                 }
 
                 if cannotOpen {
-                    ProgressHUD.failed("Cannot open this file.")
+                    let alert = UIAlertController(title: fileInfo.fileName, message: i18n("f.select_file_type"), preferredStyle: .actionSheet)
+                    alert.addAction(UIAlertAction(title: i18n("Text"), style: .default, handler: { [weak self] _ in
+                        let vc = CodeEditorViewController(fileInfo: fileInfo)
+                        let nvc = PannableNavigationViewController(rootViewController: vc)
+                        nvc.modalPresentationStyle = .fullScreen
+                        self?.present(nvc, animated: true)
+                    }))
+                    alert.addAction(UIAlertAction(title: i18n("Image"), style: .default, handler: { [weak self] _ in
+                        let imageVC = ImagePreviewViewController(imageURL: fileInfo.url)
+                        imageVC.title = fileInfo.fileName
+                        let nvc = PannableNavigationViewController(rootViewController: imageVC)
+                        nvc.modalPresentationStyle = .fullScreen
+                        nvc.overrideUserInterfaceStyle = .dark
+                        self?.present(nvc, animated: true)
+                    }))
+                    alert.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel))
+
+                    alert.popoverPresentationController?.sourceView = cell
+                    alert.popoverPresentationController?.sourceRect = cell?.bounds ?? .zero
+
+                    present(alert, animated: true)
                 }
             }
             tableView.deselectRow(at: indexPath, animated: true)

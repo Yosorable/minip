@@ -85,7 +85,12 @@ class MiniAppManager {
         }
 
         if tmpApps != Defaults[.appInfoList] {
-            Defaults[.appInfoList] = tmpApps
+            // ignore files property
+            Defaults[.appInfoList] = tmpApps.map {
+                var t = $0
+                t.files = nil
+                return t
+            }
             logger.debug("[getAppInfos] not equal")
         }
         return tmpApps

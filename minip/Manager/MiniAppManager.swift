@@ -84,15 +84,17 @@ class MiniAppManager {
             Defaults[.appSortList] = newSortList
         }
 
-        if tmpApps != Defaults[.appInfoList] {
-            // ignore files property
-            Defaults[.appInfoList] = tmpApps.map {
-                var t = $0
-                t.files = nil
-                return t
-            }
+        // ignore files property
+        let withoutFiles = tmpApps.map {
+            var t = $0
+            t.files = nil
+            return t
+        }
+        if withoutFiles != Defaults[.appInfoList] {
+            Defaults[.appInfoList] = withoutFiles
             logger.debug("[getAppInfos] not equal")
         }
+
         return tmpApps
     }
 

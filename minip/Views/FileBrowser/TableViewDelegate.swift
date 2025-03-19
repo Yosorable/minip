@@ -132,10 +132,15 @@ extension FileBrowserViewController {
         let isInTrashRoot = folderURL == Global.shared.documentsTrashURL
 
         let onDeleteSuccess = { [weak self] in
-            self?.files.remove(at: indexPath.row)
-            tableView.beginUpdates()
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            tableView.endUpdates()
+            // ".Trash" not generated (files deleted and ".Trash" created at sametime)
+            if self?.folderURL == Global.shared.documentsRootURL, self?.files.first?.url != Global.shared.documentsTrashURL {
+                self?.fetchFiles(reloadTableView: true)
+            } else {
+                self?.files.remove(at: indexPath.row)
+                tableView.beginUpdates()
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                tableView.endUpdates()
+            }
             ShowSimpleSuccess(msg: i18n(isInTrashRoot ? "f.deleted_success" : "f.moved_to_trash"))
         }
         let onDeleteError = { err in

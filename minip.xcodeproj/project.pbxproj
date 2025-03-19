@@ -534,7 +534,6 @@
 		48DF6B9B288D32C800D523C1 /* minip */ = {
 			isa = PBXGroup;
 			children = (
-				48BF62D72D89E07800060589 /* minip.entitlements */,
 				48F649012D589BA700C9FD82 /* Api */,
 				48F649022D589BAF00C9FD82 /* Manager */,
 				48021CBF2D5F6A9400C39F07 /* Common */,
@@ -549,6 +548,7 @@
 				489837232D85E3690027650E /* SceneDelegate.swift */,
 				48DF6BA0288D32CA00D523C1 /* Assets.xcassets */,
 				2B9B579E2A57D5B5002E9D57 /* Info.plist */,
+				48BF62D72D89E07800060589 /* minip.entitlements */,
 				48CE18422D5E760300F6F987 /* Settings.bundle */,
 				48DF6BA2288D32CA00D523C1 /* Preview Content */,
 				48C22D282D683C260000F74F /* Localizable.strings */,
@@ -945,7 +945,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = minip/minip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025031702;
+				CURRENT_PROJECT_VERSION = 2025031902;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
@@ -962,7 +962,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.25;
+				MARKETING_VERSION = 0.0.26;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -981,7 +981,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = minip/minip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025031702;
+				CURRENT_PROJECT_VERSION = 2025031902;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
@@ -998,7 +998,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.25;
+				MARKETING_VERSION = 0.0.26;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

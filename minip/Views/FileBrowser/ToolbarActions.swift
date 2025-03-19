@@ -102,10 +102,15 @@ extension FileBrowserViewController {
                 }
                 self?.toggleSelectMode()
                 if successDeleted.count > 0 {
-                    self?.fetchFiles(reloadTableView: false)
-                    self?.tableView.beginUpdates()
-                    self?.tableView.deleteRows(at: successDeleted, with: .automatic)
-                    self?.tableView.endUpdates()
+                    // ".Trash" not generated (files deleted and ".Trash" created at sametime)
+                    if self?.folderURL == Global.shared.documentsRootURL, self?.files.first?.url != Global.shared.documentsTrashURL {
+                        self?.fetchFiles(reloadTableView: true)
+                    } else {
+                        self?.fetchFiles(reloadTableView: false)
+                        self?.tableView.beginUpdates()
+                        self?.tableView.deleteRows(at: successDeleted, with: .automatic)
+                        self?.tableView.endUpdates()
+                    }
                 }
             }))
             present(alertController, animated: true)
@@ -129,6 +134,6 @@ extension FileBrowserViewController {
         avc.popoverPresentationController?.sourceView = view
         avc.popoverPresentationController?.sourceRect = view.bounds
 
-        self.present(avc, animated: true)
+        present(avc, animated: true)
     }
 }

@@ -957,10 +957,16 @@
 				INFOPLIST_FILE = minip/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Minip;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Take photo";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use to auth";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Take video";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save pictures to album";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Get pictures from album";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -993,10 +999,16 @@
 				INFOPLIST_FILE = minip/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Minip;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Take photo";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use to auth";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Take video";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save pictures to album";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Get pictures from album";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -153,10 +153,6 @@ class FileBrowserViewController: UITableViewController {
             needCheckFileUpdates = false
             fetchFiles(reloadTableView: true)
         }
-        if !isModal && !tableView.isEditing {
-            updateToobarButtonStatus()
-            navigationController?.setToolbarHidden(true, animated: true)
-        }
     }
 
     @objc func refreshTableView() {
@@ -164,15 +160,13 @@ class FileBrowserViewController: UITableViewController {
     }
 
     @objc func toggleSelectMode() {
-        if tableView.isEditing {
-            tableView.setEditing(false, animated: true)
-            selectButton.title = i18n("Select")
-        } else {
-            tableView.setEditing(true, animated: true)
-            selectButton.title = i18n("Cancel")
-        }
+        let editing = tableView.isEditing
+
+        tableView.setEditing(!editing, animated: true)
+        selectButton.title = i18n(editing ? "Select" : "Cancel")
         updateToobarButtonStatus()
         navigationController?.setToolbarHidden(!tableView.isEditing, animated: true)
+        navigationItem.hidesBackButton = !editing
     }
 
     @objc func openWebServer() {

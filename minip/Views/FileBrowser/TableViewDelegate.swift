@@ -205,4 +205,8 @@ extension FileBrowserViewController {
         })
         return UISwipeActionsConfiguration(actions: [deleteAction, moreAction])
     }
+
+    override func tableView(_ tableView: UITableView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
+        return true
+    }
 }

@@ -352,6 +352,10 @@ extension FileBrowserViewController {
             guard let fileName = textField?.text, let strongSelf = self else {
                 return
             }
+            if fileName == "" {
+                ShowSimpleError(err: ErrorMsg(errorDescription: "Invalid folder name"))
+                return
+            }
 
             let fileManager = FileManager.default
             let newFileURL = strongSelf.folderURL.appendingPolyfill(component: fileName)

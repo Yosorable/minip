@@ -54,12 +54,9 @@ class ImagePreviewViewController: UIViewController {
         }
         view.backgroundColor = .black
 
-        // not in a navigation view
-        if navigationController == nil {
-            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
-            view.addGestureRecognizer(tapGestureRecognizer)
-            tapGestureRecognizer.require(toFail: imageView.doubleTapGesture)
-        }
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
+        view.addGestureRecognizer(tapGestureRecognizer)
+        tapGestureRecognizer.require(toFail: imageView.doubleTapGesture)
 
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
         view.addGestureRecognizer(longPressRecognizer)
@@ -73,8 +70,22 @@ class ImagePreviewViewController: UIViewController {
         }
     }
 
+    var isNavigationBarHidden: Bool = false {
+        didSet {
+            navigationController?.setNavigationBarHidden(isNavigationBarHidden, animated: true)
+        }
+    }
+
+    override var prefersStatusBarHidden: Bool {
+        return isNavigationBarHidden
+    }
+
     @objc func tapped(sender: UITapGestureRecognizer) {
-        dismiss(animated: true)
+        if navigationController != nil {
+            isNavigationBarHidden.toggle()
+        } else {
+            dismiss(animated: true)
+        }
     }
 
     @objc func longPressed(sender: UILongPressGestureRecognizer) {

@@ -238,7 +238,7 @@ extension MiniAppManager {
             let vc = await self.createMiniAppRootViewController(appInfo: appInfo)
 
             await MainActor.run {
-                vc.modalPresentationStyle = .fullScreen // .overFullScreen
+                vc.modalPresentationStyle = .fullScreen
                 MiniAppManager.shared.openedApp = appInfo
             }
 

@@ -165,7 +165,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let app = self.apps[indexPath.row]
             let alert = UIAlertController(title: i18n("home.delete_alert_title"), message: i18nF("delete_alert_confirm_message", app.displayName ?? app.name), preferredStyle: .alert)
             let confirm = UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in
-                MiniAppManager.shared.deleteMiniAPp(app: self.apps[indexPath.row], completion: {
+                MiniAppManager.shared.deleteMiniApp(app: self.apps[indexPath.row], completion: {
                     self.apps.remove(at: indexPath.row)
                     tableView.beginUpdates()
                     tableView.deleteRows(at: [indexPath], with: .automatic)

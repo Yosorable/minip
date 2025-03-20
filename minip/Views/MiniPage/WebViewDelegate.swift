@@ -14,6 +14,7 @@ extension MiniPageViewController: WKUIDelegate {
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
             completionHandler()
         }))
+        alertController.view.tintColor = webView.tintColor
         present(alertController, animated: true)
     }
 }

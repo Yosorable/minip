@@ -45,56 +45,67 @@ extension FileBrowserViewController {
             }
         }
         logger.debug("[FileBrowser] file to \(isMove ? "move" : "copy"): \(files.map { $0.fileName })")
-        let vc = UINavigationController(
-            rootViewController:
-            FileBrowserViewController(
-                folderURL: Global.shared.fileBrowserRootURL,
-                isModal: true,
-                modalMessage: message,
-                onConfirm: { [weak self] destinationDirectoryURL in
-                    logger.debug("[FileBrowser] \(isMove ? "move" : "copy") to path: \(destinationDirectoryURL)")
-                    let sourceURLs = files.map { $0.url }
 
-                    let fileManager = FileManager.default
+        let onConfirm = { [weak self] (destinationDirectoryURL: URL) in
+            logger.debug("[FileBrowser] \(isMove ? "move" : "copy") to path: \(destinationDirectoryURL)")
+            let sourceURLs = files.map { $0.url }
 
-                    do {
-                        // check existance
-                        for sourceURL in sourceURLs {
-                            let destinationURL = destinationDirectoryURL.appendingPathComponent(sourceURL.lastPathComponent)
-                            if fileManager.fileExists(atPath: destinationURL.path) {
-                                throw ErrorMsg(errorDescription: i18n("Some files with same names already exist"))
-                            }
-                            if self?.isDestinationInsideSource(sourceURL: sourceURL, destinationURL: destinationURL) == true {
-                                throw ErrorMsg(errorDescription: "Cannot \(isMove ? "move" : "copy") a folder into itself")
-                            }
-                        }
+            let fileManager = FileManager.default
 
-                        // move or copy
-                        for sourceURL in sourceURLs {
-                            let destinationURL = destinationDirectoryURL.appendingPathComponent(sourceURL.lastPathComponent)
-                            if isMove {
-                                try fileManager.moveItem(at: sourceURL, to: destinationURL)
-                            } else {
-                                try fileManager.copyItem(at: sourceURL, to: destinationURL)
-                            }
-                        }
-                        ShowSimpleSuccess(msg: i18n(isMove ? "Moved successfully" : "Copied successfully"))
-                        if self?.tableView.isEditing == true {
-                            self?.toggleSelectMode()
-                        }
-                    } catch {
-                        ShowSimpleError(err: error)
+            do {
+                // check existance
+                for sourceURL in sourceURLs {
+                    let destinationURL = destinationDirectoryURL.appendingPathComponent(sourceURL.lastPathComponent)
+                    if fileManager.fileExists(atPath: destinationURL.path) {
+                        throw ErrorMsg(errorDescription: i18n("Some files with same names already exist"))
                     }
-                    self?.fetchFiles(reloadTableView: true)
-                },
-                confirmText: i18n(isMove ? "Move" : "Copy"),
-                onCancel: { [weak self] in
-                    self?.fetchFiles(reloadTableView: true)
+                    if self?.isDestinationInsideSource(sourceURL: sourceURL, destinationURL: destinationURL) == true {
+                        throw ErrorMsg(errorDescription: "Cannot \(isMove ? "move" : "copy") a folder into itself")
+                    }
                 }
-            )
-        )
-        vc.presentationController?.delegate = self
-        present(vc, animated: true)
+
+                // move or copy
+                for sourceURL in sourceURLs {
+                    let destinationURL = destinationDirectoryURL.appendingPathComponent(sourceURL.lastPathComponent)
+                    if isMove {
+                        try fileManager.moveItem(at: sourceURL, to: destinationURL)
+                    } else {
+                        try fileManager.copyItem(at: sourceURL, to: destinationURL)
+                    }
+                }
+                ShowSimpleSuccess(msg: i18n(isMove ? "Moved successfully" : "Copied successfully"))
+                if self?.tableView.isEditing == true {
+                    self?.toggleSelectMode()
+                }
+            } catch {
+                ShowSimpleError(err: error)
+            }
+            self?.fetchFiles(reloadTableView: true)
+        }
+
+        let onCancel: () -> Void = { [weak self] in
+            self?.fetchFiles(reloadTableView: true)
+        }
+
+        var vcs: [UIViewController] = []
+        for vc in navigationController?.viewControllers ?? [] {
+            if let url = (vc as? FileBrowserViewController)?.folderURL {
+                let vc = FileBrowserViewController(
+                    folderURL: url,
+                    isModal: true,
+                    modalMessage: message,
+                    onConfirm: onConfirm,
+                    confirmText: i18n(isMove ? "Move" : "Copy"),
+                    onCancel: onCancel
+                )
+                vcs.append(vc)
+            }
+        }
+
+        let nvc = UINavigationController()
+        nvc.setViewControllers(vcs, animated: false)
+        nvc.presentationController?.delegate = self
+        present(nvc, animated: true)
     }
 
     fileprivate func isDestinationInsideSource(sourceURL: URL, destinationURL: URL) -> Bool {

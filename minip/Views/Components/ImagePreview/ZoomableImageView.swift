@@ -129,7 +129,6 @@ class ZoomableImageView: UIScrollView, UIScrollViewDelegate {
     open func setup() {
         contentInsetAdjustmentBehavior = .never
 
-        backgroundColor = UIColor.clear
         delegate = self
         imageView.contentMode = .scaleAspectFill
         addSubview(imageView)

@@ -26,6 +26,14 @@ class ImagePreviewViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        if navigationController != nil {
+            view.backgroundColor = .systemBackground
+        } else {
+            overrideUserInterfaceStyle = .dark
+            view.backgroundColor = .black.withAlphaComponent(0.4)
+        }
+
         imageView = ZoomableImageView()
         imageView.zoomMode = .fit
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -52,11 +60,12 @@ class ImagePreviewViewController: UIViewController {
                 imageView.setWebImage(url: url)
             }
         }
-        view.backgroundColor = .black
 
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
-        view.addGestureRecognizer(tapGestureRecognizer)
-        tapGestureRecognizer.require(toFail: imageView.doubleTapGesture)
+        if navigationController == nil {
+            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
+            view.addGestureRecognizer(tapGestureRecognizer)
+            tapGestureRecognizer.require(toFail: imageView.doubleTapGesture)
+        }
 
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
         view.addGestureRecognizer(longPressRecognizer)
@@ -70,20 +79,8 @@ class ImagePreviewViewController: UIViewController {
         }
     }
 
-    var isNavigationBarHidden: Bool = false {
-        didSet {
-            navigationController?.setNavigationBarHidden(isNavigationBarHidden, animated: true)
-        }
-    }
-
-    override var prefersStatusBarHidden: Bool {
-        return isNavigationBarHidden
-    }
-
     @objc func tapped(sender: UITapGestureRecognizer) {
-        if navigationController != nil {
-            isNavigationBarHidden.toggle()
-        } else {
+        if navigationController == nil {
             dismiss(animated: true)
         }
     }

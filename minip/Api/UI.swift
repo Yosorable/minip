@@ -203,7 +203,7 @@ extension MinipApi {
     }
 
     func previewImage(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let _ = param.webView?.holderObject as? MiniPageViewController else {
+        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
         }
         guard let urlStr = (param.data as? [String: String])?["url"],
@@ -212,7 +212,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
         }
-        PreviewImage(url: url)
+        PreviewImage(url: url, vc: vc)
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
 

@@ -84,7 +84,6 @@ extension FileBrowserViewController {
                         imageVC.title = fileInfo.fileName
                         let nvc = PannableNavigationViewController(rootViewController: imageVC)
                         nvc.modalPresentationStyle = .fullScreen
-                        nvc.overrideUserInterfaceStyle = .dark
                         present(nvc, animated: true)
                     } else {
                         cannotOpen = true
@@ -106,7 +105,6 @@ extension FileBrowserViewController {
                         imageVC.title = fileInfo.fileName
                         let nvc = PannableNavigationViewController(rootViewController: imageVC)
                         nvc.modalPresentationStyle = .fullScreen
-                        nvc.overrideUserInterfaceStyle = .dark
                         self?.present(nvc, animated: true)
                     }))
                     alert.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel))

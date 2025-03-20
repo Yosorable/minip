@@ -151,45 +151,25 @@ func GetTopViewController(controller: UIViewController? = GetKeyWindowUIViewCont
 
 // image preview
 
-func PreviewImage(url: URL? = nil) {
+func PreviewImage(url: URL? = nil, vc: UIViewController? = nil) {
     guard let url = url else {
         return
     }
+
+    let pvc = ImagePreviewViewController(imageURL: url)
+    pvc.modalPresentationStyle = .overFullScreen
+    pvc.modalTransitionStyle = .crossDissolve
+    if let vc = vc {
+        vc.present(pvc, animated: true)
+        return
+    }
+
     let tvc = GetTopViewController()
 
-//    let videoSuffixs = ["mp4", "mov", "avi", "rmvb", "rm", "flv", "3gp", "wmv", "vob", "dat", "m4v", "f4v", "mkv"] // and more suffix
-//    let vc = ZLImagePreviewController(datas: [url], index: 0, showSelectBtn: false, showBottomView: false) { url -> ZLURLType in
-//        if let sf = url.absoluteString.split(separator: ".").last, videoSuffixs.contains(String(sf)) {
-//            return .video
-//        } else {
-//            return .image
-//        }
-//    } urlImageLoader: { url, imageView, progress, loadFinish in
-//        // Demo used Kingfisher.
-//        imageView.kf.setImage(with: url) { receivedSize, totalSize in
-//            let percent = (CGFloat(receivedSize) / CGFloat(totalSize))
-//            progress(percent)
-//        } completionHandler: { _ in
-//            loadFinish()
-//        }
-//    }
-//
-//
-//    vc.doneBlock = { datas in
-//        // your code
-//    }
-//
-//    vc.modalPresentationStyle = .fullScreen
-//    tvc?.showDetailViewController(vc, sender: nil)
-
-    let vc = ImagePreviewViewController(imageURL: url)
-    vc.modalPresentationStyle = .overFullScreen
-    vc.modalTransitionStyle = .crossDissolve
-
-    if let tabc = tvc?.navigationController {
-        tabc.present(vc, animated: true)
+    if let nvc = tvc?.navigationController {
+        nvc.present(pvc, animated: true)
     } else {
-        tvc?.present(vc, animated: true)
+        tvc?.present(pvc, animated: true)
     }
 }
 

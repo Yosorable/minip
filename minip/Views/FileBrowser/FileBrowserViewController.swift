@@ -164,15 +164,7 @@ class FileBrowserViewController: UITableViewController {
     }
 
     @objc func toggleSelectMode() {
-        if tableView.isEditing {
-            tableView.setEditing(false, animated: true)
-            selectButton.title = i18n("Select")
-        } else {
-            tableView.setEditing(true, animated: true)
-            selectButton.title = i18n("Cancel")
-        }
-        updateToobarButtonStatus()
-        navigationController?.setToolbarHidden(!tableView.isEditing, animated: true)
+        setEditing(!isEditing, animated: true)
     }
 
     @objc func openWebServer() {

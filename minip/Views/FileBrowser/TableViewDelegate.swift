@@ -9,14 +9,6 @@ import ProgressHUD
 import UIKit
 
 extension FileBrowserViewController {
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        selectButton.title = i18n(editing ? "Cancel" : "Select")
-        updateToobarButtonStatus()
-        navigationController?.setToolbarHidden(!editing, animated: true)
-        navigationItem.hidesBackButton = editing
-    }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if files.count == 0 {
             let messageAttributedString = NSMutableAttributedString(string: i18n("f.empty_folder_msg_p1"))
@@ -49,10 +41,6 @@ extension FileBrowserViewController {
         if tableView.isEditing {
             updateToobarButtonStatus()
         }
-    }
-
-    override func tableView(_ tableView: UITableView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
-        return true
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

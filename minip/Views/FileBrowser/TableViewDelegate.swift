@@ -33,7 +33,26 @@ extension FileBrowserViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FileItemCell.identifier, for: indexPath) as! FileItemCell
-        cell.configure(with: files[indexPath.row])
+        let fileInfo = files[indexPath.row]
+        var displayName: NSAttributedString? = nil
+        if folderURL == Global.shared.projectDataFolderURL, let appName = MiniAppManager.shared.getAppInfosFromCache().filter({ $0.appId == fileInfo.fileName }).first?.name {
+            let dName = fileInfo.fileName + " " + appName
+            let attributedString = NSMutableAttributedString(string: dName)
+            let grayTextStartIndex = fileInfo.fileName.count
+            let grayTextLength = dName.count - grayTextStartIndex
+            attributedString.addAttribute(
+                .foregroundColor,
+                value: UIColor.secondaryLabel,
+                range: NSRange(location: grayTextStartIndex, length: grayTextLength)
+            )
+            attributedString.addAttribute(
+                .font,
+                value: UIFont.preferredFont(forTextStyle: .footnote),
+                range: NSRange(location: grayTextStartIndex, length: grayTextLength)
+            )
+            displayName = attributedString
+        }
+        cell.configure(with: fileInfo, displayName: displayName)
         return cell
     }
 

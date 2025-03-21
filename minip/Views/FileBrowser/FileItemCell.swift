@@ -65,7 +65,7 @@ class FileItemCell: UITableViewCell {
         separatorInset = UIEdgeInsets(top: 0, left: 55, bottom: 0, right: 0)
     }
 
-    func configure(with info: FileInfo) {
+    func configure(with info: FileInfo, displayName: NSAttributedString? = nil) {
         if info.isFolder {
             sizeLabel.isHidden = true
             itemImageView.image = UIImage(systemName: (info.url == Global.shared.documentsTrashURL) ? "trash" : "folder")
@@ -76,6 +76,10 @@ class FileItemCell: UITableViewCell {
             itemImageView.image = UIImage(systemName: FileManager.isImage(url: info.url) ? "photo" : "doc")
             accessoryType = .none
         }
-        nameLabel.text = info.fileName
+        if let atxt = displayName {
+            nameLabel.attributedText = atxt
+        } else {
+            nameLabel.text = info.fileName
+        }
     }
 }

@@ -68,6 +68,22 @@ class MinipApi {
         case deleteKVStorageSync
         case clearKVStorageSync
 
+        // MARK: SQLite
+
+        case sqliteOpenDB
+        case sqliteCloseDB
+        case sqlitePrepare
+        case sqliteStatementAll
+        case sqliteStatementRun
+
+        // MARK: Memory Storage
+
+        case setMemoryStorage
+        case setMemoryStorageIfNotExist
+        case getMemoryStorage
+        case removeMemoryStorage
+        case clearMemoryStorage
+
         func requestPermissionType() -> MiniAppPermissionTypes? {
             switch self {
             case .scanQRCode:
@@ -111,20 +127,23 @@ class MinipApi {
     }
 
     class InteropUtils {
+        static let successCode = 0
+        static let failedCode = 7
+
         static func succeed(msg _msg: String? = nil) -> Response<String> {
-            Response<String>(code: 0, msg: _msg)
+            Response<String>(code: successCode, msg: _msg)
         }
 
         static func succeedWithData<T: Codable>(data _data: T, msg _msg: String? = nil) -> Response<T> {
-            Response(code: 0, msg: _msg, data: _data)
+            Response(code: successCode, msg: _msg, data: _data)
         }
 
         static func fail(msg _msg: String? = nil) -> Response<String> {
-            Response<String>(code: 7, msg: _msg)
+            Response<String>(code: failedCode, msg: _msg)
         }
 
         static func failWithData<T: Codable>(data _data: T, msg _msg: String? = nil) -> Response<T> {
-            Response(code: 7, msg: _msg, data: _data)
+            Response(code: failedCode, msg: _msg, data: _data)
         }
     }
 }

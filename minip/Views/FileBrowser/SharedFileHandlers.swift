@@ -38,7 +38,7 @@ extension FileBrowserViewController {
         if isMove {
             // check if the files or folder can be moved
             for ele in files {
-                if ele.url == Global.shared.documentsTrashURL || ele.url == Global.shared.projectsDataFolderURL {
+                if ele.url == Global.shared.documentsTrashURL || ele.url == Global.shared.dataFolderURL {
                     ShowSimpleError(err: ErrorMsg(errorDescription: files.count == 1 ? "This \(files.first!.isFolder ? "folder" : "file") cannot move" : "Some files or folders cannot move"))
                     return
                 }

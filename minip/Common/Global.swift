@@ -14,7 +14,8 @@ final class Global {
 
     let documentsRootURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     let documentsTrashURL: URL
-    let projectsDataFolderURL: URL
+    let dataFolderURL: URL
+    let projectDataFolderURL: URL
 
     let sandboxRootURL = URL(fileURLWithPath: NSHomeDirectory())
 
@@ -24,7 +25,8 @@ final class Global {
 
     private init() {
         documentsTrashURL = documentsRootURL.appendingPolyfill(path: ".Trash/")
-        projectsDataFolderURL = documentsRootURL.appendingPolyfill(path: ".data/")
+        dataFolderURL = documentsRootURL.appendingPolyfill(path: ".data/")
+        projectDataFolderURL = dataFolderURL.appendingPolyfill(path: "appdata/")
 #if DEBUG
         fileBrowserRootURL = sandboxRootURL
 #else

@@ -60,7 +60,7 @@ extension FileBrowserViewController {
             let fileInfo = self.files[$0.row]
             selectedItemFileInfo.append(fileInfo)
             selectedItemIndexInTableView.append($0.row)
-            if fileInfo.url == Global.shared.documentsTrashURL || fileInfo.url == Global.shared.projectsDataFolderURL {
+            if fileInfo.url == Global.shared.documentsTrashURL || fileInfo.url == Global.shared.dataFolderURL {
                 isValid = false
             }
             return fileInfo.url

@@ -19,8 +19,7 @@ class MiniAppManager {
 
     var httpServer: HTTPServer?
     var serverAddress: String?
-
-    var openedDatabase: [String: SQLiteDatabase] = .init()
+    var appMemoryStorage = [String: String]()
 
     fileprivate let semaphore = DispatchSemaphore(value: 1)
 
@@ -109,12 +108,8 @@ class MiniAppManager {
         if let appId = appId {
             KVStorageManager.shared.removeDB(dbName: appId)
         }
-        if !self.openedDatabase.isEmpty {
-            for (k, v) in self.openedDatabase {
-                v.close()
-            }
-            self.openedDatabase.removeAll()
-        }
+        SQLiteDBManager.shared.clear()
+        appMemoryStorage.removeAll()
     }
 }
 

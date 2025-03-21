@@ -9,7 +9,7 @@ import UIKit
 
 extension FileBrowserViewController {
     func rename(fileInfo: FileInfo) {
-        if fileInfo.url == Global.shared.documentsTrashURL || fileInfo.url == Global.shared.projectsDataFolderURL {
+        if fileInfo.url == Global.shared.documentsTrashURL || fileInfo.url == Global.shared.dataFolderURL {
             ShowSimpleError(err: ErrorMsg(errorDescription: "You cannot rename this folder"))
             return
         }

@@ -123,6 +123,26 @@ class MinipNativeInteraction: NSObject, WKScriptMessageHandlerWithReply {
             api.scanQRCode(param: param, replyHandler: replyHandler)
         case .getDeviceInfo:
             api.getDeviceInfo(param: param, replyHandler: replyHandler)
+        case .sqliteOpenDB:
+            api.sqliteOpenDB(param: param, replyHandler: replyHandler)
+        case .sqliteCloseDB:
+            api.sqliteCloseDB(param: param, replyHandler: replyHandler)
+        case .sqlitePrepare:
+            api.sqlitePrepare(param: param, replyHandler: replyHandler)
+        case .sqliteStatementAll:
+            api.sqliteStatementAll(param: param, replyHandler: replyHandler)
+        case .sqliteStatementRun:
+            api.sqliteStatementRun(param: param, replyHandler: replyHandler)
+        case .setMemoryStorage:
+            api.setMemoryStorage(param: param, replyHandler: replyHandler)
+        case .setMemoryStorageIfNotExist:
+            api.setMemoryStorageIfNotExist(param: param, replyHandler: replyHandler)
+        case .getMemoryStorage:
+            api.getMemoryStorage(param: param, replyHandler: replyHandler)
+        case .removeMemoryStorage:
+            api.removeMemoryStorage(param: param, replyHandler: replyHandler)
+        case .clearMemoryStorage:
+            api.clearMemoryCache(param: param, replyHandler: replyHandler)
         default:
             replyHandler(nil, "API \(apiName.rawValue) is not implemented or not allowed")
         }

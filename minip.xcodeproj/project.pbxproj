@@ -40,7 +40,6 @@
 		482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */; };
 		482F03BE2D4C528E00D6CA6B /* PannableViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482F03BD2D4C528E00D6CA6B /* PannableViews.swift */; };
 		48328F5E2D6870330031C4D3 /* i18n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48328F5D2D6870290031C4D3 /* i18n.swift */; };
-		483E061F2D08227500140F13 /* SQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 483E061E2D08227500140F13 /* SQLite.swift */; };
 		484DF0502D8826CE00B2246D /* PresentationControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484DF04F2D8826BE00B2246D /* PresentationControllerDelegate.swift */; };
 		484E08312B96D6DD0018DCF0 /* AppDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */; };
 		485A75222BDCA43F00D887A4 /* logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485A75212BDCA43F00D887A4 /* logger.swift */; };
@@ -115,8 +114,11 @@
 		48D1FB7F2D4E97140093137D /* MiniAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D1FB7E2D4E97050093137D /* MiniAppSettingsViewController.swift */; };
 		48D1FB812D4E9C100093137D /* BackableNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D1FB802D4E9C080093137D /* BackableNavigationController.swift */; };
 		48D399872D06E88400BDD99F /* DownloadAndInstallMiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */; };
+		48D4B0702D8D5DB3005A4B5B /* MemoryStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D4B06F2D8D5DB0005A4B5B /* MemoryStorage.swift */; };
 		48D68D532D58DA56002303FD /* CreateProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D68D522D58DA4C002303FD /* CreateProject.swift */; };
 		48D68D552D58E894002303FD /* DeleteMiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D68D542D58E88D002303FD /* DeleteMiniApp.swift */; };
+		48DB22152D8CEE2300F53D42 /* SQLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DB22142D8CEE1D00F53D42 /* SQLite.swift */; };
+		48DB22192D8CFE8000F53D42 /* SQLiteDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DB22182D8CFE7C00F53D42 /* SQLiteDB.swift */; };
 		48DE4A242D5E23D8002D4653 /* CreateMiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE4A232D5E23D2002D4653 /* CreateMiniApp.swift */; };
 		48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA0288D32CA00D523C1 /* Assets.xcassets */; };
 		48DF6BA4288D32CA00D523C1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */; };
@@ -161,7 +163,6 @@
 		482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppManager.swift; sourceTree = "<group>"; };
 		482F03BD2D4C528E00D6CA6B /* PannableViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PannableViews.swift; sourceTree = "<group>"; };
 		48328F5D2D6870290031C4D3 /* i18n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = i18n.swift; sourceTree = "<group>"; };
-		483E061E2D08227500140F13 /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLite.swift; sourceTree = "<group>"; };
 		484DF04F2D8826BE00B2246D /* PresentationControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationControllerDelegate.swift; sourceTree = "<group>"; };
 		484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
 		485A75212BDCA43F00D887A4 /* logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = logger.swift; sourceTree = "<group>"; };
@@ -206,8 +207,11 @@
 		48D1FB7E2D4E97050093137D /* MiniAppSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppSettingsViewController.swift; sourceTree = "<group>"; };
 		48D1FB802D4E9C080093137D /* BackableNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackableNavigationController.swift; sourceTree = "<group>"; };
 		48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadAndInstallMiniApp.swift; sourceTree = "<group>"; };
+		48D4B06F2D8D5DB0005A4B5B /* MemoryStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryStorage.swift; sourceTree = "<group>"; };
 		48D68D522D58DA4C002303FD /* CreateProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProject.swift; sourceTree = "<group>"; };
 		48D68D542D58E88D002303FD /* DeleteMiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteMiniApp.swift; sourceTree = "<group>"; };
+		48DB22142D8CEE1D00F53D42 /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLite.swift; sourceTree = "<group>"; };
+		48DB22182D8CFE7C00F53D42 /* SQLiteDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteDB.swift; sourceTree = "<group>"; };
 		48DE4A232D5E23D2002D4653 /* CreateMiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateMiniApp.swift; sourceTree = "<group>"; };
 		48DF6B99288D32C800D523C1 /* minip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DF6BA0288D32CA00D523C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -305,6 +309,7 @@
 			children = (
 				2B1B32D62A61784600DA573F /* Defaults.swift */,
 				2BC331B52A62D48C00441447 /* LMDB.swift */,
+				48DB22142D8CEE1D00F53D42 /* SQLite.swift */,
 			);
 			path = DataStore;
 			sourceTree = "<group>";
@@ -350,7 +355,6 @@
 				48328F5D2D6870290031C4D3 /* i18n.swift */,
 				2B9B57992A56399B002E9D57 /* utils.swift */,
 				48D399862D06E88400BDD99F /* DownloadAndInstallMiniApp.swift */,
-				483E061E2D08227500140F13 /* SQLite.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -576,6 +580,8 @@
 				48F649082D58A93000C9FD82 /* UI.swift */,
 				48F6490A2D58C64A00C9FD82 /* Device.swift */,
 				48F6490C2D58C81400C9FD82 /* KVStorage.swift */,
+				48DB22182D8CFE7C00F53D42 /* SQLiteDB.swift */,
+				48D4B06F2D8D5DB0005A4B5B /* MemoryStorage.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -729,10 +735,11 @@
 				48021CC22D5F705100C39F07 /* Notification.swift in Sources */,
 				2B415A112A7E8FA900B3BF94 /* MiniPageViewController.swift in Sources */,
 				48CA01782D5C21F5006A63DD /* SingleColumnPickerView.swift in Sources */,
+				48DB22192D8CFE8000F53D42 /* SQLiteDB.swift in Sources */,
+				48DB22152D8CEE2300F53D42 /* SQLite.swift in Sources */,
 				48F649002D589B7100C9FD82 /* MinipApi.swift in Sources */,
 				2B8DC8BA2A5FAC4B002D5288 /* VSCodeDarkTheme.swift in Sources */,
 				48E518E12D8AA3E100FD716F /* ZoomableImageView.swift in Sources */,
-				483E061F2D08227500140F13 /* SQLite.swift in Sources */,
 				488C2F3E2D4E1BDC00892E3A /* AppInfo.swift in Sources */,
 				48CA017A2D5C262F006A63DD /* PickerContainerView.swift in Sources */,
 				2B1B32CF2A61633000DA573F /* FilePickerView.swift in Sources */,
@@ -747,6 +754,7 @@
 				482092F12D7C2585009E9BB8 /* ConsoleViewController.swift in Sources */,
 				2B6D0E4C2A623D93005BFEB9 /* ImagePreviewViewController.swift in Sources */,
 				482F03BE2D4C528E00D6CA6B /* PannableViews.swift in Sources */,
+				48D4B0702D8D5DB3005A4B5B /* MemoryStorage.swift in Sources */,
 				48F6B3632D86EF190026D64F /* FileInfo.swift in Sources */,
 				2B1B32C72A6135D300DA573F /* DownloadProjectView.swift in Sources */,
 				48328F5E2D6870330031C4D3 /* i18n.swift in Sources */,

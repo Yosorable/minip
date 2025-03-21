@@ -126,7 +126,7 @@ extension FileBrowserViewController {
 
         let fileInfo = files[indexPath.row]
         let cell = tableView.cellForRow(at: indexPath)
-        let cannotDelete = fileInfo.url == Global.shared.documentsTrashURL || fileInfo.url == Global.shared.projectsDataFolderURL
+        let cannotDelete = fileInfo.url == Global.shared.documentsTrashURL || fileInfo.url == Global.shared.dataFolderURL
         let isInTrashRoot = folderURL == Global.shared.documentsTrashURL
 
         let onDeleteSuccess = { [weak self] in

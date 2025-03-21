@@ -64,6 +64,32 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let url = urlContext.url
         handleURL(url: url)
     }
+
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        guard let serv = MiniAppManager.shared.httpServer else {
+            logger.debug("[enter foreground] not create server")
+            return
+        }
+        guard let _ = MiniAppManager.shared.openedApp else {
+            logger.debug("[enter foreground] no app opened")
+            return
+        }
+
+        Task {
+            if await serv.isListening {
+                logger.debug("[Enter foreground] server is running")
+                return
+            }
+
+            logger.debug("[Enter foreground] server not run, try to run")
+
+            do {
+                try await serv.run()
+            } catch {
+                logger.error("[Enter foreground] cannot start server \(error.localizedDescription)")
+            }
+        }
+    }
 }
 
 extension SceneDelegate {

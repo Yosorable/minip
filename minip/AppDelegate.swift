@@ -9,37 +9,13 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    // MARK: scene
-
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
-
-    // MARK: other lifecycle
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         _ = MWebViewPool.shared
         NotificationCenter.default.post(name: .mainControllerInitSuccess, object: nil)
         return true
-    }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        guard let serv = MiniAppManager.shared.httpServer else {
-            logger.debug("[enter foreground] not create server")
-            return
-        }
-        guard let _ = MiniAppManager.shared.openedApp else {
-            logger.debug("[enter foreground] no app opened")
-            return
-        }
-
-        Task {
-            if await serv.isListening {
-                logger.debug("[Enter foreground] server is running")
-                return
-            }
-            logger.debug("[Enter foreground] server not run, try to run")
-            try? await serv.run()
-        }
     }
 }

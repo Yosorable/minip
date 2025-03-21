@@ -18,7 +18,9 @@ extension MiniAppManager {
                 let key = app.appId + "-" + per.rawValue
                 try db?.deleteValue(forKey: key)
             }
-        } catch {}
+        } catch {
+            logger.error("[deleteMiniApp] error: \(error.localizedDescription)")
+        }
         completion()
     }
 }

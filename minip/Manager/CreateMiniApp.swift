@@ -48,6 +48,7 @@ extension MiniAppManager {
           <style>
             html { color-scheme: light dark; }
             body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; word-break: break-all; }
+            h1 { font-family: Zapfino; }
             .logo { max-width: 100%; overflow: auto; }
           </style>
         </head>

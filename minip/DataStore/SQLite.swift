@@ -141,14 +141,16 @@ class SQLiteDBManager {
 
         for (index, param) in parameters.enumerated() {
             let position = Int32(index + 1)
-            if let intParam = param as? Int {
-                sqlite3_bind_int(stmt, position, Int32(intParam))
+            if let intParam = param as? Int64 {
+                sqlite3_bind_int64(stmt, position, intParam)
             } else if let doubleParam = param as? Double {
                 sqlite3_bind_double(stmt, position, doubleParam)
             } else if let stringParam = param as? String {
                 sqlite3_bind_text(stmt, position, stringParam, -1, SQLITE_TRANSIENT)
             } else if param is NSNull {
                 sqlite3_bind_null(stmt, position)
+            } else {
+                throw ErrorMsg(errorDescription: "unsupported type")
             }
         }
 

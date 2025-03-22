@@ -88,6 +88,11 @@ class SQLiteDBManager {
             throw ErrorMsg(errorDescription: "cannot find this statement")
         }
 
+        defer {
+            sqlite3_finalize(stmt)
+            stmtMap.removeValue(forKey: stmtKey)
+        }
+
         if sqlite3_bind_parameter_count(stmt) != parameters.count {
             throw ErrorMsg(errorDescription: "parameters not match")
         }
@@ -131,15 +136,17 @@ class SQLiteDBManager {
             result.append(row)
         }
 
-        sqlite3_finalize(stmt)
-        stmtMap.removeValue(forKey: stmtKey)
-
         return result
     }
 
     func runStmt(dbKey: Int, stmtKey: Int, parameters: [Any]) throws -> runStmtResult {
         guard let stmt = stmtMap[stmtKey], let db = dbMap[dbKey] else {
             throw ErrorMsg(errorDescription: "cannot find db or statement")
+        }
+
+        defer {
+            sqlite3_finalize(stmt)
+            stmtMap.removeValue(forKey: stmtKey)
         }
 
         if sqlite3_bind_parameter_count(stmt) != parameters.count {
@@ -172,9 +179,6 @@ class SQLiteDBManager {
             throw ErrorMsg(errorDescription: msg)
         }
 
-        sqlite3_finalize(stmt)
-        stmtMap.removeValue(forKey: stmtKey)
-
         return runStmtResult(changes: affectedRows, lastInsertRowid: lastInsertRowID)
     }
 
@@ -186,6 +190,8 @@ class SQLiteDBManager {
         }
 
         if sqlite3_bind_parameter_count(stmt) != parameters.count {
+            sqlite3_finalize(stmt)
+            stmtMap.removeValue(forKey: stmtKey)
             throw ErrorMsg(errorDescription: "parameters not match")
         }
 

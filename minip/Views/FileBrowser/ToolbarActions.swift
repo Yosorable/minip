@@ -102,15 +102,7 @@ extension FileBrowserViewController {
                 }
                 self?.toggleSelectMode()
                 if successDeleted.count > 0 {
-                    // ".Trash" not generated (files deleted and ".Trash" created at sametime)
-                    if self?.folderURL == Global.shared.documentsRootURL, self?.files.first?.url != Global.shared.documentsTrashURL {
-                        self?.fetchFiles(reloadTableView: true)
-                    } else {
-                        self?.fetchFiles(reloadTableView: false)
-                        self?.tableView.beginUpdates()
-                        self?.tableView.deleteRows(at: successDeleted, with: .automatic)
-                        self?.tableView.endUpdates()
-                    }
+                    self?.fetchFilesAndUpdateDataSource()
                 }
             }))
             present(alertController, animated: true)

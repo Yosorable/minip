@@ -80,11 +80,11 @@ extension FileBrowserViewController {
             } catch {
                 ShowSimpleError(err: error)
             }
-            self?.fetchFiles(reloadTableView: true)
+            self?.fetchFilesAndUpdateDataSource()
         }
 
         let onCancel: () -> Void = { [weak self] in
-            self?.fetchFiles(reloadTableView: true)
+            self?.fetchFilesAndUpdateDataSource()
         }
 
         var vcs: [UIViewController] = []

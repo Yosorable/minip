@@ -9,7 +9,39 @@ import ProgressHUD
 import UIKit
 
 extension FileBrowserViewController {
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func configureDataSource() {
+        dataSource = UITableViewDiffableDataSource<Int, FileInfo>(tableView: tableView) { tableView, indexPath, _ in
+            let cell = tableView.dequeueReusableCell(withIdentifier: FileItemCell.identifier, for: indexPath) as! FileItemCell
+            let fileInfo = self.files[indexPath.row]
+            var displayName: NSAttributedString? = nil
+            if self.folderURL == Global.shared.projectDataFolderURL, let appName = MiniAppManager.shared.getAppInfosFromCache().filter({ $0.appId == fileInfo.fileName }).first?.name {
+                let dName = fileInfo.fileName + " " + appName
+                let attributedString = NSMutableAttributedString(string: dName)
+                let grayTextStartIndex = fileInfo.fileName.count
+                let grayTextLength = dName.count - grayTextStartIndex
+                attributedString.addAttribute(
+                    .foregroundColor,
+                    value: UIColor.secondaryLabel,
+                    range: NSRange(location: grayTextStartIndex, length: grayTextLength)
+                )
+                attributedString.addAttribute(
+                    .font,
+                    value: UIFont.preferredFont(forTextStyle: .footnote),
+                    range: NSRange(location: grayTextStartIndex, length: grayTextLength)
+                )
+                displayName = attributedString
+            }
+            cell.configure(with: fileInfo, displayName: displayName)
+            return cell
+        }
+    }
+
+    func updateDataSource() {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, FileInfo>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(files)
+        dataSource.apply(snapshot, animatingDifferences: true)
+
         if files.count == 0 {
             let messageAttributedString = NSMutableAttributedString(string: i18n("f.empty_folder_msg_p1"))
 
@@ -23,37 +55,11 @@ extension FileBrowserViewController {
             messageAttributedString.append(NSAttributedString(string: i18n("f.empty_folder_msg_p2")))
             tableView.setEmptyView(
                 title: NSAttributedString(string: i18n("f.empty_folder")),
-                message: self.isModal ? NSAttributedString() : (self.folderURL == Global.shared.documentsTrashURL ? NSAttributedString(string: i18n("f.empty_trash_msg")) : messageAttributedString)
+                message: isModal ? NSAttributedString() : (folderURL == Global.shared.documentsTrashURL ? NSAttributedString(string: i18n("f.empty_trash_msg")) : messageAttributedString)
             )
         } else {
             tableView.restore()
         }
-        return files.count
-    }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: FileItemCell.identifier, for: indexPath) as! FileItemCell
-        let fileInfo = files[indexPath.row]
-        var displayName: NSAttributedString? = nil
-        if folderURL == Global.shared.projectDataFolderURL, let appName = MiniAppManager.shared.getAppInfosFromCache().filter({ $0.appId == fileInfo.fileName }).first?.name {
-            let dName = fileInfo.fileName + " " + appName
-            let attributedString = NSMutableAttributedString(string: dName)
-            let grayTextStartIndex = fileInfo.fileName.count
-            let grayTextLength = dName.count - grayTextStartIndex
-            attributedString.addAttribute(
-                .foregroundColor,
-                value: UIColor.secondaryLabel,
-                range: NSRange(location: grayTextStartIndex, length: grayTextLength)
-            )
-            attributedString.addAttribute(
-                .font,
-                value: UIFont.preferredFont(forTextStyle: .footnote),
-                range: NSRange(location: grayTextStartIndex, length: grayTextLength)
-            )
-            displayName = attributedString
-        }
-        cell.configure(with: fileInfo, displayName: displayName)
-        return cell
     }
 
     override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -91,7 +97,7 @@ extension FileBrowserViewController {
                             if let xmlString = String(data: data, encoding: .utf8) {
                                 let vc = PannableNavigationViewController(rootViewController: CodeEditorViewController(fileInfo: fileInfo, readyOnlyText: xmlString))
                                 vc.modalPresentationStyle = .fullScreen
-                                self.present(vc, animated: true)
+                                present(vc, animated: true)
                             } else {
                                 throw ErrorMsg()
                             }
@@ -151,12 +157,10 @@ extension FileBrowserViewController {
         let onDeleteSuccess = { [weak self] in
             // ".Trash" not generated (files deleted and ".Trash" created at sametime)
             if self?.folderURL == Global.shared.documentsRootURL, self?.files.first?.url != Global.shared.documentsTrashURL {
-                self?.fetchFiles(reloadTableView: true)
+                self?.fetchFilesAndUpdateDataSource()
             } else {
                 self?.files.remove(at: indexPath.row)
-                tableView.beginUpdates()
-                tableView.deleteRows(at: [indexPath], with: .automatic)
-                tableView.endUpdates()
+                self?.updateDataSource()
             }
             ShowSimpleSuccess(msg: i18n(isInTrashRoot ? "f.deleted_success" : "f.moved_to_trash"))
         }

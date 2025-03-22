@@ -35,7 +35,7 @@ extension FileBrowserViewController {
 
             do {
                 try fileManager.moveItem(at: fileInfo.url, to: newURL)
-                self?.fetchFiles(reloadTableView: true)
+                self?.fetchFilesAndUpdateDataSource()
                 ShowSimpleSuccess(msg: i18n("Renamed successfully"))
             } catch {
                 ShowSimpleError(err: error)

@@ -12,4 +12,12 @@ struct FileInfo: Hashable {
     var isFolder: Bool
     var url: URL
     var size: String?
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(url)
+    }
+
+    static func == (lhs: FileInfo, rhs: FileInfo) -> Bool {
+        return lhs.url == rhs.url && lhs.size == rhs.size
+    }
 }

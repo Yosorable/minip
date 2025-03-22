@@ -15,7 +15,8 @@ class FileBrowserViewController: UITableViewController {
     var onConfirm: ((URL) -> Void)?
     var confirmText: String?
     var onCancel: (() -> Void)?
-    var files: [FileInfo] = []
+    var files: [FileInfo]!
+    var dataSource: UITableViewDiffableDataSource<Int, FileInfo>!
 
     lazy var openWebServerBtn = {
         let btn = UIBarButtonItem(image: UIImage(systemName: "server.rack"), style: .plain, target: self, action: #selector(openWebServer))
@@ -124,7 +125,8 @@ class FileBrowserViewController: UITableViewController {
             navigationController?.setToolbarHidden(false, animated: false)
         }
 
-        fetchFiles(reloadTableView: false)
+        configureDataSource()
+        fetchFilesAndUpdateDataSource()
 
         tableView.rowHeight = 44
         if !isModal {
@@ -181,12 +183,12 @@ class FileBrowserViewController: UITableViewController {
             }
             logger.debug("[FileBrowser] \"\(fn())\": checking file updates")
             needCheckFileUpdates = false
-            fetchFiles(reloadTableView: true)
+            fetchFilesAndUpdateDataSource()
         }
     }
 
     @objc func refreshTableView() {
-        fetchFiles(reloadTableView: true)
+        fetchFilesAndUpdateDataSource()
     }
 
     @objc func toggleSelectMode() {
@@ -221,7 +223,7 @@ class FileBrowserViewController: UITableViewController {
 // MARK: File or Folder Handler
 
 extension FileBrowserViewController {
-    func fetchFiles(reloadTableView: Bool, insertedItemName: String? = nil) {
+    func fetchFilesAndUpdateDataSource() {
         logger.debug("[FileBrowser] fetching files")
         do {
             var (folderURLs, fileURLs) = try getFilesAndFolders(in: folderURL)
@@ -234,16 +236,8 @@ extension FileBrowserViewController {
 
             if files != allFilesAndFolders {
                 files = allFilesAndFolders
-                if reloadTableView {
-                    logger.debug("[FileBrowser] reload table view")
-                    if let insertedItemName = insertedItemName, let idx = allFilesAndFolders.firstIndex(where: { $0.fileName == insertedItemName }) {
-                        tableView.beginUpdates()
-                        tableView.insertRows(at: [IndexPath(row: idx, section: 0)], with: .automatic)
-                        tableView.endUpdates()
-                    } else {
-                        tableView.reloadData()
-                    }
-                }
+                logger.debug("[FileBrowser] refreshing table view")
+                updateDataSource()
 
                 if tableView.isEditing == true {
                     toggleSelectMode()
@@ -253,6 +247,10 @@ extension FileBrowserViewController {
             }
         } catch {
             ShowSimpleError(err: error)
+            if files == nil {
+                files = []
+                updateDataSource()
+            }
         }
         refreshControl?.endRefreshing()
     }
@@ -300,13 +298,9 @@ extension FileBrowserViewController {
         alertController.addAction(UIAlertAction(title: i18n("f.clean_trash"), style: .destructive, handler: { [weak self] _ in
             CleanTrashAsync {
                 ShowSimpleSuccess()
-                self?.fetchFiles(reloadTableView: false)
-                let deletedRows = self?.tableView.indexPathsForVisibleRows ?? []
-                if deletedRows.count > 0 {
-                    self?.tableView.beginUpdates()
-                    self?.tableView.deleteRows(at: deletedRows, with: .automatic)
-                    self?.tableView.endUpdates()
-                }
+
+                self?.fetchFilesAndUpdateDataSource()
+
                 if self?.tableView.isEditing == true {
                     self?.toggleSelectMode()
                 }
@@ -345,7 +339,7 @@ extension FileBrowserViewController {
                         try Data().write(to: newFileURL)
                     }
                     ShowSimpleSuccess(msg: i18n("created_successfully"))
-                    strongSelf.fetchFiles(reloadTableView: true, insertedItemName: fileName)
+                    strongSelf.fetchFilesAndUpdateDataSource()
                 } catch {
                     ShowSimpleError(err: error)
                 }

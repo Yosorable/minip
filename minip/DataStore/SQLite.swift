@@ -88,10 +88,14 @@ class SQLiteDBManager {
             throw ErrorMsg(errorDescription: "cannot find this statement")
         }
 
+        if sqlite3_bind_parameter_count(stmt) != parameters.count {
+            throw ErrorMsg(errorDescription: "parameters not match")
+        }
+
         for (index, param) in parameters.enumerated() {
             let position = Int32(index + 1)
-            if let intParam = param as? Int {
-                sqlite3_bind_int(stmt, position, Int32(intParam))
+            if let intParam = param as? Int64 {
+                sqlite3_bind_int64(stmt, position, intParam)
             } else if let doubleParam = param as? Double {
                 sqlite3_bind_double(stmt, position, doubleParam)
             } else if let stringParam = param as? String {
@@ -113,7 +117,7 @@ class SQLiteDBManager {
 
                 switch columnType {
                 case SQLITE_INTEGER:
-                    row[columnName] = Int(sqlite3_column_int(stmt, i))
+                    row[columnName] = sqlite3_column_int64(stmt, i)
                 case SQLITE_FLOAT:
                     row[columnName] = sqlite3_column_double(stmt, i)
                 case SQLITE_TEXT:
@@ -137,6 +141,10 @@ class SQLiteDBManager {
     func runStmt(dbKey: Int, stmtKey: Int, parameters: [Any]) throws -> runStmtResult {
         guard let stmt = stmtMap[stmtKey], let db = dbMap[dbKey] else {
             throw ErrorMsg(errorDescription: "cannot find db or statement")
+        }
+
+        if sqlite3_bind_parameter_count(stmt) != parameters.count {
+            throw ErrorMsg(errorDescription: "parameters not match")
         }
 
         for (index, param) in parameters.enumerated() {

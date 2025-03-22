@@ -79,13 +79,13 @@ class FileBrowserViewController: UITableViewController {
         if !isModal {
             actions.append(
                 UIAction(title: i18n("f.create_file"), image: UIImage(systemName: "doc")) { [weak self] _ in
-                    self?.createFile()
+                    self?.createFileOrFolder(isFolder: false)
                 }
             )
         }
         actions.append(
             UIAction(title: i18n("f.create_folder"), image: UIImage(systemName: "folder")) { [weak self] _ in
-                self?.createFolder()
+                self?.createFileOrFolder(isFolder: true)
             }
         )
         let menu = UIMenu(children: actions)
@@ -137,6 +137,36 @@ class FileBrowserViewController: UITableViewController {
             refreshControl?.addTarget(self, action: #selector(refreshTableView), for: .valueChanged)
         }
     }
+
+    // TODO: replace mannually refresh data
+//    private var folderFD: CInt = -1
+//    private var source: DispatchSourceFileSystemObject?
+//    func startMonitoring() {
+//        folderFD = open(folderURL.path, O_EVTONLY)
+//        guard folderFD >= 0 else {
+//            logger.error("Failed to open folder: \(self.folderURL)")
+//            return
+//        }
+//
+//        source = DispatchSource.makeFileSystemObjectSource(fileDescriptor: folderFD, eventMask: [.write, .delete, .rename], queue: DispatchQueue.global())
+//        source?.setEventHandler { [weak self] in
+//            guard let self = self else {
+//                return
+//            }
+//            let url = self.folderURL
+//            print("[FD Monitoring] \(url) has changes")
+//        }
+//        let fd = folderFD
+//        source?.setCancelHandler {
+//            close(fd)
+//        }
+//        source?.resume()
+//    }
+//
+//    func stopMonitoring() {
+//        source?.cancel()
+//        source = nil
+//    }
 
     var needCheckFileUpdates = false
     override func viewDidDisappear(_ animated: Bool) {
@@ -300,11 +330,11 @@ extension FileBrowserViewController {
         present(alertController, animated: true)
     }
 
-    func createFile() {
-        let alertController = UIAlertController(title: i18n("f.create_file"), message: i18n("f.create_file_tip"), preferredStyle: .alert)
+    func createFileOrFolder(isFolder: Bool) {
+        let alertController = UIAlertController(title: i18n(isFolder ? "f.create_folder" : "f.create_file"), message: i18n(isFolder ? "f.create_folder_tip" : "f.create_file_tip"), preferredStyle: .alert)
         var textField: UITextField?
         alertController.addTextField { tf in
-            tf.placeholder = i18n("f.file_name")
+            tf.placeholder = i18n(isFolder ? "f.folder_name" : "f.file_name")
             textField = tf
         }
         alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
@@ -313,41 +343,7 @@ extension FileBrowserViewController {
                 return
             }
             if fileName == "" {
-                ShowSimpleError(err: ErrorMsg(errorDescription: "Invalid file name"))
-                return
-            }
-
-            let fileManager = FileManager.default
-            let newFileURL = strongSelf.folderURL.appendingPolyfill(component: fileName)
-
-            if !fileManager.fileExists(atPath: newFileURL.path) {
-                if fileManager.createFile(atPath: newFileURL.path, contents: nil) {
-                    ShowSimpleSuccess(msg: i18n("created_successfully"))
-                    strongSelf.fetchFiles(reloadTableView: true, insertedItemName: fileName)
-                } else {
-                    ShowSimpleError()
-                }
-            } else {
-                ShowSimpleError(err: ErrorMsg(errorDescription: "File exists"))
-            }
-        }))
-        present(alertController, animated: true)
-    }
-
-    func createFolder() {
-        let alertController = UIAlertController(title: i18n("f.create_folder"), message: i18n("f.create_folder_tip"), preferredStyle: .alert)
-        var textField: UITextField?
-        alertController.addTextField { tf in
-            tf.placeholder = i18n("f.folder_name")
-            textField = tf
-        }
-        alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
-        alertController.addAction(UIAlertAction(title: i18n("Create"), style: .default, handler: { [weak self] _ in
-            guard let fileName = textField?.text, let strongSelf = self else {
-                return
-            }
-            if fileName == "" {
-                ShowSimpleError(err: ErrorMsg(errorDescription: "Invalid folder name"))
+                ShowSimpleError(err: ErrorMsg(errorDescription: isFolder ? "Invalid folder name" : "Invalid file name"))
                 return
             }
 
@@ -356,7 +352,11 @@ extension FileBrowserViewController {
 
             if !fileManager.fileExists(atPath: newFileURL.path) {
                 do {
-                    try fileManager.createDirectory(at: newFileURL, withIntermediateDirectories: false)
+                    if isFolder {
+                        try fileManager.createDirectory(at: newFileURL, withIntermediateDirectories: false)
+                    } else {
+                        try Data().write(to: newFileURL)
+                    }
                     ShowSimpleSuccess(msg: i18n("created_successfully"))
                     strongSelf.fetchFiles(reloadTableView: true, insertedItemName: fileName)
                 } catch {
@@ -364,42 +364,18 @@ extension FileBrowserViewController {
                 }
 
             } else {
-                ShowSimpleError(err: ErrorMsg(errorDescription: "Folder exists"))
+                ShowSimpleError(err: ErrorMsg(errorDescription: isFolder ? "Folder exists" : "File exists"))
             }
         }))
         present(alertController, animated: true)
     }
 
-    func deleteFolder(url: URL?, onSuccess: @escaping () -> Void, onFailed: @escaping (Error) -> Void, onCanceled: @escaping () -> Void) {
+    func deleteFileOrFolder(isFolder: Bool, url: URL?, onSuccess: @escaping () -> Void, onFailed: @escaping (Error) -> Void, onCanceled: @escaping () -> Void) {
         guard let url = url else {
             return
         }
         let isInTrashRoot = folderURL == Global.shared.documentsTrashURL
-        let alertController = UIAlertController(title: i18n("Confirm"), message: i18nF("f.delete_folder_confirm_message", url.lastPathComponent), preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: { _ in
-            onCanceled()
-        }))
-        alertController.addAction(UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in
-            do {
-                if isInTrashRoot {
-                    try FileManager.default.removeItem(at: url)
-                } else {
-                    try FileManager.default.trashItem(at: url, resultingItemURL: nil)
-                }
-                onSuccess()
-            } catch {
-                onFailed(error)
-            }
-        }))
-        present(alertController, animated: true)
-    }
-
-    func deleteFile(url: URL?, onSuccess: @escaping () -> Void, onFailed: @escaping (Error) -> Void, onCanceled: @escaping () -> Void) {
-        guard let url = url else {
-            return
-        }
-        let isInTrashRoot = folderURL == Global.shared.documentsTrashURL
-        let alertController = UIAlertController(title: i18n("Confirm"), message: i18nF("f.delete_file_confirm_message", url.lastPathComponent), preferredStyle: .alert)
+        let alertController = UIAlertController(title: i18n("Confirm"), message: i18nF(isFolder ? "f.delete_folder_confirm_message" : "f.delete_file_confirm_message", url.lastPathComponent), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: { _ in onCanceled() }))
         alertController.addAction(UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in
             do {

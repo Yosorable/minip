@@ -171,23 +171,14 @@ extension FileBrowserViewController {
                 return
             }
 
-            if fileInfo.isFolder {
-                self?.deleteFolder(url: fileInfo.url, onSuccess: {
-                    onDeleteSuccess()
-                    completion(true)
-                }, onFailed: {
-                    onDeleteError($0)
-                    completion(false)
-                }, onCanceled: { completion(false) })
-            } else {
-                self?.deleteFile(url: fileInfo.url, onSuccess: {
-                    onDeleteSuccess()
-                    completion(true)
-                }, onFailed: {
-                    onDeleteError($0)
-                    completion(false)
-                }, onCanceled: { completion(false) })
-            }
+            self?.deleteFileOrFolder(isFolder: fileInfo.isFolder, url: fileInfo.url, onSuccess: {
+                onDeleteSuccess()
+                completion(true)
+            }, onFailed: {
+                onDeleteError($0)
+                completion(false)
+            }, onCanceled: { completion(false) })
+
         })
         let moreAction = UIContextualAction(style: .normal, title: i18n("More"), handler: { [weak self] _, _, completion in
             let alert = UIAlertController(title: fileInfo.fileName, message: i18n(fileInfo.isFolder ? "Folder" : "File") + (fileInfo.isFolder ? "" : " (\(fileInfo.size ?? "unknown size"))"), preferredStyle: .actionSheet)
@@ -214,7 +205,7 @@ extension FileBrowserViewController {
                     ShowSimpleError(err: ErrorMsg(errorDescription: "You cannot delete this folder"))
                     return
                 }
-                self?.deleteFile(url: fileInfo.url, onSuccess: onDeleteSuccess, onFailed: onDeleteError, onCanceled: {})
+                self?.deleteFileOrFolder(isFolder: fileInfo.isFolder, url: fileInfo.url, onSuccess: onDeleteSuccess, onFailed: onDeleteError, onCanceled: {})
             }))
             alert.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel))
             alert.popoverPresentationController?.sourceView = cell

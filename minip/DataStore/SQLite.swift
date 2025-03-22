@@ -179,12 +179,80 @@ class SQLiteDBManager {
         return runStmtResult(changes: affectedRows, lastInsertRowid: lastInsertRowID)
     }
 
+    // MARK: Stream Query
+
+    func iterateStmt(dbKey: Int, stmtKey: Int, parameters: [Any]) throws {
+        guard let _ = dbMap[dbKey], let stmt = stmtMap[stmtKey] else {
+            throw ErrorMsg(errorDescription: "cannot find this statement")
+        }
+
+        if sqlite3_bind_parameter_count(stmt) != parameters.count {
+            throw ErrorMsg(errorDescription: "parameters not match")
+        }
+
+        for (index, param) in parameters.enumerated() {
+            let position = Int32(index + 1)
+            if let intParam = param as? Int64 {
+                sqlite3_bind_int64(stmt, position, intParam)
+            } else if let doubleParam = param as? Double {
+                sqlite3_bind_double(stmt, position, doubleParam)
+            } else if let stringParam = param as? String {
+                sqlite3_bind_text(stmt, position, stringParam, -1, SQLITE_TRANSIENT)
+            } else if param is NSNull {
+                sqlite3_bind_null(stmt, position)
+            }
+        }
+    }
+
+    func iterateStmtNext(dbKey: Int, stmtKey: Int) throws -> [String: Any]? {
+        guard let _ = dbMap[dbKey], let stmt = stmtMap[stmtKey] else {
+            throw ErrorMsg(errorDescription: "cannot find this statement")
+        }
+        let columnCount = sqlite3_column_count(stmt)
+
+        if sqlite3_step(stmt) == SQLITE_ROW {
+            var row: [String: Any] = [:]
+
+            for i in 0 ..< columnCount {
+                let columnName = String(cString: sqlite3_column_name(stmt, i))
+                let columnType = sqlite3_column_type(stmt, i)
+
+                switch columnType {
+                case SQLITE_INTEGER:
+                    row[columnName] = sqlite3_column_int64(stmt, i)
+                case SQLITE_FLOAT:
+                    row[columnName] = sqlite3_column_double(stmt, i)
+                case SQLITE_TEXT:
+                    row[columnName] = String(cString: sqlite3_column_text(stmt, i))
+                case SQLITE_NULL:
+                    row[columnName] = NSNull()
+                default:
+                    logger.error("[SQLiteDBManager] unsupported sqlite type")
+                }
+            }
+            return row
+        }
+
+        sqlite3_finalize(stmt)
+        stmtMap.removeValue(forKey: stmtKey)
+        return nil
+    }
+
+    func iterateStmtRelease(dbKey: Int, stmtKey: Int) throws {
+        guard let _ = dbMap[dbKey], let stmt = stmtMap[stmtKey] else {
+            throw ErrorMsg(errorDescription: "already released")
+        }
+
+        sqlite3_finalize(stmt)
+        stmtMap.removeValue(forKey: stmtKey)
+    }
+
     // MARK: execute
 
     func execute(dbKey: Int, sql: String, parameters: [Any]) throws -> (reader: Bool, runRes: runStmtResult?, entityData: [[String: Any]]?) {
         let prepareRes = try prepareStmt(dbKey: dbKey, sql: sql)
-        var runRes: runStmtResult? = nil
-        var entityData: [[String: Any]]? = nil
+        var runRes: runStmtResult?
+        var entityData: [[String: Any]]?
         if prepareRes.reader {
             entityData = try allStmt(dbKey: dbKey, stmtKey: prepareRes.stmtKey, parameters: parameters)
         } else {

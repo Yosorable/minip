@@ -171,4 +171,87 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
+
+    // MARK: Stream Query
+
+    func sqliteCreateIterator(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let _ = MiniAppManager.shared.openedApp?.appId else {
+            replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
+            return
+        }
+        guard
+            let data = param.data as? [String: Any],
+            let dbKey = data["dbKey"] as? Int,
+            let stmtKey = data["stmtKey"] as? Int
+        else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+        let parameters = (data["parameters"] as? [Any]) ?? []
+
+        do {
+            try SQLiteDBManager.shared.iterateStmt(dbKey: dbKey, stmtKey: stmtKey, parameters: parameters)
+            replyHandler(InteropUtils.succeed().toJsonString(), nil)
+        } catch {
+            replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
+        }
+    }
+    
+    func sqliteIteratorNext(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let _ = MiniAppManager.shared.openedApp?.appId else {
+            replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
+            return
+        }
+        guard
+            let data = param.data as? [String: Any],
+            let dbKey = data["dbKey"] as? Int,
+            let stmtKey = data["stmtKey"] as? Int
+        else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+
+        do {
+            let res = try SQLiteDBManager.shared.iterateStmtNext(dbKey: dbKey, stmtKey: stmtKey)
+            if let res = res {
+                let replyRes: [String: Any] = [
+                    "code": InteropUtils.successCode,
+                    "data": res
+                ]
+                let jsonData = try JSONSerialization.data(withJSONObject: replyRes)
+                
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    replyHandler(jsonString, nil)
+                } else {
+                    throw ErrorMsg(errorDescription: "Internal Error")
+                }
+            } else {
+                replyHandler(InteropUtils.succeed().toJsonString(), nil)
+            }
+        } catch {
+            replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
+        }
+    }
+    
+    func sqliteIteratorRelease(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let _ = MiniAppManager.shared.openedApp?.appId else {
+            replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
+            return
+        }
+        guard
+            let data = param.data as? [String: Any],
+            let dbKey = data["dbKey"] as? Int,
+            let stmtKey = data["stmtKey"] as? Int
+        else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+
+        do {
+            try SQLiteDBManager.shared.iterateStmtRelease(dbKey: dbKey, stmtKey: stmtKey)
+            replyHandler(InteropUtils.succeed().toJsonString(), nil)
+        } catch {
+            replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
+        }
+    }
 }

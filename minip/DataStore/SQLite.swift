@@ -8,6 +8,7 @@
 import Foundation
 import SQLite3
 
+// TODO: support blob, release statement when errors occur
 class SQLiteDBManager {
     let SQLITE_TRANSIENT = unsafeBitCast(OpaquePointer(bitPattern: -1), to: sqlite3_destructor_type.self)
 
@@ -82,7 +83,6 @@ class SQLiteDBManager {
         throw ErrorMsg(errorDescription: msg)
     }
 
-    // TODO: support blob
     func allStmt(dbKey: Int, stmtKey: Int, parameters: [Any]) throws -> [[String: Any]] {
         guard let _ = dbMap[dbKey], let stmt = stmtMap[stmtKey] else {
             throw ErrorMsg(errorDescription: "cannot find this statement")
@@ -137,7 +137,6 @@ class SQLiteDBManager {
         return result
     }
 
-    // TODO: support blob
     func runStmt(dbKey: Int, stmtKey: Int, parameters: [Any]) throws -> runStmtResult {
         guard let stmt = stmtMap[stmtKey], let db = dbMap[dbKey] else {
             throw ErrorMsg(errorDescription: "cannot find db or statement")
@@ -260,8 +259,6 @@ class SQLiteDBManager {
         }
         return (prepareRes.reader, runRes, entityData)
     }
-
-    // TODO: iterate
 }
 
 extension SQLiteDBManager {

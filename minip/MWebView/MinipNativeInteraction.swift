@@ -133,6 +133,8 @@ class MinipNativeInteraction: NSObject, WKScriptMessageHandlerWithReply {
             api.sqliteStatementAll(param: param, replyHandler: replyHandler)
         case .sqliteStatementRun:
             api.sqliteStatementRun(param: param, replyHandler: replyHandler)
+        case .sqliteExecute:
+            api.sqliteExecute(param: param, replyHandler: replyHandler)
         case .setMemoryStorage:
             api.setMemoryStorage(param: param, replyHandler: replyHandler)
         case .setMemoryStorageIfNotExist:

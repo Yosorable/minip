@@ -75,6 +75,7 @@ class MinipApi {
         case sqlitePrepare
         case sqliteStatementAll
         case sqliteStatementRun
+        case sqliteExecute
 
         // MARK: Memory Storage
 

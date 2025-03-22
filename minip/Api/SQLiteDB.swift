@@ -124,4 +124,51 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
+
+    func sqliteExecute(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let _ = MiniAppManager.shared.openedApp?.appId else {
+            replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
+            return
+        }
+        guard
+            let data = param.data as? [String: Any],
+            let dbKey = data["dbKey"] as? Int,
+            let sql = data["sql"] as? String
+        else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+        let parameters = (data["parameters"] as? [Any]) ?? []
+
+        do {
+            let (reader, runRes, entityData) = try SQLiteDBManager.shared.execute(dbKey: dbKey, sql: sql, parameters: parameters)
+            var res = [String: Any]()
+            res["reader"] = reader
+            if let runRes = runRes {
+                res["runRes"] = [
+                    "changes": runRes.changes,
+                    "lastInsertRowid": runRes.lastInsertRowid
+                ]
+            }
+            res["entityData"] = entityData
+
+            let replyRes: [String: Any] = [
+                "code": InteropUtils.successCode,
+                "data": res
+            ]
+
+            if (reader && entityData != nil) || (!reader && runRes != nil) {
+                let jsonData = try JSONSerialization.data(withJSONObject: replyRes)
+
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    replyHandler(jsonString, nil)
+                    return
+                }
+            } else {
+                throw ErrorMsg(errorDescription: "Internal Error")
+            }
+        } catch {
+            replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
+        }
+    }
 }

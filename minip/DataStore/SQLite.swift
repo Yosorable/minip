@@ -179,6 +179,20 @@ class SQLiteDBManager {
         return runStmtResult(changes: affectedRows, lastInsertRowid: lastInsertRowID)
     }
 
+    // MARK: execute
+
+    func execute(dbKey: Int, sql: String, parameters: [Any]) throws -> (reader: Bool, runRes: runStmtResult?, entityData: [[String: Any]]?) {
+        let prepareRes = try prepareStmt(dbKey: dbKey, sql: sql)
+        var runRes: runStmtResult? = nil
+        var entityData: [[String: Any]]? = nil
+        if prepareRes.reader {
+            entityData = try allStmt(dbKey: dbKey, stmtKey: prepareRes.stmtKey, parameters: parameters)
+        } else {
+            runRes = try runStmt(dbKey: dbKey, stmtKey: prepareRes.stmtKey, parameters: parameters)
+        }
+        return (prepareRes.reader, runRes, entityData)
+    }
+
     // TODO: iterate
 }
 

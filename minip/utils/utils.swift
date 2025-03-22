@@ -108,6 +108,19 @@ func CleanTrashAsync(onComplete: (() -> Void)? = nil, onError: ((Error) -> Void)
     }
 }
 
+func FormatFileSize(_ bytes: UInt64) -> String {
+    let units = ["B", "KB", "MB", "GB", "TB"]
+    var size = Double(bytes)
+    var unitIndex = 0
+
+    while size >= 1024 && unitIndex < units.count - 1 {
+        size /= 1024
+        unitIndex += 1
+    }
+
+    return String(format: "%.2f%@", size, units[unitIndex])
+}
+
 // alert
 extension UIAlertController {
     func showOnTopViewController(completion: (() -> Void)? = nil) {

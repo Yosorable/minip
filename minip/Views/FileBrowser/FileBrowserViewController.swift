@@ -273,7 +273,7 @@ extension FileBrowserViewController {
                 } else {
                     var sizeStr = "unknown size"
                     if let size = resource.fileSize {
-                        sizeStr = formatFileSize(UInt64(size))
+                        sizeStr = FormatFileSize(UInt64(size))
                     }
                     files.append(FileInfo(fileName: url.lastPathComponent, isFolder: false, url: url, size: sizeStr))
                 }
@@ -288,19 +288,6 @@ extension FileBrowserViewController {
             $0.url.lastPathComponent.localizedStandardCompare($1.url.lastPathComponent) == .orderedAscending
         }
         return (folders, files)
-    }
-
-    func formatFileSize(_ bytes: UInt64) -> String {
-        let units = ["B", "KB", "MB", "GB", "TB"]
-        var size = Double(bytes)
-        var unitIndex = 0
-
-        while size >= 1024 && unitIndex < units.count - 1 {
-            size /= 1024
-            unitIndex += 1
-        }
-
-        return String(format: "%.2f%@", size, units[unitIndex])
     }
 
     @objc func cleanTrash() {

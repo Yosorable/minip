@@ -45,14 +45,6 @@ extension MiniAppManager {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
           <meta name="format-detection" content="telephone=no,email=no,address=no" >
-          <script type="importmap">
-            {
-              "imports": {
-                "minip": "https://cdn.jsdelivr.net/npm/minip-bridge/dist/index.mjs",
-                "kysely": "https://cdn.jsdelivr.net/npm/kysely/dist/esm/index.js"
-              }
-            }
-          </script>
           <style>
             html { color-scheme: light dark; }
             body { font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; word-break: break-all; }
@@ -82,7 +74,7 @@ extension MiniAppManager {
           <button disabled id="st-btn">Go to Settings Page</button>
           <div id="msg"></div>
           <script type="module">
-            import * as minip from "minip"
+            import * as minip from "https://cdn.jsdelivr.net/npm/minip-bridge/dist/index.mjs"
             const msgDiv = document.querySelector("#msg")
             const btn = document.querySelector("#btn")
             const stBtn = document.querySelector("#st-btn")

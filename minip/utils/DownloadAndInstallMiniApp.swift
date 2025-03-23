@@ -9,7 +9,7 @@ import Alamofire
 import Foundation
 import ZipArchive
 
-func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((String)->Void)? = nil, singalAppListChangedOnSuccess: Bool = true) {
+func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((String)->Void)? = nil, signalAppListChangedOnSuccess: Bool = true) {
     let fileManager = FileManager.default
 
     let tempDirURL = fileManager.temporaryDirectory
@@ -26,7 +26,7 @@ func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((Stri
         }
         try installByAppJSON(in: appJSONURL)
         onSuccess?()
-        if singalAppListChangedOnSuccess {
+        if signalAppListChangedOnSuccess {
             NotificationCenter.default.post(name: .appListUpdated, object: nil)
         }
         deleteFolder(at: unzipDirURL)

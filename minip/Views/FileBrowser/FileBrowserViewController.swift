@@ -125,6 +125,7 @@ class FileBrowserViewController: UITableViewController {
             navigationController?.setToolbarHidden(false, animated: false)
         }
 
+        tableView.register(FileItemCell.self, forCellReuseIdentifier: FileItemCell.identifier)
         configureDataSource()
         fetchFilesAndUpdateDataSource()
 
@@ -132,7 +133,6 @@ class FileBrowserViewController: UITableViewController {
         if !isModal {
             tableView.allowsMultipleSelectionDuringEditing = true
         }
-        tableView.register(FileItemCell.self, forCellReuseIdentifier: FileItemCell.identifier)
 
         if !isModal {
             refreshControl = UIRefreshControl()

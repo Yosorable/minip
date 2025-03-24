@@ -207,7 +207,7 @@ extension MinipApi {
             return
         }
         guard let urlStr = (param.data as? [String: String])?["url"],
-              let url = URL(string: urlStr)
+              let url = URL(string: urlStr.deletingPrefix("minipimg").deletingPrefix("minip"))
         else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return

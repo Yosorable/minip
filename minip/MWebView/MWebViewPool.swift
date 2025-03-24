@@ -72,7 +72,12 @@ extension MWebViewPool {
         logger.debug("[MWebViewPool] create new")
         let cfg = MWebView.defaultConfiguration()
         cfg.processPool = processPool
-        cfg.setURLSchemeHandler(MinipRequest(), forURLScheme: "miniprequest")
+        cfg.setURLSchemeHandler(MinipRequest.shared, forURLScheme: "miniphttp")
+        cfg.setURLSchemeHandler(MinipRequest.shared, forURLScheme: "miniphttps")
+
+        cfg.setURLSchemeHandler(MinipImage.shared, forURLScheme: "minipimghttp")
+        cfg.setURLSchemeHandler(MinipImage.shared, forURLScheme: "minipimghttps")
+
         cfg.setURLSchemeHandler(MinipURLSchemePing(), forURLScheme: "minipping")
         cfg.userContentController.addScriptMessageHandler(MinipNativeInteraction(), contentWorld: .page, name: MinipNativeInteraction.name)
 

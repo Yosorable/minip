@@ -8,6 +8,7 @@
 import Defaults
 import FlyingFox
 import Foundation
+import Kingfisher
 import SwiftLMDB
 import UIKit
 
@@ -109,7 +110,10 @@ class MiniAppManager {
             KVStorageManager.shared.removeDB(dbName: appId)
         }
         SQLiteDBManager.shared.clear()
-        appMemoryStorage.removeAll()
+        self.appMemoryStorage.removeAll()
+
+        logger.debug("[Kingfisher] closed app, cleaning memory image cache")
+        KingfisherManager.shared.cache.clearMemoryCache()
     }
 }
 

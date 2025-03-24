@@ -10,7 +10,6 @@
 		2B1B32C12A6132FD00DA573F /* FileManager++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B1B32C02A6132FD00DA573F /* FileManager++.swift */; };
 		2B1B32C42A61358B00DA573F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 2B1B32C32A61358B00DA573F /* Alamofire */; };
 		2B1B32C72A6135D300DA573F /* DownloadProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B1B32C62A6135D300DA573F /* DownloadProjectView.swift */; };
-		2B1B32CA2A614FF900DA573F /* ZipArchive in Frameworks */ = {isa = PBXBuildFile; productRef = 2B1B32C92A614FF900DA573F /* ZipArchive */; };
 		2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B1B32CC2A615BB800DA573F /* SettingsView.swift */; };
 		2B1B32CF2A61633000DA573F /* FilePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B1B32CE2A61633000DA573F /* FilePickerView.swift */; };
 		2B1B32D12A6163A100DA573F /* ImportProjectFromFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B1B32D02A6163A100DA573F /* ImportProjectFromFileView.swift */; };
@@ -111,6 +110,7 @@
 		48CA018B2D5C9E7B006A63DD /* MultiColumnsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CA018A2D5C9E74006A63DD /* MultiColumnsPickerView.swift */; };
 		48CD76DB2D65C9A70055A2C9 /* MiniAppPrivacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CD76DA2D65C9A00055A2C9 /* MiniAppPrivacy.swift */; };
 		48CE18432D5E760300F6F987 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 48CE18422D5E760300F6F987 /* Settings.bundle */; };
+		48CE69232D90EAE80072AF47 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 48CE69222D90EAE80072AF47 /* ZIPFoundation */; };
 		48CFF45A2D8FF23F00FAF2EF /* MinipImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CFF4592D8FF23700FAF2EF /* MinipImage.swift */; };
 		48D1FB7F2D4E97140093137D /* MiniAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D1FB7E2D4E97050093137D /* MiniAppSettingsViewController.swift */; };
 		48D1FB812D4E9C100093137D /* BackableNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D1FB802D4E9C080093137D /* BackableNavigationController.swift */; };
@@ -243,6 +243,7 @@
 				2B6D0E4A2A6223B4005BFEB9 /* PanModal in Frameworks */,
 				4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */,
 				48C22CE12D67FEA20000F74F /* TreeSitterJSDocRunestone in Frameworks */,
+				48CE69232D90EAE80072AF47 /* ZIPFoundation in Frameworks */,
 				487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */,
 				2B1B32C42A61358B00DA573F /* Alamofire in Frameworks */,
 				48C22CD92D67FEA20000F74F /* TreeSitterHTMLQueries in Frameworks */,
@@ -263,7 +264,6 @@
 				48C22CD52D67FEA20000F74F /* TreeSitterCommentRunestone in Frameworks */,
 				480B06452D5B3AC500FFAAA5 /* ProgressHUD in Frameworks */,
 				48C22D1D2D6831B80000F74F /* TreeSitterPythonRunestone in Frameworks */,
-				2B1B32CA2A614FF900DA573F /* ZipArchive in Frameworks */,
 				48C22D152D6831B70000F74F /* TreeSitterMarkdownQueries in Frameworks */,
 				48C22CCB2D67FEA20000F74F /* TreeSitterCSS in Frameworks */,
 				48C22CE52D67FEA20000F74F /* TreeSitterJSONQueries in Frameworks */,
@@ -620,7 +620,6 @@
 				2BD9B1A92A5BD4D300036AFD /* Runestone */,
 				2BD9B1D52A5C09C700036AFD /* KeyboardToolbar */,
 				2B1B32C32A61358B00DA573F /* Alamofire */,
-				2B1B32C92A614FF900DA573F /* ZipArchive */,
 				2B1B32D32A61783400DA573F /* Defaults */,
 				2B6D0E492A6223B4005BFEB9 /* PanModal */,
 				2BC331B32A62D47700441447 /* SwiftLMDB */,
@@ -659,6 +658,7 @@
 				48C22D1E2D6831B80000F74F /* TreeSitterYAML */,
 				48C22D202D6831B80000F74F /* TreeSitterYAMLQueries */,
 				48C22D222D6831B80000F74F /* TreeSitterYAMLRunestone */,
+				48CE69222D90EAE80072AF47 /* ZIPFoundation */,
 			);
 			productName = minip;
 			productReference = 48DF6B99288D32C800D523C1 /* minip.app */;
@@ -694,7 +694,6 @@
 				2BD9B1A82A5BD4D300036AFD /* XCRemoteSwiftPackageReference "Runestone" */,
 				2BD9B1D42A5C09C700036AFD /* XCRemoteSwiftPackageReference "KeyboardToolbar" */,
 				2B1B32C22A61358B00DA573F /* XCRemoteSwiftPackageReference "Alamofire" */,
-				2B1B32C82A614FF900DA573F /* XCRemoteSwiftPackageReference "ZipArchive" */,
 				2B1B32D22A61783400DA573F /* XCRemoteSwiftPackageReference "Defaults" */,
 				2B6D0E482A6223B4005BFEB9 /* XCRemoteSwiftPackageReference "PanModal" */,
 				2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */,
@@ -702,6 +701,7 @@
 				4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */,
 				480B06432D5B3AC500FFAAA5 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 				48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */,
+				48CE69212D90EAE80072AF47 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			productRefGroup = 48DF6B9A288D32C800D523C1 /* Products */;
 			projectDirPath = "";
@@ -1068,14 +1068,6 @@
 				minimumVersion = 5.0.0;
 			};
 		};
-		2B1B32C82A614FF900DA573F /* XCRemoteSwiftPackageReference "ZipArchive" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ZipArchive/ZipArchive";
-			requirement = {
-				kind = exactVersion;
-				version = 2.4.3;
-			};
-		};
 		2B1B32D22A61783400DA573F /* XCRemoteSwiftPackageReference "Defaults" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/Defaults";
@@ -1148,6 +1140,14 @@
 				minimumVersion = 0.1.10;
 			};
 		};
+		48CE69212D90EAE80072AF47 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.19;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1155,11 +1155,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2B1B32C22A61358B00DA573F /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
-		};
-		2B1B32C92A614FF900DA573F /* ZipArchive */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2B1B32C82A614FF900DA573F /* XCRemoteSwiftPackageReference "ZipArchive" */;
-			productName = ZipArchive;
 		};
 		2B1B32D32A61783400DA573F /* Defaults */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1360,6 +1355,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
 			productName = TreeSitterYAMLRunestone;
+		};
+		48CE69222D90EAE80072AF47 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48CE69212D90EAE80072AF47 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

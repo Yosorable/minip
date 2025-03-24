@@ -1,5 +1,5 @@
 {
-  "originHash" : "13953d89e47387f3abf5d573db4b6919adc6a5d4b84d948e5a2cef709c9a71dc",
+  "originHash" : "904cc4a6102b097d1b6557df63b6acf7166081e2f85163cc2e2cb3fa17fbe465",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -110,12 +110,12 @@
       }
     },
     {
-      "identity" : "ziparchive",
+      "identity" : "zipfoundation",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ZipArchive/ZipArchive",
+      "location" : "https://github.com/weichsel/ZIPFoundation",
       "state" : {
-        "revision" : "38e0ce0598e06b034271f296a8e15b149c91aa19",
-        "version" : "2.4.3"
+        "revision" : "02b6abe5f6eef7e3cbd5f247c5cc24e246efcfe0",
+        "version" : "0.9.19"
       }
     }
   ],

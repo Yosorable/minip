@@ -7,6 +7,7 @@
 
 import ProgressHUD
 import UIKit
+import ZIPFoundation
 
 extension FileBrowserViewController {
     func configureDataSource() {

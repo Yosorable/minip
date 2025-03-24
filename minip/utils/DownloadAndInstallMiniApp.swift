@@ -7,7 +7,7 @@
 
 import Alamofire
 import Foundation
-import ZipArchive
+import ZIPFoundation
 
 func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((String)->Void)? = nil, signalAppListChangedOnSuccess: Bool = true) {
     let fileManager = FileManager.default
@@ -17,9 +17,7 @@ func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((Stri
 
     do {
         try fileManager.createDirectory(at: unzipDirURL, withIntermediateDirectories: true, attributes: nil)
-        if !SSZipArchive.unzipFile(atPath: pkgFile.path, toDestination: unzipDirURL.path) {
-            throw ErrorMsg(errorDescription: "unzipped failed")
-        }
+        try fileManager.unzipItem(at: pkgFile, to: unzipDirURL)
 
         guard let appJSONURL = try findAppJSON(in: unzipDirURL) else {
             throw ErrorMsg(errorDescription: "cannot find app.json")

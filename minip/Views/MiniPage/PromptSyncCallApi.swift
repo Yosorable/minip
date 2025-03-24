@@ -23,7 +23,7 @@ extension MiniPageViewController {
             return
         }
 
-        guard let apiName = MinipApi.APIName(rawValue: apiName) else {
+        guard let apiName = MinipApi.APIName(rawValue: apiName), let webView = webView as? MWebView else {
             do {
                 let encoder = JSONEncoder()
                 let resData = try encoder.encode(MinipApi.InteropUtils.fail(msg: "API not found"))
@@ -35,22 +35,22 @@ extension MiniPageViewController {
             return
         }
 
-        let wid = (webView as? MWebView)?.id ?? -1
-        logger.debug("[minip-api] call api [\(apiName.rawValue)] from [webview:\(wid == -1 ? "unknown" : "\(wid)")]")
+        let wid = webView.id ?? -1
+        logger.debug("[minip-api-sync] call api [\(apiName.rawValue)] from [webview:\(wid == -1 ? "unknown" : "\(wid)")]")
 
         let api = MinipApi.shared
-        let param = MinipApi.Parameter(webView: webView as? MWebView, data: jsonObj["data"])
+        let param = MinipApi.Parameter(webView: webView, data: jsonObj["data"])
+        let replyHandler: (Any?, String?) -> Void = { res, _ in
+            completionHandler(res as? String)
+        }
+
         switch apiName {
-        case .getKVStorageSync:
-            completionHandler(api.getKVStorageSync(param: param))
-        case .setKVStorageSync:
-            completionHandler(api.setKVStorageSync(param: param))
-        case .deleteKVStorageSync:
-            completionHandler(api.deleteKVStorageSync(param: param))
-        case .clearKVStorageSync:
-            completionHandler(api.clearKVStorageSync(param: param))
-        case .getDeviceInfoSync:
-            completionHandler(api.getDeviceInfoSync(param: param))
+        case .getKVStorageSync,
+             .setKVStorageSync,
+             .deleteKVStorageSync,
+             .clearKVStorageSync,
+             .getDeviceInfoSync:
+            api.call(apiName: apiName, param: param, replyHandler: replyHandler)
         default:
             completionHandler("API \(apiName.rawValue) is not implemented or not allowed")
         }

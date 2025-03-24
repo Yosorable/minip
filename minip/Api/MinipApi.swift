@@ -105,49 +105,132 @@ class MinipApi {
         }
     }
 
-    struct Parameter {
-        var webView: MWebView?
-        var data: Any?
+    func call(apiName: APIName, param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let _ = MiniAppManager.shared.openedApp, let webView = param.webView, let vc = webView.holderObject as? UIViewController else {
+            return
+        }
+
+        if let permission = apiName.requestPermissionType() {
+            MiniAppManager.shared.getOrRequestPermission(permissionType: permission, onSuccess: { [weak self] in
+                self?.handle(apiName: apiName, param: param, replyHandler: replyHandler)
+            }, onFailed: { _ in
+                replyHandler(nil, "No permission")
+            }, parentVC: vc)
+        } else {
+            self.handle(apiName: apiName, param: param, replyHandler: replyHandler)
+        }
     }
 
-    struct Request<T: Codable>: Codable {
-        var apiName: APIName
-        var data: T?
-    }
-
-    struct Response<T: Codable>: Codable {
-        var code: Int
-        var msg: String?
-        var data: T?
-
-        func toJsonString() -> String? {
-            let encoder = JSONEncoder()
-            do {
-                return try String(data: encoder.encode(self))
-            } catch {
-                return "{\"code\": 7, \"msg\": \"Error occurs when encoding res data to json\"}"
+    private func handle(apiName: APIName, param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        let api = MinipApi.shared
+        switch apiName {
+        case .ping:
+            var res = MinipApi.InteropUtils.succeed()
+            if let req = (param.data as? [String: Any])?["data"] as? String {
+                res.data = req
             }
-        }
-    }
-
-    class InteropUtils {
-        static let successCode = 0
-        static let failedCode = 7
-
-        static func succeed(msg _msg: String? = nil) -> Response<String> {
-            Response<String>(code: successCode, msg: _msg)
-        }
-
-        static func succeedWithData<T: Codable>(data _data: T, msg _msg: String? = nil) -> Response<T> {
-            Response(code: successCode, msg: _msg, data: _data)
-        }
-
-        static func fail(msg _msg: String? = nil) -> Response<String> {
-            Response<String>(code: failedCode, msg: _msg)
-        }
-
-        static func failWithData<T: Codable>(data _data: T, msg _msg: String? = nil) -> Response<T> {
-            Response(code: failedCode, msg: _msg, data: _data)
+            do {
+                let encoder = JSONEncoder()
+                let resData = try encoder.encode(res)
+                replyHandler(String(data: resData), nil)
+            } catch {
+                replyHandler(nil, error.localizedDescription)
+            }
+        case .getInstalledAppList:
+            api.getInstalledAppList(replyHandler: replyHandler)
+        case .navigateTo:
+            api.navigateTo(param: param, replyHandler: replyHandler)
+        case .navigateBack:
+            api.navigateBack(param: param, replyHandler: replyHandler)
+        case .redirectTo:
+            api.redirectTo(param: param, replyHandler: replyHandler)
+        case .openWebsite:
+            api.openWebsite(param: param, replyHandler: replyHandler)
+        case .openSettings:
+            api.openSettings(param: param, replyHandler: replyHandler)
+        case .showAppDetail:
+            api.showAppDetail(param: param, replyHandler: replyHandler)
+        case .closeApp:
+            api.closeApp(param: param, replyHandler: replyHandler)
+        case .installApp:
+            api.installApp(param: param, replyHandler: replyHandler)
+        case .setNavigationBarTitle:
+            api.setNavigationBarTitle(param: param, replyHandler: replyHandler)
+        case .setNavigationBarColor:
+            api.setNavigationBarColor(param: param, replyHandler: replyHandler)
+        case .enablePullDownRefresh:
+            api.enablePullDownRefresh(param: param, replyHandler: replyHandler)
+        case .disablePullDownRefresh:
+            api.disablePullDownRefresh(param: param, replyHandler: replyHandler)
+        case .startPullDownRefresh:
+            api.startPullDownRefresh(param: param, replyHandler: replyHandler)
+        case .stopPullDownRefresh:
+            api.stopPullDownRefresh(param: param, replyHandler: replyHandler)
+        case .showHUD:
+            api.showHUD(param: param, replyHandler: replyHandler)
+        case .hideHUD:
+            api.hideHUD(param: param, replyHandler: replyHandler)
+        case .showAlert:
+            api.showAlert(param: param, replyHandler: replyHandler)
+        case .previewImage:
+            api.previewImage(param: param, replyHandler: replyHandler)
+        case .previewVideo:
+            api.previewVideo(param: param, replyHandler: replyHandler)
+        case .vibrate:
+            api.vibrate(param: param, replyHandler: replyHandler)
+        case .getClipboardData:
+            api.getClipboardData(param: param, replyHandler: replyHandler)
+        case .setClipboardData:
+            api.setClipboardData(param: param, replyHandler: replyHandler)
+        case .getKVStorage,
+             .getKVStorageSync:
+            api.getKVStorage(param: param, replyHandler: replyHandler)
+        case .setKVStorage,
+             .setKVStorageSync:
+            api.setKVStorage(param: param, replyHandler: replyHandler)
+        case .deleteKVStorage,
+             .deleteKVStorageSync:
+            api.deleteKVStorage(param: param, replyHandler: replyHandler)
+        case .clearKVStorage,
+             .clearKVStorageSync:
+            api.clearKVStorage(param: param, replyHandler: replyHandler)
+        case .showPicker:
+            api.showPicker(param: param, replyHandler: replyHandler)
+        case .scanQRCode:
+            api.scanQRCode(param: param, replyHandler: replyHandler)
+        case .getDeviceInfo,
+             .getDeviceInfoSync:
+            api.getDeviceInfo(param: param, replyHandler: replyHandler)
+        case .sqliteOpenDB:
+            api.sqliteOpenDB(param: param, replyHandler: replyHandler)
+        case .sqliteCloseDB:
+            api.sqliteCloseDB(param: param, replyHandler: replyHandler)
+        case .sqlitePrepare:
+            api.sqlitePrepare(param: param, replyHandler: replyHandler)
+        case .sqliteStatementAll:
+            api.sqliteStatementAll(param: param, replyHandler: replyHandler)
+        case .sqliteStatementRun:
+            api.sqliteStatementRun(param: param, replyHandler: replyHandler)
+        case .sqliteExecute:
+            api.sqliteExecute(param: param, replyHandler: replyHandler)
+        case .sqliteCreateIterator:
+            api.sqliteCreateIterator(param: param, replyHandler: replyHandler)
+        case .sqliteIteratorNext:
+            api.sqliteIteratorNext(param: param, replyHandler: replyHandler)
+        case .sqliteIteratorRelease:
+            api.sqliteIteratorRelease(param: param, replyHandler: replyHandler)
+        case .setMemoryStorage:
+            api.setMemoryStorage(param: param, replyHandler: replyHandler)
+        case .setMemoryStorageIfNotExist:
+            api.setMemoryStorageIfNotExist(param: param, replyHandler: replyHandler)
+        case .getMemoryStorage:
+            api.getMemoryStorage(param: param, replyHandler: replyHandler)
+        case .removeMemoryStorage:
+            api.removeMemoryStorage(param: param, replyHandler: replyHandler)
+        case .clearMemoryStorage:
+            api.clearMemoryCache(param: param, replyHandler: replyHandler)
+        default:
+            replyHandler(nil, "API \(apiName.rawValue) is not implemented or not allowed")
         }
     }
 }

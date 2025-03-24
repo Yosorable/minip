@@ -217,8 +217,8 @@ extension UIColor {
     }
 
     convenience init?(light: UIColor?, dark: UIColor?) {
-        var lightColor = light ?? dark
-        var darkColor = dark ?? light
+        let lightColor = light ?? dark
+        let darkColor = dark ?? light
         if let lc = lightColor, let dc = darkColor {
             self.init { (traitCollection: UITraitCollection) -> UIColor in
                 if traitCollection.userInterfaceStyle == .dark {

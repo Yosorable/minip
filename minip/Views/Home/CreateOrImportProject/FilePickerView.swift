@@ -11,7 +11,6 @@ import MobileCoreServices
 import ProgressHUD
 import SwiftUI
 import UniformTypeIdentifiers
-import ZipArchive
 
 struct FileImporterView: UIViewControllerRepresentable {
     var onSuccess: (() -> Void)?

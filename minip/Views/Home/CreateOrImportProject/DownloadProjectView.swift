@@ -9,7 +9,6 @@ import Alamofire
 import Defaults
 import ProgressHUD
 import SwiftUI
-import ZipArchive
 
 class DownloadProjectViewController: UIHostingController<DownloadProjectView> {
     init() {

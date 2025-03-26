@@ -30,25 +30,28 @@ struct SettingsView: View {
     @Default(.wkwebviewInspectable) var wkwebviewInspectable
     @Default(.useCapsuleButton) var useCapsuleButton
     @Default(.colorScheme) var colorScheme
+    @Default(.useSanboxRoot) var useSandboxRoot
 
     var content: some View {
         List {
-            #if DEBUG
             Section {
-                Toggle(isOn: $wkwebviewInspectable, label: {
-                    Text(i18n("s.allow_inspect_wkwebview"))
+                Toggle(isOn: $useCapsuleButton, label: {
+                    Text(i18n("s.use_capsule_button"))
                 })
 
-                Button {
-                    MiniAppManager.shared.clearAllPermissions()
-                    ShowSimpleSuccess(msg: "Cleared successfully.")
-                } label: {
-                    Text("Clear All Permissions")
+                Picker("Appearance", selection: $colorScheme) {
+                    Text("Follow System").tag(0)
+                    Text("Light").tag(1)
+                    Text("Dark").tag(2)
                 }
+                .onChange(of: colorScheme, perform: { val in
+                    let del = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.delegate as? SceneDelegate
+                    del?.window?.overrideUserInterfaceStyle = if val == 1 { .light } else if val == 2 { .dark } else { .unspecified }
+                })
             } header: {
-                Text("Debug")
+                Text("Preference")
             }
-            #endif
+
             Section {
                 Button {
                     let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
@@ -56,7 +59,6 @@ struct SettingsView: View {
                     WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: dateFrom) {
                         ProgressHUD.succeed(i18n("success"))
                     }
-
                 } label: {
                     Text(i18n("s.clear_wkwebview_cache"))
                 }
@@ -74,21 +76,26 @@ struct SettingsView: View {
             }
 
             Section {
-                Toggle(isOn: $useCapsuleButton, label: {
-                    Text(i18n("s.use_capsule_button"))
+                Toggle(isOn: $wkwebviewInspectable, label: {
+                    Text(i18n("s.allow_inspect_wkwebview"))
                 })
 
-                Picker("Appearance", selection: $colorScheme) {
-                    Text("Follow System").tag(0)
-                    Text("Light").tag(1)
-                    Text("Dark").tag(2)
+                Toggle(isOn: $useSandboxRoot, label: {
+                    Text("Use Sandbox Root for File Browser")
+                }).onChange(of: useSandboxRoot) { newVal in
+                    Global.shared.fileBrowserRootURL = newVal ? Global.shared.sandboxRootURL : Global.shared.documentsRootURL
+                    guard let scene = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+                    scene.updateFileBrowserRoot()
                 }
-                .onChange(of: colorScheme, perform: { val in
-                    let del = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.delegate as? SceneDelegate
-                    del?.window?.overrideUserInterfaceStyle = if val == 1 { .light } else if val == 2 { .dark } else { .unspecified }
-                })
+
+                Button {
+                    MiniAppManager.shared.clearAllPermissions()
+                    ShowSimpleSuccess(msg: "Cleared successfully.")
+                } label: {
+                    Text("Remove All Permissions")
+                }
             } header: {
-                Text("Preference")
+                Text("Advance")
             }
 
             Section {

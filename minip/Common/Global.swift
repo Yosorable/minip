@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Defaults
 
 final class Global {
     static let shared = Global()
@@ -27,10 +28,6 @@ final class Global {
         documentsTrashURL = documentsRootURL.appendingPolyfill(path: ".Trash/")
         dataFolderURL = documentsRootURL.appendingPolyfill(path: ".data/")
         projectDataFolderURL = dataFolderURL.appendingPolyfill(path: "appdata/")
-#if DEBUG
-        fileBrowserRootURL = sandboxRootURL
-#else
-        fileBrowserRootURL = documentsRootURL
-#endif
+        fileBrowserRootURL = Defaults[.useSanboxRoot] ? sandboxRootURL : documentsRootURL
     }
 }

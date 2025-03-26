@@ -27,4 +27,7 @@ extension Defaults.Keys {
     
     // color scheme, 0: system, 1: light, 2: dark
     static let colorScheme = Key<Int>("colorScheme", default: 0)
+    
+    // use sandbox root as file browser root path
+    static let useSanboxRoot = Key<Bool>("useSandboxRoot", default: false)
 }

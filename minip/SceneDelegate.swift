@@ -58,6 +58,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             handleURL(url: url)
         }
     }
+    
+    func updateFileBrowserRoot() {
+        guard let nvc = (window?.rootViewController as? UITabBarController)?.viewControllers?[1] as? UINavigationController else {
+            return
+        }
+        nvc.setViewControllers([FileBrowserViewController(folderURL: Global.shared.fileBrowserRootURL)], animated: false)
+    }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         guard let urlContext = URLContexts.first else { return }

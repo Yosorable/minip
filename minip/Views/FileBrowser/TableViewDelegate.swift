@@ -11,11 +11,13 @@ import ZIPFoundation
 
 extension FileBrowserViewController {
     func configureDataSource() {
-        dataSource = UITableViewDiffableDataSource<Int, FileInfo>(tableView: tableView) { tableView, indexPath, _ in
+        dataSource = UITableViewDiffableDataSource<Int, FileInfo>(tableView: tableView) { [weak self] tableView, indexPath, _ in
             let cell = tableView.dequeueReusableCell(withIdentifier: FileItemCell.identifier, for: indexPath) as! FileItemCell
-            let fileInfo = self.files[indexPath.row]
+            guard let fileInfo = self?.files[indexPath.row] else {
+                return nil
+            }
             var displayName: NSAttributedString? = nil
-            if self.folderURL == Global.shared.projectDataFolderURL, let appName = MiniAppManager.shared.getAppInfosFromCache().filter({ $0.appId == fileInfo.fileName }).first?.name {
+            if self?.folderURL == Global.shared.projectDataFolderURL, let appName = MiniAppManager.shared.getAppInfosFromCache().filter({ $0.appId == fileInfo.fileName }).first?.name {
                 let dName = fileInfo.fileName + " " + appName
                 let attributedString = NSMutableAttributedString(string: dName)
                 let grayTextStartIndex = fileInfo.fileName.count

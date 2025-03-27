@@ -121,23 +121,6 @@ func FormatFileSize(_ bytes: UInt64) -> String {
     return String(format: "%.2f%@", size, units[unitIndex])
 }
 
-// alert
-extension UIAlertController {
-    func showOnTopViewController(completion: (() -> Void)? = nil) {
-        let kw = UIApplication
-            .shared
-            .connectedScenes
-            .flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
-            .last { $0.isKeyWindow }
-        if var topController = kw?.rootViewController {
-            while let presentedViewController = topController.presentedViewController {
-                topController = presentedViewController
-            }
-            topController.present(self, animated: true, completion: completion)
-        }
-    }
-}
-
 func GetKeyWindowUIViewController() -> UIViewController? {
     let kw = UIApplication
         .shared

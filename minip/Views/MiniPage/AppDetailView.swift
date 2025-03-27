@@ -168,7 +168,7 @@ struct AppDetailView: View {
                 nvc.view.tintColor = pvc?.view.tintColor
                 if #available(iOS 15.0, *) {
                     if let presentVC = nvc.sheetPresentationController {
-                        presentVC.detents = [.medium(), .large()]
+                        presentVC.detents = [.medium()]
                     }
                 }
                 pvc?.present(nvc, animated: true)

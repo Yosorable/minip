@@ -113,6 +113,16 @@ extension FileBrowserViewController {
                         let nvc = PannableNavigationViewController(rootViewController: imageVC)
                         nvc.modalPresentationStyle = .fullScreen
                         present(nvc, animated: true)
+                    } else if utType.conforms(to: .zip) {
+                        let alert = UIAlertController(title: fileInfo.fileName, message: i18n(fileInfo.isFolder ? "Folder" : "File") + (fileInfo.isFolder ? "" : " (\(fileInfo.size ?? "unknown size"))"), preferredStyle: .actionSheet)
+
+                        alert.addAction(UIAlertAction(title: i18n("Decompress"), style: .default, handler: { _ in
+                            self.decompress(fileInfo)
+                        }))
+                        alert.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel))
+                        alert.popoverPresentationController?.sourceView = cell
+                        alert.popoverPresentationController?.sourceRect = cell?.bounds ?? .zero
+                        self.present(alert, animated: true)
                     } else {
                         cannotOpen = true
                     }

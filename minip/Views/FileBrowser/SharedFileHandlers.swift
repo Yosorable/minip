@@ -5,7 +5,9 @@
 //  Created by LZY on 2025/3/17.
 //
 
+import ProgressHUD
 import UIKit
+import ZIPFoundation
 
 extension FileBrowserViewController {
     func moveOrCopyFiles(files: [FileInfo], isMove: Bool) {
@@ -121,5 +123,27 @@ extension FileBrowserViewController {
             }
         }
         return false
+    }
+
+    func decompress(_ fileInfo: FileInfo) {
+        ProgressHUD.animate("uncompressing", interaction: false)
+        Task {
+            let f = fileInfo.url.deletingLastPathComponent()
+            let fileNameWithoutExt = fileInfo.fileName.deletingSuffix(".zip")
+            var dest = f.appendingPolyfill(path: fileNameWithoutExt)
+            let fileManager = FileManager.default
+            var cnt = 1
+            while fileManager.fileExists(atPath: dest.path) {
+                dest = dest.deletingLastPathComponent().appendingPolyfill(path: fileNameWithoutExt + " \(cnt)")
+                cnt += 1
+            }
+            do {
+                try fileManager.unzipItem(at: fileInfo.url, to: dest)
+                ShowSimpleSuccess(msg: "Uncompressed successfully")
+                self.fetchFilesAndUpdateDataSource()
+            } catch {
+                ShowSimpleError(err: error)
+            }
+        }
     }
 }

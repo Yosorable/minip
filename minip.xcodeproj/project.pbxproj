@@ -138,6 +138,7 @@
 		48F6B3632D86EF190026D64F /* FileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F6B3622D86EF150026D64F /* FileInfo.swift */; };
 		48F91E1A2D7B1086001D5BEA /* WebViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F91E192D7B107B001D5BEA /* WebViewDelegate.swift */; };
 		48FB5A052B95CD9400D2DFCC /* UIViewController++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FB5A042B95CD9400D2DFCC /* UIViewController++.swift */; };
+		48FFAA3C2D96F4050028D02D /* FileServerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48FFAA3B2D96F3FF0028D02D /* FileServerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -234,6 +235,7 @@
 		48F6B3622D86EF150026D64F /* FileInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileInfo.swift; sourceTree = "<group>"; };
 		48F91E192D7B107B001D5BEA /* WebViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDelegate.swift; sourceTree = "<group>"; };
 		48FB5A042B95CD9400D2DFCC /* UIViewController++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController++.swift"; sourceTree = "<group>"; };
+		48FFAA3B2D96F3FF0028D02D /* FileServerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileServerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -375,6 +377,7 @@
 		2B9CF4222A5A6A2700BD2C7F /* FileBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				48FFAA3A2D96F3F40028D02D /* FileServer */,
 				2B9CF4102A5A558D00BD2C7F /* Editor */,
 				48F6B35E2D86A5BF0026D64F /* FileItemCell.swift */,
 				48F6B35C2D86A58A0026D64F /* FileBrowserViewController.swift */,
@@ -595,6 +598,14 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
+		48FFAA3A2D96F3F40028D02D /* FileServer */ = {
+			isa = PBXGroup;
+			children = (
+				48FFAA3B2D96F3FF0028D02D /* FileServerView.swift */,
+			);
+			path = FileServer;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -729,6 +740,7 @@
 				48CA017C2D5C28FB006A63DD /* Transition.swift in Sources */,
 				484DF0502D8826CE00B2246D /* PresentationControllerDelegate.swift in Sources */,
 				48BDB1EB2D8264F000C6A100 /* CodeEditorViewController.swift in Sources */,
+				48FFAA3C2D96F4050028D02D /* FileServerView.swift in Sources */,
 				48CA01802D5C32F1006A63DD /* PickerType.swift in Sources */,
 				48021CC22D5F705100C39F07 /* Notification.swift in Sources */,
 				2B415A112A7E8FA900B3BF94 /* MiniPageViewController.swift in Sources */,

@@ -6,6 +6,7 @@
 //
 
 import ProgressHUD
+import SwiftUI
 import UIKit
 
 class FileBrowserViewController: UITableViewController {
@@ -202,7 +203,9 @@ class FileBrowserViewController: UITableViewController {
     }
 
     @objc func openWebServer() {
-        ShowSimpleError(err: ErrorMsg(errorDescription: "Not implemented"))
+        let vc = UIHostingController(rootView: FileServerView())
+
+        present(vc, animated: true)
     }
 
     @objc func dismissModal() {

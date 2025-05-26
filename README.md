@@ -14,7 +14,7 @@ For documentation, please refer to https://minip.lzyl.win/
 
 [Source code](https://github.com/Yosorable/minip-demo)
 
-Scan this QR code using the Minip app to see a live demo:
+Scan this QR code using the Minip App to see a live demo:
 
 ![](qrcode.jpg)
 

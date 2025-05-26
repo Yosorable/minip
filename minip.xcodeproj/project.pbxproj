@@ -41,7 +41,7 @@
 		48328F5E2D6870330031C4D3 /* i18n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48328F5D2D6870290031C4D3 /* i18n.swift */; };
 		484DF0502D8826CE00B2246D /* PresentationControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484DF04F2D8826BE00B2246D /* PresentationControllerDelegate.swift */; };
 		484E08312B96D6DD0018DCF0 /* AppDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */; };
-		485A75222BDCA43F00D887A4 /* logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485A75212BDCA43F00D887A4 /* logger.swift */; };
+		485A75222BDCA43F00D887A4 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485A75212BDCA43F00D887A4 /* Logger.swift */; };
 		485FEE752D5D076900A0C430 /* QRScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FEE742D5D076400A0C430 /* QRScannerView.swift */; };
 		485FEE772D5D078700A0C430 /* QRScannerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FEE762D5D077D00A0C430 /* QRScannerViewDelegate.swift */; };
 		485FEE792D5D07AE00A0C430 /* QRScannerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FEE782D5D07A800A0C430 /* QRScannerError.swift */; };
@@ -168,7 +168,7 @@
 		48328F5D2D6870290031C4D3 /* i18n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = i18n.swift; sourceTree = "<group>"; };
 		484DF04F2D8826BE00B2246D /* PresentationControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationControllerDelegate.swift; sourceTree = "<group>"; };
 		484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
-		485A75212BDCA43F00D887A4 /* logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = logger.swift; sourceTree = "<group>"; };
+		485A75212BDCA43F00D887A4 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		485FEE742D5D076400A0C430 /* QRScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerView.swift; sourceTree = "<group>"; };
 		485FEE762D5D077D00A0C430 /* QRScannerViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewDelegate.swift; sourceTree = "<group>"; };
 		485FEE782D5D07A800A0C430 /* QRScannerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerError.swift; sourceTree = "<group>"; };
@@ -448,7 +448,7 @@
 			isa = PBXGroup;
 			children = (
 				48021CC12D5F704700C39F07 /* Notification.swift */,
-				485A75212BDCA43F00D887A4 /* logger.swift */,
+				485A75212BDCA43F00D887A4 /* Logger.swift */,
 				48B90EEB2D5DDB5600CCE103 /* QRCodeHandler.swift */,
 				48BF62D52D89B56600060589 /* Global.swift */,
 				48021CBD2D5F3ECD00C39F07 /* URLSchemeHandler.swift */,
@@ -800,7 +800,7 @@
 				488C2F402D4E287A00892E3A /* ErrorMsg.swift in Sources */,
 				48D68D552D58E894002303FD /* MiniAppManager+DeleteApp.swift in Sources */,
 				485FEE792D5D07AE00A0C430 /* QRScannerError.swift in Sources */,
-				485A75222BDCA43F00D887A4 /* logger.swift in Sources */,
+				485A75222BDCA43F00D887A4 /* Logger.swift in Sources */,
 				48CFF45A2D8FF23F00FAF2EF /* MinipImage.swift in Sources */,
 				2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */,
 				48CA01842D5C3379006A63DD /* DatePickerView.swift in Sources */,

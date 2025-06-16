@@ -117,7 +117,7 @@ extension MWebView: MWebViewPoolProtocol {
         if backForwardList.responds(to: sel) {
             backForwardList.perform(sel)
         }
-        #warning("Use custom removal of placeholder image")
+
         loadHTMLString("", baseURL: nil)
 
         if #available(iOS 16.4, *) {

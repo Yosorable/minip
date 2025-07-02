@@ -13,7 +13,10 @@ let logger = Logger()
 
 
 public final class LoggerForFlyingFox: Logging {
-    let prefix = "http-server"
+    let prefix: String
+    init(prefix: String = "http-server") {
+        self.prefix = prefix
+    }
     public func logDebug(_ debug: @autoclosure () -> String) {
 #if DEBUG
         let msg = debug()

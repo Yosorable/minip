@@ -18,7 +18,7 @@ public class MWebViewPool: NSObject {
     private let processPool = WKProcessPool()
 
     // webviews be owned by viewcontrollers
-    public var visiableWebViewSet = Set<MWebView>()
+    public var visibleWebViewSet = Set<MWebView>()
     // webviews in recycle pool
     public var reusableWebViewSet = Set<MWebView>()
 
@@ -44,7 +44,8 @@ public class MWebViewPool: NSObject {
     }
 
     deinit {
-        // clear set
+        visibleWebViewSet.removeAll()
+        reusableWebViewSet.removeAll()
     }
 }
 
@@ -90,10 +91,10 @@ extension MWebViewPool {
     /// owned webView's holder is destroyed, recycle it
     func tryCompactWeakHolders() {
         lock.wait()
-        let shouldReusedWebViewSet = visiableWebViewSet.filter { $0.holderObject == nil }
+        let shouldReusedWebViewSet = visibleWebViewSet.filter { $0.holderObject == nil }
         for webView in shouldReusedWebViewSet {
             webView.webviewWillEnterPool()
-            visiableWebViewSet.remove(webView)
+            visibleWebViewSet.remove(webView)
             reusableWebViewSet.insert(webView)
         }
         lock.signal()
@@ -121,12 +122,12 @@ public extension MWebViewPool {
             logger.debug("[MWebViewPool] reuse")
             webView = reusableWebViewSet.randomElement()!
             reusableWebViewSet.remove(webView)
-            visiableWebViewSet.insert(webView)
+            visibleWebViewSet.insert(webView)
 
             webView.webviewWillLeavePool()
         } else {
             webView = createNewWebvew()
-            visiableWebViewSet.insert(webView)
+            visibleWebViewSet.insert(webView)
         }
 
         webView.holderObject = holder
@@ -141,9 +142,9 @@ public extension MWebViewPool {
         guard let webView = webView else { return }
         logger.debug("[MWebViewPool] recycle webview")
         lock.wait()
-        if visiableWebViewSet.contains(webView) {
+        if visibleWebViewSet.contains(webView) {
             webView.webviewWillEnterPool()
-            visiableWebViewSet.remove(webView)
+            visibleWebViewSet.remove(webView)
             reusableWebViewSet.insert(webView)
         }
         lock.signal()

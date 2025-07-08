@@ -66,6 +66,15 @@ struct FileServerView: View {
                 }
             }
             .navigationBarTitle(Text("File Server"), displayMode: .inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        getTopViewController()?.dismiss(animated: true)
+                    } label: {
+                        Text("Close")
+                    }
+                }
+            }
         }
         .onDisappear {
             guard let serv = fileServer else { return }

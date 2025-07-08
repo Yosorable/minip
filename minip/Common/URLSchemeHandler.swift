@@ -81,12 +81,12 @@ extension URLSchemeHandler {
         }
 
         DownloadMiniAppPackageToTmpFolder(urlStr, onError: { err in
-            ShowSimpleError(err: err)
+            showSimpleError(err: err)
         }, onSuccess: { pkgURL in
             InstallMiniApp(pkgFile: pkgURL, onSuccess: {
-                ShowSimpleSuccess()
+                showSimpleSuccess()
             }, onFailed: { errMsg in
-                ShowSimpleError(err: ErrorMsg(errorDescription: errMsg))
+                showSimpleError(err: ErrorMsg(errorDescription: errMsg))
             })
         })
     }

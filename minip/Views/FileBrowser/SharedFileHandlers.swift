@@ -41,7 +41,7 @@ extension FileBrowserViewController {
             // check if the files or folder can be moved
             for ele in files {
                 if ele.url == Global.shared.documentsTrashURL || ele.url == Global.shared.dataFolderURL {
-                    ShowSimpleError(err: ErrorMsg(errorDescription: files.count == 1 ? "This \(files.first!.isFolder ? "folder" : "file") cannot move" : "Some files or folders cannot move"))
+                    showSimpleError(err: ErrorMsg(errorDescription: files.count == 1 ? "This \(files.first!.isFolder ? "folder" : "file") cannot move" : "Some files or folders cannot move"))
                     return
                 }
             }
@@ -75,12 +75,12 @@ extension FileBrowserViewController {
                         try fileManager.copyItem(at: sourceURL, to: destinationURL)
                     }
                 }
-                ShowSimpleSuccess(msg: i18n(isMove ? "Moved successfully" : "Copied successfully"))
+                showSimpleSuccess(msg: i18n(isMove ? "Moved successfully" : "Copied successfully"))
                 if self?.tableView.isEditing == true {
                     self?.toggleSelectMode()
                 }
             } catch {
-                ShowSimpleError(err: error)
+                showSimpleError(err: error)
             }
             self?.fetchFilesAndUpdateDataSource()
         }
@@ -139,10 +139,10 @@ extension FileBrowserViewController {
             }
             do {
                 try fileManager.unzipItem(at: fileInfo.url, to: dest)
-                ShowSimpleSuccess(msg: "Uncompressed successfully")
+                showSimpleSuccess(msg: "Uncompressed successfully")
                 self.fetchFilesAndUpdateDataSource()
             } catch {
-                ShowSimpleError(err: error)
+                showSimpleError(err: error)
             }
         }
     }

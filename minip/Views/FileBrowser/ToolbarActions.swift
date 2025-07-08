@@ -77,7 +77,7 @@ extension FileBrowserViewController {
         logger.debug("[FileBrowser] to delete file: \(toDeleteURLs.map { $0.lastPathComponent })")
 
         if containsCannotDeleteItems {
-            ShowSimpleError(err: ErrorMsg(errorDescription: "Some files or folders cannot delete"))
+            showSimpleError(err: ErrorMsg(errorDescription: "Some files or folders cannot delete"))
             return
         }
 
@@ -96,9 +96,9 @@ extension FileBrowserViewController {
                         }
                         successDeleted.append(IndexPath(row: toDeleteIndexInTableView[index], section: 0))
                     }
-                    ShowSimpleSuccess(msg: i18n(isInTrashRoot ? "f.deleted_success" : "f.moved_to_trash"))
+                    showSimpleSuccess(msg: i18n(isInTrashRoot ? "f.deleted_success" : "f.moved_to_trash"))
                 } catch {
-                    ShowSimpleError(err: error)
+                    showSimpleError(err: error)
                 }
                 self?.toggleSelectMode()
                 if successDeleted.count > 0 {

@@ -7,121 +7,20 @@
 
 import AudioToolbox
 import Foundation
-import os.log
 import ProgressHUD
 import UIKit
+import os.log
 
-func WriteToFile(data: Data, fileName: String) -> Bool {
-    // get path of directory
-    guard let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-        return false
-    }
-    // create file url
-    let fileurl = directory.appendingPathComponent(fileName)
-
-    logger.debug("[WriteToFile] file uri: \(fileurl)")
-
-    do {
-        try data.write(to: fileurl, options: .atomic)
-        return true
-    } catch {
-        logger.error("[WriteToFile] Unable to write in new file.")
-        return false
-    }
-}
-
-func readFile(fileName: String) -> [UInt8] {
-    guard let directory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-        return [UInt8]()
-    }
-    let fileurl = directory.appendingPathComponent(fileName)
-    do {
-        let rawData: Data = try Data(contentsOf: fileurl)
-        return [UInt8](rawData)
-    } catch {
-        return [UInt8]()
-    }
-}
-
-func fileOrFolderExists(path: String) -> (Bool, Bool) {
-    let fileManager = FileManager.default
-    var isDirectory: ObjCBool = false
-    let exists = fileManager.fileExists(atPath: path, isDirectory: &isDirectory)
-    return (exists, isDirectory.boolValue)
-}
-
-func mkdir(path: String) {
-    try? FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true)
-}
-
-func touch(path: String, content: Data? = nil) {
-    FileManager.default.createFile(atPath: path, contents: content)
-}
-
-func cat(url: URL?) -> String {
-    guard let url = url else {
-        return ""
-    }
-    do {
-        let dt = try Data(contentsOf: url, options: .mappedIfSafe)
-        let res = String(data: dt, encoding: .utf8)
-        return res ?? ""
-    } catch {
-        return ""
-    }
-}
-
-func saveFile(url: URL?, content: String) {
-    guard let url = url else {
-        return
-    }
-    do {
-        try content.write(to: url, atomically: true, encoding: .utf8)
-    } catch {}
-}
-
-func ShowSimpleSuccess(msg: String? = nil) {
+func showSimpleSuccess(msg: String? = nil) {
     ProgressHUD.succeed(msg ?? i18n("Success"))
 }
 
-func ShowSimpleError(err: Error? = nil) {
+func showSimpleError(err: Error? = nil) {
     ProgressHUD.failed(err?.localizedDescription ?? "Error")
 }
 
-func CleanTrashAsync(onComplete: (() -> Void)? = nil, onError: ((Error) -> Void)? = nil) {
-    DispatchQueue.global().async {
-        let trashURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: ".Trash")
 
-        do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(at: trashURL, includingPropertiesForKeys: nil)
-            for fileURL in fileURLs {
-                try FileManager.default.removeItem(at: fileURL)
-            }
-            DispatchQueue.main.async {
-                onComplete?()
-            }
-        } catch {
-            DispatchQueue.main.async {
-                onError?(error)
-            }
-        }
-    }
-}
-
-func FormatFileSize(_ bytes: UInt64) -> String {
-    let units = ["B", "KB", "MB", "GB", "TB"]
-    var size = Double(bytes)
-    var unitIndex = 0
-
-    while size >= 1024 && unitIndex < units.count - 1 {
-        size /= 1024
-        unitIndex += 1
-    }
-
-    return String(format: "%.2f%@", size, units[unitIndex])
-}
-
-func GetKeyWindowUIViewController() -> UIViewController? {
+func getKeyWindowUIViewController() -> UIViewController? {
     let kw = UIApplication
         .shared
         .connectedScenes
@@ -130,24 +29,28 @@ func GetKeyWindowUIViewController() -> UIViewController? {
     return kw?.rootViewController
 }
 
-func GetTopViewController(controller: UIViewController? = GetKeyWindowUIViewController()) -> UIViewController? {
+func getTopViewController(
+    controller: UIViewController? = getKeyWindowUIViewController()
+) -> UIViewController? {
     if let navigationController = controller as? UINavigationController {
-        return GetTopViewController(controller: navigationController.visibleViewController)
+        return getTopViewController(
+            controller: navigationController.visibleViewController
+        )
     }
     if let tabController = controller as? UITabBarController {
         if let selected = tabController.selectedViewController {
-            return GetTopViewController(controller: selected)
+            return getTopViewController(controller: selected)
         }
     }
     if let presented = controller?.presentedViewController {
-        return GetTopViewController(controller: presented)
+        return getTopViewController(controller: presented)
     }
     return controller
 }
 
 // image preview
 
-func PreviewImage(url: URL? = nil, vc: UIViewController? = nil) {
+func previewImage(url: URL? = nil, vc: UIViewController? = nil) {
     guard let url = url else {
         return
     }
@@ -160,7 +63,7 @@ func PreviewImage(url: URL? = nil, vc: UIViewController? = nil) {
         return
     }
 
-    let tvc = GetTopViewController()
+    let tvc = getTopViewController()
 
     if let nvc = tvc?.navigationController {
         nvc.present(pvc, animated: true)
@@ -170,7 +73,7 @@ func PreviewImage(url: URL? = nil, vc: UIViewController? = nil) {
 }
 
 // sound
-func ShortShake() {
+func shortShake() {
     let soundShort = SystemSoundID(1519)
     AudioServicesPlaySystemSound(soundShort)
 }

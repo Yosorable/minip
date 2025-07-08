@@ -115,7 +115,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             QRCodeHandler.shared.handle(code: code, viewController: self)
         }
         qvc.onFailed = { err in
-            ShowSimpleError(err: err)
+            showSimpleError(err: err)
         }
         present(qvc, animated: true)
     }
@@ -171,7 +171,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     tableView.deleteRows(at: [indexPath], with: .automatic)
                     tableView.endUpdates()
                     completion(true)
-                    ShowSimpleSuccess(msg: i18n("delete_successfully"))
+                    showSimpleSuccess(msg: i18n("delete_successfully"))
                 })
             })
             let cancel = UIAlertAction(title: i18n("Cancel"), style: .default, handler: { _ in

@@ -212,7 +212,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
         }
-        PreviewImage(url: url, vc: vc)
+        minip.previewImage(url: url, vc: vc)
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
 

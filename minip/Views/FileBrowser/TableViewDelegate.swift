@@ -175,15 +175,15 @@ extension FileBrowserViewController {
                 self?.files.remove(at: indexPath.row)
                 self?.updateDataSource()
             }
-            ShowSimpleSuccess(msg: i18n(isInTrashRoot ? "f.deleted_success" : "f.moved_to_trash"))
+            showSimpleSuccess(msg: i18n(isInTrashRoot ? "f.deleted_success" : "f.moved_to_trash"))
         }
         let onDeleteError = { err in
-            ShowSimpleError(err: err)
+            showSimpleError(err: err)
         }
 
         let deleteAction = UIContextualAction(style: .destructive, title: i18n("Delete"), handler: { [weak self] _, _, completion in
             if cannotDelete {
-                ShowSimpleError(err: ErrorMsg(errorDescription: "You cannot delete this folder"))
+                showSimpleError(err: ErrorMsg(errorDescription: "You cannot delete this folder"))
                 completion(false)
                 return
             }
@@ -198,7 +198,8 @@ extension FileBrowserViewController {
 
         })
         let moreAction = UIContextualAction(style: .normal, title: i18n("More"), handler: { [weak self] _, _, completion in
-            let alert = UIAlertController(title: fileInfo.fileName, message: i18n(fileInfo.isFolder ? "Folder" : "File") + (fileInfo.isFolder ? "" : " (\(fileInfo.size ?? "unknown size"))"), preferredStyle: .actionSheet)
+            let dateMsg = (fileInfo.lastModified != nil) ? "\n\(formatDateToLocalString(fileInfo.lastModified!))" : ""
+            let alert = UIAlertController(title: fileInfo.fileName, message: (i18n(fileInfo.isFolder ? "Folder" : "File") + (fileInfo.isFolder ? "" : " (\(fileInfo.size ?? "unknown size"))")) + dateMsg, preferredStyle: .actionSheet)
 
             alert.addAction(UIAlertAction(title: i18n("Share"), style: .default, handler: { _ in
                 let avc = UIActivityViewController(activityItems: [fileInfo.url], applicationActivities: nil)
@@ -219,7 +220,7 @@ extension FileBrowserViewController {
             }))
             alert.addAction(UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in
                 if cannotDelete {
-                    ShowSimpleError(err: ErrorMsg(errorDescription: "You cannot delete this folder"))
+                    showSimpleError(err: ErrorMsg(errorDescription: "You cannot delete this folder"))
                     return
                 }
                 self?.deleteFileOrFolder(isFolder: fileInfo.isFolder, url: fileInfo.url, onSuccess: onDeleteSuccess, onFailed: onDeleteError, onCanceled: {})

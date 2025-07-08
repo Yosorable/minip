@@ -138,7 +138,7 @@ class CodeEditorViewController: UIViewController {
             ])
 
             if let err = err {
-                ShowSimpleError(err: err)
+                showSimpleError(err: err)
             }
         }
 
@@ -160,7 +160,7 @@ class CodeEditorViewController: UIViewController {
             fileString = text
             saveButton.isEnabled = false
         } catch {
-            ShowSimpleError(err: error)
+            showSimpleError(err: error)
         }
     }
 

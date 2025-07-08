@@ -51,6 +51,6 @@ class TextDisplayViewController: UIViewController {
 
     @objc func copyToClipboard() {
         UIPasteboard.general.string = textView.text
-        ShowSimpleSuccess()
+        showSimpleSuccess()
     }
 }

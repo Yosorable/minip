@@ -25,10 +25,10 @@ func ShowCreateNewProjectAlert(_ parentVC: UIViewController, onCreatedSuccess: @
 
         do {
             let newApp = try MiniAppManager.shared.createMiniApp(name: name, displayName: displayName)
-            ShowSimpleSuccess(msg: i18n("project_created_successfully"))
+            showSimpleSuccess(msg: i18n("project_created_successfully"))
             onCreatedSuccess(newApp)
         } catch {
-            ShowSimpleError(err: error)
+            showSimpleError(err: error)
         }
     }
 

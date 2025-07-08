@@ -196,7 +196,7 @@ extension MiniAppManager {
 
                     await server.appendRoute("POST /closeApp") { _ in
                         DispatchQueue.main.async {
-                            if let mvc = GetTopViewController() as? MiniPageViewController {
+                            if let mvc = getTopViewController() as? MiniPageViewController {
                                 mvc.close()
                             }
                         }

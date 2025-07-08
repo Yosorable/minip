@@ -229,7 +229,7 @@ extension FileBrowserViewController {
     func fetchFilesAndUpdateDataSource() {
         logger.debug("[FileBrowser] fetching files")
         do {
-            var (folderURLs, fileURLs) = try getFilesAndFolders(in: folderURL)
+            var (folderURLs, fileURLs) = try listFilesAndFolders(in: folderURL)
             if folderURL == Global.shared.documentsRootURL {
                 if let idx = folderURLs.firstIndex(where: { $0.url == Global.shared.documentsTrashURL }) {
                     folderURLs.insert(folderURLs.remove(at: idx), at: 0)
@@ -249,46 +249,13 @@ extension FileBrowserViewController {
                 logger.debug("[FileBrowser] no changes")
             }
         } catch {
-            ShowSimpleError(err: error)
+            showSimpleError(err: error)
             if files == nil {
                 files = []
                 updateDataSource()
             }
         }
         refreshControl?.endRefreshing()
-    }
-
-    func getFilesAndFolders(in directory: URL) throws -> (folders: [FileInfo], files: [FileInfo]) {
-        var folders = [FileInfo]()
-        var files = [FileInfo]()
-
-        let fileManager = FileManager.default
-        let metaDataKeys: Set<URLResourceKey> = [.fileSizeKey, .isDirectoryKey]
-        let contents = try fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: metaDataKeys.map { $0 })
-        for ele in contents {
-            let resource = try ele.resourceValues(forKeys: metaDataKeys)
-            if let isDir = resource.isDirectory {
-                let url = ele.standardizedFileURL
-                if isDir {
-                    folders.append(FileInfo(fileName: url.lastPathComponent, isFolder: true, url: url))
-                } else {
-                    var sizeStr = "unknown size"
-                    if let size = resource.fileSize {
-                        sizeStr = FormatFileSize(UInt64(size))
-                    }
-                    files.append(FileInfo(fileName: url.lastPathComponent, isFolder: false, url: url, size: sizeStr))
-                }
-            } else {
-                throw ErrorMsg(errorDescription: "Cannot read files or folders meta data")
-            }
-        }
-        files.sort {
-            $0.url.lastPathComponent.localizedStandardCompare($1.url.lastPathComponent) == .orderedAscending
-        }
-        folders.sort {
-            $0.url.lastPathComponent.localizedStandardCompare($1.url.lastPathComponent) == .orderedAscending
-        }
-        return (folders, files)
     }
 
     @objc func cleanTrash() {
@@ -299,8 +266,8 @@ extension FileBrowserViewController {
         let alertController = UIAlertController(title: i18n("Confirm"), message: i18n("f.clean_trash_confirm"), preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
         alertController.addAction(UIAlertAction(title: i18n("f.clean_trash"), style: .destructive, handler: { [weak self] _ in
-            CleanTrashAsync {
-                ShowSimpleSuccess()
+            cleanTrashAsync {
+                showSimpleSuccess()
 
                 self?.fetchFilesAndUpdateDataSource()
 
@@ -308,7 +275,7 @@ extension FileBrowserViewController {
                     self?.toggleSelectMode()
                 }
             } onError: { err in
-                ShowSimpleError(err: err)
+                showSimpleError(err: err)
             }
         }))
         present(alertController, animated: true)
@@ -327,7 +294,7 @@ extension FileBrowserViewController {
                 return
             }
             if fileName == "" {
-                ShowSimpleError(err: ErrorMsg(errorDescription: isFolder ? "Invalid folder name" : "Invalid file name"))
+                showSimpleError(err: ErrorMsg(errorDescription: isFolder ? "Invalid folder name" : "Invalid file name"))
                 return
             }
 
@@ -341,14 +308,14 @@ extension FileBrowserViewController {
                     } else {
                         try Data().write(to: newFileURL)
                     }
-                    ShowSimpleSuccess(msg: i18n("created_successfully"))
+                    showSimpleSuccess(msg: i18n("created_successfully"))
                     strongSelf.fetchFilesAndUpdateDataSource()
                 } catch {
-                    ShowSimpleError(err: error)
+                    showSimpleError(err: error)
                 }
 
             } else {
-                ShowSimpleError(err: ErrorMsg(errorDescription: isFolder ? "Folder exists" : "File exists"))
+                showSimpleError(err: ErrorMsg(errorDescription: isFolder ? "Folder exists" : "File exists"))
             }
         }))
         present(alertController, animated: true)

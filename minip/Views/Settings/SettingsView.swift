@@ -90,7 +90,7 @@ struct SettingsView: View {
 
                 Button {
                     MiniAppManager.shared.clearAllPermissions()
-                    ShowSimpleSuccess(msg: "Cleared successfully.")
+                    showSimpleSuccess(msg: "Cleared successfully.")
                 } label: {
                     Text("Remove All Permissions")
                 }

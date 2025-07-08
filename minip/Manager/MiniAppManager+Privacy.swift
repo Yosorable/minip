@@ -81,7 +81,7 @@ extension MiniAppManager {
             onSuccess?()
         }))
 
-        (parentVC ?? GetTopViewController())?.present(alert, animated: true)
+        (parentVC ?? getTopViewController())?.present(alert, animated: true)
     }
 
     func clearAllPermissions() {

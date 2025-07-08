@@ -12,6 +12,7 @@ struct FileInfo: Hashable {
     var isFolder: Bool
     var url: URL
     var size: String?
+    var lastModified: Date?
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(url)

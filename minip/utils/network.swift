@@ -7,11 +7,13 @@
 
 import Foundation
 
-func getIPAddresses() -> [String: String] {
+func getIPAddresses() -> (ipv4: String?, ipv6: String?) {
     var addresses = [String: String]()
+    var ipv4: String?
+    var ipv6: String?
 
     var ifaddr: UnsafeMutablePointer<ifaddrs>?
-    guard getifaddrs(&ifaddr) == 0 else { return addresses }
+    guard getifaddrs(&ifaddr) == 0 else { return (nil, nil) }
     defer { freeifaddrs(ifaddr) }
 
     var ptr = ifaddr
@@ -41,9 +43,10 @@ func getIPAddresses() -> [String: String] {
                     let address = String(cString: hostname)
 
                     if addr.sa_family == UInt8(AF_INET) {
-                        addresses["IPv4"] = address
+                        ipv4 = address
+
                     } else {
-                        addresses["IPv6"] = address
+                        ipv6 = address
                     }
                 }
             }
@@ -51,5 +54,5 @@ func getIPAddresses() -> [String: String] {
         ptr = interface.pointee.ifa_next
     }
 
-    return addresses
+    return (ipv4, ipv6)
 }

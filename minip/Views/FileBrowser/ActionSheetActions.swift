@@ -10,7 +10,7 @@ import UIKit
 extension FileBrowserViewController {
     func rename(fileInfo: FileInfo) {
         if fileInfo.url == Global.shared.documentsTrashURL || fileInfo.url == Global.shared.dataFolderURL {
-            ShowSimpleError(err: ErrorMsg(errorDescription: "You cannot rename this folder"))
+            showSimpleError(err: ErrorMsg(errorDescription: "You cannot rename this folder"))
             return
         }
 
@@ -27,7 +27,7 @@ extension FileBrowserViewController {
                 return
             }
             if fileName == "" || fileName.contains("/") {
-                ShowSimpleError(err: ErrorMsg(errorDescription: "Invalid file name"))
+                showSimpleError(err: ErrorMsg(errorDescription: "Invalid file name"))
                 return
             }
             let fileManager = FileManager.default
@@ -36,9 +36,9 @@ extension FileBrowserViewController {
             do {
                 try fileManager.moveItem(at: fileInfo.url, to: newURL)
                 self?.fetchFilesAndUpdateDataSource()
-                ShowSimpleSuccess(msg: i18n("Renamed successfully"))
+                showSimpleSuccess(msg: i18n("Renamed successfully"))
             } catch {
-                ShowSimpleError(err: error)
+                showSimpleError(err: error)
             }
         }))
         present(alert, animated: true)

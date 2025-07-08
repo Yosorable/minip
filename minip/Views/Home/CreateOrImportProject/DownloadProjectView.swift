@@ -153,7 +153,7 @@ struct DownloadProjectView: View {
             if newValue {
                 let alert = UIAlertController(title: "Error", message: alertMsg, preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-                GetTopViewController()?.present(alert, animated: true, completion: nil)
+                getTopViewController()?.present(alert, animated: true, completion: nil)
             }
         })
     }

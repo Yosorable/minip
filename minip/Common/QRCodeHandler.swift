@@ -40,7 +40,7 @@ class QRCodeHandler {
                         do {
                             try URLSchemeHandler.shared.handle(item.2)
                         } catch {
-                            ShowSimpleError(err: error)
+                            showSimpleError(err: error)
                         }
                     }
                     alert.addAction(action)
@@ -54,7 +54,7 @@ class QRCodeHandler {
         }
 
         if !succeed {
-            if let vc = viewController ?? GetTopViewController() {
+            if let vc = viewController ?? getTopViewController() {
                 let navVC = UINavigationController(rootViewController: TextDisplayViewController(text: code, title: "QRCode Result"))
                 vc.present(navVC, animated: true)
             }
@@ -64,7 +64,7 @@ class QRCodeHandler {
     private func handleWebsiteURL(url: URL?, parentVC: UIViewController?) -> Bool {
         guard let url = url else { return false }
         let svc = SFSafariViewController(url: url)
-        if let vc = parentVC ?? GetTopViewController() {
+        if let vc = parentVC ?? getTopViewController() {
             vc.present(svc, animated: true)
             return true
         }

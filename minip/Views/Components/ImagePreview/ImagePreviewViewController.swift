@@ -87,24 +87,24 @@ class ImagePreviewViewController: UIViewController {
 
     @objc func longPressed(sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
-            ShortShake()
+            shortShake()
 
             let alertController = UIAlertController(title: "Actions", message: "Select an action", preferredStyle: .actionSheet)
             alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
             alertController.addAction(UIAlertAction(title: "Save to album", style: .default, handler: { [weak self] _ in
                 guard let img = self?.imageView.image else {
-                    ShowSimpleError(err: ErrorMsg(errorDescription: "Error image"))
+                    showSimpleError(err: ErrorMsg(errorDescription: "Error image"))
                     return
                 }
                 PHPhotoLibrary.requestAuthorization { status in
                     if status == .authorized {
                         UIImageWriteToSavedPhotosAlbum(img, nil, nil, nil)
                         DispatchQueue.main.async {
-                            ShowSimpleSuccess()
+                            showSimpleSuccess()
                         }
                     } else {
                         DispatchQueue.main.async {
-                            ShowSimpleError(err: ErrorMsg(errorDescription: "Cannot save to album, no permission or limitted"))
+                            showSimpleError(err: ErrorMsg(errorDescription: "Cannot save to album, no permission or limitted"))
                         }
                     }
                 }

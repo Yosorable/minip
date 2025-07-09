@@ -9,6 +9,7 @@ import FlyingFox
 import SwiftUI
 
 struct FileServerView: View {
+    @Environment(\.dismissPolyfill) var dismiss
     @State var serverRunning = false
     @State var fileServer: HTTPServer? = nil
     @State var ipAddress = ""
@@ -69,7 +70,7 @@ struct FileServerView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        getTopViewController()?.dismiss(animated: true)
+                        dismiss()
                     } label: {
                         Text("Close")
                     }

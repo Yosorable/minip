@@ -42,7 +42,10 @@
 "Share" = "共享";
 "Text" = "文本";
 "Image" = "图像";
-
+"Close" = "关闭";
+"Start" = "开始";
+"Stop" = "关闭";
+"Network" = "网络";
 
 // MARK: home
 "home.menu.create_project" = "创建新项目";
@@ -90,6 +93,14 @@
 "f.select_file_type" = "文件类型未知，请选择打开方式";
 
 "Renamed successfully" = "重命名成功";
+
+// MARK: file server
+"fs.title" = "文件服务器";
+"fs.not_running" = "文件服务器未运行";
+"fs.note_step1" = "1. 启动文件服务器。";
+"fs.note_step2" = "2. 在同一网络中，使用其他设备的浏览器打开显示的URL。";
+"fs.note_step3" = "3. 传输文件。";
+"fs.note_warnning" = "如果你离开此页面、应用进入后台或设备屏幕关闭，文件服务器将自动关闭。";
 
 // MARK: settings
 "s.clear_wkwebview_cache" = "清除WKWebView缓存";

@@ -17,15 +17,15 @@ struct FileServerView: View {
         NavigationView {
             List {
                 Section {
-                    Text(serverRunning ? ipAddress : "File server is not running")
+                    Text(serverRunning ? ipAddress : i18n("fs.not_running"))
                 } header: {
                     Text("Network")
                 } footer: {
                     VStack(alignment: .leading) {
-                        Text("1. Start the file server.")
-                        Text("2. On the same network, use another device’s web browser to open the displayed URL.")
-                        Text("3. Transfer files.")
-                        Text("The file server will automatically shut down if you leave this page, the app goes to the background, or your device's screen turns off.")
+                        Text(i18n("fs.note_step1"))
+                        Text(i18n("fs.note_step2"))
+                        Text(i18n("fs.note_step3"))
+                        Text(i18n("fs.note_warnning"))
                             .padding(.vertical)
                     }
                 }
@@ -65,7 +65,7 @@ struct FileServerView: View {
                     }
                 }
             }
-            .navigationBarTitle(Text("File Server"), displayMode: .inline)
+            .navigationBarTitle(Text(i18n("fs.title")), displayMode: .inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

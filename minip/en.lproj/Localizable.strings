@@ -42,6 +42,10 @@
 "Share" = "Share";
 "Text" = "Text";
 "Image" = "Image";
+"Close" = "Close";
+"Start" = "Start";
+"Stop" = "Stop";
+"Network" = "Network";
 
 // MARK: home
 "home.menu.create_project" = "Create new project";
@@ -89,6 +93,14 @@
 "f.select_file_type" = "Unknown file type, please specify the type to open it.";
 
 "Renamed successfully" = "Renamed successfully";
+
+// MARK: file server
+"fs.title" = "File Server";
+"fs.not_running" = "File server is not running";
+"fs.note_step1" = "1. Start the file server.";
+"fs.note_step2" = "2. On the same network, use another device’s web browser to open the displayed URL.";
+"fs.note_step3" = "3. Transfer files.";
+"fs.note_warnning" = "The file server will automatically shut down if you leave this page, the app goes to the background, or your device's screen turns off.";
 
 // MARK: settings
 "s.clear_wkwebview_cache" = "Clear WKWebView Cache";

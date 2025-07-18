@@ -188,6 +188,7 @@ class FileSystemManager {
     }
 
     func truncate(path: String, length: off_t) throws {
+        let path = try appPathToURL(path).path
         let fd = open(path, O_WRONLY)
         if fd == -1 {
             throw NSError(domain: "FileSystemManager", code: Int(errno), userInfo: [NSLocalizedDescriptionKey: String(cString: strerror(errno))])

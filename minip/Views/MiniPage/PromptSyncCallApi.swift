@@ -49,7 +49,20 @@ extension MiniPageViewController {
              .setKVStorageSync,
              .deleteKVStorageSync,
              .clearKVStorageSync,
-             .getDeviceInfoSync:
+             .getDeviceInfoSync,
+             .fsAccessSync,
+             .fsMkdirSync,
+             .fsReadDirSync,
+             .fsRmdirSync,
+             .fsReadFileSync,
+             .fsWriteFileSync,
+             .fsAppendFileSync,
+             .fsCopyFileSync,
+             .fsUnlinkSync,
+             .fsRenameSync,
+             .fsStatSync,
+             .fsTruncateSync,
+             .fsRmSync:
             api.call(apiName: apiName, param: param, replyHandler: replyHandler)
         default:
             completionHandler("API \(apiName.rawValue) is not implemented or not allowed")

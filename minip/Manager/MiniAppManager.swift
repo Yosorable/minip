@@ -22,6 +22,8 @@ class MiniAppManager {
     var serverAddress: String?
     var appMemoryStorage = [String: String]()
 
+    var fileSystemManager: FileSystemManager?
+
     fileprivate let semaphore = DispatchSemaphore(value: 1)
 
     func appendWebViewLog(_ msg: String) {
@@ -114,6 +116,8 @@ class MiniAppManager {
 
         logger.debug("[Kingfisher] closed app, cleaning memory image cache")
         KingfisherManager.shared.cache.clearMemoryCache()
+
+        self.fileSystemManager = nil
     }
 }
 
@@ -169,6 +173,8 @@ extension MiniAppManager {
 
     func openMiniApp(parent: UIViewController, window: UIWindow? = nil, appInfo: AppInfo, animated: Bool = true, completion: (() -> Void)? = nil) {
         let app = appInfo
+
+        self.fileSystemManager = FileSystemManager(appInfo: appInfo)
 
         Task {
             var addr = ""

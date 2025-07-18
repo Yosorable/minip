@@ -88,6 +88,37 @@ class MinipApi {
         case removeMemoryStorage
         case clearMemoryStorage
 
+        // MARK: File System
+
+        case fsAccess
+        case fsMkdir
+        case fsReadDir
+        case fsRmdir
+        case fsReadFile
+        case fsWriteFile
+        case fsAppendFile
+        case fsCopyFile
+        case fsUnlink
+        case fsRename
+        case fsStat
+        case fsTruncate
+        case fsRm
+
+        // Sync
+        case fsAccessSync
+        case fsMkdirSync
+        case fsReadDirSync
+        case fsRmdirSync
+        case fsReadFileSync
+        case fsWriteFileSync
+        case fsAppendFileSync
+        case fsCopyFileSync
+        case fsUnlinkSync
+        case fsRenameSync
+        case fsStatSync
+        case fsTruncateSync
+        case fsRmSync
+
         func requestPermissionType() -> MiniAppPermissionTypes? {
             switch self {
             case .scanQRCode:
@@ -229,6 +260,31 @@ class MinipApi {
             api.removeMemoryStorage(param: param, replyHandler: replyHandler)
         case .clearMemoryStorage:
             api.clearMemoryCache(param: param, replyHandler: replyHandler)
+        case .fsAccess, .fsAccessSync:
+            api.fsAccess(param: param, replyHandler: replyHandler)
+        case .fsMkdir, .fsMkdirSync:
+            api.fsMkdir(param: param, replyHandler: replyHandler)
+        case .fsReadDir, .fsReadDirSync:
+            api.fsReadDir(param: param, replyHandler: replyHandler)
+        case .fsRmdir, .fsRmdirSync:
+            api.fsRmdir(param: param, replyHandler: replyHandler)
+        case .fsReadFile, .fsReadFileSync:
+            api.fsReadFile(param: param, replyHandler: replyHandler)
+        case .fsWriteFile, .fsWriteFileSync:
+            api.fsWriteFile(param: param, replyHandler: replyHandler)
+        case .fsAppendFile, .fsAppendFileSync: api.fsAppendFile(param: param, replyHandler: replyHandler)
+        case .fsCopyFile, .fsCopyFileSync:
+            api.fsCopyFile(param: param, replyHandler: replyHandler)
+        case .fsUnlink, .fsUnlinkSync:
+            api.fsUnlink(param: param, replyHandler: replyHandler)
+        case .fsRename, .fsRenameSync:
+            api.fsRename(param: param, replyHandler: replyHandler)
+        case .fsStat, .fsStatSync:
+            api.fsStat(param: param, replyHandler: replyHandler)
+        case .fsTruncate, .fsTruncateSync:
+            api.fsTruncate(param: param, replyHandler: replyHandler)
+        case .fsRm, .fsRmSync:
+            api.fsRm(param: param, replyHandler: replyHandler)
         default:
             replyHandler(nil, "API \(apiName.rawValue) is not implemented or not allowed")
         }

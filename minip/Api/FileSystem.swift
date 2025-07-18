@@ -38,7 +38,7 @@ extension MinipApi {
             return
         }
 
-        let recursive = (data["recursive"] as? Bool) ?? true
+        let recursive = (data["recursive"] as? Bool) ?? false
 
         do {
             try fs.mkdir(path: path, recursive: recursive)

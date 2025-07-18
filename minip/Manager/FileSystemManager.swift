@@ -65,9 +65,12 @@ class FileSystemManager {
         }
     }
 
-    func mkdir(path: String, recursive: Bool = true) throws {
+    func mkdir(path: String, recursive: Bool) throws {
         let path = try appPathToURL(path).path
         let fileManager = FileManager.default
+        if fileManager.fileExists(atPath: path) {
+            throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "exist"])
+        }
         try fileManager.createDirectory(atPath: path, withIntermediateDirectories: recursive, attributes: nil)
     }
 

@@ -20,8 +20,8 @@ extension FileBrowserViewController {
             if self?.folderURL == Global.shared.projectDataFolderURL, let appName = MiniAppManager.shared.getAppInfosFromCache().filter({ $0.appId == fileInfo.fileName }).first?.name {
                 let dName = fileInfo.fileName + " " + appName
                 let attributedString = NSMutableAttributedString(string: dName)
-                let grayTextStartIndex = fileInfo.fileName.count
-                let grayTextLength = dName.count - grayTextStartIndex
+                let grayTextStartIndex = (fileInfo.fileName + " ").utf16.count
+                let grayTextLength = dName.utf16.count - grayTextStartIndex
                 attributedString.addAttribute(
                     .foregroundColor,
                     value: UIColor.secondaryLabel,

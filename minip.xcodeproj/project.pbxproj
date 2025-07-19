@@ -129,7 +129,7 @@
 		48DE4A242D5E23D8002D4653 /* MiniAppManager+CreateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DE4A232D5E23D2002D4653 /* MiniAppManager+CreateApp.swift */; };
 		48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA0288D32CA00D523C1 /* Assets.xcassets */; };
 		48DF6BA4288D32CA00D523C1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */; };
-		48E39B592D4D126400C4A3CD /* TabViewFIx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39B582D4D125D00C4A3CD /* TabViewFIx.swift */; };
+		48E39B592D4D126400C4A3CD /* TabViewFix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E39B582D4D125D00C4A3CD /* TabViewFix.swift */; };
 		48E518E12D8AA3E100FD716F /* ZoomableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48E518E02D8AA3DB00FD716F /* ZoomableImageView.swift */; };
 		48F649002D589B7100C9FD82 /* MinipApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F648FF2D589B6D00C9FD82 /* MinipApi.swift */; };
 		48F649042D589BCB00C9FD82 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48F649032D589BC800C9FD82 /* Route.swift */; };
@@ -231,7 +231,7 @@
 		48DF6B99288D32C800D523C1 /* minip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DF6BA0288D32CA00D523C1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		48DF6BA3288D32CA00D523C1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		48E39B582D4D125D00C4A3CD /* TabViewFIx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewFIx.swift; sourceTree = "<group>"; };
+		48E39B582D4D125D00C4A3CD /* TabViewFix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewFix.swift; sourceTree = "<group>"; };
 		48E518E02D8AA3DB00FD716F /* ZoomableImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableImageView.swift; sourceTree = "<group>"; };
 		48F648FF2D589B6D00C9FD82 /* MinipApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinipApi.swift; sourceTree = "<group>"; };
 		48F649032D589BC800C9FD82 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
@@ -354,7 +354,7 @@
 				48CA01742D5C20D8006A63DD /* Picker */,
 				485FEE732D5D072F00A0C430 /* QRScanner */,
 				2B9003C22A81FEB400ED360D /* LazyView.swift */,
-				48E39B582D4D125D00C4A3CD /* TabViewFIx.swift */,
+				48E39B582D4D125D00C4A3CD /* TabViewFix.swift */,
 				482F03BD2D4C528E00D6CA6B /* PannableViews.swift */,
 				48D1FB802D4E9C080093137D /* BackableNavigationController.swift */,
 				48B90EED2D5DDF4000CCE103 /* TextDisplayViewController.swift */,
@@ -844,7 +844,7 @@
 				48021CBE2D5F3ED300C39F07 /* URLSchemeHandler.swift in Sources */,
 				2B1B32D72A61784600DA573F /* Defaults.swift in Sources */,
 				4863BF482D88753400029FAA /* UITableView++.swift in Sources */,
-				48E39B592D4D126400C4A3CD /* TabViewFIx.swift in Sources */,
+				48E39B592D4D126400C4A3CD /* TabViewFix.swift in Sources */,
 				2B1B32CD2A615BB800DA573F /* SettingsView.swift in Sources */,
 				488942162D8B2CC80059CF31 /* AppDetailView.swift in Sources */,
 				4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */,

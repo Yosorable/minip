@@ -155,6 +155,13 @@ extension MinipApi {
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
 
+    struct AlertInput: Codable {
+        var key: String // callback parameter
+        var type: String? // text (default), password, number
+        var title: String?
+        var defaultValue: String?
+    }
+
     struct AlertAction: Codable {
         var title: String?
         var style: String?
@@ -165,6 +172,7 @@ extension MinipApi {
         var title: String?
         var message: String?
         var preferredStyle: String?
+        var inputs: [AlertInput]?
         var actions: [AlertAction]
     }
 
@@ -181,6 +189,22 @@ extension MinipApi {
             return
         }
         let alert = UIAlertController(title: config.title, message: config.message, preferredStyle: config.preferredStyle == "actionSheet" ? .actionSheet : .alert)
+        if let inputs = config.inputs {
+            for ipt in inputs {
+                alert.addTextField(configurationHandler: { tf in
+                    tf.placeholder = ipt.title ?? ""
+                    if ipt.type == "password" {
+                        tf.isSecureTextEntry = true
+                    } else if ipt.type == "number" {
+                        tf.keyboardType = .numberPad
+                    }
+
+                    if let dft = ipt.defaultValue {
+                        tf.text = dft
+                    }
+                })
+            }
+        }
         for act in config.actions {
             var style = UIAlertAction.Style.default
             if act.style == "cancel" {
@@ -189,8 +213,19 @@ extension MinipApi {
                 style = .destructive
             }
             alert.addAction(UIAlertAction(title: act.title, style: style) { _ in
-                let res = InteropUtils.succeedWithData(data: act.key).toJsonString()
-                replyHandler(res, nil)
+                struct AlertWithInputsRes: Codable {
+                    var action: String
+                    var inputs: [String: String]
+                }
+                var res = AlertWithInputsRes(action: act.key, inputs: [:])
+
+                if let cfg = config.inputs, let tfs = alert.textFields {
+                    for (idx, tf) in tfs.enumerated() {
+                        res.inputs[cfg[idx].key] = tf.text
+                    }
+                }
+
+                replyHandler(InteropUtils.succeedWithData(data: res).toJsonString(), nil)
             })
         }
         alert.view.tintColor = vc.view.tintColor

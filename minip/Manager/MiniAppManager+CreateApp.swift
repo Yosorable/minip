@@ -86,13 +86,17 @@ extension MiniAppManager {
               minip.showAlert({
                 title: "Alert",
                 message: "This is an alert.",
+                inputs: [
+                  { title: "username", key: "username" },
+                  { title: "password", key: "password", type: "password" }
+                ],
                 actions: [
                   { title: "Ok", key: "Ok" },
                   { title: "Cancel", key: "Cancel", style: "cancel" },
                   { title: "Do Nothing", key: "DoNothing", style: "destructive" }
                 ]
               })
-              .then(res => msgDiv.innerText = `You clicked ${res.data}.`)
+              .then(res => msgDiv.innerText = JSON.stringify(res.data))
               .catch(showError)
             }
             btn.disabled = false

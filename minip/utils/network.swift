@@ -8,7 +8,6 @@
 import Foundation
 
 func getIPAddresses() -> (ipv4: String?, ipv6: String?) {
-    var addresses = [String: String]()
     var ipv4: String?
     var ipv6: String?
 

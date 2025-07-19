@@ -196,7 +196,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func sqliteIteratorNext(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let _ = MiniAppManager.shared.openedApp?.appId else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
@@ -219,7 +219,7 @@ extension MinipApi {
                     "data": res
                 ]
                 let jsonData = try JSONSerialization.data(withJSONObject: replyRes)
-                
+
                 if let jsonString = String(data: jsonData, encoding: .utf8) {
                     replyHandler(jsonString, nil)
                 } else {
@@ -232,7 +232,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func sqliteIteratorRelease(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let _ = MiniAppManager.shared.openedApp?.appId else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)

@@ -30,6 +30,11 @@ class FileSystemManager {
 
     init(appInfo: AppInfo) {
         dataDirURL = Global.shared.projectDataFolderURL.appendingPolyfill(path: appInfo.appId).standardizedFileURL
+
+        let fileManager = FileManager.default
+        if !fileManager.fileExists(atPath: dataDirURL.path) {
+            try? fileManager.createDirectory(at: dataDirURL, withIntermediateDirectories: true)
+        }
     }
 
     // close all opened fd
@@ -159,11 +164,11 @@ class FileSystemManager {
         }
 
         let atimeMs = Double(statInfo.st_atimespec.tv_sec) * 1000 +
-            Double(statInfo.st_atimespec.tv_nsec) / 1000_000
+            Double(statInfo.st_atimespec.tv_nsec) / 1000000
         let mtimeMs = Double(statInfo.st_mtimespec.tv_sec) * 1000 +
-            Double(statInfo.st_mtimespec.tv_nsec) / 1000_000
+            Double(statInfo.st_mtimespec.tv_nsec) / 1000000
         let ctimeMs = Double(statInfo.st_ctimespec.tv_sec) * 1000 +
-            Double(statInfo.st_ctimespec.tv_nsec) / 1000_000
+            Double(statInfo.st_ctimespec.tv_nsec) / 1000000
 
         let birthtimeMs: Double
         if #available(macOS 10.15, iOS 13.0, *) {

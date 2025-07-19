@@ -18,32 +18,11 @@ class QRScannerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupQRScanner()
+        setupQRScannerView()
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         .portrait
-    }
-
-    private func setupQRScanner() {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            setupQRScannerView()
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
-                if granted {
-                    DispatchQueue.main.async { [weak self] in
-                        self?.setupQRScannerView()
-                    }
-                } else {
-                    DispatchQueue.main.async { [weak self] in
-                        self?.showAlert()
-                    }
-                }
-            }
-        default:
-            showAlert()
-        }
     }
 
     private func setupQRScannerView() {
@@ -111,17 +90,6 @@ class QRScannerViewController: UIViewController {
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
-    }
-
-    private func showAlert() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            let alert = UIAlertController(title: "Error", message: "Camera is required to use in this application", preferredStyle: .alert)
-            alert.addAction(.init(title: "OK", style: .default, handler: { _ in
-                self?.onFailed?(ErrorMsg(errorDescription: "Unauthorized"))
-                self?.dismiss(animated: false)
-            }))
-            self?.present(alert, animated: true)
-        }
     }
 }
 

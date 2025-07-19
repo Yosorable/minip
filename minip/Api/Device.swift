@@ -5,6 +5,7 @@
 //  Created by LZY on 2025/2/9.
 //
 
+import AVFoundation
 import UIKit
 
 extension MinipApi {
@@ -59,7 +60,23 @@ extension MinipApi {
         qvc.onFailed = { err in
             replyHandler(InteropUtils.fail(msg: err.localizedDescription).toJsonString(), nil)
         }
-        vc.present(qvc, animated: true)
+
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            vc.present(qvc, animated: true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                if granted {
+                    DispatchQueue.main.async {
+                        vc.present(qvc, animated: true)
+                    }
+                } else {
+                    replyHandler(InteropUtils.fail(msg: "NO Permission: Camera is required to use in this application").toJsonString(), nil)
+                }
+            }
+        default:
+            replyHandler(InteropUtils.fail(msg: "NO Permission: Camera is required to use in this application").toJsonString(), nil)
+        }
     }
 
     struct DeviceInfo: Codable {

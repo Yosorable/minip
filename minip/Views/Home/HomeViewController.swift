@@ -5,6 +5,7 @@
 //  Created by LZY on 2025/2/1.
 //
 
+import AVFoundation
 import Defaults
 import SwiftUI
 import UIKit
@@ -117,7 +118,31 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         qvc.onFailed = { err in
             showSimpleError(err: err)
         }
-        present(qvc, animated: true)
+
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            present(qvc, animated: true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+                if granted {
+                    DispatchQueue.main.async {
+                        self?.present(qvc, animated: true)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        let alert = UIAlertController(title: "NO Permission", message: "Camera is required to use in this application", preferredStyle: .alert)
+                        alert.addAction(.init(title: "OK", style: .default, handler: { _ in
+                            self?.dismiss(animated: false)
+                        }))
+                        self?.present(alert, animated: true)
+                    }
+                }
+            }
+        default:
+            let alert = UIAlertController(title: "NO Permission", message: "Camera is required to use in this application", preferredStyle: .alert)
+            alert.addAction(.init(title: "OK", style: .cancel))
+            present(alert, animated: true)
+        }
     }
 
     // MARK: - TableView DataSource

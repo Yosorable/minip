@@ -27,26 +27,26 @@ func getIPAddresses() -> (ipv4: String?, ipv6: String?) {
             if addr.sa_family == UInt8(AF_INET)
                 || addr.sa_family == UInt8(AF_INET6)
             {
-
                 let name = String(cString: interface.pointee.ifa_name)
 
-                var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
-                if getnameinfo(
-                    &addr,
-                    socklen_t(addr.sa_len),
-                    &hostname,
-                    socklen_t(hostname.count),
-                    nil,
-                    socklen_t(0),
-                    NI_NUMERICHOST
-                ) == 0 {
-                    let address = String(cString: hostname)
+                if name == "en0" {
+                    var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                    if getnameinfo(
+                        &addr,
+                        socklen_t(addr.sa_len),
+                        &hostname,
+                        socklen_t(hostname.count),
+                        nil,
+                        socklen_t(0),
+                        NI_NUMERICHOST
+                    ) == 0 {
+                        let address = String(cString: hostname)
 
-                    if addr.sa_family == UInt8(AF_INET) {
-                        ipv4 = address
-
-                    } else {
-                        ipv6 = address
+                        if addr.sa_family == UInt8(AF_INET) {
+                            ipv4 = address
+                        } else {
+                            ipv6 = address
+                        }
                     }
                 }
             }

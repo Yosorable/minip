@@ -46,7 +46,7 @@ class FileSystemManager {
         let res = dataDirURL.appendingPolyfill(path: path).standardizedFileURL
 
         if !res.path.hasPrefix(dataDirURL.path) {
-            throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "not premission"])
+            throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "no premission"])
         }
 
         return res
@@ -211,7 +211,7 @@ class FileSystemManager {
         let path = try appPathToURL(path).path
         let fileManager = FileManager.default
         guard fileManager.fileExists(atPath: path) else {
-            throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "File not found"])
+            throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "file not found"])
         }
 
         try fileManager.removeItem(atPath: path)

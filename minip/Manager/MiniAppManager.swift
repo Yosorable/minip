@@ -22,9 +22,8 @@ class MiniAppManager {
     var serverAddress: String?
     var appMemoryStorage = [String: String]()
 
-    var fileSystemManager: FileSystemManager?
-
-    fileprivate let semaphore = DispatchSemaphore(value: 1)
+    private let fsLock = NSLock()
+    private var fileSystemManager: FileSystemManager?
 
     func appendWebViewLog(_ msg: String) {
         while self.webViewLogs.count >= 500 {
@@ -104,6 +103,21 @@ class MiniAppManager {
         return Defaults[.appInfoList]
     }
 
+    func getFSManager() -> FileSystemManager? {
+        if self.fileSystemManager != nil {
+            return self.fileSystemManager
+        }
+
+        self.fsLock.lock()
+        defer { self.fsLock.unlock() }
+
+        if self.fileSystemManager == nil, let appInfo = openedApp {
+            self.fileSystemManager = FileSystemManager(appInfo: appInfo)
+        }
+
+        return self.fileSystemManager
+    }
+
     func clearOpenedApp() {
         let appId = self.openedApp?.appId
         self.openedApp = nil
@@ -173,8 +187,6 @@ extension MiniAppManager {
 
     func openMiniApp(parent: UIViewController, window: UIWindow? = nil, appInfo: AppInfo, animated: Bool = true, completion: (() -> Void)? = nil) {
         let app = appInfo
-
-        self.fileSystemManager = FileSystemManager(appInfo: appInfo)
 
         Task {
             var addr = ""

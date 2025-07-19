@@ -10,7 +10,7 @@ import Foundation
 
 extension MinipApi {
     func fsAccess(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let fs = MiniAppManager.shared.fileSystemManager else {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
         }
@@ -29,7 +29,7 @@ extension MinipApi {
     }
     
     func fsMkdir(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let fs = MiniAppManager.shared.fileSystemManager else {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
         }
@@ -49,7 +49,7 @@ extension MinipApi {
     }
     
     func fsReadDir(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let fs = MiniAppManager.shared.fileSystemManager else {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
         }
@@ -66,7 +66,7 @@ extension MinipApi {
     }
     
     func fsRmdir(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let fs = MiniAppManager.shared.fileSystemManager else {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
         }
@@ -85,7 +85,7 @@ extension MinipApi {
     }
     
     func fsReadFile(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let fs = MiniAppManager.shared.fileSystemManager else {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
         }
@@ -103,7 +103,7 @@ extension MinipApi {
     }
     
     func fsWriteFile(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let fs = MiniAppManager.shared.fileSystemManager else {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
         }
@@ -121,7 +121,7 @@ extension MinipApi {
     }
     
     func fsAppendFile(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let fs = MiniAppManager.shared.fileSystemManager else {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
         }
@@ -138,7 +138,7 @@ extension MinipApi {
     }
     
     func fsCopyFile(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let fs = MiniAppManager.shared.fileSystemManager else {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
         }
@@ -155,7 +155,7 @@ extension MinipApi {
     }
     
     func fsUnlink(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let fs = MiniAppManager.shared.fileSystemManager else {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
         }
@@ -172,7 +172,7 @@ extension MinipApi {
     }
     
     func fsRename(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let fs = MiniAppManager.shared.fileSystemManager else {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
         }
@@ -189,7 +189,7 @@ extension MinipApi {
     }
     
     func fsStat(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let fs = MiniAppManager.shared.fileSystemManager else {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
         }
@@ -205,7 +205,7 @@ extension MinipApi {
     }
     
     func fsTruncate(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let fs = MiniAppManager.shared.fileSystemManager else {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
         }
@@ -222,7 +222,7 @@ extension MinipApi {
     }
     
     func fsRm(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let fs = MiniAppManager.shared.fileSystemManager else {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
         }

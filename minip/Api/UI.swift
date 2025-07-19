@@ -189,7 +189,7 @@ extension MinipApi {
             return
         }
         let alert = UIAlertController(title: config.title, message: config.message, preferredStyle: config.preferredStyle == "actionSheet" ? .actionSheet : .alert)
-        if let inputs = config.inputs {
+        if config.preferredStyle != "actionSheet", let inputs = config.inputs {
             for ipt in inputs {
                 alert.addTextField(configurationHandler: { tf in
                     tf.placeholder = ipt.title ?? ""

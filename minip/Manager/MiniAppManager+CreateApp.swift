@@ -88,7 +88,8 @@ extension MiniAppManager {
                 message: "This is an alert.",
                 inputs: [
                   { title: "username", key: "username" },
-                  { title: "password", key: "password", type: "password" }
+                  { title: "password", key: "password", type: "password" },
+                  { title: "number", key: "number", type: "number" }
                 ],
                 actions: [
                   { title: "Ok", key: "Ok" },

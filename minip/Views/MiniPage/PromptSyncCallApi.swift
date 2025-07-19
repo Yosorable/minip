@@ -36,7 +36,7 @@ extension MiniPageViewController {
         }
 
         let wid = webView.id ?? -1
-        logger.debug("[minip-api-sync] call api [\(apiName.rawValue)] from [webview:\(wid == -1 ? "unknown" : "\(wid)")]")
+        logger.debug("[minip-api-sync] call api [\(apiName.rawValue)] from [webview:\(wid == -1 ? "unknown" : "\(wid)")] with [\(prompt.count < 1000 ? prompt : "data length: \(prompt.count)")]")
 
         let api = MinipApi.shared
         let param = MinipApi.Parameter(webView: webView, data: jsonObj["data"])

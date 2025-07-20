@@ -27,7 +27,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func fsMkdir(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
@@ -47,7 +47,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func fsReadDir(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
@@ -64,7 +64,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func fsRmdir(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
@@ -83,7 +83,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func fsReadFile(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
@@ -101,7 +101,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func fsWriteFile(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
@@ -119,7 +119,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func fsAppendFile(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
@@ -136,7 +136,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func fsCopyFile(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
@@ -153,7 +153,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func fsUnlink(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
@@ -170,7 +170,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func fsRename(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
@@ -187,7 +187,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func fsStat(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
@@ -203,7 +203,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func fsTruncate(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
@@ -220,7 +220,7 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
     }
-    
+
     func fsRm(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
@@ -233,6 +233,128 @@ extension MinipApi {
         do {
             try fs.rm(path: path)
             replyHandler(InteropUtils.succeed().toJsonString(), nil)
+        } catch {
+            replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
+        }
+    }
+
+    func fsCp(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
+            replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
+            return
+        }
+        guard let data = param.data as? [String: Any], let src = data["src"] as? String, let dest = data["dest"] as? String else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+        let recursive = data["recursive"] as? Bool
+        do {
+            try fs.cp(src: src, dest: dest, recursive: recursive ?? false)
+            replyHandler(InteropUtils.succeed().toJsonString(), nil)
+        } catch {
+            replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
+        }
+    }
+
+    func fsOpen(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
+            replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
+            return
+        }
+        guard let data = param.data as? [String: Any], let path = data["path"] as? String, let flags = data["flags"] as? Int32 else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+        let mode = data["mode"] as? UInt16
+        do {
+            try replyHandler(InteropUtils.succeedWithData(data: fs.open(path: path, flags: flags, mode: mode ?? 0o644)).toJsonString(), nil)
+        } catch {
+            replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
+        }
+    }
+
+    func fsClose(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
+            replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
+            return
+        }
+        guard let data = param.data as? [String: Any], let fd = data["fd"] as? Int32 else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+        do {
+            try fs.close(fd: fd)
+            replyHandler(InteropUtils.succeed().toJsonString(), nil)
+        } catch {
+            replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
+        }
+    }
+
+    func fsFstat(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
+            replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
+            return
+        }
+        guard let data = param.data as? [String: Any], let fd = data["fd"] as? Int32 else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+        do {
+            try replyHandler(InteropUtils.succeedWithData(data: fs.fstat(fd: fd)).toJsonString(), nil)
+        } catch {
+            replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
+        }
+    }
+
+    func fsFtruncate(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
+            replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
+            return
+        }
+        guard let data = param.data as? [String: Any], let fd = data["fd"] as? Int32, let length = data["length"] as? Int else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+        do {
+            try fs.ftruncate(fd: fd, length: off_t(length))
+            replyHandler(InteropUtils.succeed().toJsonString(), nil)
+        } catch {
+            replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
+        }
+    }
+
+    func fsRead(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
+            replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
+            return
+        }
+        guard let data = param.data as? [String: Any], let fd = data["fd"] as? Int32, let length = data["length"] as? Int else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+        let position = data["position"] as? Int
+        do {
+            let data = try fs.read(fd: fd, length: length, position: position)
+            replyHandler(InteropUtils.succeedWithData(data: data.base64EncodedString()).toJsonString(), nil)
+        } catch {
+            replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
+        }
+    }
+
+    func fsWrite(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let fs = MiniAppManager.shared.getFSManager() else {
+            replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
+            return
+        }
+        guard let data = param.data as? [String: Any], let fd = data["fd"] as? Int32 else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+        let fileDataBase64 = (data["data"] as? String) ?? ""
+        let position = data["position"] as? Int
+        do {
+            let bytesWritten = try fs.write(fd: fd, data: Data(base64Encoded: fileDataBase64) ?? Data(), position: position)
+            replyHandler(InteropUtils.succeedWithData(data: bytesWritten).toJsonString(), nil)
         } catch {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }

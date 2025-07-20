@@ -62,7 +62,14 @@ extension MiniPageViewController {
              .fsRenameSync,
              .fsStatSync,
              .fsTruncateSync,
-             .fsRmSync:
+             .fsRmSync,
+             .fsCpSync,
+             .fsOpenSync,
+             .fsCloseSync,
+             .fsFstatSync,
+             .fsFtruncateSync,
+             .fsReadSync,
+             .fsWriteSync:
             api.call(apiName: apiName, param: param, replyHandler: replyHandler)
         default:
             completionHandler("API \(apiName.rawValue) is not implemented or not allowed")

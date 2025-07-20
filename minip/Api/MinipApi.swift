@@ -103,6 +103,13 @@ class MinipApi {
         case fsStat
         case fsTruncate
         case fsRm
+        case fsCp
+        case fsOpen
+        case fsClose
+        case fsFstat
+        case fsFtruncate
+        case fsRead
+        case fsWrite
 
         // Sync
         case fsAccessSync
@@ -118,6 +125,13 @@ class MinipApi {
         case fsStatSync
         case fsTruncateSync
         case fsRmSync
+        case fsCpSync
+        case fsOpenSync
+        case fsCloseSync
+        case fsFstatSync
+        case fsFtruncateSync
+        case fsReadSync
+        case fsWriteSync
 
         func requestPermissionType() -> MiniAppPermissionTypes? {
             switch self {
@@ -285,6 +299,20 @@ class MinipApi {
             api.fsTruncate(param: param, replyHandler: replyHandler)
         case .fsRm, .fsRmSync:
             api.fsRm(param: param, replyHandler: replyHandler)
+        case .fsCp, .fsCpSync:
+            api.fsCp(param: param, replyHandler: replyHandler)
+        case .fsOpen, .fsOpenSync:
+            api.fsOpen(param: param, replyHandler: replyHandler)
+        case .fsClose, .fsCloseSync:
+            api.fsClose(param: param, replyHandler: replyHandler)
+        case .fsFstat, .fsFstatSync:
+            api.fsFstat(param: param, replyHandler: replyHandler)
+        case .fsFtruncate, .fsFtruncateSync:
+            api.fsFtruncate(param: param, replyHandler: replyHandler)
+        case .fsRead, .fsReadSync:
+            api.fsRead(param: param, replyHandler: replyHandler)
+        case .fsWrite, .fsWriteSync:
+            api.fsWrite(param: param, replyHandler: replyHandler)
         default:
             replyHandler(nil, "API \(apiName.rawValue) is not implemented or not allowed")
         }

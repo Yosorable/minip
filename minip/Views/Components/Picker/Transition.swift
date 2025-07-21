@@ -49,7 +49,7 @@ class BottomSheetPresentationController: UIPresentationController {
     override func containerViewWillLayoutSubviews() {
         super.containerViewWillLayoutSubviews()
         dimmingView.frame = containerView!.bounds
-        let height = min(max(containerView!.bounds.height, containerView!.bounds.width) / 3, containerView!.bounds.height)
+        let height = min(max(containerView!.bounds.height, containerView!.bounds.width) / 2.6, containerView!.bounds.height)
         let width = min(containerView!.bounds.height, containerView!.bounds.width)
         presentedView?.frame = CGRect(x: (containerView!.bounds.width - width) / 2, y: containerView!.bounds.height - height, width: width, height: height)
     }

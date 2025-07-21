@@ -8,7 +8,7 @@
 import UIKit
 
 class PickerContainerView: UIView {
-    private let toolbar = UIView()
+    public let toolbar = UIView()
     private let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
     private let pickerView: UIView
     private let dismissFunc: ()->Void

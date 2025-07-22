@@ -6,10 +6,6 @@ You can interact with native features via a JavaScript bridge.
 
 <a href="https://apps.apple.com/us/app/minip-editor/id6463115915" target="_blank"><img width="150" alt="Download on the App Store" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"/></a>
 
-## Documentation
-
-For documentation, please refer to https://minip.lzyl.win/
-
 ## Demo
 
 [Source code](https://github.com/Yosorable/minip-demo)

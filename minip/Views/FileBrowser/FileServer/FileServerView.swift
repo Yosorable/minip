@@ -96,9 +96,9 @@ struct FileServerView: View {
         fileServer = serv
 
         // frontend
-        await serv.appendRoute("GET /", to: .file(named: "index.html"))
-        await serv.appendRoute("GET /index.css", to: .file(named: "index.css"))
-        await serv.appendRoute("GET /index.js", to: .file(named: "index.js"))
+        await serv.appendRoute("GET /", to: .file(named: "web/index.html"))
+        await serv.appendRoute("GET /index.css", to: .file(named: "web/index.css"))
+        await serv.appendRoute("GET /index.js", to: .file(named: "web/index.js"))
 
         // download file
         let dirHandler = DirectoryHTTPHandler(

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -26,6 +26,7 @@
 		2B8F0B952A597C4800D9359F /* Color++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8F0B942A597C4800D9359F /* Color++.swift */; };
 		2B9003C32A81FEB400ED360D /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9003C22A81FEB400ED360D /* LazyView.swift */; };
 		2B9B579A2A56399B002E9D57 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9B57992A56399B002E9D57 /* utils.swift */; };
+		2BC0B55A2E50EDD3002CA620 /* web in Resources */ = {isa = PBXBuildFile; fileRef = 2BC0B5592E50EDD3002CA620 /* web */; };
 		2BC331B42A62D47700441447 /* SwiftLMDB in Frameworks */ = {isa = PBXBuildFile; productRef = 2BC331B32A62D47700441447 /* SwiftLMDB */; };
 		2BC331B62A62D48C00441447 /* LMDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC331B52A62D48C00441447 /* LMDB.swift */; };
 		2BD9B1AA2A5BD4D300036AFD /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = 2BD9B1A92A5BD4D300036AFD /* Runestone */; };
@@ -164,6 +165,7 @@
 		2B9003C22A81FEB400ED360D /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
 		2B9B57992A56399B002E9D57 /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		2B9B579E2A57D5B5002E9D57 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2BC0B5592E50EDD3002CA620 /* web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = web; sourceTree = "<group>"; };
 		2BC331B52A62D48C00441447 /* LMDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LMDB.swift; sourceTree = "<group>"; };
 		2BD9B1D82A5C426700036AFD /* EditorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorTheme.swift; sourceTree = "<group>"; };
 		2BD9B1DA2A5C428700036AFD /* HighlightName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightName.swift; sourceTree = "<group>"; };
@@ -247,10 +249,6 @@
 		48FB5A042B95CD9400D2DFCC /* UIViewController++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController++.swift"; sourceTree = "<group>"; };
 		48FFAA3B2D96F3FF0028D02D /* FileServerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileServerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		2B58E6112E1928B000E9D5EE /* web */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = web; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		48DF6B96288D32C800D523C1 /* Frameworks */ = {
@@ -620,7 +618,7 @@
 		48FFAA3A2D96F3F40028D02D /* FileServer */ = {
 			isa = PBXGroup;
 			children = (
-				2B58E6112E1928B000E9D5EE /* web */,
+				2BC0B5592E50EDD3002CA620 /* web */,
 				48FFAA3B2D96F3FF0028D02D /* FileServerView.swift */,
 			);
 			path = FileServer;
@@ -640,9 +638,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				2B58E6112E1928B000E9D5EE /* web */,
 			);
 			name = minip;
 			packageProductDependencies = (
@@ -746,6 +741,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BC0B55A2E50EDD3002CA620 /* web in Resources */,
 				48DF6BA4288D32CA00D523C1 /* Preview Assets.xcassets in Resources */,
 				48C22D2A2D683C260000F74F /* Localizable.strings in Resources */,
 				48CE18432D5E760300F6F987 /* Settings.bundle in Resources */,

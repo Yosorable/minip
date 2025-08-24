@@ -107,7 +107,7 @@
 "s.clear_kfimage_cache" = "清除KFImage缓存";
 "s.allow_inspect_wkwebview" = "Allow Inspect WKWebView";
 "s.use_capsule_button" = "使用胶囊按钮";
-"s.documentation_source_code" = "文档和源码: [GitHub - yosorable/minip](https://github.com/yosorable/minip)";
+"s.documentation_source_code" = "文档和源码: [GitHub - Yosorable/Minip](https://github.com/yosorable/minip)";
 
 // MARK: MiniApp Privacy
 "mp.camera" = "相机";

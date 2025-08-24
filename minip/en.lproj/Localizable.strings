@@ -107,7 +107,7 @@
 "s.clear_kfimage_cache" = "Clear KFImage Cache";
 "s.allow_inspect_wkwebview" = "Allow Inspect WKWebView";
 "s.use_capsule_button" = "Use Capsule Button";
-"s.documentation_source_code" = "Documentation and source code: [GitHub - yosorable/minip](https://github.com/yosorable/minip)";
+"s.documentation_source_code" = "Documentation and source code: [GitHub - Yosorable/Minip](https://github.com/yosorable/minip)";
 
 // MARK: MiniApp Privacy
 "mp.camera" = "Camera";

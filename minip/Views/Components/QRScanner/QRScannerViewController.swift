@@ -6,11 +6,14 @@
 //
 
 import AVFoundation
+import CoreImage
+import Photos
 import UIKit
 
-class QRScannerViewController: UIViewController {
+class QRScannerViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     var qrScannerView: QRScannerView!
     var flashButton: FlashButton!
+    var albumButton: UIButton!
     var closeButton: UIButton!
     var onCanceled: (()->Void)?
     var onSucceed: ((String)->Void)?
@@ -39,6 +42,11 @@ class QRScannerViewController: UIViewController {
         flashButton.translatesAutoresizingMaskIntoConstraints = false
         flashButton.layer.cornerRadius = 35
 
+        albumButton = UIButton()
+        view.addSubview(albumButton)
+        albumButton.translatesAutoresizingMaskIntoConstraints = false
+        albumButton.layer.cornerRadius = 35
+
         closeButton = UIButton()
         view.addSubview(closeButton)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -46,9 +54,14 @@ class QRScannerViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             flashButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            flashButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            flashButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             flashButton.widthAnchor.constraint(equalToConstant: 70),
             flashButton.heightAnchor.constraint(equalToConstant: 70),
+
+            albumButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            albumButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            albumButton.widthAnchor.constraint(equalToConstant: 70),
+            albumButton.heightAnchor.constraint(equalToConstant: 70),
 
             qrScannerView.topAnchor.constraint(equalTo: view.topAnchor),
             qrScannerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -58,7 +71,7 @@ class QRScannerViewController: UIViewController {
             closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             closeButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             closeButton.widthAnchor.constraint(equalToConstant: 36),
-            closeButton.heightAnchor.constraint(equalToConstant: 36)
+            closeButton.heightAnchor.constraint(equalToConstant: 36),
         ])
 
         let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterialDark))
@@ -76,6 +89,22 @@ class QRScannerViewController: UIViewController {
         if let imageView = closeButton.imageView {
             closeButton.bringSubviewToFront(imageView)
         }
+
+        let blurEffectView2 = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterialDark))
+        albumButton.clipsToBounds = true
+
+        blurEffectView2.frame = albumButton.bounds
+        blurEffectView2.isUserInteractionEnabled = false
+        blurEffectView2.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        albumButton.insertSubview(blurEffectView2, at: 0)
+
+        albumButton.setImage(UIImage(systemName: "photo", withConfiguration: UIImage.SymbolConfiguration(textStyle: .title1)), for: .normal)
+        albumButton.tintColor = .white
+        albumButton.addTarget(self, action: #selector(tapAlbumButton), for: .touchUpInside)
+
+        if let imageView = albumButton.imageView {
+            albumButton.bringSubviewToFront(imageView)
+        }
     }
 
     @objc func tapCloseButton() {
@@ -90,6 +119,114 @@ class QRScannerViewController: UIViewController {
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
+    }
+
+    @objc func tapAlbumButton() {
+        checkPhotoLibraryPermission()
+    }
+
+    private func checkPhotoLibraryPermission() {
+        let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+        qrScannerView.stopRunning()
+
+        switch status {
+        case .authorized, .limited:
+            presentImagePicker()
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization(for: .readWrite) { [weak self] status in
+                DispatchQueue.main.async {
+                    if status == .authorized {
+                        self?.presentImagePicker()
+                    } else {
+                        self?.showPermissionDeniedAlert()
+                    }
+                }
+            }
+        case .denied, .restricted:
+            showPermissionDeniedAlert()
+        @unknown default:
+            showPermissionDeniedAlert()
+        }
+    }
+
+    private func showPermissionDeniedAlert() {
+        let alert = UIAlertController(
+            title: "Cannot Access Photo Library",
+            message: "Please allow access to your photo library in Settings to select images.",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+            self?.qrScannerView.startRunning()
+        })
+        alert.addAction(UIAlertAction(title: "Settings", style: .default) { _ in
+            guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
+            UIApplication.shared.open(settingsURL)
+        })
+        present(alert, animated: true)
+    }
+
+    private func presentImagePicker() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = false
+        present(imagePicker, animated: true)
+    }
+
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        picker.dismiss(animated: true, completion: { [weak self] in
+            guard let image = info[.originalImage] as? UIImage else {
+                self?.showError(message: "Cannot get image")
+                return
+            }
+
+            if let qrCodeContent = self?.detectQRCode(in: image) {
+                DispatchQueue.main.async { [weak self] in
+                    self?.dismiss(animated: true)
+                    self?.onSucceed?(qrCodeContent)
+                }
+            } else {
+                self?.showError(message: "No QRCode in this image")
+            }
+        })
+    }
+
+    private func detectQRCode(in image: UIImage)->String? {
+        guard let ciImage = CIImage(image: image) else { return nil }
+
+        let detector = CIDetector(
+            ofType: CIDetectorTypeQRCode,
+            context: nil,
+            options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+        )
+
+        let features = detector?.features(in: ciImage) ?? []
+
+        for feature in features {
+            if let qrFeature = feature as? CIQRCodeFeature {
+                return qrFeature.messageString
+            }
+        }
+
+        return nil
+    }
+
+    private func showError(message: String) {
+        let alert = UIAlertController(
+            title: "Error",
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak self] _ in
+            self?.qrScannerView.startRunning()
+        }))
+        present(alert, animated: true)
+    }
+
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: { [weak self] in
+            self?.qrScannerView.startRunning()
+        })
     }
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B0CED632E5E1F8A00AD03C5 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0CED622E5E1F8600AD03C5 /* ImagePicker.swift */; };
 		2B1B32C12A6132FD00DA573F /* FileManager++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B1B32C02A6132FD00DA573F /* FileManager++.swift */; };
 		2B1B32C42A61358B00DA573F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 2B1B32C32A61358B00DA573F /* Alamofire */; };
 		2B1B32C72A6135D300DA573F /* DownloadProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B1B32C62A6135D300DA573F /* DownloadProjectView.swift */; };
@@ -148,6 +149,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2B0CED622E5E1F8600AD03C5 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		2B1B32C02A6132FD00DA573F /* FileManager++.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager++.swift"; sourceTree = "<group>"; };
 		2B1B32C62A6135D300DA573F /* DownloadProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProjectView.swift; sourceTree = "<group>"; };
 		2B1B32CC2A615BB800DA573F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -496,6 +498,7 @@
 			isa = PBXGroup;
 			children = (
 				485FEE7A2D5D07E500A0C430 /* QRScannerViewController.swift */,
+				2B0CED622E5E1F8600AD03C5 /* ImagePicker.swift */,
 				485FEE7C2D5D09B400A0C430 /* FlashButton.swift */,
 				485FEE742D5D076400A0C430 /* QRScannerView.swift */,
 				485FEE762D5D077D00A0C430 /* QRScannerViewDelegate.swift */,
@@ -769,6 +772,7 @@
 				48F649002D589B7100C9FD82 /* MinipApi.swift in Sources */,
 				2B8DC8BA2A5FAC4B002D5288 /* VSCodeDarkTheme.swift in Sources */,
 				48E518E12D8AA3E100FD716F /* ZoomableImageView.swift in Sources */,
+				2B0CED632E5E1F8A00AD03C5 /* ImagePicker.swift in Sources */,
 				488C2F3E2D4E1BDC00892E3A /* AppInfo.swift in Sources */,
 				48CA017A2D5C262F006A63DD /* PickerContainerView.swift in Sources */,
 				2B1B32CF2A61633000DA573F /* FilePickerView.swift in Sources */,

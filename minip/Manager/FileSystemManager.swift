@@ -136,6 +136,7 @@ class FileSystemManager {
     }
 
     // MARK: todo: file exist
+
     func copyFile(src: String, dest: String) throws {
         let src = try appPathToURL(src).path
         let dest = try appPathToURL(dest).path
@@ -190,6 +191,7 @@ class FileSystemManager {
     }
 
     // MARK: todo: file exist
+
     func cp(src: String, dest: String, recursive: Bool) throws {
         let fileManager = FileManager.default
         let srcURL = try appPathToURL(src)
@@ -218,7 +220,7 @@ class FileSystemManager {
 
     func open(path: String, flags: Int32, mode: mode_t = 0o644) throws -> Int32 {
         let path = try appPathToURL(path).path
-        let fd = Darwin.open(path, flags, mode)
+        let fd = Darwin.open(path, convertOpenFlags(from: flags), mode)
         if fd == -1 {
             throw NSError(domain: "FileSystemManager", code: Int(errno), userInfo: [NSLocalizedDescriptionKey: String(cString: strerror(errno))])
         }
@@ -279,6 +281,36 @@ class FileSystemManager {
         }
 
         return bytesWritten
+    }
+
+    private func convertOpenFlags(from linuxFlags: Int32) -> Int32 {
+        var darwinFlags: Int32 = 0
+
+        if linuxFlags & 0 == 0 { // O_RDONLY
+            darwinFlags |= O_RDONLY
+        }
+        if linuxFlags & 1 != 0 { // O_WRONLY
+            darwinFlags |= O_WRONLY
+        }
+        if linuxFlags & 2 != 0 { // O_RDWR
+            darwinFlags |= O_RDWR
+        }
+
+        // Linux → Darwin
+        if linuxFlags & 64 != 0 { // O_CREAT
+            darwinFlags |= O_CREAT // Darwin: 512
+        }
+        if linuxFlags & 128 != 0 { // O_EXCL
+            darwinFlags |= O_EXCL // Darwin: 2048
+        }
+        if linuxFlags & 512 != 0 { // O_TRUNC
+            darwinFlags |= O_TRUNC // Darwin: 1024
+        }
+        if linuxFlags & 1024 != 0 { // O_APPEND
+            darwinFlags |= O_APPEND // Darwin: 8
+        }
+
+        return darwinFlags
     }
 }
 

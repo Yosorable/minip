@@ -23,13 +23,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         window?.overrideUserInterfaceStyle = if Defaults[.colorScheme] == 1 { .light } else if Defaults[.colorScheme] == 2 { .dark } else { .unspecified }
 
-        // disable ipad top tabbar on ios 18
-//        if #available(iOS 18.0, *) {
-//            if UIDevice.current.userInterfaceIdiom == .pad {
-//                mainVC.traitOverrides.horizontalSizeClass = .compact
-//
-//            }
-//        }
         mainVC.viewControllers = [
             {
                 let vc = UINavigationController(rootViewController: HomeViewController())

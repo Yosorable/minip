@@ -20,7 +20,7 @@ extension Defaults.Keys {
     static let wkwebviewInspectable = Key<Bool>("wkwebviewInspectable", default: false)
 
     // capsule button
-    static let useCapsuleButton = Key<Bool>("useCapsuleButton", default: true)
+    static let useCapsuleButton = Key<Bool>("useCapsuleButton", default: false)
 
     // first start app
     static let firstStart = Key<Bool>("firstStart", default: true)

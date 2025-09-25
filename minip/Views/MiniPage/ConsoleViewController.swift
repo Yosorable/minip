@@ -41,7 +41,7 @@ class ConsoleViewController: UIViewController {
         ])
         textView.text = MiniAppManager.shared.webViewLogs.joined(separator: "\n")
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .done, target: self, action: #selector(close))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(close))
     }
 
     override func viewDidLayoutSubviews() {

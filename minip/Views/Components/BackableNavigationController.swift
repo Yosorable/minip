@@ -57,17 +57,23 @@ class BackableNavigationController: UINavigationController {
     }
 
     deinit {
-        for gesture in edgePanGestures {
+        for gesture in panGestures {
             gesture.view?.removeGestureRecognizer(gesture)
         }
     }
 
-    var edgePanGestures: [UIScreenEdgePanGestureRecognizer] = []
+    var panGestures: [UIPanGestureRecognizer] = []
     func addPanGesture(vc: UIViewController) {
-        let panGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(self.onPan(_:)))
-        panGesture.edges = .left
+        var panGesture: UIPanGestureRecognizer
+        if #available(iOS 26.0, *) {
+            panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.onPan(_:)))
+        } else {
+            let edgePanGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(self.onPan(_:)))
+            edgePanGesture.edges = .left
+            panGesture = edgePanGesture
+        }
         vc.view.addGestureRecognizer(panGesture)
-        self.edgePanGestures.append(panGesture)
+        self.panGestures.append(panGesture)
     }
 }
 

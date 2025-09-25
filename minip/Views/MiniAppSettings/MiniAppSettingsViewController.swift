@@ -25,7 +25,7 @@ class MiniAppSettingsViewController: UITableViewController {
         title = i18n("Settings")
 
         if navigationController is BackableNavigationController {
-            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .done, target: self, action: #selector(closePage))
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(closePage))
         } else {
             navigationItem.largeTitleDisplayMode = .never
         }

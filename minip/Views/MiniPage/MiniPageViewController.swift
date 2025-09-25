@@ -26,8 +26,6 @@ class MiniPageViewController: UIViewController {
     var initialTouchPoint: CGPoint = .init(x: 0, y: 0)
     var isRoot: Bool
 
-    var capsuleMoreButton: UIView?
-
     init(app: AppInfo, page: String? = nil, title: String? = nil, isRoot: Bool = false) {
         self.app = app
         self.page = page ?? app.homepage
@@ -197,39 +195,13 @@ class MiniPageViewController: UIViewController {
         }
 
         if showNav {
-            if Defaults[.useCapsuleButton] {
-                let moreButton = UIButton(type: .system)
-                moreButton.setImage(UIImage(named: "capsule-more"), for: .normal)
-                moreButton.addTarget(self, action: #selector(showAppDetail), for: .touchUpInside)
-
-                capsuleMoreButton = moreButton
-
-                let closeButton = UIButton(type: .system)
-                closeButton.setImage(UIImage(named: "capsule-close"), for: .normal)
-                closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
-
-                let stackView = UIStackView(arrangedSubviews: [moreButton, closeButton])
-                stackView.axis = .horizontal
-                stackView.spacing = 0
-                stackView.distribution = .equalSpacing
-
-                NSLayoutConstraint.activate([
-                    moreButton.widthAnchor.constraint(equalToConstant: 132 / 3),
-                    moreButton.heightAnchor.constraint(equalToConstant: 96 / 3),
-                    closeButton.widthAnchor.constraint(equalToConstant: 132 / 3),
-                    closeButton.heightAnchor.constraint(equalToConstant: 96 / 3)
-                ])
-
-                navigationItem.rightBarButtonItems = [
-                    UIBarButtonItem(customView: stackView)
-                ]
-            } else {
+            if !Defaults[.useCapsuleButton] {
                 navigationItem.rightBarButtonItems = [
                     UIBarButtonItem(
-                        image: UIImage(systemName: "xmark"), style: .done, target: self, action: #selector(close)
+                        image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(close)
                     ),
                     UIBarButtonItem(
-                        image: UIImage(systemName: "ellipsis"), style: .done, target: self, action: #selector(showAppDetail)
+                        image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(showAppDetail)
                     )
                 ]
             }
@@ -313,14 +285,18 @@ class MiniPageViewController: UIViewController {
             MiniAppManager.shared.clearOpenedApp()
         })
     }
-
     @objc
     func showAppDetail() {
+        showAppDetail(moreButton: navigationItem.rightBarButtonItems?.last?.value(forKey: "view") as? UIView)
+    }
+
+    @objc
+    func showAppDetail(moreButton: UIView? = nil) {
         let detailVC = AppDetailViewController(appInfo: app, reloadPageFunc: { [weak self] in
             self?.webview.reload()
         }, parentVC: self)
 
-        if let moreBtn = capsuleMoreButton ?? (navigationItem.rightBarButtonItems?.last?.value(forKey: "view") as? UIView) {
+        if let moreBtn = moreButton {
             presentPanModal(detailVC, sourceView: moreBtn, sourceRect: moreBtn.bounds)
         } else {
             presentPanModal(detailVC)

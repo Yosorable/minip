@@ -21,7 +21,6 @@
 		2B46AFAD2E2898B000E33E5D /* FileSystemManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B46AFAC2E2898AB00E33E5D /* FileSystemManager.swift */; };
 		2B5359382E0D66A000C04ACC /* network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5359372E0D669D00C04ACC /* network.swift */; };
 		2B58E61D2E193B6200E9D5EE /* date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B58E61C2E193B6000E9D5EE /* date.swift */; };
-		2B6D0E4A2A6223B4005BFEB9 /* PanModal in Frameworks */ = {isa = PBXBuildFile; productRef = 2B6D0E492A6223B4005BFEB9 /* PanModal */; };
 		2B6D0E4C2A623D93005BFEB9 /* ImagePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6D0E4B2A623D93005BFEB9 /* ImagePreviewViewController.swift */; };
 		2B8DC8BA2A5FAC4B002D5288 /* VSCodeDarkTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8DC8B92A5FAC4B002D5288 /* VSCodeDarkTheme.swift */; };
 		2B8F0B952A597C4800D9359F /* Color++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8F0B942A597C4800D9359F /* Color++.swift */; };
@@ -34,6 +33,7 @@
 		2BD9B1D62A5C09C700036AFD /* KeyboardToolbar in Frameworks */ = {isa = PBXBuildFile; productRef = 2BD9B1D52A5C09C700036AFD /* KeyboardToolbar */; };
 		2BD9B1D92A5C426700036AFD /* EditorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD9B1D82A5C426700036AFD /* EditorTheme.swift */; };
 		2BD9B1DB2A5C428700036AFD /* HighlightName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD9B1DA2A5C428700036AFD /* HighlightName.swift */; };
+		2BE125CD2E85259200B159E7 /* PanModal in Frameworks */ = {isa = PBXBuildFile; productRef = 2BE125CC2E85259200B159E7 /* PanModal */; };
 		2BFC7BF32E1983BA0017DB2C /* file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BFC7BF22E1983B80017DB2C /* file.swift */; };
 		4800EA092CF1C93300F49842 /* FlyingFox in Frameworks */ = {isa = PBXBuildFile; productRef = 4800EA082CF1C93300F49842 /* FlyingFox */; };
 		4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */ = {isa = PBXBuildFile; productRef = 4800EA0A2CF1C93300F49842 /* FlyingSocks */; };
@@ -258,7 +258,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				48C22D212D6831B80000F74F /* TreeSitterYAMLQueries in Frameworks */,
-				2B6D0E4A2A6223B4005BFEB9 /* PanModal in Frameworks */,
 				4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */,
 				48C22CE12D67FEA20000F74F /* TreeSitterJSDocRunestone in Frameworks */,
 				48CE69232D90EAE80072AF47 /* ZIPFoundation in Frameworks */,
@@ -278,6 +277,7 @@
 				48C22CED2D67FEA20000F74F /* TreeSitterJavaScriptRunestone in Frameworks */,
 				48C22CE92D67FEA20000F74F /* TreeSitterJavaScript in Frameworks */,
 				48C22D192D6831B70000F74F /* TreeSitterPython in Frameworks */,
+				2BE125CD2E85259200B159E7 /* PanModal in Frameworks */,
 				4800EA092CF1C93300F49842 /* FlyingFox in Frameworks */,
 				48C22CD52D67FEA20000F74F /* TreeSitterCommentRunestone in Frameworks */,
 				480B06452D5B3AC500FFAAA5 /* ProgressHUD in Frameworks */,
@@ -648,7 +648,6 @@
 				2BD9B1D52A5C09C700036AFD /* KeyboardToolbar */,
 				2B1B32C32A61358B00DA573F /* Alamofire */,
 				2B1B32D32A61783400DA573F /* Defaults */,
-				2B6D0E492A6223B4005BFEB9 /* PanModal */,
 				2BC331B32A62D47700441447 /* SwiftLMDB */,
 				487E38922A8FBA48003464D7 /* Kingfisher */,
 				4800EA082CF1C93300F49842 /* FlyingFox */,
@@ -686,6 +685,7 @@
 				48C22D202D6831B80000F74F /* TreeSitterYAMLQueries */,
 				48C22D222D6831B80000F74F /* TreeSitterYAMLRunestone */,
 				48CE69222D90EAE80072AF47 /* ZIPFoundation */,
+				2BE125CC2E85259200B159E7 /* PanModal */,
 			);
 			productName = minip;
 			productReference = 48DF6B99288D32C800D523C1 /* minip.app */;
@@ -722,13 +722,13 @@
 				2BD9B1D42A5C09C700036AFD /* XCRemoteSwiftPackageReference "KeyboardToolbar" */,
 				2B1B32C22A61358B00DA573F /* XCRemoteSwiftPackageReference "Alamofire" */,
 				2B1B32D22A61783400DA573F /* XCRemoteSwiftPackageReference "Defaults" */,
-				2B6D0E482A6223B4005BFEB9 /* XCRemoteSwiftPackageReference "PanModal" */,
 				2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */,
 				487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */,
 				480B06432D5B3AC500FFAAA5 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 				48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */,
 				48CE69212D90EAE80072AF47 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+				2BE125CB2E85259200B159E7 /* XCRemoteSwiftPackageReference "PanModal" */,
 			);
 			productRefGroup = 48DF6B9A288D32C800D523C1 /* Products */;
 			projectDirPath = "";
@@ -1112,14 +1112,6 @@
 				kind = branch;
 			};
 		};
-		2B6D0E482A6223B4005BFEB9 /* XCRemoteSwiftPackageReference "PanModal" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/slackhq/PanModal";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/agisboye/SwiftLMDB";
@@ -1142,6 +1134,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.1.1;
+			};
+		};
+		2BE125CB2E85259200B159E7 /* XCRemoteSwiftPackageReference "PanModal" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Yosorable/PanModal";
+			requirement = {
+				branch = master;
+				kind = branch;
 			};
 		};
 		4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */ = {
@@ -1197,11 +1197,6 @@
 			package = 2B1B32D22A61783400DA573F /* XCRemoteSwiftPackageReference "Defaults" */;
 			productName = Defaults;
 		};
-		2B6D0E492A6223B4005BFEB9 /* PanModal */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2B6D0E482A6223B4005BFEB9 /* XCRemoteSwiftPackageReference "PanModal" */;
-			productName = PanModal;
-		};
 		2BC331B32A62D47700441447 /* SwiftLMDB */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */;
@@ -1216,6 +1211,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2BD9B1D42A5C09C700036AFD /* XCRemoteSwiftPackageReference "KeyboardToolbar" */;
 			productName = KeyboardToolbar;
+		};
+		2BE125CC2E85259200B159E7 /* PanModal */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2BE125CB2E85259200B159E7 /* XCRemoteSwiftPackageReference "PanModal" */;
+			productName = PanModal;
 		};
 		4800EA082CF1C93300F49842 /* FlyingFox */ = {
 			isa = XCSwiftPackageProductDependency;

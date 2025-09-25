@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Defaults
 
 class PannableNavigationViewController: UINavigationController {
     public var minimumScreenRatioToHide = 0.5 as CGFloat
@@ -14,9 +15,71 @@ class PannableNavigationViewController: UINavigationController {
     private lazy var transitionDelegate: SheetTransitionDelegate = .init()
 
     private var orientations: UIInterfaceOrientationMask? = nil
+    private var isMiniApp: Bool = false
+
+    private var _moreButton: UIButton? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        if isMiniApp && Defaults[.useCapsuleButton] {
+            let containerView = UIView()
+            containerView.translatesAutoresizingMaskIntoConstraints = false
+
+            if #available(iOS 26.0, *) {
+                let visualEffectView = UIVisualEffectView(effect: UIGlassEffect())
+                visualEffectView.translatesAutoresizingMaskIntoConstraints = false
+                visualEffectView.layer.cornerRadius = 18
+                visualEffectView.layer.masksToBounds = true
+
+                containerView.addSubview(visualEffectView)
+
+                NSLayoutConstraint.activate([
+                    visualEffectView.topAnchor.constraint(equalTo: containerView.topAnchor),
+                    visualEffectView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+                    visualEffectView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+                    visualEffectView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+                ])
+            }
+
+
+            let moreButton = UIButton(type: .system)
+            moreButton.setImage(UIImage(named: "capsule-more"), for: .normal)
+            moreButton.addTarget(self, action: #selector(showAppDetail), for: .touchUpInside)
+            _moreButton = moreButton
+
+            let closeButton = UIButton(type: .system)
+            closeButton.setImage(UIImage(named: "capsule-close"), for: .normal)
+            closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+
+            let stackView = UIStackView(arrangedSubviews: [moreButton, closeButton])
+            stackView.axis = .horizontal
+            stackView.spacing = 0
+            stackView.distribution = .equalSpacing
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+
+            containerView.addSubview(stackView)
+
+            navigationBar.addSubview(containerView)
+            containerView.layer.zPosition = CGFloat.greatestFiniteMagnitude
+
+            NSLayoutConstraint.activate([
+                moreButton.widthAnchor.constraint(equalToConstant: 132 / 3),
+                moreButton.heightAnchor.constraint(equalToConstant: 96 / 3),
+                closeButton.widthAnchor.constraint(equalToConstant: 132 / 3),
+                closeButton.heightAnchor.constraint(equalToConstant: 96 / 3),
+                stackView.widthAnchor.constraint(equalToConstant: 264 / 3),
+                stackView.heightAnchor.constraint(equalToConstant: 96 / 3),
+                stackView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                stackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+
+
+                containerView.widthAnchor.constraint(equalToConstant: 264 / 3 + 10),
+                containerView.heightAnchor.constraint(equalToConstant: 96 / 3 + 10),
+                containerView.trailingAnchor.constraint(equalTo: navigationBar.safeAreaLayoutGuide.trailingAnchor, constant: -10),
+                containerView.centerYAnchor.constraint(equalTo: navigationBar.safeAreaLayoutGuide.centerYAnchor),
+            ])
+        }
 
         self.transitioningDelegate = self.transitionDelegate
     }
@@ -50,12 +113,25 @@ class PannableNavigationViewController: UINavigationController {
         }
     }
 
+    @objc
+    func close() {
+        guard let vc = viewControllers.last as? MiniPageViewController else { return }
+        vc.close()
+    }
+
+    @objc
+    func showAppDetail() {
+        guard let vc = viewControllers.last as? MiniPageViewController else { return }
+        vc.showAppDetail(moreButton: _moreButton)
+    }
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
-    init(rootViewController: UIViewController, orientations: UIInterfaceOrientationMask? = nil) {
+    init(rootViewController: UIViewController, orientations: UIInterfaceOrientationMask? = nil, isMiniApp: Bool = false) {
         self.orientations = orientations
+        self.isMiniApp = isMiniApp
         super.init(rootViewController: rootViewController)
     }
 

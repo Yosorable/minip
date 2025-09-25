@@ -33,6 +33,13 @@ class MiniAppManager {
     }
 
     func getAppInfos() -> [AppInfo] {
+        let start = DispatchTime.now()
+        defer {
+            let end = DispatchTime.now()
+            let nanoTime = end.uptimeNanoseconds - start.uptimeNanoseconds
+            let timeInterval = Double(nanoTime) / 1_000_000
+            logger.debug("[getAppInfos] cost \(timeInterval) ms")
+        }
         var tmpApps: [AppInfo] = []
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -41,7 +48,7 @@ class MiniAppManager {
             let decoder = JSONDecoder()
             for ele in fileURLs {
                 let infoURL = ele.appendingPathComponent("app", conformingTo: .json)
-                if ele.lastPathComponent != ".Trash", fileManager.fileExists(atPath: infoURL.path) {
+                if ele.lastPathComponent != ".Trash", ele.lastPathComponent != ".data", ele.lastPathComponent != ".tmp", fileManager.fileExists(atPath: infoURL.path) {
                     do {
                         let data = try Data(contentsOf: infoURL, options: .mappedIfSafe)
                         let appDetail = try? decoder.decode(AppInfo.self, from: data)

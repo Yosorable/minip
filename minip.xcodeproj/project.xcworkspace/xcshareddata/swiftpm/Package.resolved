@@ -11,6 +11,15 @@
       }
     },
     {
+      "identity" : "bluruikit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/TimOliver/BlurUIKit.git",
+      "state" : {
+        "revision" : "7808a740b1424e4a105c6c9df0aff2f3de7ac7a4",
+        "version" : "1.2.0"
+      }
+    },
+    {
       "identity" : "clmdb",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/agisboye/CLMDB.git",
@@ -33,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swhitty/FlyingFox.git",
       "state" : {
-        "revision" : "de429870282bed7b01bf6c384f5f29d55907aa10",
-        "version" : "0.24.1"
+        "revision" : "76b2d2d0eb54f0b53e8b661cc8007c487d94f8da",
+        "version" : "0.25.0"
       }
     },
     {
@@ -42,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/simonbs/KeyboardToolbar",
       "state" : {
-        "revision" : "5f95f8e9af98f6163a58caaceaadc3bf720fd7bd",
-        "version" : "0.1.1"
+        "branch" : "main",
+        "revision" : "41ec0d3352c228a3a5cf4259a8cde4ae5d88b9d3"
       }
     },
     {

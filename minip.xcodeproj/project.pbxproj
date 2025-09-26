@@ -1128,8 +1128,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/simonbs/KeyboardToolbar";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.1;
+				branch = main;
+				kind = branch;
 			};
 		};
 		2BE125CB2E85259200B159E7 /* XCRemoteSwiftPackageReference "PanModal" */ = {

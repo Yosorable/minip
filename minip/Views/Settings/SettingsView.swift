@@ -35,9 +35,11 @@ struct SettingsView: View {
     var content: some View {
         List {
             Section {
-                Toggle(isOn: $useCapsuleButton, label: {
-                    Text(i18n("s.use_capsule_button"))
-                })
+                if #unavailable(iOS 26.0) {
+                    Toggle(isOn: $useCapsuleButton, label: {
+                        Text(i18n("s.use_capsule_button"))
+                    })
+                }
 
                 Picker("Appearance", selection: $colorScheme) {
                     Text("Follow System").tag(0)

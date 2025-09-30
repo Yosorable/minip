@@ -200,6 +200,8 @@ class FileBrowserViewController: UITableViewController {
         updateToobarButtonStatus()
         navigationController?.setToolbarHidden(!tableView.isEditing, animated: true)
         navigationItem.hidesBackButton = !editing
+        // TODO: rm
+        tabBarController?.tabBar.isHidden = tableView.isEditing
     }
 
     @objc func openWebServer() {

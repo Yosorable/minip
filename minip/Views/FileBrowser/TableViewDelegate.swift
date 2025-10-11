@@ -235,6 +235,6 @@ extension FileBrowserViewController {
     }
 
     override func tableView(_ tableView: UITableView, shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath) -> Bool {
-        return true
+        return tableView.isEditing
     }
 }

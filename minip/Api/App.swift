@@ -15,6 +15,15 @@ extension MinipApi {
         }
     }
 
+    func getAppInfo(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
+            return
+        }
+        var appInfo = vc.app
+        appInfo.files = nil
+        replyHandler(InteropUtils.succeedWithData(data: appInfo).toJsonString(), nil)
+    }
+
     func showAppDetail(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return

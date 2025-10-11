@@ -24,6 +24,7 @@ class MinipApi {
         case openSettings
 
         // MARK: App
+        case getAppInfo
         case showAppDetail
         case closeApp
         case installApp
@@ -183,6 +184,8 @@ class MinipApi {
             } catch {
                 replyHandler(nil, error.localizedDescription)
             }
+        case .getAppInfo:
+            api.getAppInfo(param: param, replyHandler: replyHandler)
         case .getInstalledAppList:
             api.getInstalledAppList(replyHandler: replyHandler)
         case .navigateTo:

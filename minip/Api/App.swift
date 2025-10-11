@@ -49,4 +49,26 @@ extension MinipApi {
             })
         })
     }
+
+    func updateCurrentApp(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
+            return
+        }
+        guard let url = (param.data as? [String: String])?["url"] else {
+            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
+            return
+        }
+        let appID = vc.app.appId
+        DownloadMiniAppPackageToTmpFolder(url, onError: { err in
+            replyHandler(InteropUtils.fail(msg: err.localizedDescription).toJsonString(), nil)
+        }, onSuccess: { pkgURL in
+            InstallMiniApp(pkgFile: pkgURL, onSuccess: {
+                replyHandler(InteropUtils.succeed().toJsonString(), nil)
+            }, onFailed: { errMsg in
+                replyHandler(InteropUtils.fail(msg: errMsg).toJsonString(), nil)
+            }, validateAppInfoFunc: { appInfo in
+                return appInfo.appId == appID
+            })
+        })
+    }
 }

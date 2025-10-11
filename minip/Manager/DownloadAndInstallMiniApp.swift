@@ -9,7 +9,7 @@ import Alamofire
 import Foundation
 import ZIPFoundation
 
-func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((String)->Void)? = nil, signalAppListChangedOnSuccess: Bool = true) {
+func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((String)->Void)? = nil, validateAppInfoFunc: ((AppInfo)->Bool)? = nil, signalAppListChangedOnSuccess: Bool = true) {
     let fileManager = FileManager.default
 
     let tempDirURL = fileManager.temporaryDirectory
@@ -22,7 +22,7 @@ func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((Stri
         guard let appJSONURL = try findAppJSON(in: unzipDirURL) else {
             throw ErrorMsg(errorDescription: "cannot find app.json")
         }
-        try installByAppJSON(in: appJSONURL)
+        try installByAppJSON(in: appJSONURL, validateAppInfoFunc: validateAppInfoFunc)
         onSuccess?()
         if signalAppListChangedOnSuccess {
             NotificationCenter.default.post(name: .appListUpdated, object: nil)
@@ -84,13 +84,19 @@ private func findAppJSON(in directory: URL) throws->URL? {
     return nil
 }
 
-private func installByAppJSON(in appJSONURL: URL) throws {
+private func installByAppJSON(in appJSONURL: URL, validateAppInfoFunc: ((AppInfo)->Bool)?) throws {
     let decoder = JSONDecoder()
     do {
         let data = try Data(contentsOf: appJSONURL)
         guard let newAppInfo = try? decoder.decode(AppInfo.self, from: data) else {
             logger.error("[installByAppJSON] invalid app.json")
             throw ErrorMsg(errorDescription: "invalid app.json")
+        }
+
+        if let validateAppInfoFunc = validateAppInfoFunc {
+            if !validateAppInfoFunc(newAppInfo) {
+                throw ErrorMsg(errorDescription: "invalid app, validate failed")
+            }
         }
 
         let parentFolderURL = appJSONURL.deletingLastPathComponent()

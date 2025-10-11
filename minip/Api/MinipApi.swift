@@ -23,9 +23,11 @@ class MinipApi {
         case openWebsite
         case openSettings
 
+        // MARK: App
         case showAppDetail
         case closeApp
         case installApp
+        case updateCurrentApp
 
         // MARK: UI
 
@@ -199,6 +201,8 @@ class MinipApi {
             api.closeApp(param: param, replyHandler: replyHandler)
         case .installApp:
             api.installApp(param: param, replyHandler: replyHandler)
+        case .updateCurrentApp:
+            api.updateCurrentApp(param: param, replyHandler: replyHandler)
         case .setNavigationBarTitle:
             api.setNavigationBarTitle(param: param, replyHandler: replyHandler)
         case .setNavigationBarColor:

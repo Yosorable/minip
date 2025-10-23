@@ -32,13 +32,20 @@ public class MWebView: WKWebView {
         config.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
         config.setValue(true, forKey: "allowUniversalAccessFromFileURLs")
         config.allowsInlineMediaPlayback = true
+        config.allowsPictureInPictureMediaPlayback = true
+        config.limitsNavigationsToAppBoundDomains = false
+        config.defaultWebpagePreferences.allowsContentJavaScript = true
+        if #available(iOS 15.0, *) {
+            config.upgradeKnownHostsToHTTPS = false
+        }
+        config.preferences.javaScriptCanOpenWindowsAutomatically = true
 
         let overrideConsole = """
             function log(emoji, type, args) {
               window.webkit.messageHandlers.logging.postMessage(
                 `${emoji} JS ${type}: ${Object.values(args)
                   .map(v => typeof(v) === "undefined" ? "undefined" : typeof(v) === "object" ? JSON.stringify(v) : v.toString())
-                  .map(v => v.substring(0, 3000)) // Limit msg to 3000 chars
+                  .map(v => v.substring(0, 5000)) // Limit msg to 5000 chars
                   .join(", ")}`
               )
             }

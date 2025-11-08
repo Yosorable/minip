@@ -15,6 +15,9 @@ class ZoomableImageView: UIScrollView, UIScrollViewDelegate {
 
     var errorLabel: UILabel?
 
+    var doubleTapGesture: UITapGestureRecognizer!
+    var dragToDismissGesture: UIPanGestureRecognizer!
+
     // MARK: - Properties
 
     public let imageView: UIImageView = {
@@ -58,11 +61,13 @@ class ZoomableImageView: UIScrollView, UIScrollViewDelegate {
         errorLabel = label
     }
 
-    var doubleTapGesture: UITapGestureRecognizer!
     func onSuccessLoadImage(maximumZoomScale: CGFloat = 5) {
         self.maximumZoomScale = maximumZoomScale
 
         addGestureRecognizer(doubleTapGesture)
+        if let dragToDismissGesture {
+            addGestureRecognizer(dragToDismissGesture)
+        }
 
         updateImageView()
         scrollToCenter()
@@ -265,5 +270,74 @@ class ZoomableImageView: UIScrollView, UIScrollViewDelegate {
         let verticalOffset = (boundingSize.height > contentSize.height) ? ((boundingSize.height - contentSize.height) * 0.5) : 0.0
 
         return CGPoint(x: contentSize.width * 0.5 + horizontalOffest, y: contentSize.height * 0.5 + verticalOffset)
+    }
+
+    var parentBackgroundColor: UIColor = .black
+    @objc func handleDragToDismiss(_ gesture: UIPanGestureRecognizer) {
+        guard let vc = findViewController() else { return }
+
+        let translation = gesture.translation(in: self)
+        let distance = sqrt(translation.x * translation.x + translation.y * translation.y)
+
+        let maxDistance: CGFloat = 200
+        let scale = max(0.5, 1 - distance / (maxDistance * 2))
+        let alpha = max(0.1, parentBackgroundColor.cgColor.alpha - distance / maxDistance)
+
+        let velocity = gesture.velocity(in: self)
+        let speed = sqrt(velocity.x * velocity.x + velocity.y * velocity.y)
+        let velocityThreshold: CGFloat = 1000
+
+        switch gesture.state {
+        case .began:
+            parentBackgroundColor = vc.view.backgroundColor ?? .black
+        case .changed:
+            imageView.transform = CGAffineTransform(translationX: translation.x, y: translation.y)
+                .scaledBy(x: scale, y: scale)
+            vc.view.backgroundColor = parentBackgroundColor.withAlphaComponent(alpha)
+        case .ended, .cancelled:
+            panGestureRecognizer.isEnabled = true
+            if distance > maxDistance {
+                vc.dismiss(animated: true)
+            } else if speed > velocityThreshold {
+                let newX = min(translation.x + velocity.x * 0.1, 200)
+                let newY = min(translation.y + velocity.y * 0.1, 200)
+                let newDistance = sqrt(newX * newX + newY * newY)
+                let newScale = max(0.5, 1 - newDistance  / (newDistance * 2))
+                let newAlpha = max(0.1, parentBackgroundColor.cgColor.alpha - newDistance / maxDistance)
+
+                UIView.animate(withDuration: 0.25, delay: 0, options: .curveLinear) {
+                    self.imageView.transform = CGAffineTransform(translationX: newX, y: newY)
+                        .scaledBy(x: newScale, y: newScale)
+                    vc.view.backgroundColor = self.parentBackgroundColor.withAlphaComponent(newAlpha)
+                } completion: { _ in
+                    vc.dismiss(animated: true)
+                }
+            } else {
+                UIView.animate(withDuration: 0.25) {
+                    self.imageView.transform = .identity
+                    vc.view.backgroundColor = self.parentBackgroundColor
+                }
+            }
+        default:
+            break
+        }
+    }
+
+    private func findViewController() -> UIViewController? {
+        var responder: UIResponder? = self
+        while responder != nil {
+            if let vc = responder as? UIViewController { return vc }
+            responder = responder?.next
+        }
+        return nil
+    }
+}
+
+extension ZoomableImageView: UIGestureRecognizerDelegate {
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer == dragToDismissGesture {
+            return zoomScale == 1
+        }
+        return true
     }
 }

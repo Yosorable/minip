@@ -15,8 +15,12 @@ class AppCell: UITableViewCell {
     lazy var appIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 12
         imageView.clipsToBounds = true
+
+        imageView.backgroundColor = .tertiarySystemGroupedBackground
+        imageView.layer.cornerRadius = 12
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = UIColor.separator.cgColor
 
         return imageView
     }()
@@ -81,8 +85,6 @@ class AppCell: UITableViewCell {
         authorLabel.text = "@" + (app.author ?? "no_author")
         appIdLabel.text = app.appId
         appIconImageView.image = nil
-        appIconImageView.layer.borderColor = nil
-        appIconImageView.layer.borderWidth = 0
         if let icon = app.icon {
             var iconURL: URL?
             if icon.starts(with: "http://") || icon.starts(with: "https://") {
@@ -93,17 +95,12 @@ class AppCell: UITableViewCell {
                     appIconImageView.image = UIImage(contentsOfFile: iconURL.path)
                 }
             }
-        } else {
-            appIconImageView.layer.borderColor = UIColor.secondaryLabel.cgColor
-            appIconImageView.layer.borderWidth = 1
         }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            if appIconImageView.layer.borderColor != nil {
-                appIconImageView.layer.borderColor = UIColor.secondaryLabel.cgColor
-            }
+            appIconImageView.layer.borderColor = UIColor.separator.cgColor
         }
     }
 }

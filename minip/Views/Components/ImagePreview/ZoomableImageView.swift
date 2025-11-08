@@ -61,13 +61,16 @@ class ZoomableImageView: UIScrollView, UIScrollViewDelegate {
         errorLabel = label
     }
 
+    public func addDragToDismissGesture() {
+        dragToDismissGesture = UIPanGestureRecognizer(target: self, action: #selector(handleDragToDismiss(_:)))
+        dragToDismissGesture.delegate = self
+        addGestureRecognizer(dragToDismissGesture)
+    }
+
     func onSuccessLoadImage(maximumZoomScale: CGFloat = 5) {
         self.maximumZoomScale = maximumZoomScale
 
         addGestureRecognizer(doubleTapGesture)
-        if let dragToDismissGesture {
-            addGestureRecognizer(dragToDismissGesture)
-        }
 
         updateImageView()
         scrollToCenter()
@@ -272,8 +275,8 @@ class ZoomableImageView: UIScrollView, UIScrollViewDelegate {
         return CGPoint(x: contentSize.width * 0.5 + horizontalOffest, y: contentSize.height * 0.5 + verticalOffset)
     }
 
-    var parentBackgroundColor: UIColor = .black
-    @objc func handleDragToDismiss(_ gesture: UIPanGestureRecognizer) {
+    private var parentBackgroundColor: UIColor = .black
+    @objc private func handleDragToDismiss(_ gesture: UIPanGestureRecognizer) {
         guard let vc = findViewController() else { return }
 
         let translation = gesture.translation(in: self)

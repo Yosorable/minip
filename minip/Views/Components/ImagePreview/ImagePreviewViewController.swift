@@ -66,8 +66,7 @@ class ImagePreviewViewController: UIViewController {
             view.addGestureRecognizer(tapGestureRecognizer)
             tapGestureRecognizer.require(toFail: imageView.doubleTapGesture)
 
-            imageView.dragToDismissGesture = UIPanGestureRecognizer(target: imageView, action: #selector(imageView.handleDragToDismiss(_:)))
-            imageView.dragToDismissGesture.delegate = imageView
+            imageView.addDragToDismissGesture()
         }
 
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))

@@ -321,9 +321,9 @@ class ZoomableImageView: UIScrollView, UIScrollViewDelegate {
         case .ended, .cancelled:
             if distance > maxDistance {
                 vc.dismiss(animated: true)
-            } else if speed > velocityThreshold {
-                let newX = min(translation.x + velocity.x * 0.1, sqrt(20000))
-                let newY = min(translation.y + velocity.y * 0.1, sqrt(20000))
+            } else if speed > velocityThreshold, (translation.x * velocity.x + translation.y * velocity.y) > 0 {
+                let newX = min(translation.x + velocity.x * 0.1 - translation.x, sqrt(20000))
+                let newY = min(translation.y + velocity.y * 0.1 - translation.y, sqrt(20000))
                 let newDistance = sqrt(newX * newX + newY * newY)
                 let newScale = max(0.5, 1 - newDistance  / (newDistance * 2))
                 let newAlpha = max(0.1, parentBackgroundColor.cgColor.alpha - newDistance / maxDistance)

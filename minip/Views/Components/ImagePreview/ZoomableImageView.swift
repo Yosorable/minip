@@ -275,41 +275,61 @@ class ZoomableImageView: UIScrollView, UIScrollViewDelegate {
         return CGPoint(x: contentSize.width * 0.5 + horizontalOffest, y: contentSize.height * 0.5 + verticalOffset)
     }
 
+    // MARK: drag to dismiss
     private var parentBackgroundColor: UIColor = .black
+
+    private var originalSize: CGSize = .zero
+    private var originalCenter: CGPoint = .zero
+    private var initialTouchLocation: CGPoint = .zero
+
     @objc private func handleDragToDismiss(_ gesture: UIPanGestureRecognizer) {
         guard let vc = findViewController() else { return }
 
-        let translation = gesture.translation(in: self)
+        let translation = gesture.translation(in: self.superview)
         let distance = sqrt(translation.x * translation.x + translation.y * translation.y)
 
         let maxDistance: CGFloat = 200
         let scale = max(0.5, 1 - distance / (maxDistance * 2))
         let alpha = max(0.1, parentBackgroundColor.cgColor.alpha - distance / maxDistance)
 
-        let velocity = gesture.velocity(in: self)
+        let velocity = gesture.velocity(in: self.superview)
         let speed = sqrt(velocity.x * velocity.x + velocity.y * velocity.y)
         let velocityThreshold: CGFloat = 1000
 
+        let touchLocation = gesture.location(in: self.superview)
+
         switch gesture.state {
         case .began:
+            originalSize = self.bounds.size
+            originalCenter = self.center
+            initialTouchLocation = gesture.location(in: self)
+
             parentBackgroundColor = vc.view.backgroundColor ?? .black
         case .changed:
-            imageView.transform = CGAffineTransform(translationX: translation.x, y: translation.y)
-                .scaledBy(x: scale, y: scale)
             vc.view.backgroundColor = parentBackgroundColor.withAlphaComponent(alpha)
+
+            self.transform = CGAffineTransform(scaleX: scale, y: scale)
+
+            let scaledTouchLocation = CGPoint(
+                x: initialTouchLocation.x * scale,
+                y: initialTouchLocation.y * scale
+            )
+            self.center = CGPoint(
+                x: touchLocation.x - scaledTouchLocation.x + (self.bounds.width * scale) / 2,
+                y: touchLocation.y - scaledTouchLocation.y + (self.bounds.height * scale) / 2
+            )
         case .ended, .cancelled:
-            panGestureRecognizer.isEnabled = true
             if distance > maxDistance {
                 vc.dismiss(animated: true)
             } else if speed > velocityThreshold {
-                let newX = min(translation.x + velocity.x * 0.1, 200)
-                let newY = min(translation.y + velocity.y * 0.1, 200)
+                let newX = min(translation.x + velocity.x * 0.1, sqrt(20000))
+                let newY = min(translation.y + velocity.y * 0.1, sqrt(20000))
                 let newDistance = sqrt(newX * newX + newY * newY)
                 let newScale = max(0.5, 1 - newDistance  / (newDistance * 2))
                 let newAlpha = max(0.1, parentBackgroundColor.cgColor.alpha - newDistance / maxDistance)
 
-                UIView.animate(withDuration: 0.25, delay: 0, options: .curveLinear) {
-                    self.imageView.transform = CGAffineTransform(translationX: newX, y: newY)
+                UIView.animate(withDuration: 0.20, delay: 0, options: .curveEaseOut) {
+                    self.transform = CGAffineTransform(translationX: newX, y: newY)
                         .scaledBy(x: newScale, y: newScale)
                     vc.view.backgroundColor = self.parentBackgroundColor.withAlphaComponent(newAlpha)
                 } completion: { _ in
@@ -317,7 +337,8 @@ class ZoomableImageView: UIScrollView, UIScrollViewDelegate {
                 }
             } else {
                 UIView.animate(withDuration: 0.25) {
-                    self.imageView.transform = .identity
+                    self.transform = .identity
+                    self.center = self.originalCenter
                     vc.view.backgroundColor = self.parentBackgroundColor
                 }
             }

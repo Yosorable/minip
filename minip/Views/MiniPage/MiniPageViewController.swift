@@ -158,6 +158,7 @@ class MiniPageViewController: UIViewController {
         } else if let scrollBarConfig = app.iOS_scrollbar {
             webview.scrollView.verticalScrollIndicatorInsets = scrollBarConfig.verticalInsets?.toUIEdgeInsets() ?? .zero
             webview.scrollView.horizontalScrollIndicatorInsets = scrollBarConfig.horizontalInsets?.toUIEdgeInsets() ?? .zero
+            webview.scrollView.bounces = !(scrollBarConfig.disableBounces ?? false)
         }
 
         let fileManager = FileManager.default

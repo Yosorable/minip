@@ -54,6 +54,7 @@ extension AppInfo {
         var hide: Bool?
         var verticalInsets: EdgeInsets?
         var horizontalInsets: EdgeInsets?
+        var disableBounces: Bool? // enable pull to refresh will disable this config
     }
 
     struct EdgeInsets: Hashable, Codable {

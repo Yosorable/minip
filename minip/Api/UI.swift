@@ -232,7 +232,7 @@ extension MinipApi {
 
         if let ppc = alert.popoverPresentationController {
             ppc.sourceView = vc.view
-            ppc.sourceRect = CGRectMake(vc.view.bounds.size.width / 2.0, vc.view.bounds.size.height / 2.0, 1.0, 1.0)
+            ppc.sourceRect = vc.view.bounds
         }
         vc.present(alert, animated: true, completion: nil)
     }

@@ -123,7 +123,7 @@ class ImagePreviewViewController: UIViewController {
             }
 
             alertController.popoverPresentationController?.sourceView = view
-            alertController.popoverPresentationController?.sourceRect = CGRectMake(view.center.x - 1, view.center.y - 1, 2, 2)
+            alertController.popoverPresentationController?.sourceRect = view.bounds
             present(alertController, animated: true)
         }
     }

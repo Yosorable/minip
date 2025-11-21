@@ -22,7 +22,15 @@ class QRScannerViewController: UIViewController {
         setupQRScannerView()
     }
 
+    override var prefersInterfaceOrientationLocked: Bool {
+        false
+    }
+
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        .portrait
+    }
+
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
         .portrait
     }
 

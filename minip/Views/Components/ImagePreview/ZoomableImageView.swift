@@ -7,34 +7,66 @@
 
 import UIKit
 
-class ZoomableImageView: UIScrollView, UIScrollViewDelegate {
-    public enum ZoomMode {
-        case fit
-        case fill
-    }
+class ZoomableImageViewV2: UIView {
+    var tapHandler: (() -> Void)?
+    var panGestureChangedHandler: ((_ scale: CGFloat) -> Void)?
+    var panGestureReleasedHandler: ((_ downSwipe: Bool) -> Void)?
+    var longPressedHandler: ((_ gesture: UILongPressGestureRecognizer) -> Void)?
+
+    var imageView = UIImageView()
+    var scrollView = UIScrollView()
 
     var errorLabel: UILabel?
 
-    var doubleTapGesture: UITapGestureRecognizer!
-    var dragToDismissGesture: UIPanGestureRecognizer!
+    lazy var parentVC: UIViewController? = nil
+    var parentBackground: UIColor = .clear
 
-    // MARK: - Properties
+    private var beganFrame: CGRect = .zero
+    private var beganTouch: CGPoint = .zero
 
-    public let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.layer.allowsEdgeAntialiasing = true
-        return imageView
-    }()
+    public init(disablePanGesture: Bool) {
+        super.init(frame: .zero)
+        setup(disablePanGesture: disablePanGesture)
+    }
 
-    public func setWebImage(url: URL?) {
-        imageView.kf.setImage(with: url, completionHandler: { [weak self] result in
-            switch result {
-            case .success:
-                self?.onSuccessLoadImage()
-            case .failure:
-                self?.showErrorMsg(err: ErrorMsg(errorDescription: "Cannot load remote resource.\nTap to dismiss."))
-            }
-        })
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    func setup(disablePanGesture: Bool = false) {
+        addSubview(scrollView)
+        scrollView.addSubview(imageView)
+
+        scrollView.delegate = self
+        scrollView.maximumZoomScale = 5.0
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.showsHorizontalScrollIndicator = true
+        scrollView.contentInsetAdjustmentBehavior = .never
+
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture(_:)))
+        addGestureRecognizer(longPressGesture)
+
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTapGesture(_:)))
+        doubleTapGesture.numberOfTapsRequired = 2
+        addGestureRecognizer(doubleTapGesture)
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(_:)))
+        addGestureRecognizer(tapGesture)
+        tapGesture.require(toFail: doubleTapGesture)
+
+        if !disablePanGesture {
+            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+            panGesture.delegate = self
+            scrollView.addGestureRecognizer(panGesture)
+        }
+    }
+
+    func onSuccessLoadImage() {
+        layoutSubviews()
     }
 
     public func showErrorMsg(err: Error) {
@@ -61,307 +93,175 @@ class ZoomableImageView: UIScrollView, UIScrollViewDelegate {
         errorLabel = label
     }
 
-    public func addDragToDismissGesture() {
-        dragToDismissGesture = UIPanGestureRecognizer(target: self, action: #selector(handleDragToDismiss(_:)))
-        dragToDismissGesture.delegate = self
-        addGestureRecognizer(dragToDismissGesture)
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
-    func onSuccessLoadImage(maximumZoomScale: CGFloat = 5) {
-        self.maximumZoomScale = maximumZoomScale
-
-        addGestureRecognizer(doubleTapGesture)
-
-        updateImageView()
-        scrollToCenter()
-    }
-
-    public var zoomMode: ZoomMode = .fit {
-        didSet {
-            updateImageView()
-            scrollToCenter()
-        }
-    }
-
-    open var image: UIImage? {
-        get {
-            return imageView.image
-        }
-        set {
-            let oldImage = imageView.image
-            imageView.image = newValue
-
-            if oldImage?.size != newValue?.size {
-                oldSize = nil
-                updateImageView()
-            }
-            scrollToCenter()
-        }
-    }
-
-    override open var intrinsicContentSize: CGSize {
-        return imageView.intrinsicContentSize
-    }
-
-    private var oldSize: CGSize?
-
-    // MARK: - Initializers
-
-    override public init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
-
-    public init(image: UIImage) {
-        super.init(frame: CGRect.zero)
-        self.image = image
-        setup()
-    }
-
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setup()
-    }
-
-    // MARK: - Functions
-
-    open func scrollToCenter() {
-        let centerOffset = CGPoint(
-            x: contentSize.width > bounds.width ? (contentSize.width / 2) - (bounds.width / 2) : 0,
-            y: contentSize.height > bounds.height ? (contentSize.height / 2) - (bounds.height / 2) : 0
-        )
-
-        contentOffset = centerOffset
-    }
-
-    open func setup() {
-        contentInsetAdjustmentBehavior = .never
-
-        delegate = self
-        imageView.contentMode = .scaleAspectFill
-        addSubview(imageView)
-
-        doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
-        doubleTapGesture.numberOfTapsRequired = 2
-    }
-
-    override open func didMoveToSuperview() {
-        super.didMoveToSuperview()
-    }
-
-    override open func layoutSubviews() {
+    override func layoutSubviews() {
         super.layoutSubviews()
 
-        if imageView.image != nil && oldSize != bounds.size {
-            updateImageView()
-            oldSize = bounds.size
-        }
-
-        if imageView.frame.width <= bounds.width {
-            imageView.center.x = bounds.width * 0.5
-        }
-
-        if imageView.frame.height <= bounds.height {
-            imageView.center.y = bounds.height * 0.5
-        }
+        scrollView.frame = bounds
+        scrollView.setZoomScale(1.0, animated: false)
+        imageView.frame = fitFrame
+        scrollView.setZoomScale(1.0, animated: false)
     }
 
-    override open func updateConstraints() {
-        super.updateConstraints()
-        updateImageView()
-    }
-
-    private func updateImageView() {
-        func fitSize(aspectRatio: CGSize, boundingSize: CGSize) -> CGSize {
-            let widthRatio = (boundingSize.width / aspectRatio.width)
-            let heightRatio = (boundingSize.height / aspectRatio.height)
-
-            var boundingSize = boundingSize
-
-            if widthRatio < heightRatio {
-                boundingSize.height = boundingSize.width / aspectRatio.width * aspectRatio.height
-            } else if heightRatio < widthRatio {
-                boundingSize.width = boundingSize.height / aspectRatio.height * aspectRatio.width
-            }
-            return CGSize(width: ceil(boundingSize.width), height: ceil(boundingSize.height))
-        }
-
-        func fillSize(aspectRatio: CGSize, minimumSize: CGSize) -> CGSize {
-            let widthRatio = (minimumSize.width / aspectRatio.width)
-            let heightRatio = (minimumSize.height / aspectRatio.height)
-
-            var minimumSize = minimumSize
-
-            if widthRatio > heightRatio {
-                minimumSize.height = minimumSize.width / aspectRatio.width * aspectRatio.height
-            } else if heightRatio > widthRatio {
-                minimumSize.width = minimumSize.height / aspectRatio.height * aspectRatio.width
-            }
-            return CGSize(width: ceil(minimumSize.width), height: ceil(minimumSize.height))
-        }
-
-        guard let image = imageView.image else { return }
-
-        var size: CGSize
-
-        switch zoomMode {
-        case .fit:
-            size = fitSize(aspectRatio: image.size, boundingSize: bounds.size)
-        case .fill:
-            size = fillSize(aspectRatio: image.size, minimumSize: bounds.size)
-        }
-
-        size.height = round(size.height)
-        size.width = round(size.width)
-
-        zoomScale = 1
-        //    maximumZoomScale = image.size.width / size.width
-        imageView.bounds.size = size
-        contentSize = size
-        imageView.center = ZoomableImageView.contentCenter(forBoundingSize: bounds.size, contentSize: contentSize)
-    }
-
-    @objc private func handleDoubleTap(_ gestureRecognizer: UITapGestureRecognizer) {
-        if zoomScale == 1 {
-            zoom(
-                to: zoomRectFor(
-                    scale: max(1, maximumZoomScale / 3),
-                    with: gestureRecognizer.location(in: gestureRecognizer.view)
-                ),
-                animated: true
-            )
+    private var fitSize: CGSize {
+        guard let imageSize = imageView.image?.size else { return bounds.size }
+        var width: CGFloat
+        var height: CGFloat
+        if scrollView.bounds.width < scrollView.bounds.height {
+            width = scrollView.bounds.width
+            height = (imageSize.height / imageSize.width) * width
         } else {
-            setZoomScale(1, animated: true)
-        }
-    }
-
-    private func zoomRectFor(scale: CGFloat, with center: CGPoint) -> CGRect {
-        let center = imageView.convert(center, from: self)
-
-        var zoomRect = CGRect()
-        zoomRect.size.height = bounds.height / scale
-        zoomRect.size.width = bounds.width / scale
-        zoomRect.origin.x = center.x - zoomRect.width / 2.0
-        zoomRect.origin.y = center.y - zoomRect.height / 2.0
-
-        return zoomRect
-    }
-
-    // MARK: - UIScrollViewDelegate
-
-    @objc public dynamic func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        imageView.center = ZoomableImageView.contentCenter(forBoundingSize: bounds.size, contentSize: contentSize)
-    }
-
-    @objc public dynamic func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {}
-
-    @objc public dynamic func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {}
-
-    @objc public dynamic func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return imageView
-    }
-
-    @inline(__always)
-    private static func contentCenter(forBoundingSize boundingSize: CGSize, contentSize: CGSize) -> CGPoint {
-        /// When the zoom scale changes i.e. the image is zoomed in or out, the hypothetical center
-        /// of content view changes too. But the default Apple implementation is keeping the last center
-        /// value which doesn't make much sense. If the image ratio is not matching the screen
-        /// ratio, there will be some empty space horizontaly or verticaly. This needs to be calculated
-        /// so that we can get the correct new center value. When these are added, edges of contentView
-        /// are aligned in realtime and always aligned with corners of scrollview.
-        let horizontalOffest = (boundingSize.width > contentSize.width) ? ((boundingSize.width - contentSize.width) * 0.5) : 0.0
-        let verticalOffset = (boundingSize.height > contentSize.height) ? ((boundingSize.height - contentSize.height) * 0.5) : 0.0
-
-        return CGPoint(x: contentSize.width * 0.5 + horizontalOffest, y: contentSize.height * 0.5 + verticalOffset)
-    }
-
-    // MARK: drag to dismiss
-    private var parentBackgroundColor: UIColor = .black
-
-    private var originalSize: CGSize = .zero
-    private var originalCenter: CGPoint = .zero
-    private var initialTouchLocation: CGPoint = .zero
-
-    @objc private func handleDragToDismiss(_ gesture: UIPanGestureRecognizer) {
-        guard let vc = findViewController() else { return }
-
-        let translation = gesture.translation(in: self.superview)
-        let distance = sqrt(translation.x * translation.x + translation.y * translation.y)
-
-        let maxDistance: CGFloat = 200
-        let scale = max(0.5, 1 - distance / (maxDistance * 2))
-        let alpha = max(0.1, parentBackgroundColor.cgColor.alpha - distance / maxDistance)
-
-        let velocity = gesture.velocity(in: self.superview)
-        let speed = sqrt(velocity.x * velocity.x + velocity.y * velocity.y)
-        let velocityThreshold: CGFloat = 1000
-
-        let touchLocation = gesture.location(in: self.superview)
-
-        switch gesture.state {
-        case .began:
-            originalSize = self.bounds.size
-            originalCenter = self.center
-            initialTouchLocation = gesture.location(in: self)
-
-            parentBackgroundColor = vc.view.backgroundColor ?? .black
-        case .changed:
-            vc.view.backgroundColor = parentBackgroundColor.withAlphaComponent(alpha)
-
-            self.transform = CGAffineTransform(scaleX: scale, y: scale)
-
-            let scaledTouchLocation = CGPoint(
-                x: initialTouchLocation.x * scale,
-                y: initialTouchLocation.y * scale
-            )
-            self.center = CGPoint(
-                x: touchLocation.x - scaledTouchLocation.x + (self.bounds.width * scale) / 2,
-                y: touchLocation.y - scaledTouchLocation.y + (self.bounds.height * scale) / 2
-            )
-        case .ended, .cancelled:
-            if distance > maxDistance {
-                vc.dismiss(animated: true)
-            } else if speed > velocityThreshold, (translation.x * velocity.x + translation.y * velocity.y) > 0 {
-                let newX = min(translation.x + velocity.x * 0.1 - translation.x, sqrt(20000))
-                let newY = min(translation.y + velocity.y * 0.1 - translation.y, sqrt(20000))
-                let newDistance = sqrt(newX * newX + newY * newY)
-                let newScale = max(0.5, 1 - newDistance  / (newDistance * 2))
-                let newAlpha = max(0.1, parentBackgroundColor.cgColor.alpha - newDistance / maxDistance)
-
-                UIView.animate(withDuration: 0.20, delay: 0, options: .curveEaseOut) {
-                    self.transform = CGAffineTransform(translationX: newX, y: newY)
-                        .scaledBy(x: newScale, y: newScale)
-                    vc.view.backgroundColor = self.parentBackgroundColor.withAlphaComponent(newAlpha)
-                } completion: { _ in
-                    vc.dismiss(animated: true)
-                }
-            } else {
-                UIView.animate(withDuration: 0.25) {
-                    self.transform = .identity
-                    self.center = self.originalCenter
-                    vc.view.backgroundColor = self.parentBackgroundColor
-                }
+            height = scrollView.bounds.height
+            width = (imageSize.width / imageSize.height) * height
+            if width > scrollView.bounds.width {
+                width = scrollView.bounds.width
+                height = (imageSize.height / imageSize.width) * width
             }
-        default:
-            break
         }
+        return CGSize(width: width, height: height)
     }
 
-    private func findViewController() -> UIViewController? {
-        var responder: UIResponder? = self
-        while responder != nil {
-            if let vc = responder as? UIViewController { return vc }
-            responder = responder?.next
+    private var resettingCenter: CGPoint {
+        let deltaWidth = bounds.width - scrollView.contentSize.width
+        let offsetX = deltaWidth > 0 ? deltaWidth * 0.5 : 0
+        let deltaHeight = bounds.height - scrollView.contentSize.height
+        let offsetY = deltaHeight > 0 ? deltaHeight * 0.5 : 0
+        return CGPoint(x: scrollView.contentSize.width * 0.5 + offsetX,
+                       y: scrollView.contentSize.height * 0.5 + offsetY)
+    }
+
+    private var fitFrame: CGRect {
+        let size = fitSize
+        let y = scrollView.bounds.height > size.height
+            ? (scrollView.bounds.height - size.height) * 0.5 : 0
+        let x = scrollView.bounds.width > size.width
+            ? (scrollView.bounds.width - size.width) * 0.5 : 0
+        return CGRect(x: x, y: y, width: size.width, height: size.height)
+    }
+
+    private func panResult(_ pan: UIPanGestureRecognizer) -> PanGestureResult {
+        let translation = pan.translation(in: scrollView)
+        let currentTouch = pan.location(in: scrollView)
+
+        let scale = min(1.0, max(0.3, 1 - translation.y / bounds.height))
+
+        let width = beganFrame.size.width * scale
+        let height = beganFrame.size.height * scale
+
+        let xRate = (beganTouch.x - beganFrame.origin.x) / beganFrame.size.width
+        let currentTouchDeltaX = xRate * width
+        let x = currentTouch.x - currentTouchDeltaX
+
+        let yRate = (beganTouch.y - beganFrame.origin.y) / beganFrame.size.height
+        let currentTouchDeltaY = yRate * height
+        let y = currentTouch.y - currentTouchDeltaY
+
+        return PanGestureResult(frame: CGRect(x: x.isNaN ? 0 : x, y: y.isNaN ? 0 : y, width: width, height: height), scale: scale)
+    }
+
+    private func resetImageView() {
+        let size = fitSize
+        let needResetSize = imageView.bounds.size.width < size.width
+            || imageView.bounds.size.height < size.height
+        UIView.animate(withDuration: 0.25) {
+            self.imageView.center = self.resettingCenter
+            if needResetSize {
+                self.imageView.bounds.size = size
+            }
+            if let vc = self.parentVC {
+                vc.view.backgroundColor = self.parentBackground
+            }
         }
-        return nil
     }
 }
 
-extension ZoomableImageView: UIGestureRecognizerDelegate {
+extension ZoomableImageViewV2 {
+    @objc private func handleTapGesture(_ gesture: UITapGestureRecognizer) {
+        tapHandler?()
+    }
+
+    @objc private func handleDoubleTapGesture(_ gesture: UITapGestureRecognizer) {
+        if scrollView.zoomScale == 1.0 {
+            let pointInView = gesture.location(in: imageView)
+            let width = scrollView.bounds.size.width / min(scrollView.maximumZoomScale, 2.0)
+            let height = scrollView.bounds.size.height / min(scrollView.maximumZoomScale, 2.0)
+            let x = pointInView.x - (width / 2.0)
+            let y = pointInView.y - (height / 2.0)
+            scrollView.zoom(to: CGRect(x: x, y: y, width: width, height: height), animated: true)
+        } else {
+            scrollView.setZoomScale(1.0, animated: true)
+        }
+    }
+
+    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        if imageView.image == nil {
+            return
+        }
+
+        switch gesture.state {
+        case .began:
+            beganFrame = imageView.frame
+            beganTouch = gesture.location(in: scrollView)
+        case .changed:
+            let result = panResult(gesture)
+            imageView.frame = result.frame
+            panGestureChangedHandler?(result.scale)
+            let alpha = max(0.1, parentBackground.cgColor.alpha - (1 - result.scale) / 0.6)
+            parentVC?.view.backgroundColor = parentBackground.withAlphaComponent(alpha)
+        case .ended, .cancelled:
+            let result = panResult(gesture)
+            imageView.frame = result.frame
+            let isDownSwipe = gesture.velocity(in: self).y > 0
+            if isDownSwipe && result.scale <= 0.8 {
+                panGestureReleasedHandler?(isDownSwipe)
+            } else {
+                resetImageView()
+            }
+        default:
+            resetImageView()
+        }
+    }
+
+    @objc private func handleLongPressGesture(_ gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            longPressedHandler?(gesture)
+        }
+    }
+}
+
+extension ZoomableImageViewV2: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return imageView
+    }
+
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        imageView.center = resettingCenter
+    }
+}
+
+extension ZoomableImageViewV2: UIGestureRecognizerDelegate {
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if gestureRecognizer == dragToDismissGesture {
-            return zoomScale == 1
+        guard let pan = gestureRecognizer as? UIPanGestureRecognizer else {
+            return true
+        }
+        let velocity = pan.velocity(in: self)
+        if velocity.y < 0 {
+            return false
+        }
+        if abs(Int(velocity.x)) > Int(velocity.y) {
+            return false
+        }
+        if scrollView.contentOffset.y > 0 {
+            return false
         }
         return true
     }
+}
+
+fileprivate struct PanGestureResult {
+    var frame: CGRect
+    var scale: CGFloat
 }

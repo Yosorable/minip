@@ -5,13 +5,12 @@
 //  Created by ByteDance on 2023/7/15.
 //
 
-import Kingfisher
-import Photos
 import UIKit
+import Photos
 
 class ImagePreviewViewController: UIViewController {
-    var imageView: ZoomableImageView!
     var imageURL: URL?
+    var zoomableImageView: ZoomableImageViewV2!
 
     init(imageURL: URL? = nil) {
         self.imageURL = imageURL
@@ -29,72 +28,74 @@ class ImagePreviewViewController: UIViewController {
 
         if navigationController != nil {
             view.backgroundColor = .systemBackground
-        } else {
-            overrideUserInterfaceStyle = .dark
-            view.backgroundColor = .black.withAlphaComponent(0.4)
-        }
+            zoomableImageView = ZoomableImageViewV2(disablePanGesture: true)
 
-        imageView = ZoomableImageView()
-        imageView.zoomMode = .fit
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(imageView)
-        NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: view.topAnchor),
-            imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
-
-        imageView.showsVerticalScrollIndicator = true
-        imageView.showsHorizontalScrollIndicator = true
-
-        if let url = imageURL {
-            if url.scheme == "file" {
-                if let img = UIImage(contentsOfFile: url.path) {
-                    imageView.image = img
-                    imageView.onSuccessLoadImage()
-                } else {
-                    imageView.showErrorMsg(err: ErrorMsg(errorDescription: "Cannot read this file."))
-                }
-            } else {
-                imageView.setWebImage(url: url)
-            }
-        }
-
-        if navigationController == nil {
-            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
-            view.addGestureRecognizer(tapGestureRecognizer)
-            tapGestureRecognizer.require(toFail: imageView.doubleTapGesture)
-
-            imageView.addDragToDismissGesture()
-        }
-
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressed))
-        view.addGestureRecognizer(longPressRecognizer)
-
-        if let pnv = navigationController as? PannableNavigationViewController {
-            pnv.addPanGesture(vc: self)
             navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), primaryAction: UIAction(handler: { [weak self] _ in
                 self?.dismiss(animated: true)
             }))
+        } else {
+            zoomableImageView = ZoomableImageViewV2()
+            zoomableImageView.parentVC = self
+            overrideUserInterfaceStyle = .dark
+            view.backgroundColor = .black.withAlphaComponent(0.4)
+            zoomableImageView.parentBackground = view.backgroundColor ?? .clear
+            zoomableImageView.panGestureReleasedHandler = { [weak self] swipeDown in
+                if (swipeDown) {
+                    self?.dismiss(animated: true)
+                }
+            }
+            zoomableImageView.tapHandler = { [weak self] in
+                self?.dismiss(animated: true)
+            }
+        }
+
+        if let url = imageURL {
+            if url.scheme == "file" {
+                if let img = UIImage(contentsOfFile: url.path) {
+                    zoomableImageView.imageView.image = img
+                    zoomableImageView.onSuccessLoadImage()
+                } else {
+                    zoomableImageView.showErrorMsg(err: ErrorMsg(errorDescription: "Cannot read this file."))
+                }
+            } else {
+                zoomableImageView.imageView.kf.setImage(with: imageURL, completionHandler: { [weak self] result in
+                    switch result {
+                    case .success:
+                        self?.zoomableImageView.onSuccessLoadImage()
+                    case .failure:
+                        self?.zoomableImageView.showErrorMsg(err: ErrorMsg(errorDescription: "Cannot load remote resource.\nTap to dismiss."))
+                    }
+                })
+            }
+        }
+
+        zoomableImageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(zoomableImageView)
+        NSLayoutConstraint.activate([
+            zoomableImageView.topAnchor.constraint(equalTo: view.topAnchor),
+            zoomableImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            zoomableImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            zoomableImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+
+        zoomableImageView.longPressedHandler = { [weak self] gesture in
+            self?.longPressed(sender: gesture)
+        }
+
+        if let pnv = navigationController as? PannableNavigationViewController {
+            pnv.addPanGesture(vc: self)
         }
     }
 
-    @objc func tapped(sender: UITapGestureRecognizer) {
-        if navigationController == nil {
-            dismiss(animated: true)
-        }
-    }
-
-    @objc func longPressed(sender: UILongPressGestureRecognizer) {
+    func longPressed(sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             shortShake()
 
             let alertController = UIAlertController(title: "Actions", message: "Select an action", preferredStyle: .actionSheet)
             alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
             alertController.addAction(UIAlertAction(title: "Save to album", style: .default, handler: { [weak self] _ in
-                guard let img = self?.imageView.image else {
+                guard let img = self?.zoomableImageView.imageView.image else {
                     showSimpleError(err: ErrorMsg(errorDescription: "Error image"))
                     return
                 }
@@ -122,8 +123,8 @@ class ImagePreviewViewController: UIViewController {
                 }
             }
 
-            alertController.popoverPresentationController?.sourceView = view
-            alertController.popoverPresentationController?.sourceRect = view.bounds
+            alertController.popoverPresentationController?.sourceView = zoomableImageView
+            alertController.popoverPresentationController?.sourceRect = zoomableImageView.bounds
             present(alertController, animated: true)
         }
     }

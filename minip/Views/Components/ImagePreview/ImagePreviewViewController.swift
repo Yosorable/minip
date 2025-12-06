@@ -10,7 +10,7 @@ import Photos
 
 class ImagePreviewViewController: UIViewController {
     var imageURL: URL?
-    var zoomableImageView: ZoomableImageViewV2!
+    var zoomableImageView: ZoomableImageView!
 
     init(imageURL: URL? = nil) {
         self.imageURL = imageURL
@@ -28,14 +28,14 @@ class ImagePreviewViewController: UIViewController {
 
         if navigationController != nil {
             view.backgroundColor = .systemBackground
-            zoomableImageView = ZoomableImageViewV2(disablePanGesture: true)
+            zoomableImageView = ZoomableImageView(disablePanGesture: true)
 
             navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), primaryAction: UIAction(handler: { [weak self] _ in
                 self?.dismiss(animated: true)
             }))
         } else {
-            zoomableImageView = ZoomableImageViewV2()
+            zoomableImageView = ZoomableImageView()
             zoomableImageView.parentVC = self
             overrideUserInterfaceStyle = .dark
             view.backgroundColor = .black.withAlphaComponent(0.4)

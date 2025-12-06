@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ZoomableImageViewV2: UIView {
+class ZoomableImageView: UIView {
     var tapHandler: (() -> Void)?
     var panGestureChangedHandler: ((_ scale: CGFloat) -> Void)?
     var panGestureReleasedHandler: ((_ downSwipe: Bool) -> Void)?
@@ -178,7 +178,7 @@ class ZoomableImageViewV2: UIView {
     }
 }
 
-extension ZoomableImageViewV2 {
+extension ZoomableImageView {
     @objc private func handleTapGesture(_ gesture: UITapGestureRecognizer) {
         tapHandler?()
     }
@@ -197,10 +197,6 @@ extension ZoomableImageViewV2 {
     }
 
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-        if imageView.image == nil {
-            return
-        }
-
         switch gesture.state {
         case .began:
             beganFrame = imageView.frame
@@ -232,7 +228,7 @@ extension ZoomableImageViewV2 {
     }
 }
 
-extension ZoomableImageViewV2: UIScrollViewDelegate {
+extension ZoomableImageView: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
@@ -242,7 +238,7 @@ extension ZoomableImageViewV2: UIScrollViewDelegate {
     }
 }
 
-extension ZoomableImageViewV2: UIGestureRecognizerDelegate {
+extension ZoomableImageView: UIGestureRecognizerDelegate {
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard let pan = gestureRecognizer as? UIPanGestureRecognizer else {
             return true

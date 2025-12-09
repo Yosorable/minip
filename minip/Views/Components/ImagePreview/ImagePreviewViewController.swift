@@ -95,19 +95,27 @@ class ImagePreviewViewController: UIViewController {
             let alertController = UIAlertController(title: "Actions", message: "Select an action", preferredStyle: .actionSheet)
             alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
             alertController.addAction(UIAlertAction(title: "Save to album", style: .default, handler: { [weak self] _ in
-                guard let img = self?.zoomableImageView.imageView.image else {
+                guard let img = self?.zoomableImageView.imageView.image, let pngData = img.pngData() else {
                     showSimpleError(err: ErrorMsg(errorDescription: "Error image"))
                     return
                 }
-                PHPhotoLibrary.requestAuthorization { status in
-                    if status == .authorized {
-                        UIImageWriteToSavedPhotosAlbum(img, nil, nil, nil)
-                        DispatchQueue.main.async {
-                            showSimpleSuccess()
-                        }
-                    } else {
+                PHPhotoLibrary.requestAuthorization(for: .addOnly) { status in
+                    guard status == .authorized || status == .limited else {
                         DispatchQueue.main.async {
                             showSimpleError(err: ErrorMsg(errorDescription: "Cannot save to album, no permission or limitted"))
+                        }
+                        return
+                    }
+                    PHPhotoLibrary.shared().performChanges({
+                        let request = PHAssetCreationRequest.forAsset()
+                        request.addResource(with: .photo, data: pngData, options: nil)
+                    }) { success, error in
+                        DispatchQueue.main.async {
+                            if success {
+                                showSimpleSuccess()
+                            } else {
+                                showSimpleError(err: ErrorMsg(errorDescription: error?.localizedDescription ?? "Cannot save to album, unknown error"))
+                            }
                         }
                     }
                 }

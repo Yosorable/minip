@@ -50,7 +50,11 @@ extension FileBrowserViewController {
 
             if let symbolImage = UIImage(systemName: "plus.app.fill") {
                 let attachment = NSTextAttachment()
-                attachment.image = symbolImage.withTintColor(view.tintColor)
+                if #available(iOS 26.0, *) {
+                    attachment.image = symbolImage.withTintColor(.label)
+                } else {
+                    attachment.image = symbolImage.withTintColor(view.tintColor)
+                }
 
                 let imageString = NSAttributedString(attachment: attachment)
                 messageAttributedString.append(imageString)

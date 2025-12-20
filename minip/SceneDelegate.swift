@@ -51,7 +51,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             handleURL(url: url)
         }
     }
-    
+
     func updateFileBrowserRoot() {
         guard let nvc = (window?.rootViewController as? UITabBarController)?.viewControllers?[1] as? UINavigationController else {
             return
@@ -70,7 +70,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             logger.debug("[enter foreground] not create server")
             return
         }
-        guard let _ = MiniAppManager.shared.openedApp else {
+        guard MiniAppManager.shared.openedApp != nil else {
             logger.debug("[enter foreground] no app opened")
             return
         }

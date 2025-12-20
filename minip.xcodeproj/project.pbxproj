@@ -46,6 +46,7 @@
 		482BEEEB2AC291D1007F11A9 /* MiniAppManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */; };
 		482F03BE2D4C528E00D6CA6B /* PannableViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482F03BD2D4C528E00D6CA6B /* PannableViews.swift */; };
 		48328F5E2D6870330031C4D3 /* i18n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48328F5D2D6870290031C4D3 /* i18n.swift */; };
+		4844977B2EF6F77A001DDBDF /* .swift-format in Resources */ = {isa = PBXBuildFile; fileRef = 4844977A2EF6F775001DDBDF /* .swift-format */; };
 		484DF0502D8826CE00B2246D /* PresentationControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484DF04F2D8826BE00B2246D /* PresentationControllerDelegate.swift */; };
 		484E08312B96D6DD0018DCF0 /* AppDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */; };
 		485A75222BDCA43F00D887A4 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485A75212BDCA43F00D887A4 /* Logger.swift */; };
@@ -179,6 +180,7 @@
 		482BEEEA2AC291D1007F11A9 /* MiniAppManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniAppManager.swift; sourceTree = "<group>"; };
 		482F03BD2D4C528E00D6CA6B /* PannableViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PannableViews.swift; sourceTree = "<group>"; };
 		48328F5D2D6870290031C4D3 /* i18n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = i18n.swift; sourceTree = "<group>"; };
+		4844977A2EF6F775001DDBDF /* .swift-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-format"; sourceTree = "<group>"; };
 		484DF04F2D8826BE00B2246D /* PresentationControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationControllerDelegate.swift; sourceTree = "<group>"; };
 		484E08302B96D6DD0018DCF0 /* AppDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailViewController.swift; sourceTree = "<group>"; };
 		485A75212BDCA43F00D887A4 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -567,6 +569,7 @@
 				2BB920172A52FEB800D4BE3C /* Views */,
 				488DDFF42ABEEAEE00BAB280 /* AppDelegate.swift */,
 				489837232D85E3690027650E /* SceneDelegate.swift */,
+				4844977A2EF6F775001DDBDF /* .swift-format */,
 				48DF6BA0288D32CA00D523C1 /* Assets.xcassets */,
 				2B9B579E2A57D5B5002E9D57 /* Info.plist */,
 				48BF62D72D89E07800060589 /* minip.entitlements */,
@@ -745,6 +748,7 @@
 				48DF6BA4288D32CA00D523C1 /* Preview Assets.xcassets in Resources */,
 				48C22D2A2D683C260000F74F /* Localizable.strings in Resources */,
 				48CE18432D5E760300F6F987 /* Settings.bundle in Resources */,
+				4844977B2EF6F77A001DDBDF /* .swift-format in Resources */,
 				48DF6BA1288D32CA00D523C1 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

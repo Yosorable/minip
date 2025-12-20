@@ -39,7 +39,6 @@
 		4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */ = {isa = PBXBuildFile; productRef = 4800EA0A2CF1C93300F49842 /* FlyingSocks */; };
 		48021CBE2D5F3ED300C39F07 /* URLSchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48021CBD2D5F3ECD00C39F07 /* URLSchemeHandler.swift */; };
 		48021CC22D5F705100C39F07 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48021CC12D5F704700C39F07 /* Notification.swift */; };
-		480B06452D5B3AC500FFAAA5 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 480B06442D5B3AC500FFAAA5 /* ProgressHUD */; };
 		482092F12D7C2585009E9BB8 /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482092F02D7C257F009E9BB8 /* ConsoleViewController.swift */; };
 		48248BC22AF1F4D0001097CC /* MWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC12AF1F4D0001097CC /* MWebView.swift */; };
 		48248BC42AF1F6C1001097CC /* MWebViewPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48248BC32AF1F6C1001097CC /* MWebViewPool.swift */; };
@@ -57,6 +56,7 @@
 		485FEE7D2D5D09B800A0C430 /* FlashButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485FEE7C2D5D09B400A0C430 /* FlashButton.swift */; };
 		4863BF482D88753400029FAA /* UITableView++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4863BF472D88752E00029FAA /* UITableView++.swift */; };
 		4869E8082D0D345600E2B080 /* MinipNativeInteraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4869E8072D0D345600E2B080 /* MinipNativeInteraction.swift */; };
+		487C49EC2EF704FD0088FE93 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 487C49EB2EF704FD0088FE93 /* ProgressHUD */; };
 		487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 487E38922A8FBA48003464D7 /* Kingfisher */; };
 		488942162D8B2CC80059CF31 /* AppDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488942152D8B2CC20059CF31 /* AppDetailView.swift */; };
 		488C2F392D4DECDE00892E3A /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 488C2F382D4DECD200892E3A /* HomeViewController.swift */; };
@@ -272,6 +272,7 @@
 				48C22CDF2D67FEA20000F74F /* TreeSitterJSDocQueries in Frameworks */,
 				48C22D1F2D6831B80000F74F /* TreeSitterYAML in Frameworks */,
 				48C22D172D6831B70000F74F /* TreeSitterMarkdownRunestone in Frameworks */,
+				487C49EC2EF704FD0088FE93 /* ProgressHUD in Frameworks */,
 				48C22CEF2D67FEA20000F74F /* TreeSitterLanguagesCommon in Frameworks */,
 				2BD9B1AA2A5BD4D300036AFD /* Runestone in Frameworks */,
 				48C22CED2D67FEA20000F74F /* TreeSitterJavaScriptRunestone in Frameworks */,
@@ -280,7 +281,6 @@
 				2BE125CD2E85259200B159E7 /* PanModal in Frameworks */,
 				4800EA092CF1C93300F49842 /* FlyingFox in Frameworks */,
 				48C22CD52D67FEA20000F74F /* TreeSitterCommentRunestone in Frameworks */,
-				480B06452D5B3AC500FFAAA5 /* ProgressHUD in Frameworks */,
 				48C22D1D2D6831B80000F74F /* TreeSitterPythonRunestone in Frameworks */,
 				48C22D152D6831B70000F74F /* TreeSitterMarkdownQueries in Frameworks */,
 				48C22CCB2D67FEA20000F74F /* TreeSitterCSS in Frameworks */,
@@ -652,7 +652,6 @@
 				487E38922A8FBA48003464D7 /* Kingfisher */,
 				4800EA082CF1C93300F49842 /* FlyingFox */,
 				4800EA0A2CF1C93300F49842 /* FlyingSocks */,
-				480B06442D5B3AC500FFAAA5 /* ProgressHUD */,
 				48C22CCA2D67FEA20000F74F /* TreeSitterCSS */,
 				48C22CCC2D67FEA20000F74F /* TreeSitterCSSQueries */,
 				48C22CCE2D67FEA20000F74F /* TreeSitterCSSRunestone */,
@@ -686,6 +685,7 @@
 				48C22D222D6831B80000F74F /* TreeSitterYAMLRunestone */,
 				48CE69222D90EAE80072AF47 /* ZIPFoundation */,
 				2BE125CC2E85259200B159E7 /* PanModal */,
+				487C49EB2EF704FD0088FE93 /* ProgressHUD */,
 			);
 			productName = minip;
 			productReference = 48DF6B99288D32C800D523C1 /* minip.app */;
@@ -725,10 +725,10 @@
 				2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */,
 				487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */,
-				480B06432D5B3AC500FFAAA5 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 				48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */,
 				48CE69212D90EAE80072AF47 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				2BE125CB2E85259200B159E7 /* XCRemoteSwiftPackageReference "PanModal" */,
+				487C49EA2EF704FD0088FE93 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 			);
 			productRefGroup = 48DF6B9A288D32C800D523C1 /* Products */;
 			projectDirPath = "";
@@ -1152,12 +1152,12 @@
 				minimumVersion = 0.20.0;
 			};
 		};
-		480B06432D5B3AC500FFAAA5 /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
+		487C49EA2EF704FD0088FE93 /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/relatedcode/ProgressHUD";
+			repositoryURL = "https://github.com/Yosorable/ProgressHUD.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 14.1.3;
+				branch = master;
+				kind = branch;
 			};
 		};
 		487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
@@ -1227,9 +1227,9 @@
 			package = 4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */;
 			productName = FlyingSocks;
 		};
-		480B06442D5B3AC500FFAAA5 /* ProgressHUD */ = {
+		487C49EB2EF704FD0088FE93 /* ProgressHUD */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 480B06432D5B3AC500FFAAA5 /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			package = 487C49EA2EF704FD0088FE93 /* XCRemoteSwiftPackageReference "ProgressHUD" */;
 			productName = ProgressHUD;
 		};
 		487E38922A8FBA48003464D7 /* Kingfisher */ = {

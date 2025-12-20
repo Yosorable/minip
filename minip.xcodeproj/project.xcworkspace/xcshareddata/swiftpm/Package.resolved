@@ -1,5 +1,5 @@
 {
-  "originHash" : "ae0c4a1f8b2e07972392a8ebafebb31029d28e7021432acdb2124f4d2628d70b",
+  "originHash" : "f2c2bd444d1c9f430e86e25376e21831ed5ad6b7f9b4a4967f1ff64406e647e0",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -76,10 +76,10 @@
     {
       "identity" : "progresshud",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/relatedcode/ProgressHUD",
+      "location" : "https://github.com/Yosorable/ProgressHUD.git",
       "state" : {
-        "revision" : "4aa638a88450d6d48a6620070722e875e7a179ef",
-        "version" : "14.1.4"
+        "branch" : "master",
+        "revision" : "7fbf7e7a723c48f20729f8708a88b9f577695e74"
       }
     },
     {

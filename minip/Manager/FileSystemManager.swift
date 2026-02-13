@@ -30,7 +30,7 @@ class FileSystemManager {
     private var openedFDs: Set<Int32> = []
 
     init(appInfo: AppInfo) {
-        dataDirURL = Global.shared.projectDataFolderURL.appendingPolyfill(path: appInfo.appId).standardizedFileURL
+        dataDirURL = Global.shared.projectDataFolderURL.appending(path: appInfo.appId).standardizedFileURL
 
         let fileManager = FileManager.default
         if !fileManager.fileExists(atPath: dataDirURL.path) {
@@ -50,7 +50,7 @@ class FileSystemManager {
     }
 
     private func appPathToURL(_ path: String) throws -> URL {
-        let res = dataDirURL.appendingPolyfill(path: path).standardizedFileURL
+        let res = dataDirURL.appending(path: path).standardizedFileURL
 
         if !res.path.hasPrefix(dataDirURL.path) {
             throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "no premission"])

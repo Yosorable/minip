@@ -22,7 +22,7 @@ struct AppDetailView: View {
             if icon.starts(with: "http://") || icon.starts(with: "https://") {
                 self.iconURL = URL(string: icon)
             } else {
-                self.iconURL = Global.shared.documentsRootURL.appendingPolyfill(path: self.appInfo.name).appendingPolyfill(path: icon)
+                self.iconURL = Global.shared.documentsRootURL.appending(path: self.appInfo.name, directoryHint: .isDirectory).appending(path: icon)
             }
         }
     }

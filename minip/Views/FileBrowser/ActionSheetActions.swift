@@ -31,7 +31,7 @@ extension FileBrowserViewController {
                 return
             }
             let fileManager = FileManager.default
-            let newURL = strongSelf.folderURL.appendingPolyfill(component: fileName)
+            let newURL = strongSelf.folderURL.appending(component: fileName)
 
             do {
                 try fileManager.moveItem(at: fileInfo.url, to: newURL)

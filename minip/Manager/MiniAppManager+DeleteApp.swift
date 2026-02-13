@@ -10,8 +10,8 @@ import Foundation
 extension MiniAppManager {
     func deleteMiniApp(app: AppInfo, completion: () -> Void) {
         let fileManager = FileManager.default
-        let appFolder = Global.shared.documentsRootURL.appendingPolyfill(path: app.name)
-        let dataFolder = Global.shared.projectDataFolderURL.appendingPolyfill(path: app.appId)
+        let appFolder = Global.shared.documentsRootURL.appending(component: app.name, directoryHint: .isDirectory)
+        let dataFolder = Global.shared.projectDataFolderURL.appending(component: app.appId, directoryHint: .isDirectory)
         do {
             try fileManager.trashItem(at: appFolder, resultingItemURL: nil)
             let db = KVStorageManager.shared.getPrivacyDB()

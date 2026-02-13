@@ -235,7 +235,7 @@ class CodeEditorViewController: UIViewController {
 
         DispatchQueue.global(qos: .userInitiated).async {
             let tTxt = text.trimmingCharacters(in: .whitespacesAndNewlines)
-            let sps = tTxt.splitPolyfill(separator: "\n")
+            let sps = tTxt.split(separator: "\n")
             var mx = 0
             for ele in sps {
                 mx = max(ele.count, mx)

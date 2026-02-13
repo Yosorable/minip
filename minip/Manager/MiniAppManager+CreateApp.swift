@@ -27,7 +27,7 @@ extension MiniAppManager {
         }
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let appFolder = documentsURL.appendingPolyfill(path: name)
+        let appFolder = documentsURL.appending(path: name)
         let (exist, _) = fileOrFolderExists(path: appFolder.path)
         if exist {
             throw ErrorMsg(errorDescription: "Invalid name")

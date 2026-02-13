@@ -17,8 +17,8 @@ extension MinipApi {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
         }
-        let appHomeURL = Global.shared.projectDataFolderURL.appendingPolyfill(path: appId + "/")
-        let dbFileURL = appHomeURL.appendingPolyfill(component: path).standardizedFileURL
+        let appHomeURL = Global.shared.projectDataFolderURL.appending(component: appId, directoryHint: .isDirectory)
+        let dbFileURL = appHomeURL.appending(component: path, directoryHint: .notDirectory).standardizedFileURL
         let dbFolderURL = dbFileURL.deletingLastPathComponent()
         if !dbFolderURL.path.contains(appHomeURL.path) {
             replyHandler(InteropUtils.fail(msg: "Cannot access this file").toJsonString(), nil)

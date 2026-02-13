@@ -5,8 +5,8 @@
 //  Created by LZY on 2025/3/18.
 //
 
-import Foundation
 import Defaults
+import Foundation
 
 final class Global {
     static let shared = Global()
@@ -25,9 +25,9 @@ final class Global {
     var fileBrowserRootURL: URL
 
     private init() {
-        documentsTrashURL = documentsRootURL.appendingPolyfill(path: ".Trash/")
-        dataFolderURL = documentsRootURL.appendingPolyfill(path: ".data/")
-        projectDataFolderURL = dataFolderURL.appendingPolyfill(path: "appdata/")
+        documentsTrashURL = documentsRootURL.appending(component: ".Trash", directoryHint: .isDirectory)
+        dataFolderURL = documentsRootURL.appending(component: ".data", directoryHint: .isDirectory)
+        projectDataFolderURL = dataFolderURL.appending(component: "appdata", directoryHint: .isDirectory)
         fileBrowserRootURL = Defaults[.useSanboxRoot] ? sandboxRootURL : documentsRootURL
     }
 }

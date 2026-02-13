@@ -9,7 +9,7 @@ import FlyingFox
 import SwiftUI
 
 struct FileServerView: View {
-    @Environment(\.dismissPolyfill) var dismiss
+    @Environment(\.dismiss) var dismiss
     @State var serverRunning = false
     @State var fileServer: HTTPServer? = nil
     @State var ipAddress = ""
@@ -128,7 +128,7 @@ struct FileServerView: View {
                 let documentURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
                 
                 do {
-                    let files = try listFilesAndFolders(in: documentURL.appendingPolyfill(path: path))
+                    let files = try listFilesAndFolders(in: documentURL.appending(path: path))
                     var res = [[String:Any]]()
                     for file in files.folders + files.files {
                         res.append([
@@ -158,7 +158,7 @@ struct FileServerView: View {
                 let documentURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
                 do {
-                    let toDel = documentURL.appendingPolyfill(path: path).appendingPolyfill(component: file)
+                    let toDel = documentURL.appending(path: path).appending(component: file)
                     try FileManager.default.removeItem(at: toDel)
                     return HTTPResponse(statusCode: .ok)
                 } catch {
@@ -179,7 +179,7 @@ struct FileServerView: View {
                let tp = jsonObj["type"] {
                 let documentURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
                 let isFolder = tp == "folder"
-                let url = documentURL.appendingPolyfill(path: path).appendingPolyfill(component: file)
+                let url = documentURL.appending(path: path).appending(component: file)
 
                 if FileManager.default.fileExists(atPath: url.path) {
                     return HTTPResponse(statusCode: .internalServerError)
@@ -210,9 +210,9 @@ struct FileServerView: View {
                let rename = jsonObj["rename"] {
                 let documentURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
                 do {
-                    let folder = documentURL.appendingPolyfill(path: path)
-                    let ori = folder.appendingPolyfill(path: file)
-                    let dst = folder.appendingPolyfill(path: rename)
+                    let folder = documentURL.appending(path: path)
+                    let ori = folder.appending(path: file)
+                    let dst = folder.appending(path: rename)
                     try FileManager.default.moveItem(at: ori, to: dst)
                     return HTTPResponse(statusCode: .ok)
                 } catch {
@@ -232,7 +232,7 @@ struct FileServerView: View {
             }
             
             let documentURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let fileURL = documentURL.appendingPolyfill(path: targetDir).appendingPolyfill(component: filename)
+            let fileURL = documentURL.appending(path: targetDir).appending(component: filename)
             if !FileManager.default.createFile(atPath: fileURL.path, contents: nil) {
                 return HTTPResponse(statusCode: .internalServerError)
             }

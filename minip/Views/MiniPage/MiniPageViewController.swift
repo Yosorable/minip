@@ -60,7 +60,7 @@ class MiniPageViewController: UIViewController {
             let req = URLRequest(url: url)
             webview.load(req)
         } else {
-            url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
+            url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appending(path: "\(app.name)/\(page)")
             logger.info("[webview] load file: \(url)")
             webview.loadFileURL(url, allowingReadAccessTo: documentsURL.appendingPathComponent(app.name))
         }
@@ -180,9 +180,9 @@ class MiniPageViewController: UIViewController {
             let req = URLRequest(url: url)
             webview.load(req)
         } else {
-            url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appendingPolyfill(path: "\(app.name)/\(page)")
+            url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appending(path: "\(app.name)/\(page)")
             logger.info("[webview] load file: \(url)")
-            webview.loadFileURL(url, allowingReadAccessTo: documentsURL.appendingPathComponent(app.name))
+            webview.loadFileURL(url, allowingReadAccessTo: documentsURL.appending(component: app.name))
         }
         pageURL = url
 

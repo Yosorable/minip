@@ -91,7 +91,7 @@ class AppCell: UITableViewCell {
                 iconURL = URL(string: icon)
                 appIconImageView.kf.setImage(with: iconURL)
             } else {
-                if let iconURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPolyfill(path: app.name).appendingPolyfill(path: icon) {
+                if let iconURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appending(path: app.name, directoryHint: .isDirectory).appending(path: icon) {
                     appIconImageView.image = UIImage(contentsOfFile: iconURL.path)
                 }
             }

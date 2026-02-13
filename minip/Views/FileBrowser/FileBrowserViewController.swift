@@ -179,7 +179,7 @@ class FileBrowserViewController: UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         if needCheckFileUpdates {
             lazy var fn = { [weak self] in
-                let res = self?.folderURL.path.splitPolyfill(separator: Global.shared.fileBrowserRootURL.path).last ?? "unknown path"
+                let res = self?.folderURL.path.split(separator: Global.shared.fileBrowserRootURL.path).last ?? "unknown path"
                 return res == "" ? "/" : res
             }
             logger.debug("[FileBrowser] \"\(fn())\": checking file updates")
@@ -301,7 +301,7 @@ extension FileBrowserViewController {
             }
 
             let fileManager = FileManager.default
-            let newFileURL = strongSelf.folderURL.appendingPolyfill(component: fileName)
+            let newFileURL = strongSelf.folderURL.appending(component: fileName)
 
             if !fileManager.fileExists(atPath: newFileURL.path) {
                 do {

@@ -35,7 +35,7 @@ func cleanTrashAsync(
         let trashURL = FileManager.default.urls(
             for: .documentDirectory,
             in: .userDomainMask
-        )[0].appendingPolyfill(path: ".Trash")
+        )[0].appending(component: ".Trash", directoryHint: .isDirectory)
 
         do {
             let fileURLs = try FileManager.default.contentsOfDirectory(

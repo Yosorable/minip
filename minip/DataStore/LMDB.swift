@@ -13,7 +13,7 @@ class KVStorageManager {
     var environment: Environment?
     var dbMap: [String: Database] = .init()
     init() {
-        let defaultURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPolyfill(path: ".data")
+        let defaultURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appending(component: ".data", directoryHint: .isDirectory)
         let (exist, _) = fileOrFolderExists(path: defaultURL.path)
         do {
             if !exist {

@@ -130,11 +130,11 @@ extension FileBrowserViewController {
         Task {
             let f = fileInfo.url.deletingLastPathComponent()
             let fileNameWithoutExt = fileInfo.fileName.deletingSuffix(".zip")
-            var dest = f.appendingPolyfill(path: fileNameWithoutExt)
+            var dest = f.appending(path: fileNameWithoutExt)
             let fileManager = FileManager.default
             var cnt = 1
             while fileManager.fileExists(atPath: dest.path) {
-                dest = dest.deletingLastPathComponent().appendingPolyfill(path: fileNameWithoutExt + " \(cnt)")
+                dest = dest.deletingLastPathComponent().appending(path: fileNameWithoutExt + " \(cnt)")
                 cnt += 1
             }
             do {

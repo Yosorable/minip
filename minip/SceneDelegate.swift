@@ -31,9 +31,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 return vc
             }(),
             {
-                let vc = UINavigationController(rootViewController: FileBrowserViewController(folderURL: Global.shared.fileBrowserRootURL))
+                let vc = UINavigationController()
                 vc.navigationBar.prefersLargeTitles = true
                 vc.tabBarItem = UITabBarItem(title: i18n("Files"), image: UIImage(systemName: "folder.fill"), tag: 1)
+
+                let lastFolder = Defaults[.filebrowserLastFolder]
+                var vcs: [UIViewController] = []
+
+                var url = Global.shared.sandboxRootURL
+
+                if Global.shared.fileBrowserRootURL == Global.shared.sandboxRootURL {
+                    vcs.append(FileBrowserViewController(folderURL: Global.shared.fileBrowserRootURL))
+                }
+
+                lastFolder.split(separator: "/").forEach {
+                    url = url.appending(component: $0, directoryHint: .isDirectory)
+                    vcs.append(FileBrowserViewController(folderURL: url))
+                }
+
+                vc.viewControllers = vcs
+
                 return vc
             }(),
             {
@@ -42,6 +59,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 return vc
             }(),
         ]
+
+        mainVC.selectedIndex = Defaults[.lastTabIndex]
 
         window?.rootViewController = mainVC
         window?.makeKeyAndVisible()
@@ -88,6 +107,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             } catch {
                 logger.error("[Enter foreground] cannot start server \(error.localizedDescription)")
             }
+        }
+    }
+
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        guard let rootVC = window?.rootViewController as? UITabBarController, let fileBrowserNavigationVC = rootVC.viewControllers?[1] as? UINavigationController else { return }
+
+        // tab index
+        Defaults[.lastTabIndex] = rootVC.selectedIndex
+
+        // file browser path
+        if let currentPath = (fileBrowserNavigationVC.viewControllers.last as? FileBrowserViewController)?.folderURL.path(percentEncoded: false) {
+            let root = Global.shared.sandboxRootURL.path(percentEncoded: false)
+            let lastFolder = currentPath.deletingPrefix(root).deletingSuffix("/")
+            Defaults[.filebrowserLastFolder] = lastFolder
         }
     }
 }

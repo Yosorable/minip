@@ -24,10 +24,14 @@ extension Defaults.Keys {
 
     // first start app
     static let firstStart = Key<Bool>("firstStart", default: true)
-    
+
     // color scheme, 0: system, 1: light, 2: dark
     static let colorScheme = Key<Int>("colorScheme", default: 0)
-    
+
     // use sandbox root as file browser root path
     static let useSanboxRoot = Key<Bool>("useSandboxRoot", default: false)
+
+    static let lastTabIndex = Key<Int>("lastTabIndex", default: 0)
+
+    static let filebrowserLastFolder = Key<String>("filebrowserLastFolder", default: "")
 }

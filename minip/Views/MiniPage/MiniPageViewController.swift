@@ -119,6 +119,9 @@ class MiniPageViewController: UIViewController {
             }
         }
 
+        view.addSubview(webview)
+        webview.translatesAutoresizingMaskIntoConstraints = false
+
         if app.alwaysInSafeArea == true {
             if showNav {
                 let appearance = UINavigationBarAppearance()
@@ -131,16 +134,19 @@ class MiniPageViewController: UIViewController {
                     navigationController?.navigationBar.compactScrollEdgeAppearance = appearance
                 }
             }
-            view.addSubview(webview)
-            webview.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 webview.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
                 webview.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
                 webview.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-                webview.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+                webview.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             ])
         } else {
-            view = webview
+            NSLayoutConstraint.activate([
+                webview.topAnchor.constraint(equalTo: view.topAnchor),
+                webview.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                webview.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                webview.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            ])
         }
 
         if let bc = app.backgroundColor {
@@ -205,7 +211,7 @@ class MiniPageViewController: UIViewController {
                     ),
                     UIBarButtonItem(
                         image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(showAppDetail)
-                    )
+                    ),
                 ]
             } else if !Defaults[.useCapsuleButton] {
                 navigationItem.rightBarButtonItems = [
@@ -214,7 +220,7 @@ class MiniPageViewController: UIViewController {
                     ),
                     UIBarButtonItem(
                         image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(showAppDetail)
-                    )
+                    ),
                 ]
             } else {
                 let moreButton = UIButton(type: .system)
@@ -236,7 +242,7 @@ class MiniPageViewController: UIViewController {
                     moreButton.widthAnchor.constraint(equalToConstant: 132 / 3),
                     moreButton.heightAnchor.constraint(equalToConstant: 96 / 3),
                     closeButton.widthAnchor.constraint(equalToConstant: 132 / 3),
-                    closeButton.heightAnchor.constraint(equalToConstant: 96 / 3)
+                    closeButton.heightAnchor.constraint(equalToConstant: 96 / 3),
                 ])
 
                 navigationItem.rightBarButtonItems = [
@@ -310,18 +316,20 @@ class MiniPageViewController: UIViewController {
 
     @objc
     func close() {
-        dismiss(animated: true, completion: {
-            logger.info("[MiniPageViewController] clear open app info & reset orientation")
-            if MiniAppManager.shared.openedApp?.orientation == "landscape" {
-                if #available(iOS 16.0, *) {
-                    let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-                    windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .all))
-                } else {
-                    UIDevice.current.setValue(UIInterfaceOrientation.unknown.rawValue, forKey: "orientation")
+        dismiss(
+            animated: true,
+            completion: {
+                logger.info("[MiniPageViewController] clear open app info & reset orientation")
+                if MiniAppManager.shared.openedApp?.orientation == "landscape" {
+                    if #available(iOS 16.0, *) {
+                        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                        windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .all))
+                    } else {
+                        UIDevice.current.setValue(UIInterfaceOrientation.unknown.rawValue, forKey: "orientation")
+                    }
                 }
-            }
-            MiniAppManager.shared.clearOpenedApp()
-        })
+                MiniAppManager.shared.clearOpenedApp()
+            })
     }
     @objc
     func showAppDetail() {
@@ -330,9 +338,11 @@ class MiniPageViewController: UIViewController {
 
     @objc
     func showAppDetail(moreButton: UIView? = nil) {
-        let detailVC = AppDetailViewController(appInfo: app, reloadPageFunc: { [weak self] in
-            self?.webview.reload()
-        }, parentVC: self)
+        let detailVC = AppDetailViewController(
+            appInfo: app,
+            reloadPageFunc: { [weak self] in
+                self?.webview.reload()
+            }, parentVC: self)
 
         if let moreBtn = moreButton {
             presentPanModal(detailVC, sourceView: moreBtn, sourceRect: moreBtn.bounds)

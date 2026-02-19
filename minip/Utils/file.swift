@@ -86,12 +86,14 @@ func listFilesAndFolders(in directory: URL) throws -> (
                 }
             }
             if isDir {
+                let count = try fileManager.contentsOfDirectory(at: url, includingPropertiesForKeys: nil).count
                 folders.append(
                     FileInfo(
                         fileName: url.lastPathComponent,
                         isFolder: true,
                         url: url,
-                        lastModified: lastModified
+                        lastModified: lastModified,
+                        filesCount: count
                     )
                 )
             } else {

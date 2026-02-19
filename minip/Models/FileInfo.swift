@@ -13,12 +13,13 @@ struct FileInfo: Hashable {
     var url: URL
     var size: String?
     var lastModified: Date?
+    var filesCount: Int?
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(url)
     }
 
     static func == (lhs: FileInfo, rhs: FileInfo) -> Bool {
-        return lhs.url == rhs.url && lhs.size == rhs.size
+        return lhs.url == rhs.url && lhs.size == rhs.size && lhs.filesCount == rhs.filesCount
     }
 }

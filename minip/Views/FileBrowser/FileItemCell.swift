@@ -60,7 +60,7 @@ class FileItemCell: UITableViewCell {
             sizeLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             sizeLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
 
-            nameLabel.trailingAnchor.constraint(lessThanOrEqualTo: sizeLabel.leadingAnchor, constant: -8)
+            nameLabel.trailingAnchor.constraint(lessThanOrEqualTo: sizeLabel.leadingAnchor, constant: -8),
         ])
         separatorInset = UIEdgeInsets(top: 0, left: 55, bottom: 0, right: 0)
     }
@@ -68,12 +68,19 @@ class FileItemCell: UITableViewCell {
     func configure(with info: FileInfo, displayName: NSAttributedString? = nil) {
         if info.isFolder {
             sizeLabel.isHidden = true
-            itemImageView.image = UIImage(systemName: (info.url == Global.shared.documentsTrashURL) ? "trash" : "folder")
+
+            let filesCnt = info.filesCount ?? 0
+            if info.url == Global.shared.documentsTrashURL {
+                itemImageView.image = UIImage(named: filesCnt == 0 ? "trash-empty" : "trash-no-empty")
+            } else {
+                itemImageView.image = UIImage(named: filesCnt == 0 ? "folder-empty" : "folder-no-empty")
+            }
             accessoryType = .disclosureIndicator
         } else {
             sizeLabel.isHidden = false
             sizeLabel.text = info.size ?? "unknown size"
-            itemImageView.image = UIImage(systemName: FileManager.isImage(url: info.url) ? "photo" : "doc")
+//            itemImageView.image = UIImage(systemName: FileManager.isImage(url: info.url) ? "photo" : "doc")
+            itemImageView.image = UIImage(named: "file")
             accessoryType = .none
         }
         if let atxt = displayName {

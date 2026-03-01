@@ -50,14 +50,19 @@ func getTopViewController(
 
 // image preview
 
-func previewImage(url: URL? = nil, vc: UIViewController? = nil) {
+func previewImage(url: URL? = nil, vc: UIViewController? = nil, sourceRect: CGRect? = nil, thumbnailImage: UIImage? = nil, onDismiss: (() -> Void)? = nil, onPresentSnapshotReady: (() -> Void)? = nil, fetchSourceRect: ((@escaping (CGRect?) -> Void) -> Void)? = nil) {
     guard let url = url else {
         return
     }
 
-    let pvc = ImagePreviewViewController(imageURL: url)
+    let pvc = ImagePreviewViewController(imageURL: url, sourceRect: sourceRect, thumbnailImage: thumbnailImage)
     pvc.modalPresentationStyle = .overFullScreen
-    pvc.modalTransitionStyle = .crossDissolve
+    if sourceRect == nil {
+        pvc.modalTransitionStyle = .crossDissolve
+    }
+    pvc.onDismiss = onDismiss
+    pvc.onPresentSnapshotReady = onPresentSnapshotReady
+    pvc.fetchSourceRect = fetchSourceRect
     if let vc = vc {
         vc.present(pvc, animated: true)
         return

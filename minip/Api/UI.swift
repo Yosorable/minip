@@ -7,6 +7,7 @@
 
 import AVFoundation
 import AVKit
+import Kingfisher
 import ProgressHUD
 import UIKit
 
@@ -98,7 +99,7 @@ extension MinipApi {
     }
 
     func showHUD(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let _ = param.webView?.holderObject as? MiniPageViewController else {
+        guard param.webView?.holderObject as? MiniPageViewController != nil else {
             return
         }
         let parameters = param.data as? [String: Any]
@@ -147,7 +148,7 @@ extension MinipApi {
     }
 
     func hideHUD(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let _ = param.webView?.holderObject as? MiniPageViewController else {
+        guard param.webView?.holderObject as? MiniPageViewController != nil else {
             return
         }
 
@@ -156,8 +157,8 @@ extension MinipApi {
     }
 
     struct AlertInput: Codable {
-        var key: String // callback parameter
-        var type: String? // text (default), password, number
+        var key: String  // callback parameter
+        var type: String?  // text (default), password, number
         var title: String?
         var defaultValue: String?
     }
@@ -165,7 +166,7 @@ extension MinipApi {
     struct AlertAction: Codable {
         var title: String?
         var style: String?
-        var key: String // callback parameter
+        var key: String  // callback parameter
     }
 
     struct AlertConfig: Codable {
@@ -182,8 +183,8 @@ extension MinipApi {
         }
         let decoder = JSONDecoder()
         guard let data = param.data,
-              let jsonData = try? JSONSerialization.data(withJSONObject: data, options: []),
-              let config = try? decoder.decode(AlertConfig.self, from: jsonData)
+            let jsonData = try? JSONSerialization.data(withJSONObject: data, options: []),
+            let config = try? decoder.decode(AlertConfig.self, from: jsonData)
         else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
@@ -212,21 +213,22 @@ extension MinipApi {
             } else if act.style == "destructive" {
                 style = .destructive
             }
-            alert.addAction(UIAlertAction(title: act.title, style: style) { _ in
-                struct AlertWithInputsRes: Codable {
-                    var action: String
-                    var inputs: [String: String]
-                }
-                var res = AlertWithInputsRes(action: act.key, inputs: [:])
-
-                if let cfg = config.inputs, let tfs = alert.textFields {
-                    for (idx, tf) in tfs.enumerated() {
-                        res.inputs[cfg[idx].key] = tf.text
+            alert.addAction(
+                UIAlertAction(title: act.title, style: style) { _ in
+                    struct AlertWithInputsRes: Codable {
+                        var action: String
+                        var inputs: [String: String]
                     }
-                }
+                    var res = AlertWithInputsRes(action: act.key, inputs: [:])
 
-                replyHandler(InteropUtils.succeedWithData(data: res).toJsonString(), nil)
-            })
+                    if let cfg = config.inputs, let tfs = alert.textFields {
+                        for (idx, tf) in tfs.enumerated() {
+                            res.inputs[cfg[idx].key] = tf.text
+                        }
+                    }
+
+                    replyHandler(InteropUtils.succeedWithData(data: res).toJsonString(), nil)
+                })
         }
         alert.view.tintColor = vc.view.tintColor
 
@@ -241,13 +243,70 @@ extension MinipApi {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
         }
-        guard let urlStr = (param.data as? [String: String])?["url"],
-              let url = URL(string: urlStr.deletingPrefix("minipimg").deletingPrefix("minip"))
+        guard let data = param.data as? [String: Any],
+            let urlStr = data["url"] as? String,
+            let url = URL(string: urlStr.deletingPrefix("minipimg").deletingPrefix("minip"))
         else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return
         }
-        minip.previewImage(url: url, vc: vc)
+
+        var sourceRect: CGRect?
+        if let rectDict = data["rect"] as? [String: Double],
+            let x = rectDict["x"], let y = rectDict["y"],
+            let width = rectDict["width"], let height = rectDict["height"],
+            let webView = param.webView
+        {
+            // getBoundingClientRect() returns CSS pixels relative to the visual viewport.
+            // Convert to UIKit points: multiply by zoomScale, then offset by content inset.
+            let zoom = webView.scrollView.zoomScale
+            let inset = webView.scrollView.adjustedContentInset
+            let webViewRect = CGRect(x: x * zoom + inset.left, y: y * zoom + inset.top, width: width * zoom, height: height * zoom)
+            sourceRect = webView.convert(webViewRect, to: nil)
+        }
+
+        let presentPreview = { (thumbnailImage: UIImage?) in
+            minip.previewImage(
+                url: url, vc: vc, sourceRect: sourceRect, thumbnailImage: thumbnailImage,
+                onDismiss: {
+                    param.webView?.evaluateJavaScript("if(window.__minipPreviewElement){window.__minipPreviewElement.style.visibility='';window.__minipPreviewElement=null}")
+                },
+                onPresentSnapshotReady: {
+                    param.webView?.evaluateJavaScript("if(window.__minipPreviewElement) window.__minipPreviewElement.style.visibility='hidden'")
+                },
+                fetchSourceRect: { completion in
+                    guard let webView = param.webView else {
+                        completion(nil)
+                        return
+                    }
+                    let js =
+                        "(function(){ var el = window.__minipPreviewElement; if (!el) return null; var r = el.getBoundingClientRect(); return JSON.stringify({x:r.x,y:r.y,width:r.width,height:r.height}); })()"
+                    webView.evaluateJavaScript(js) { result, _ in
+                        guard let jsonStr = result as? String,
+                            let data = jsonStr.data(using: .utf8),
+                            let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Double],
+                            let x = dict["x"], let y = dict["y"],
+                            let w = dict["width"], let h = dict["height"]
+                        else {
+                            completion(nil)
+                            return
+                        }
+                        let zoom = webView.scrollView.zoomScale
+                        let inset = webView.scrollView.adjustedContentInset
+                        let webViewRect = CGRect(x: x * zoom + inset.left, y: y * zoom + inset.top, width: w * zoom, height: h * zoom)
+                        completion(webView.convert(webViewRect, to: nil))
+                    }
+                })
+        }
+
+        if sourceRect != nil {
+            ImageCache.default.retrieveImage(forKey: url.absoluteString) { result in
+                let image = try? result.get().image
+                DispatchQueue.main.async { presentPreview(image) }
+            }
+        } else {
+            presentPreview(nil)
+        }
         replyHandler(InteropUtils.succeed().toJsonString(), nil)
     }
 
@@ -256,7 +315,7 @@ extension MinipApi {
             return
         }
         guard let urlStr = (param.data as? [String: String])?["url"],
-              let url = URL(string: urlStr)
+            let url = URL(string: urlStr)
         else {
             replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
             return

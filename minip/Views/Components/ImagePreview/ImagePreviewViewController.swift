@@ -11,11 +11,22 @@ import Photos
 class ImagePreviewViewController: UIViewController {
     var imageURL: URL?
     var zoomableImageView: ZoomableImageView!
+    var onDismiss: (() -> Void)?
+    var onPresentSnapshotReady: (() -> Void)?
+    var fetchSourceRect: ((@escaping (CGRect?) -> Void) -> Void)?
+    private var customTransitionDelegate: ImagePreviewTransitionDelegate?
 
-    init(imageURL: URL? = nil) {
+    init(imageURL: URL? = nil, sourceRect: CGRect? = nil, thumbnailImage: UIImage? = nil) {
         self.imageURL = imageURL
-
         super.init(nibName: nil, bundle: nil)
+
+        if let sourceRect = sourceRect {
+            customTransitionDelegate = ImagePreviewTransitionDelegate(
+                sourceRect: sourceRect,
+                thumbnailImage: thumbnailImage
+            )
+            self.transitioningDelegate = customTransitionDelegate
+        }
     }
 
     @available(*, unavailable)
@@ -85,6 +96,14 @@ class ImagePreviewViewController: UIViewController {
 
         if let pnv = navigationController as? PannableNavigationViewController {
             pnv.addPanGesture(vc: self)
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        // Fallback for non-custom-transition dismiss (e.g. crossDissolve)
+        if isBeingDismissed {
+            onDismiss?()
         }
     }
 

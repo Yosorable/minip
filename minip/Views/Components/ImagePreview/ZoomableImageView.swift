@@ -87,7 +87,7 @@ class ZoomableImageView: UIView {
         NSLayoutConstraint.activate([
             label.centerXAnchor.constraint(equalTo: centerXAnchor),
             label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            label.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor, constant: -50)
+            label.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor, constant: -50),
         ])
 
         errorLabel = label
@@ -107,21 +107,25 @@ class ZoomableImageView: UIView {
     }
 
     private var fitSize: CGSize {
+        //        guard let imageSize = imageView.image?.size else { return bounds.size }
+        //        var width: CGFloat
+        //        var height: CGFloat
+        //        if scrollView.bounds.width < scrollView.bounds.height {
+        //            width = scrollView.bounds.width
+        //            height = (imageSize.height / imageSize.width) * width
+        //        } else {
+        //            height = scrollView.bounds.height
+        //            width = (imageSize.width / imageSize.height) * height
+        //            if width > scrollView.bounds.width {
+        //                width = scrollView.bounds.width
+        //                height = (imageSize.height / imageSize.width) * width
+        //            }
+        //        }
+        //        return CGSize(width: width, height: height)
+
         guard let imageSize = imageView.image?.size else { return bounds.size }
-        var width: CGFloat
-        var height: CGFloat
-        if scrollView.bounds.width < scrollView.bounds.height {
-            width = scrollView.bounds.width
-            height = (imageSize.height / imageSize.width) * width
-        } else {
-            height = scrollView.bounds.height
-            width = (imageSize.width / imageSize.height) * height
-            if width > scrollView.bounds.width {
-                width = scrollView.bounds.width
-                height = (imageSize.height / imageSize.width) * width
-            }
-        }
-        return CGSize(width: width, height: height)
+        let ratio = min(scrollView.bounds.width / imageSize.width, scrollView.bounds.height / imageSize.height)
+        return CGSize(width: imageSize.width * ratio, height: imageSize.height * ratio)
     }
 
     private var resettingCenter: CGPoint {
@@ -129,15 +133,18 @@ class ZoomableImageView: UIView {
         let offsetX = deltaWidth > 0 ? deltaWidth * 0.5 : 0
         let deltaHeight = bounds.height - scrollView.contentSize.height
         let offsetY = deltaHeight > 0 ? deltaHeight * 0.5 : 0
-        return CGPoint(x: scrollView.contentSize.width * 0.5 + offsetX,
-                       y: scrollView.contentSize.height * 0.5 + offsetY)
+        return CGPoint(
+            x: scrollView.contentSize.width * 0.5 + offsetX,
+            y: scrollView.contentSize.height * 0.5 + offsetY)
     }
 
     private var fitFrame: CGRect {
         let size = fitSize
-        let y = scrollView.bounds.height > size.height
+        let y =
+            scrollView.bounds.height > size.height
             ? (scrollView.bounds.height - size.height) * 0.5 : 0
-        let x = scrollView.bounds.width > size.width
+        let x =
+            scrollView.bounds.width > size.width
             ? (scrollView.bounds.width - size.width) * 0.5 : 0
         return CGRect(x: x, y: y, width: size.width, height: size.height)
     }
@@ -164,7 +171,8 @@ class ZoomableImageView: UIView {
 
     private func resetImageView() {
         let size = fitSize
-        let needResetSize = imageView.bounds.size.width < size.width
+        let needResetSize =
+            imageView.bounds.size.width < size.width
             || imageView.bounds.size.height < size.height
         UIView.animate(withDuration: 0.25) {
             self.imageView.center = self.resettingCenter
@@ -257,7 +265,7 @@ extension ZoomableImageView: UIGestureRecognizerDelegate {
     }
 }
 
-fileprivate struct PanGestureResult {
+private struct PanGestureResult {
     var frame: CGRect
     var scale: CGFloat
 }

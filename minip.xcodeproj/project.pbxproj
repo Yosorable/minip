@@ -59,6 +59,7 @@
 		48BF4C132F3F8A6600708371 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				".swift-format",
 				Info.plist,
 			);
 			target = 48DF6B98288D32C800D523C1 /* minip */;
@@ -66,7 +67,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		48BF4BB02F3F8A6600708371 /* minip */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (48BF4C132F3F8A6600708371 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (Views/FileBrowser/FileServer/web, ); path = minip; sourceTree = "<group>"; };
+		48BF4BB02F3F8A6600708371 /* minip */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (48BF4C132F3F8A6600708371 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (Resources/web, ); path = minip; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */

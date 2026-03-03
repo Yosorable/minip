@@ -8,19 +8,20 @@
 import Runestone
 import TreeSitterCSSRunestone
 import TreeSitterHTMLRunestone
-import TreeSitterJavaScript
-import TreeSitterJavaScriptRunestone
 import TreeSitterJSDocRunestone
 import TreeSitterJSONRunestone
-import TreeSitterRegexRunestone
+import TreeSitterJavaScriptRunestone
 import TreeSitterMarkdownRunestone
 import TreeSitterPythonRunestone
+import TreeSitterRegexRunestone
+import TreeSitterTypeScriptRunestone
 import TreeSitterYAMLRunestone
 
 class LanguageProvider: TreeSitterLanguageProvider {
     enum Language: String {
         case html
         case javascript
+        case typescript
         case regex
         case jsdoc
         case css
@@ -36,6 +37,8 @@ class LanguageProvider: TreeSitterLanguageProvider {
             return .html
         case .javascript:
             return .javaScript
+        case .typescript:
+            return .typeScript
         case .regex:
             return .regex
         case .jsdoc:

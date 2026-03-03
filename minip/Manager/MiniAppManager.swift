@@ -160,7 +160,7 @@ extension MiniAppManager {
 
             var pages = [UINavigationController]()
             for (idx, ele) in tabs.enumerated() {
-                let page = PannableNavigationViewController(rootViewController: MiniPageViewController(app: appInfo, page: ele.path, title: ele.title, isRoot: true), isMiniApp: true)
+                let page = UINavigationController(rootViewController: MiniPageViewController(app: appInfo, page: ele.path, title: ele.title, isRoot: true))
                 page.tabBarItem = UITabBarItem(title: ele.title, image: UIImage(systemName: ele.systemImage), tag: idx)
                 pages.append(page)
             }
@@ -176,7 +176,7 @@ extension MiniAppManager {
 
             vc = tabc
         } else {
-            let nvc = PannableNavigationViewController(rootViewController: MiniPageViewController(app: appInfo, isRoot: true), orientations: orientations, isMiniApp: true)
+            let nvc = PannableNavigationViewController(rootViewController: MiniPageViewController(app: appInfo, isRoot: true), orientations: orientations)
             if let tc = appInfo.tintColor {
                 nvc.navigationBar.tintColor = UIColor(hexOrCSSName: tc)
             }
@@ -269,12 +269,8 @@ extension MiniAppManager {
             if appInfo.orientation == "landscape" {
                 await MainActor.run {
                     vc.modalPresentationStyle = .fullScreen
-                    if #available(iOS 16.0, *) {
-                        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-                        windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscape))
-                    } else {
-                        UIDevice.current.setValue(UIInterfaceOrientation.landscapeLeft.rawValue, forKey: "orientation")
-                    }
+                    let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                    windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscape))
                 }
                 try? await Task.sleep(nanoseconds: 220_000_000)
             }

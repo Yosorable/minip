@@ -94,9 +94,6 @@ class ImagePreviewViewController: UIViewController {
             self?.longPressed(sender: gesture)
         }
 
-        if let pnv = navigationController as? PannableNavigationViewController {
-            pnv.addPanGesture(vc: self)
-        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {

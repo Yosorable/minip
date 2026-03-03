@@ -81,7 +81,6 @@ extension MinipApi {
         }
         let ss = MiniAppSettingsViewController(style: .insetGrouped, app: vc.app)
         let navVC = BackableNavigationController(rootViewController: ss)
-        navVC.addPanGesture(vc: ss)
         navVC.modalPresentationStyle = .overFullScreen
         vc.present(navVC, animated: true)
         replyHandler(InteropUtils.succeed().toJsonString(), nil)

@@ -17,38 +17,19 @@
 		4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */ = {isa = PBXBuildFile; productRef = 4800EA0A2CF1C93300F49842 /* FlyingSocks */; };
 		487C49EC2EF704FD0088FE93 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 487C49EB2EF704FD0088FE93 /* ProgressHUD */; };
 		487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 487E38922A8FBA48003464D7 /* Kingfisher */; };
-		48C22CCB2D67FEA20000F74F /* TreeSitterCSS in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CCA2D67FEA20000F74F /* TreeSitterCSS */; };
-		48C22CCD2D67FEA20000F74F /* TreeSitterCSSQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CCC2D67FEA20000F74F /* TreeSitterCSSQueries */; };
-		48C22CCF2D67FEA20000F74F /* TreeSitterCSSRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CCE2D67FEA20000F74F /* TreeSitterCSSRunestone */; };
-		48C22CD12D67FEA20000F74F /* TreeSitterComment in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CD02D67FEA20000F74F /* TreeSitterComment */; };
-		48C22CD32D67FEA20000F74F /* TreeSitterCommentQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CD22D67FEA20000F74F /* TreeSitterCommentQueries */; };
-		48C22CD52D67FEA20000F74F /* TreeSitterCommentRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CD42D67FEA20000F74F /* TreeSitterCommentRunestone */; };
-		48C22CD72D67FEA20000F74F /* TreeSitterHTML in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CD62D67FEA20000F74F /* TreeSitterHTML */; };
-		48C22CD92D67FEA20000F74F /* TreeSitterHTMLQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CD82D67FEA20000F74F /* TreeSitterHTMLQueries */; };
-		48C22CDB2D67FEA20000F74F /* TreeSitterHTMLRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CDA2D67FEA20000F74F /* TreeSitterHTMLRunestone */; };
-		48C22CDD2D67FEA20000F74F /* TreeSitterJSDoc in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CDC2D67FEA20000F74F /* TreeSitterJSDoc */; };
-		48C22CDF2D67FEA20000F74F /* TreeSitterJSDocQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CDE2D67FEA20000F74F /* TreeSitterJSDocQueries */; };
-		48C22CE12D67FEA20000F74F /* TreeSitterJSDocRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CE02D67FEA20000F74F /* TreeSitterJSDocRunestone */; };
-		48C22CE32D67FEA20000F74F /* TreeSitterJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CE22D67FEA20000F74F /* TreeSitterJSON */; };
-		48C22CE52D67FEA20000F74F /* TreeSitterJSONQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CE42D67FEA20000F74F /* TreeSitterJSONQueries */; };
-		48C22CE72D67FEA20000F74F /* TreeSitterJSONRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CE62D67FEA20000F74F /* TreeSitterJSONRunestone */; };
-		48C22CE92D67FEA20000F74F /* TreeSitterJavaScript in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CE82D67FEA20000F74F /* TreeSitterJavaScript */; };
-		48C22CEB2D67FEA20000F74F /* TreeSitterJavaScriptQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CEA2D67FEA20000F74F /* TreeSitterJavaScriptQueries */; };
-		48C22CED2D67FEA20000F74F /* TreeSitterJavaScriptRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CEC2D67FEA20000F74F /* TreeSitterJavaScriptRunestone */; };
-		48C22CEF2D67FEA20000F74F /* TreeSitterLanguagesCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CEE2D67FEA20000F74F /* TreeSitterLanguagesCommon */; };
-		48C22CF12D67FEA20000F74F /* TreeSitterRegex in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CF02D67FEA20000F74F /* TreeSitterRegex */; };
-		48C22CF32D67FEA20000F74F /* TreeSitterRegexQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CF22D67FEA20000F74F /* TreeSitterRegexQueries */; };
-		48C22CF52D67FEA20000F74F /* TreeSitterRegexRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22CF42D67FEA20000F74F /* TreeSitterRegexRunestone */; };
-		48C22D132D6831B70000F74F /* TreeSitterMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22D122D6831B70000F74F /* TreeSitterMarkdown */; };
-		48C22D152D6831B70000F74F /* TreeSitterMarkdownQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22D142D6831B70000F74F /* TreeSitterMarkdownQueries */; };
-		48C22D172D6831B70000F74F /* TreeSitterMarkdownRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22D162D6831B70000F74F /* TreeSitterMarkdownRunestone */; };
-		48C22D192D6831B70000F74F /* TreeSitterPython in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22D182D6831B70000F74F /* TreeSitterPython */; };
-		48C22D1B2D6831B80000F74F /* TreeSitterPythonQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22D1A2D6831B80000F74F /* TreeSitterPythonQueries */; };
-		48C22D1D2D6831B80000F74F /* TreeSitterPythonRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22D1C2D6831B80000F74F /* TreeSitterPythonRunestone */; };
-		48C22D1F2D6831B80000F74F /* TreeSitterYAML in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22D1E2D6831B80000F74F /* TreeSitterYAML */; };
-		48C22D212D6831B80000F74F /* TreeSitterYAMLQueries in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22D202D6831B80000F74F /* TreeSitterYAMLQueries */; };
-		48C22D232D6831B80000F74F /* TreeSitterYAMLRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48C22D222D6831B80000F74F /* TreeSitterYAMLRunestone */; };
 		48CE69232D90EAE80072AF47 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 48CE69222D90EAE80072AF47 /* ZIPFoundation */; };
+		48EEFDD42F5A650700F0C6C6 /* TreeSitterCommentRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48EEFDD32F5A650700F0C6C6 /* TreeSitterCommentRunestone */; };
+		48EEFDD62F5A651200F0C6C6 /* TreeSitterCSSRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48EEFDD52F5A651200F0C6C6 /* TreeSitterCSSRunestone */; };
+		48EEFDD82F5A653000F0C6C6 /* TreeSitterHTMLRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48EEFDD72F5A653000F0C6C6 /* TreeSitterHTMLRunestone */; };
+		48EEFDDA2F5A653800F0C6C6 /* TreeSitterJavaScriptRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48EEFDD92F5A653800F0C6C6 /* TreeSitterJavaScriptRunestone */; };
+		48EEFDDC2F5A654100F0C6C6 /* TreeSitterJSDocRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48EEFDDB2F5A654100F0C6C6 /* TreeSitterJSDocRunestone */; };
+		48EEFDDE2F5A654F00F0C6C6 /* TreeSitterJSONRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48EEFDDD2F5A654F00F0C6C6 /* TreeSitterJSONRunestone */; };
+		48EEFDE02F5A656E00F0C6C6 /* TreeSitterMarkdownRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48EEFDDF2F5A656E00F0C6C6 /* TreeSitterMarkdownRunestone */; };
+		48EEFDE22F5A657700F0C6C6 /* TreeSitterMarkdownInlineRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48EEFDE12F5A657700F0C6C6 /* TreeSitterMarkdownInlineRunestone */; };
+		48EEFDE42F5A658000F0C6C6 /* TreeSitterPythonRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48EEFDE32F5A658000F0C6C6 /* TreeSitterPythonRunestone */; };
+		48EEFDE62F5A658600F0C6C6 /* TreeSitterRegexRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48EEFDE52F5A658600F0C6C6 /* TreeSitterRegexRunestone */; };
+		48EEFDEA2F5A659300F0C6C6 /* TreeSitterYAMLRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48EEFDE92F5A659300F0C6C6 /* TreeSitterYAMLRunestone */; };
+		48EEFDEC2F5A937700F0C6C6 /* TreeSitterTypeScriptRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = 48EEFDEB2F5A937700F0C6C6 /* TreeSitterTypeScriptRunestone */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,7 +48,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		48BF4BB02F3F8A6600708371 /* minip */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (48BF4C132F3F8A6600708371 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (Resources/web, ); path = minip; sourceTree = "<group>"; };
+		48BF4BB02F3F8A6600708371 /* minip */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (48BF4C132F3F8A6600708371 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (Resources/Fonts, Resources/web, ); path = minip; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,48 +56,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48C22D212D6831B80000F74F /* TreeSitterYAMLQueries in Frameworks */,
 				4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */,
-				48C22CE12D67FEA20000F74F /* TreeSitterJSDocRunestone in Frameworks */,
 				48CE69232D90EAE80072AF47 /* ZIPFoundation in Frameworks */,
 				487E38932A8FBA48003464D7 /* Kingfisher in Frameworks */,
 				2B1B32C42A61358B00DA573F /* Alamofire in Frameworks */,
-				48C22CD92D67FEA20000F74F /* TreeSitterHTMLQueries in Frameworks */,
-				48C22CD32D67FEA20000F74F /* TreeSitterCommentQueries in Frameworks */,
-				48C22CDB2D67FEA20000F74F /* TreeSitterHTMLRunestone in Frameworks */,
+				48EEFDEA2F5A659300F0C6C6 /* TreeSitterYAMLRunestone in Frameworks */,
 				2BC331B42A62D47700441447 /* SwiftLMDB in Frameworks */,
-				48C22CDD2D67FEA20000F74F /* TreeSitterJSDoc in Frameworks */,
-				48C22CCD2D67FEA20000F74F /* TreeSitterCSSQueries in Frameworks */,
-				48C22CDF2D67FEA20000F74F /* TreeSitterJSDocQueries in Frameworks */,
-				48C22D1F2D6831B80000F74F /* TreeSitterYAML in Frameworks */,
-				48C22D172D6831B70000F74F /* TreeSitterMarkdownRunestone in Frameworks */,
 				487C49EC2EF704FD0088FE93 /* ProgressHUD in Frameworks */,
-				48C22CEF2D67FEA20000F74F /* TreeSitterLanguagesCommon in Frameworks */,
 				2BD9B1AA2A5BD4D300036AFD /* Runestone in Frameworks */,
-				48C22CED2D67FEA20000F74F /* TreeSitterJavaScriptRunestone in Frameworks */,
-				48C22CE92D67FEA20000F74F /* TreeSitterJavaScript in Frameworks */,
-				48C22D192D6831B70000F74F /* TreeSitterPython in Frameworks */,
 				2BE125CD2E85259200B159E7 /* PanModal in Frameworks */,
+				48EEFDD82F5A653000F0C6C6 /* TreeSitterHTMLRunestone in Frameworks */,
+				48EEFDE42F5A658000F0C6C6 /* TreeSitterPythonRunestone in Frameworks */,
+				48EEFDDC2F5A654100F0C6C6 /* TreeSitterJSDocRunestone in Frameworks */,
+				48EEFDDA2F5A653800F0C6C6 /* TreeSitterJavaScriptRunestone in Frameworks */,
 				4800EA092CF1C93300F49842 /* FlyingFox in Frameworks */,
-				48C22CD52D67FEA20000F74F /* TreeSitterCommentRunestone in Frameworks */,
-				48C22D1D2D6831B80000F74F /* TreeSitterPythonRunestone in Frameworks */,
-				48C22D152D6831B70000F74F /* TreeSitterMarkdownQueries in Frameworks */,
-				48C22CCB2D67FEA20000F74F /* TreeSitterCSS in Frameworks */,
-				48C22CE52D67FEA20000F74F /* TreeSitterJSONQueries in Frameworks */,
-				48C22D232D6831B80000F74F /* TreeSitterYAMLRunestone in Frameworks */,
-				48C22CCF2D67FEA20000F74F /* TreeSitterCSSRunestone in Frameworks */,
-				48C22CE32D67FEA20000F74F /* TreeSitterJSON in Frameworks */,
-				48C22D132D6831B70000F74F /* TreeSitterMarkdown in Frameworks */,
-				48C22D1B2D6831B80000F74F /* TreeSitterPythonQueries in Frameworks */,
+				48EEFDE02F5A656E00F0C6C6 /* TreeSitterMarkdownRunestone in Frameworks */,
+				48EEFDE62F5A658600F0C6C6 /* TreeSitterRegexRunestone in Frameworks */,
+				48EEFDE22F5A657700F0C6C6 /* TreeSitterMarkdownInlineRunestone in Frameworks */,
+				48EEFDEC2F5A937700F0C6C6 /* TreeSitterTypeScriptRunestone in Frameworks */,
 				2B1B32D42A61783400DA573F /* Defaults in Frameworks */,
+				48EEFDD62F5A651200F0C6C6 /* TreeSitterCSSRunestone in Frameworks */,
 				2BD9B1D62A5C09C700036AFD /* KeyboardToolbar in Frameworks */,
-				48C22CF32D67FEA20000F74F /* TreeSitterRegexQueries in Frameworks */,
-				48C22CE72D67FEA20000F74F /* TreeSitterJSONRunestone in Frameworks */,
-				48C22CF12D67FEA20000F74F /* TreeSitterRegex in Frameworks */,
-				48C22CD72D67FEA20000F74F /* TreeSitterHTML in Frameworks */,
-				48C22CD12D67FEA20000F74F /* TreeSitterComment in Frameworks */,
-				48C22CEB2D67FEA20000F74F /* TreeSitterJavaScriptQueries in Frameworks */,
-				48C22CF52D67FEA20000F74F /* TreeSitterRegexRunestone in Frameworks */,
+				48EEFDD42F5A650700F0C6C6 /* TreeSitterCommentRunestone in Frameworks */,
+				48EEFDDE2F5A654F00F0C6C6 /* TreeSitterJSONRunestone in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,40 +137,21 @@
 				487E38922A8FBA48003464D7 /* Kingfisher */,
 				4800EA082CF1C93300F49842 /* FlyingFox */,
 				4800EA0A2CF1C93300F49842 /* FlyingSocks */,
-				48C22CCA2D67FEA20000F74F /* TreeSitterCSS */,
-				48C22CCC2D67FEA20000F74F /* TreeSitterCSSQueries */,
-				48C22CCE2D67FEA20000F74F /* TreeSitterCSSRunestone */,
-				48C22CD02D67FEA20000F74F /* TreeSitterComment */,
-				48C22CD22D67FEA20000F74F /* TreeSitterCommentQueries */,
-				48C22CD42D67FEA20000F74F /* TreeSitterCommentRunestone */,
-				48C22CD62D67FEA20000F74F /* TreeSitterHTML */,
-				48C22CD82D67FEA20000F74F /* TreeSitterHTMLQueries */,
-				48C22CDA2D67FEA20000F74F /* TreeSitterHTMLRunestone */,
-				48C22CDC2D67FEA20000F74F /* TreeSitterJSDoc */,
-				48C22CDE2D67FEA20000F74F /* TreeSitterJSDocQueries */,
-				48C22CE02D67FEA20000F74F /* TreeSitterJSDocRunestone */,
-				48C22CE22D67FEA20000F74F /* TreeSitterJSON */,
-				48C22CE42D67FEA20000F74F /* TreeSitterJSONQueries */,
-				48C22CE62D67FEA20000F74F /* TreeSitterJSONRunestone */,
-				48C22CE82D67FEA20000F74F /* TreeSitterJavaScript */,
-				48C22CEA2D67FEA20000F74F /* TreeSitterJavaScriptQueries */,
-				48C22CEC2D67FEA20000F74F /* TreeSitterJavaScriptRunestone */,
-				48C22CEE2D67FEA20000F74F /* TreeSitterLanguagesCommon */,
-				48C22CF02D67FEA20000F74F /* TreeSitterRegex */,
-				48C22CF22D67FEA20000F74F /* TreeSitterRegexQueries */,
-				48C22CF42D67FEA20000F74F /* TreeSitterRegexRunestone */,
-				48C22D122D6831B70000F74F /* TreeSitterMarkdown */,
-				48C22D142D6831B70000F74F /* TreeSitterMarkdownQueries */,
-				48C22D162D6831B70000F74F /* TreeSitterMarkdownRunestone */,
-				48C22D182D6831B70000F74F /* TreeSitterPython */,
-				48C22D1A2D6831B80000F74F /* TreeSitterPythonQueries */,
-				48C22D1C2D6831B80000F74F /* TreeSitterPythonRunestone */,
-				48C22D1E2D6831B80000F74F /* TreeSitterYAML */,
-				48C22D202D6831B80000F74F /* TreeSitterYAMLQueries */,
-				48C22D222D6831B80000F74F /* TreeSitterYAMLRunestone */,
 				48CE69222D90EAE80072AF47 /* ZIPFoundation */,
 				2BE125CC2E85259200B159E7 /* PanModal */,
 				487C49EB2EF704FD0088FE93 /* ProgressHUD */,
+				48EEFDD32F5A650700F0C6C6 /* TreeSitterCommentRunestone */,
+				48EEFDD52F5A651200F0C6C6 /* TreeSitterCSSRunestone */,
+				48EEFDD72F5A653000F0C6C6 /* TreeSitterHTMLRunestone */,
+				48EEFDD92F5A653800F0C6C6 /* TreeSitterJavaScriptRunestone */,
+				48EEFDDB2F5A654100F0C6C6 /* TreeSitterJSDocRunestone */,
+				48EEFDDD2F5A654F00F0C6C6 /* TreeSitterJSONRunestone */,
+				48EEFDDF2F5A656E00F0C6C6 /* TreeSitterMarkdownRunestone */,
+				48EEFDE12F5A657700F0C6C6 /* TreeSitterMarkdownInlineRunestone */,
+				48EEFDE32F5A658000F0C6C6 /* TreeSitterPythonRunestone */,
+				48EEFDE52F5A658600F0C6C6 /* TreeSitterRegexRunestone */,
+				48EEFDE92F5A659300F0C6C6 /* TreeSitterYAMLRunestone */,
+				48EEFDEB2F5A937700F0C6C6 /* TreeSitterTypeScriptRunestone */,
 			);
 			productName = minip;
 			productReference = 48DF6B99288D32C800D523C1 /* minip.app */;
@@ -238,6 +181,15 @@
 				en,
 				Base,
 				"zh-Hans",
+				ja,
+				ko,
+				ru,
+				de,
+				it,
+				fr,
+				"pt-PT",
+				es,
+				"zh-Hant",
 			);
 			mainGroup = 48DF6B90288D32C800D523C1;
 			packageReferences = (
@@ -248,10 +200,10 @@
 				2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */,
 				487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */,
-				48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */,
 				48CE69212D90EAE80072AF47 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				2BE125CB2E85259200B159E7 /* XCRemoteSwiftPackageReference "PanModal" */,
 				487C49EA2EF704FD0088FE93 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
+				48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */,
 			);
 			productRefGroup = 48DF6B9A288D32C800D523C1 /* Products */;
 			projectDirPath = "";
@@ -411,19 +363,20 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = minip/minip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = minip/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Minip;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Take photo";
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use to auth";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Take video";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save pictures to album";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Get pictures from album";
+				INFOPLIST_KEY_NSCameraUsageDescription = "The camera is used to scan QR codes and take photos.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Face ID is used to quickly and securely unlock the app.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "The microphone is used to record audio in videos or notes.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Access to save photos allows the app to store images you create or download.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Access to your photo library is used to select pictures for editing, sharing, or scanning QR codes.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -434,7 +387,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.39;
+				MARKETING_VERSION = 0.0.40;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -453,19 +406,20 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = minip/minip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = minip/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Minip;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Take photo";
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "Use to auth";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Take video";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save pictures to album";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Get pictures from album";
+				INFOPLIST_KEY_NSCameraUsageDescription = "The camera is used to scan QR codes and take photos.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Face ID is used to quickly and securely unlock the app.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "The microphone is used to record audio in videos or notes.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Access to save photos allows the app to store images you create or download.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Access to your photo library is used to select pictures for editing, sharing, or scanning QR codes.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -476,7 +430,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.39;
+				MARKETING_VERSION = 0.0.40;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -582,20 +536,20 @@
 				minimumVersion = 7.0.0;
 			};
 		};
-		48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/simonbs/treesitterlanguages";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.10;
-			};
-		};
 		48CE69212D90EAE80072AF47 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/weichsel/ZIPFoundation";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.9.19;
+			};
+		};
+		48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simonbs/treesitterlanguages";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.10;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -651,165 +605,70 @@
 			package = 487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
 		};
-		48C22CCA2D67FEA20000F74F /* TreeSitterCSS */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterCSS;
-		};
-		48C22CCC2D67FEA20000F74F /* TreeSitterCSSQueries */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterCSSQueries;
-		};
-		48C22CCE2D67FEA20000F74F /* TreeSitterCSSRunestone */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterCSSRunestone;
-		};
-		48C22CD02D67FEA20000F74F /* TreeSitterComment */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterComment;
-		};
-		48C22CD22D67FEA20000F74F /* TreeSitterCommentQueries */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterCommentQueries;
-		};
-		48C22CD42D67FEA20000F74F /* TreeSitterCommentRunestone */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterCommentRunestone;
-		};
-		48C22CD62D67FEA20000F74F /* TreeSitterHTML */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterHTML;
-		};
-		48C22CD82D67FEA20000F74F /* TreeSitterHTMLQueries */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterHTMLQueries;
-		};
-		48C22CDA2D67FEA20000F74F /* TreeSitterHTMLRunestone */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterHTMLRunestone;
-		};
-		48C22CDC2D67FEA20000F74F /* TreeSitterJSDoc */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterJSDoc;
-		};
-		48C22CDE2D67FEA20000F74F /* TreeSitterJSDocQueries */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterJSDocQueries;
-		};
-		48C22CE02D67FEA20000F74F /* TreeSitterJSDocRunestone */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterJSDocRunestone;
-		};
-		48C22CE22D67FEA20000F74F /* TreeSitterJSON */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterJSON;
-		};
-		48C22CE42D67FEA20000F74F /* TreeSitterJSONQueries */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterJSONQueries;
-		};
-		48C22CE62D67FEA20000F74F /* TreeSitterJSONRunestone */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterJSONRunestone;
-		};
-		48C22CE82D67FEA20000F74F /* TreeSitterJavaScript */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterJavaScript;
-		};
-		48C22CEA2D67FEA20000F74F /* TreeSitterJavaScriptQueries */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterJavaScriptQueries;
-		};
-		48C22CEC2D67FEA20000F74F /* TreeSitterJavaScriptRunestone */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterJavaScriptRunestone;
-		};
-		48C22CEE2D67FEA20000F74F /* TreeSitterLanguagesCommon */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterLanguagesCommon;
-		};
-		48C22CF02D67FEA20000F74F /* TreeSitterRegex */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterRegex;
-		};
-		48C22CF22D67FEA20000F74F /* TreeSitterRegexQueries */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterRegexQueries;
-		};
-		48C22CF42D67FEA20000F74F /* TreeSitterRegexRunestone */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterRegexRunestone;
-		};
-		48C22D122D6831B70000F74F /* TreeSitterMarkdown */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterMarkdown;
-		};
-		48C22D142D6831B70000F74F /* TreeSitterMarkdownQueries */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterMarkdownQueries;
-		};
-		48C22D162D6831B70000F74F /* TreeSitterMarkdownRunestone */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterMarkdownRunestone;
-		};
-		48C22D182D6831B70000F74F /* TreeSitterPython */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterPython;
-		};
-		48C22D1A2D6831B80000F74F /* TreeSitterPythonQueries */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterPythonQueries;
-		};
-		48C22D1C2D6831B80000F74F /* TreeSitterPythonRunestone */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterPythonRunestone;
-		};
-		48C22D1E2D6831B80000F74F /* TreeSitterYAML */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterYAML;
-		};
-		48C22D202D6831B80000F74F /* TreeSitterYAMLQueries */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterYAMLQueries;
-		};
-		48C22D222D6831B80000F74F /* TreeSitterYAMLRunestone */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 48C22CC92D67FEA20000F74F /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
-			productName = TreeSitterYAMLRunestone;
-		};
 		48CE69222D90EAE80072AF47 /* ZIPFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 48CE69212D90EAE80072AF47 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
 			productName = ZIPFoundation;
+		};
+		48EEFDD32F5A650700F0C6C6 /* TreeSitterCommentRunestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
+			productName = TreeSitterCommentRunestone;
+		};
+		48EEFDD52F5A651200F0C6C6 /* TreeSitterCSSRunestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
+			productName = TreeSitterCSSRunestone;
+		};
+		48EEFDD72F5A653000F0C6C6 /* TreeSitterHTMLRunestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
+			productName = TreeSitterHTMLRunestone;
+		};
+		48EEFDD92F5A653800F0C6C6 /* TreeSitterJavaScriptRunestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
+			productName = TreeSitterJavaScriptRunestone;
+		};
+		48EEFDDB2F5A654100F0C6C6 /* TreeSitterJSDocRunestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
+			productName = TreeSitterJSDocRunestone;
+		};
+		48EEFDDD2F5A654F00F0C6C6 /* TreeSitterJSONRunestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
+			productName = TreeSitterJSONRunestone;
+		};
+		48EEFDDF2F5A656E00F0C6C6 /* TreeSitterMarkdownRunestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
+			productName = TreeSitterMarkdownRunestone;
+		};
+		48EEFDE12F5A657700F0C6C6 /* TreeSitterMarkdownInlineRunestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
+			productName = TreeSitterMarkdownInlineRunestone;
+		};
+		48EEFDE32F5A658000F0C6C6 /* TreeSitterPythonRunestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
+			productName = TreeSitterPythonRunestone;
+		};
+		48EEFDE52F5A658600F0C6C6 /* TreeSitterRegexRunestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
+			productName = TreeSitterRegexRunestone;
+		};
+		48EEFDE92F5A659300F0C6C6 /* TreeSitterYAMLRunestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
+			productName = TreeSitterYAMLRunestone;
+		};
+		48EEFDEB2F5A937700F0C6C6 /* TreeSitterTypeScriptRunestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 48EEFDD22F5A64F900F0C6C6 /* XCRemoteSwiftPackageReference "treesitterlanguages" */;
+			productName = TreeSitterTypeScriptRunestone;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

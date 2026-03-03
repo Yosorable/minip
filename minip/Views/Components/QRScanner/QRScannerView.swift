@@ -41,7 +41,7 @@ public class QRScannerView: UIView {
 
     // MARK: - Public
 
-    public func configure(delegate: QRScannerViewDelegate, input: Input = .default) {
+    public func configure(delegate: QRScannerViewDelegate, input: Input = .default, videoOrientation: AVCaptureVideoOrientation = .portrait) {
         self.delegate = delegate
         if let focusImage = input.focusImage {
             self.focusImage = focusImage
@@ -56,10 +56,15 @@ public class QRScannerView: UIView {
             self.isBlurEffectEnabled = isBlurEffectEnabled
         }
 
-        configureSession()
+        currentVideoOrientation = videoOrientation
         addPreviewLayer()
         setupBlurEffectView()
         setupImageViews()
+        setupOrientationObserver()
+
+        metadataQueue.async { [weak self] in
+            self?.configureSession()
+        }
     }
 
     public func startRunning() {
@@ -109,6 +114,7 @@ public class QRScannerView: UIView {
     }
 
     deinit {
+        NotificationCenter.default.removeObserver(self)
         setTorchActive(isOn: false)
         focusImageView.removeFromSuperview()
         qrCodeImageView.removeFromSuperview()
@@ -130,6 +136,7 @@ public class QRScannerView: UIView {
     private var metadataOutput = AVCaptureMetadataOutput()
     private var videoDataOutput = AVCaptureVideoDataOutput()
     private var metadataOutputEnable = false
+    private var currentVideoOrientation: AVCaptureVideoOrientation?
     private var videoDataOutputEnable = false
     private var torchActiveObservation: NSKeyValueObservation?
     private var qrCodeImage: UIImage?
@@ -204,6 +211,14 @@ public class QRScannerView: UIView {
 
         session.commitConfiguration()
 
+        if let orientation = currentVideoOrientation {
+            previewLayer?.connection?.videoOrientation = orientation
+            videoDataOutput.connection(with: .video)?.videoOrientation = orientation
+            for connection in metadataOutput.connections where connection.isVideoOrientationSupported {
+                connection.videoOrientation = orientation
+            }
+        }
+
         // torch observation
         if videoDevice.hasTorch {
             torchActiveObservation = videoDevice.observe(\.isTorchActive, options: .new) { [weak self] _, change in
@@ -228,13 +243,10 @@ public class QRScannerView: UIView {
     }
 
     private func setupImageViews() {
-        let w = min(bounds.width, bounds.height)
-        let h = max(bounds.height, bounds.width)
-        let width = w * 0.618
-        let x = w * 0.191
-        let y = h * 0.191
+        let side = min(bounds.width, bounds.height)
+        let width = side * 0.618
 
-        focusImageView = UIImageView(frame: CGRect(x: x, y: y, width: width, height: width))
+        focusImageView = UIImageView(frame: CGRect(x: (bounds.width - width) / 2, y: (bounds.height - width) / 2, width: width, height: width))
         focusImageView.image = focusImage ?? UIImage(systemName: "viewfinder", withConfiguration: UIImage.SymbolConfiguration(weight: .thin))
         focusImageView.tintColor = .white
         addSubview(focusImageView)
@@ -244,13 +256,27 @@ public class QRScannerView: UIView {
         addSubview(qrCodeImageView)
     }
 
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        previewLayer?.frame = bounds
+        CATransaction.commit()
+
+        if metadataOutputEnable {
+            let side = min(bounds.width, bounds.height)
+            let width = side * 0.618
+            focusImageView.frame = CGRect(x: (bounds.width - width) / 2, y: (bounds.height - width) / 2, width: width, height: width)
+        }
+    }
+
     private func addPreviewLayer() {
         let previewLayer = AVCaptureVideoPreviewLayer(session: session)
         previewLayer.videoGravity = .resizeAspectFill
-
-        let w = min(bounds.width, bounds.height)
-        let h = max(bounds.height, bounds.width)
-        previewLayer.frame = CGRect(x: 0, y: 0, width: w, height: h)
+        previewLayer.frame = bounds
+        if let orientation = currentVideoOrientation {
+            previewLayer.connection?.videoOrientation = orientation
+        }
         layer.addSublayer(previewLayer)
 
         self.previewLayer = previewLayer
@@ -258,6 +284,25 @@ public class QRScannerView: UIView {
 
     private func removePreviewLayer() {
         previewLayer?.removeFromSuperlayer()
+    }
+
+    private func setupOrientationObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(deviceOrientationDidChange), name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+
+    @objc private func deviceOrientationDidChange() {
+        guard let orientation = window?.windowScene?.interfaceOrientation,
+              let videoOrientation = AVCaptureVideoOrientation(rawValue: orientation.rawValue),
+              videoOrientation != currentVideoOrientation else { return }
+        currentVideoOrientation = videoOrientation
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        previewLayer?.connection?.videoOrientation = videoOrientation
+        CATransaction.commit()
+        videoDataOutput.connection(with: .video)?.videoOrientation = videoOrientation
+        for connection in metadataOutput.connections where connection.isVideoOrientationSupported {
+            connection.videoOrientation = videoOrientation
+        }
     }
 
     private func moveImageViews(qrCode: String, corners: [CGPoint]) {
@@ -310,7 +355,10 @@ public class QRScannerView: UIView {
     }
 
     private func failure(_ error: QRScannerError) {
-        delegate?.qrScannerView(self, didFailure: error)
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.delegate?.qrScannerView(self, didFailure: error)
+        }
     }
 
     private func success(_ code: String) {
@@ -346,7 +394,6 @@ extension QRScannerView: AVCaptureMetadataOutputObjectsDelegate {
 
 extension QRScannerView: AVCaptureVideoDataOutputSampleBufferDelegate {
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        connection.videoOrientation = .portrait
         guard videoDataOutputEnable else { return }
         guard let qrCodeImage = getImageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
 

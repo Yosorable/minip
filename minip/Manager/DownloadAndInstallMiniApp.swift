@@ -125,8 +125,12 @@ private func installByAppJSON(in appJSONURL: URL, validateAppInfoFunc: ((AppInfo
                     }
                 }
                 logger.debug("[installByAppJSON] delete files: \(toDeleteFiles)")
-                try toDeleteFiles.forEach { ele in
-                    try FileManager.default.removeItem(at: ele)
+                for ele in toDeleteFiles {
+                    if FileManager.default.fileExists(atPath: ele.path(percentEncoded: false)) {
+                        try FileManager.default.removeItem(at: ele)
+                    } else {
+                        logger.debug("[installByAppJSON] file not exist, skip delete: \(ele.path(percentEncoded: false))")
+                    }
                 }
             }
         }

@@ -5,6 +5,7 @@
 //  Created by LZY on 2025/3/16.
 //
 
+import AVFoundation
 import Defaults
 import SwiftUI
 import UIKit
@@ -18,6 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
+        try? AVAudioSession.sharedInstance().setCategory(.playback)
+
         window = UIWindow(windowScene: windowScene)
         let mainVC = UITabBarController()
 

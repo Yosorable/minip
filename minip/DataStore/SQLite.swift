@@ -19,12 +19,14 @@ class SQLiteDBManager {
     var dbMap: [Int: OpaquePointer] = [:]
 
     var stmtMap: [Int: OpaquePointer] = [:]
+    var stmtToDBKey: [Int: Int] = [:]
 
     func clear() {
         counter = 0
         pathToDBKey.removeAll()
         stmtMap.forEach { sqlite3_finalize($1) }
         stmtMap.removeAll()
+        stmtToDBKey.removeAll()
         dbMap.forEach { sqlite3_close($1) }
         dbMap.removeAll()
     }
@@ -52,9 +54,17 @@ class SQLiteDBManager {
     }
 
     func closeDB(dbKey: Int) {
-        if let db = dbMap[dbKey] {
+        for (stmtKey, ownerDBKey) in stmtToDBKey where ownerDBKey == dbKey {
+            if let stmt = stmtMap.removeValue(forKey: stmtKey) {
+                sqlite3_finalize(stmt)
+            }
+            stmtToDBKey.removeValue(forKey: stmtKey)
+        }
+
+        if let db = dbMap.removeValue(forKey: dbKey) {
             sqlite3_close(db)
         }
+        pathToDBKey = pathToDBKey.filter { $0.value != dbKey }
     }
 
     func prepareStmt(dbKey: Int, sql: String) throws -> prepareResult {
@@ -66,6 +76,7 @@ class SQLiteDBManager {
             let key = counter
             counter += 1
             stmtMap[key] = stmt
+            stmtToDBKey[key] = dbKey
             let reader = sqlite3_stmt_readonly(stmt) != 0
 
             return prepareResult(stmtKey: key, reader: reader)
@@ -84,13 +95,14 @@ class SQLiteDBManager {
     }
 
     func allStmt(dbKey: Int, stmtKey: Int, parameters: [Any]) throws -> [[String: Any]] {
-        guard let _ = dbMap[dbKey], let stmt = stmtMap[stmtKey] else {
+        guard dbMap[dbKey] != nil, let stmt = stmtMap[stmtKey] else {
             throw ErrorMsg(errorDescription: "cannot find this statement")
         }
 
         defer {
             sqlite3_finalize(stmt)
             stmtMap.removeValue(forKey: stmtKey)
+            stmtToDBKey.removeValue(forKey: stmtKey)
         }
 
         if sqlite3_bind_parameter_count(stmt) != parameters.count {
@@ -107,6 +119,8 @@ class SQLiteDBManager {
                 sqlite3_bind_text(stmt, position, stringParam, -1, SQLITE_TRANSIENT)
             } else if param is NSNull {
                 sqlite3_bind_null(stmt, position)
+            } else {
+                throw ErrorMsg(errorDescription: "unsupported type")
             }
         }
 
@@ -116,7 +130,7 @@ class SQLiteDBManager {
         while sqlite3_step(stmt) == SQLITE_ROW {
             var row: [String: Any] = [:]
 
-            for i in 0 ..< columnCount {
+            for i in 0..<columnCount {
                 let columnName = String(cString: sqlite3_column_name(stmt, i))
                 let columnType = sqlite3_column_type(stmt, i)
 
@@ -147,6 +161,7 @@ class SQLiteDBManager {
         defer {
             sqlite3_finalize(stmt)
             stmtMap.removeValue(forKey: stmtKey)
+            stmtToDBKey.removeValue(forKey: stmtKey)
         }
 
         if sqlite3_bind_parameter_count(stmt) != parameters.count {
@@ -185,13 +200,14 @@ class SQLiteDBManager {
     // MARK: Stream Query
 
     func iterateStmt(dbKey: Int, stmtKey: Int, parameters: [Any]) throws {
-        guard let _ = dbMap[dbKey], let stmt = stmtMap[stmtKey] else {
+        guard dbMap[dbKey] != nil, let stmt = stmtMap[stmtKey] else {
             throw ErrorMsg(errorDescription: "cannot find this statement")
         }
 
         if sqlite3_bind_parameter_count(stmt) != parameters.count {
             sqlite3_finalize(stmt)
             stmtMap.removeValue(forKey: stmtKey)
+            stmtToDBKey.removeValue(forKey: stmtKey)
             throw ErrorMsg(errorDescription: "parameters not match")
         }
 
@@ -205,12 +221,14 @@ class SQLiteDBManager {
                 sqlite3_bind_text(stmt, position, stringParam, -1, SQLITE_TRANSIENT)
             } else if param is NSNull {
                 sqlite3_bind_null(stmt, position)
+            } else {
+                throw ErrorMsg(errorDescription: "unsupported type")
             }
         }
     }
 
     func iterateStmtNext(dbKey: Int, stmtKey: Int) throws -> [String: Any]? {
-        guard let _ = dbMap[dbKey], let stmt = stmtMap[stmtKey] else {
+        guard dbMap[dbKey] != nil, let stmt = stmtMap[stmtKey] else {
             throw ErrorMsg(errorDescription: "cannot find this statement")
         }
         let columnCount = sqlite3_column_count(stmt)
@@ -218,7 +236,7 @@ class SQLiteDBManager {
         if sqlite3_step(stmt) == SQLITE_ROW {
             var row: [String: Any] = [:]
 
-            for i in 0 ..< columnCount {
+            for i in 0..<columnCount {
                 let columnName = String(cString: sqlite3_column_name(stmt, i))
                 let columnType = sqlite3_column_type(stmt, i)
 
@@ -240,16 +258,18 @@ class SQLiteDBManager {
 
         sqlite3_finalize(stmt)
         stmtMap.removeValue(forKey: stmtKey)
+        stmtToDBKey.removeValue(forKey: stmtKey)
         return nil
     }
 
     func iterateStmtRelease(dbKey: Int, stmtKey: Int) throws {
-        guard let _ = dbMap[dbKey], let stmt = stmtMap[stmtKey] else {
+        guard dbMap[dbKey] != nil, let stmt = stmtMap[stmtKey] else {
             throw ErrorMsg(errorDescription: "already released")
         }
 
         sqlite3_finalize(stmt)
         stmtMap.removeValue(forKey: stmtKey)
+        stmtToDBKey.removeValue(forKey: stmtKey)
     }
 
     // MARK: execute

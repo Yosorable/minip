@@ -23,6 +23,7 @@ class ZoomableImageView: UIView {
 
     private var beganFrame: CGRect = .zero
     private var beganTouch: CGPoint = .zero
+    private var singleTapTimer: Timer?
 
     public init(disablePanGesture: Bool) {
         super.init(frame: .zero)
@@ -56,7 +57,6 @@ class ZoomableImageView: UIView {
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(_:)))
         addGestureRecognizer(tapGesture)
-        tapGesture.require(toFail: doubleTapGesture)
 
         if !disablePanGesture {
             let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
@@ -188,10 +188,14 @@ class ZoomableImageView: UIView {
 
 extension ZoomableImageView {
     @objc private func handleTapGesture(_ gesture: UITapGestureRecognizer) {
-        tapHandler?()
+        singleTapTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { [weak self] _ in
+            self?.tapHandler?()
+        }
     }
 
     @objc private func handleDoubleTapGesture(_ gesture: UITapGestureRecognizer) {
+        singleTapTimer?.invalidate()
+        singleTapTimer = nil
         if scrollView.zoomScale == 1.0 {
             let pointInView = gesture.location(in: imageView)
             let width = scrollView.bounds.size.width / min(scrollView.maximumZoomScale, 2.0)

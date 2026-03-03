@@ -13,7 +13,7 @@ public class VSCodeDarkTheme: EditorTheme {
 
     public var userInterfaceStyle: UIUserInterfaceStyle = .dark
 
-    public var font: UIFont = .monospacedSystemFont(ofSize: 14, weight: .regular)
+    public var font: UIFont = UIFont(name: "Menlo", size: 14) ?? .monospacedSystemFont(ofSize: 14, weight: .regular)
 
     public var textColor: UIColor = .init(hexOrCSSName: "#aeafad")!
 
@@ -23,7 +23,7 @@ public class VSCodeDarkTheme: EditorTheme {
 
     public var lineNumberColor: UIColor = .init(hexOrCSSName: "#6f7680")!
 
-    public var lineNumberFont: UIFont = .monospacedSystemFont(ofSize: 14, weight: .regular)
+    public var lineNumberFont: UIFont = UIFont(name: "Menlo", size: 14) ?? .monospacedSystemFont(ofSize: 14, weight: .regular)
 
     public var selectedLineBackgroundColor: UIColor = .init(hexOrCSSName: "#1f1f1f")!
 
@@ -66,6 +66,14 @@ public class VSCodeDarkTheme: EditorTheme {
             return UIColor(hexOrCSSName: "#aadafa")
         case .type:
             return UIColor(hexOrCSSName: "#71c6b1")
+        case .constant:
+            return UIColor(hexOrCSSName: "#4fc1ff")
+        case .variable:
+            return UIColor(hexOrCSSName: "#9cdcfe")
+        case .constructor:
+            return UIColor(hexOrCSSName: "#71c6b1")
+        case .embedded:
+            return UIColor(hexOrCSSName: "#d4d4d4")
         }
     }
 

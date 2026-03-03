@@ -9,8 +9,6 @@ import KeyboardToolbar
 import ProgressHUD
 import Runestone
 import SwiftUI
-import TreeSitterHTMLRunestone
-import TreeSitterJavaScriptRunestone
 import UIKit
 
 struct InsertTextKeyboardTool: KeyboardTool {
@@ -32,13 +30,14 @@ struct InsertTextKeyboardTool: KeyboardTool {
 
 let SourceCodeType: [String: TreeSitterLanguage] = [
     "js": .javaScript,
+    "ts": .typeScript,
     "html": .html,
     "json": .json,
     "css": .css,
     "yaml": .yaml,
     "yml": .yaml,
     "md": .markdown,
-    "py": .python
+    "py": .python,
 ]
 
 class CodeEditorViewController: UIViewController {
@@ -47,6 +46,7 @@ class CodeEditorViewController: UIViewController {
     var language: TreeSitterLanguage?
     let fileInfo: FileInfo
     let readyOnlyText: String?
+    let theme: EditorTheme
 
     lazy var keyboardToolbarView = KeyboardToolbarView()
     lazy var saveButton = {
@@ -55,12 +55,13 @@ class CodeEditorViewController: UIViewController {
         return btn
     }()
 
-    init(fileInfo: FileInfo, readyOnlyText: String? = nil) {
+    init(fileInfo: FileInfo, lang: TreeSitterLanguage? = nil, readyOnlyText: String? = nil, theme: EditorTheme = TomorrowTheme()) {
         self.fileInfo = fileInfo
         self.readyOnlyText = readyOnlyText
+        self.theme = theme
 
-        if let ext = fileInfo.fileName.split(separator: ".").last {
-            self.language = SourceCodeType[String(ext)]
+        if let lang = lang ?? SourceCodeType[fileInfo.url.pathExtension] {
+            self.language = lang
         }
 
         super.init(nibName: nil, bundle: nil)
@@ -73,7 +74,7 @@ class CodeEditorViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
+        //        navigationController?.navigationBar.scrollEdgeAppearance = UINavigationBarAppearance()
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(close))
         title = fileInfo.fileName
 
@@ -97,9 +98,11 @@ class CodeEditorViewController: UIViewController {
         if let txt = txt {
             fileString = txt
             let textView = TextView()
+            textView.theme = theme
             self.textView = textView
             textView.translatesAutoresizingMaskIntoConstraints = false
-            textView.backgroundColor = .systemBackground
+            textView.backgroundColor = theme.backgroundColor
+            view.overrideUserInterfaceStyle = theme.userInterfaceStyle
 
             if !readonly {
                 navigationItem.rightBarButtonItem = saveButton
@@ -107,7 +110,7 @@ class CodeEditorViewController: UIViewController {
                 textView.inputAccessoryView = keyboardToolbarView
                 let notificationCenter = NotificationCenter.default
                 notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
-                notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+                notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillShowNotification, object: nil)
             } else {
                 textView.isEditable = false
             }
@@ -119,7 +122,7 @@ class CodeEditorViewController: UIViewController {
                 textView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 textView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 textView.topAnchor.constraint(equalTo: view.topAnchor),
-                textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+                textView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
         } else {
             let label = UILabel()
@@ -134,7 +137,7 @@ class CodeEditorViewController: UIViewController {
             NSLayoutConstraint.activate([
                 label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                label.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, constant: -50)
+                label.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor, constant: -50),
             ])
 
             if let err = err {
@@ -142,9 +145,6 @@ class CodeEditorViewController: UIViewController {
             }
         }
 
-        if let pnv = navigationController as? PannableNavigationViewController {
-            pnv.addPanGesture(vc: self)
-        }
     }
 
     @objc func close() {
@@ -172,31 +172,30 @@ class CodeEditorViewController: UIViewController {
 
         if notification.name == UIResponder.keyboardWillHideNotification {
             textView!.contentInset = .zero
+            textView!.scrollIndicatorInsets = .zero
         } else {
             textView!.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardViewEndFrame.height - view.safeAreaInsets.bottom, right: 0)
+            textView!.scrollIndicatorInsets = textView!.contentInset
+            let selectedRange = textView!.selectedRange
+            textView!.scrollRangeToVisible(selectedRange)
         }
-
-        textView!.scrollIndicatorInsets = textView!.contentInset
-
-        let selectedRange = textView!.selectedRange
-        textView!.scrollRangeToVisible(selectedRange)
     }
 
     private func setCustomization(on textView: TextView) {
-        textView.showLineNumbers = true
+        //        textView.showLineNumbers = true
         textView.lineSelectionDisplayType = .line
-        textView.showPageGuide = true
-        textView.pageGuideColumn = 80
-        textView.showTabs = true
-        textView.showSpaces = true
-        textView.showLineBreaks = true
-        textView.showSoftLineBreaks = true
-        textView.lineHeightMultiplier = 1.3
-
-        if #available(iOS 16.0, *) {
-            textView.isFindInteractionEnabled = true
-        }
+        //        textView.showPageGuide = true
+        //        textView.pageGuideColumn = 80
+        //        textView.showTabs = true
+        //        textView.showSpaces = true
+        //        textView.showLineBreaks = true
+        //        textView.showSoftLineBreaks = true
+        //        textView.lineHeightMultiplier = 1.1
+        textView.isFindInteractionEnabled = true
+        textView.keyboardDismissMode = .interactiveWithAccessory
         textView.alwaysBounceVertical = true
+        textView.contentInsetAdjustmentBehavior = .always
+        textView.textContainerInset = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
 
         setupKeyboardTools()
         textView.autocorrectionType = .no
@@ -217,7 +216,7 @@ class CodeEditorViewController: UIViewController {
             BasicCharacterPair(leading: "{", trailing: "}"),
             BasicCharacterPair(leading: "[", trailing: "]"),
             BasicCharacterPair(leading: "\"", trailing: "\""),
-            BasicCharacterPair(leading: "'", trailing: "'")
+            BasicCharacterPair(leading: "'", trailing: "'"),
         ]
 
         textView.indentStrategy = .space(length: 2)
@@ -234,24 +233,28 @@ class CodeEditorViewController: UIViewController {
         // MARK: todo: large file or minified file, optimize disable hight strategy
 
         DispatchQueue.global(qos: .userInitiated).async {
-            let tTxt = text.trimmingCharacters(in: .whitespacesAndNewlines)
-            let sps = tTxt.split(separator: "\n")
-            var mx = 0
-            for ele in sps {
-                mx = max(ele.count, mx)
-            }
-            let lineCnt = sps.count
-            let charCnt = tTxt.count
-            logger.debug("[Code Editor]: toal char: \(charCnt), total line: \(lineCnt), max char line: \(mx), average char line: \(charCnt / lineCnt)")
-            if charCnt / lineCnt < 5000, lineCnt < 20000, mx < 10000 {
-                let state = TextViewState(text: text, theme: DefaultTheme(), language: lang, languageProvider: LanguageProvider())
+            var totalLines = 0
+            var maxLineLength = 0
+            var totalChars = 0
 
-                DispatchQueue.main.async {
-                    textView.setState(state)
+            text.enumerateLines { (line, stop) in
+                totalLines += 1
+                maxLineLength = max(maxLineLength, line.count)
+                totalChars += line.count
+
+                if maxLineLength > 20_000 || totalLines > 100_000 {
+                    stop = true
                 }
-            } else {
+            }
+
+            if totalLines > 100_000 || totalChars > 3_000_000 || maxLineLength > 20_000 {
                 DispatchQueue.main.async {
                     ProgressHUD.banner("Warning", "This file contains long lines, disable highlight.", delay: 1.5)
+                }
+            } else {
+                let state = TextViewState(text: text, theme: self.theme, language: lang, languageProvider: LanguageProvider())
+                DispatchQueue.main.async {
+                    textView.setState(state)
                 }
             }
         }
@@ -271,71 +274,83 @@ extension CodeEditorViewController: TextViewDelegate {
     }
 }
 
-private extension CodeEditorViewController {
+extension CodeEditorViewController {
     private func setupKeyboardTools() {
         textView?.inputAccessoryView = keyboardToolbarView
         let canUndo = textView?.undoManager?.canUndo ?? false
         let canRedo = textView?.undoManager?.canRedo ?? false
         keyboardToolbarView.groups = [
             KeyboardToolGroup(items: [
-                KeyboardToolGroupItem(style: .secondary, representativeTool: BlockKeyboardTool(symbolName: "arrow.uturn.backward") { [weak self] in
-                    self?.textView?.undoManager?.undo()
-                    self?.setupKeyboardTools()
-                }, isEnabled: canUndo),
-                KeyboardToolGroupItem(style: .secondary, representativeTool: BlockKeyboardTool(symbolName: "arrow.uturn.forward") { [weak self] in
-                    self?.textView?.undoManager?.redo()
-                    self?.setupKeyboardTools()
-                }, isEnabled: canRedo)
+                KeyboardToolGroupItem(
+                    style: .secondary,
+                    representativeTool: BlockKeyboardTool(symbolName: "arrow.uturn.backward") { [weak self] in
+                        self?.textView?.undoManager?.undo()
+                        self?.setupKeyboardTools()
+                    }, isEnabled: canUndo),
+                KeyboardToolGroupItem(
+                    style: .secondary,
+                    representativeTool: BlockKeyboardTool(symbolName: "arrow.uturn.forward") { [weak self] in
+                        self?.textView?.undoManager?.redo()
+                        self?.setupKeyboardTools()
+                    }, isEnabled: canRedo),
             ]),
             KeyboardToolGroup(items: [
-                KeyboardToolGroupItem(representativeTool: InsertTextKeyboardTool(text: "(", textView: textView), tools: [
-                    InsertTextKeyboardTool(text: "(", textView: textView),
-                    InsertTextKeyboardTool(text: "{", textView: textView),
-                    InsertTextKeyboardTool(text: "[", textView: textView),
-                    InsertTextKeyboardTool(text: "]", textView: textView),
-                    InsertTextKeyboardTool(text: "}", textView: textView),
-                    InsertTextKeyboardTool(text: ")", textView: textView)
-                ]),
-                KeyboardToolGroupItem(representativeTool: InsertTextKeyboardTool(text: ".", textView: textView), tools: [
-                    InsertTextKeyboardTool(text: ".", textView: textView),
-                    InsertTextKeyboardTool(text: ",", textView: textView),
-                    InsertTextKeyboardTool(text: ";", textView: textView),
-                    InsertTextKeyboardTool(text: "!", textView: textView),
-                    InsertTextKeyboardTool(text: "&", textView: textView),
-                    InsertTextKeyboardTool(text: "|", textView: textView)
-                ]),
-                KeyboardToolGroupItem(representativeTool: InsertTextKeyboardTool(text: "=", textView: textView), tools: [
-                    InsertTextKeyboardTool(text: "=", textView: textView),
-                    InsertTextKeyboardTool(text: "+", textView: textView),
-                    InsertTextKeyboardTool(text: "-", textView: textView),
-                    InsertTextKeyboardTool(text: "/", textView: textView),
-                    InsertTextKeyboardTool(text: "*", textView: textView),
-                    InsertTextKeyboardTool(text: "<", textView: textView),
-                    InsertTextKeyboardTool(text: ">", textView: textView)
-                ]),
-                KeyboardToolGroupItem(representativeTool: InsertTextKeyboardTool(text: "#", textView: textView!), tools: [
-                    InsertTextKeyboardTool(text: "#", textView: textView),
-                    InsertTextKeyboardTool(text: "\"", textView: textView),
-                    InsertTextKeyboardTool(text: "'", textView: textView),
-                    InsertTextKeyboardTool(text: "$", textView: textView),
-                    InsertTextKeyboardTool(text: "\\", textView: textView),
-                    InsertTextKeyboardTool(text: "@", textView: textView),
-                    InsertTextKeyboardTool(text: "%", textView: textView),
-                    InsertTextKeyboardTool(text: "~", textView: textView)
-                ])
+                KeyboardToolGroupItem(
+                    representativeTool: InsertTextKeyboardTool(text: "(", textView: textView),
+                    tools: [
+                        InsertTextKeyboardTool(text: "(", textView: textView),
+                        InsertTextKeyboardTool(text: "{", textView: textView),
+                        InsertTextKeyboardTool(text: "[", textView: textView),
+                        InsertTextKeyboardTool(text: "]", textView: textView),
+                        InsertTextKeyboardTool(text: "}", textView: textView),
+                        InsertTextKeyboardTool(text: ")", textView: textView),
+                    ]),
+                KeyboardToolGroupItem(
+                    representativeTool: InsertTextKeyboardTool(text: ".", textView: textView),
+                    tools: [
+                        InsertTextKeyboardTool(text: ".", textView: textView),
+                        InsertTextKeyboardTool(text: ",", textView: textView),
+                        InsertTextKeyboardTool(text: ";", textView: textView),
+                        InsertTextKeyboardTool(text: "!", textView: textView),
+                        InsertTextKeyboardTool(text: "&", textView: textView),
+                        InsertTextKeyboardTool(text: "|", textView: textView),
+                    ]),
+                KeyboardToolGroupItem(
+                    representativeTool: InsertTextKeyboardTool(text: "=", textView: textView),
+                    tools: [
+                        InsertTextKeyboardTool(text: "=", textView: textView),
+                        InsertTextKeyboardTool(text: "+", textView: textView),
+                        InsertTextKeyboardTool(text: "-", textView: textView),
+                        InsertTextKeyboardTool(text: "/", textView: textView),
+                        InsertTextKeyboardTool(text: "*", textView: textView),
+                        InsertTextKeyboardTool(text: "<", textView: textView),
+                        InsertTextKeyboardTool(text: ">", textView: textView),
+                    ]),
+                KeyboardToolGroupItem(
+                    representativeTool: InsertTextKeyboardTool(text: "#", textView: textView!),
+                    tools: [
+                        InsertTextKeyboardTool(text: "#", textView: textView),
+                        InsertTextKeyboardTool(text: "\"", textView: textView),
+                        InsertTextKeyboardTool(text: "'", textView: textView),
+                        InsertTextKeyboardTool(text: "$", textView: textView),
+                        InsertTextKeyboardTool(text: "\\", textView: textView),
+                        InsertTextKeyboardTool(text: "@", textView: textView),
+                        InsertTextKeyboardTool(text: "%", textView: textView),
+                        InsertTextKeyboardTool(text: "~", textView: textView),
+                    ]),
             ]),
             KeyboardToolGroup(items: [
-                KeyboardToolGroupItem(style: .secondary, representativeTool: BlockKeyboardTool(symbolName: "magnifyingglass") { [weak self] in
-                    if #available(iOS 16.0, *) {
+                KeyboardToolGroupItem(
+                    style: .secondary,
+                    representativeTool: BlockKeyboardTool(symbolName: "magnifyingglass") { [weak self] in
                         self?.textView?.findInteraction?.presentFindNavigator(showingReplace: false)
-                    } else {
-                        // TODO: 显示不支持，或者移除
-                    }
-                }),
-                KeyboardToolGroupItem(style: .secondary, representativeTool: BlockKeyboardTool(symbolName: "keyboard.chevron.compact.down") { [weak self] in
-                    self?.textView?.resignFirstResponder()
-                })
-            ])
+                    }),
+                KeyboardToolGroupItem(
+                    style: .secondary,
+                    representativeTool: BlockKeyboardTool(symbolName: "keyboard.chevron.compact.down") { [weak self] in
+                        self?.textView?.resignFirstResponder()
+                    }),
+            ]),
         ]
     }
 }

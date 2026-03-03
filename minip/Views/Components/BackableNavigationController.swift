@@ -17,6 +17,16 @@ class BackableNavigationController: UINavigationController {
         super.viewDidLoad()
 
         self.transitioningDelegate = self.transitionDelegate
+
+        if #available(iOS 26.0, *) {
+            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.onPan(_:)))
+            panGesture.delegate = self
+            view.addGestureRecognizer(panGesture)
+        } else {
+            let edgePanGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(self.onPan(_:)))
+            edgePanGesture.edges = .left
+            view.addGestureRecognizer(edgePanGesture)
+        }
     }
 
     @objc func onPan(_ panGesture: UIScreenEdgePanGestureRecognizer) {
@@ -42,7 +52,20 @@ class BackableNavigationController: UINavigationController {
             self.transitionDelegate.interactiveTransition.cancel()
         case .ended:
             self.transitionDelegate.interactiveTransition.hasStarted = false
-            self.transitionDelegate.interactiveTransition.shouldFinish ? self.transitionDelegate.interactiveTransition.finish() : self.transitionDelegate.interactiveTransition.cancel()
+            let shouldFinishNow = shouldFinish && velocity.x >= 0
+            let duration = CGFloat(self.transitionDelegate.transition.duration)
+            if shouldFinishNow {
+                let speed = (1.0 - progress) * duration / 0.3
+                self.transitionDelegate.interactiveTransition.completionSpeed = max(0.05, speed)
+                self.transitionDelegate.interactiveTransition.finish()
+            } else {
+                let remainingDistance = progress * self.view.bounds.width
+                let velocityDuration = remainingDistance / max(abs(velocity.x), 1)
+                let targetDuration = CGFloat(max(0.1, min(0.3, velocityDuration)))
+                let speed = progress * duration / targetDuration
+                self.transitionDelegate.interactiveTransition.completionSpeed = max(0.05, speed)
+                self.transitionDelegate.interactiveTransition.cancel()
+            }
         default:
             break
         }
@@ -56,33 +79,15 @@ class BackableNavigationController: UINavigationController {
         super.init(rootViewController: rootViewController)
     }
 
-    deinit {
-        for gesture in panGestures {
-            gesture.view?.removeGestureRecognizer(gesture)
-        }
-    }
-
-    var panGestures: [UIPanGestureRecognizer] = []
-    func addPanGesture(vc: UIViewController) {
-        var panGesture: UIPanGestureRecognizer
-        if #available(iOS 26.0, *) {
-            panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.onPan(_:)))
-            panGesture.delegate = self
-        } else {
-            let edgePanGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(self.onPan(_:)))
-            edgePanGesture.edges = .left
-            panGesture = edgePanGesture
-        }
-        vc.view.addGestureRecognizer(panGesture)
-        self.panGestures.append(panGesture)
-    }
+    deinit {}
 }
 
 extension BackableNavigationController: UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard viewControllers.count <= 1 else { return false }
         if let pan = gestureRecognizer as? UIPanGestureRecognizer {
             let velocity = pan.velocity(in: view)
-            return abs(velocity.x) > abs(velocity.y)
+            return velocity.x > 0 && abs(velocity.x) > abs(velocity.y)
         }
         return true
     }
@@ -95,13 +100,13 @@ class NavInteractiveTransition: UIPercentDrivenInteractiveTransition {
 
 class NavTransition {
     public var isPresenting: Bool = false
-    public var presentDuration: TimeInterval = 0.3
-    public var dismissDuration: TimeInterval = 0.3
+    public var duration: TimeInterval = 0.5
 }
 
 class NavTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
     lazy var transition: NavTransition = .init()
     lazy var interactiveTransition: NavInteractiveTransition = .init()
+    var currentAnimator: UIViewPropertyAnimator?
 
     func animationController(forPresented presented: UIViewController,
                              presenting: UIViewController,
@@ -122,51 +127,113 @@ class NavTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
 }
 
 extension NavTransitionDelegate: UIViewControllerAnimatedTransitioning {
+    private static let parallaxRatio: CGFloat = 1.0 / 3.0
+    private static let dimmingAlpha: CGFloat = 0.1
+
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return self.transition.isPresenting ? self.transition.presentDuration : self.transition.dismissDuration
+        return self.transition.duration
     }
 
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let fromVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from),
-              let toVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)
-        else {
-            transitionContext.completeTransition(false)
-            return
+        interruptibleAnimator(using: transitionContext).startAnimation()
+    }
+
+    func interruptibleAnimator(using transitionContext: UIViewControllerContextTransitioning) -> UIViewImplicitlyAnimating {
+        if let animator = currentAnimator {
+            return animator
         }
 
+        let fromVC = transitionContext.viewController(forKey: .from)!
+        let toVC = transitionContext.viewController(forKey: .to)!
         let containerView = transitionContext.containerView
+        let screenWidth = containerView.bounds.width
+        let duration = transitionDuration(using: transitionContext)
+
+        let animator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1.0)
+
+        // iOS 26+: rounded corners matching device screen during transition
+        let screenCornerRadius: CGFloat
+        if #available(iOS 26.0, *) {
+            let selStr = "_dis" + "play" + "Corn" + "erRad" + "ius"
+            if UIScreen.main.responds(to: Selector(selStr)), let value = UIScreen.main.value(forKey: selStr) as? CGFloat {
+                screenCornerRadius = value
+            } else {
+                screenCornerRadius = 0
+            }
+        } else {
+            screenCornerRadius = 0
+        }
 
         if self.transition.isPresenting {
-            let finalFrameForVC = transitionContext.finalFrame(for: toVC)
-            toVC.view.frame = finalFrameForVC.offsetBy(dx: UIScreen.main.bounds.size.width, dy: 0)
+            let finalFrame = transitionContext.finalFrame(for: toVC)
+            toVC.view.frame = finalFrame.offsetBy(dx: screenWidth, dy: 0)
+
+            if screenCornerRadius > 0 {
+                toVC.view.layer.cornerRadius = screenCornerRadius
+                toVC.view.layer.cornerCurve = .circular
+                toVC.view.clipsToBounds = true
+            } else {
+                toVC.view.layer.shadowColor = UIColor.black.cgColor
+                toVC.view.layer.shadowOpacity = 0.15
+                toVC.view.layer.shadowOffset = CGSize(width: -3, height: 0)
+                toVC.view.layer.shadowRadius = 8
+            }
+
+            let dimmingView = UIView(frame: containerView.bounds)
+            dimmingView.backgroundColor = .black
+            dimmingView.alpha = 0
+            containerView.addSubview(dimmingView)
             containerView.addSubview(toVC.view)
 
-            // Additional ways to animate, Spring velocity & damping
-            UIView.animate(withDuration: self.transition.presentDuration,
-                           delay: 0.0,
-                           options: .transitionCrossDissolve,
-                           animations: {
-                               toVC.view.frame = finalFrameForVC
-                               fromVC.view.transform = CGAffineTransform(translationX: -UIScreen.main.bounds.size.width / 3, y: 0)
-                           }, completion: { _ in
-                               transitionContext.completeTransition(true)
-                           })
-
+            animator.addAnimations {
+                toVC.view.frame = finalFrame
+                fromVC.view.transform = CGAffineTransform(translationX: -screenWidth * Self.parallaxRatio, y: 0)
+                dimmingView.alpha = Self.dimmingAlpha
+            }
+            animator.addCompletion { [weak self] _ in
+                toVC.view.layer.cornerRadius = 0
+                toVC.view.clipsToBounds = false
+                dimmingView.removeFromSuperview()
+                transitionContext.completeTransition(true)
+                self?.currentAnimator = nil
+            }
         } else {
-            var finalFrame = fromVC.view.frame
-            finalFrame.origin.x += finalFrame.width
+            if screenCornerRadius > 0 {
+                fromVC.view.layer.cornerRadius = screenCornerRadius
+                fromVC.view.layer.cornerCurve = .circular
+                fromVC.view.clipsToBounds = true
+            } else {
+                fromVC.view.layer.shadowColor = UIColor.black.cgColor
+                fromVC.view.layer.shadowOpacity = 0.15
+                fromVC.view.layer.shadowOffset = CGSize(width: -3, height: 0)
+                fromVC.view.layer.shadowRadius = 8
+            }
 
-            // Additional ways to animate, Spring velocity & damping
-            UIView.animate(withDuration: self.transition.dismissDuration,
-                           delay: 0.0,
-                           options: self.interactiveTransition.hasStarted ? .curveLinear : .transitionCrossDissolve,
-                           animations: {
-                               fromVC.view.frame = finalFrame
-                               toVC.view.transform = .identity
-                           },
-                           completion: { _ in
-                               transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
-                           })
+            let dimmingView = UIView(frame: containerView.bounds)
+            dimmingView.backgroundColor = .black
+            dimmingView.alpha = Self.dimmingAlpha
+            containerView.insertSubview(dimmingView, belowSubview: fromVC.view)
+
+            let fromFinalFrame = fromVC.view.frame.offsetBy(dx: screenWidth, dy: 0)
+
+            animator.addAnimations {
+                fromVC.view.frame = fromFinalFrame
+                toVC.view.transform = .identity
+                dimmingView.alpha = 0
+            }
+            animator.addCompletion { [weak self] _ in
+                dimmingView.removeFromSuperview()
+                if transitionContext.transitionWasCancelled {
+                    fromVC.view.layer.cornerRadius = 0
+                    fromVC.view.clipsToBounds = false
+                }
+                fromVC.view.layer.shadowOpacity = 0
+                transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
+                self?.currentAnimator = nil
+            }
         }
+
+        currentAnimator = animator
+        return animator
     }
 }

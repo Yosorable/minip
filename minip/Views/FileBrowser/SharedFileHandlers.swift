@@ -76,7 +76,7 @@ extension FileBrowserViewController {
                     }
                 }
                 showSimpleSuccess(msg: i18n(isMove ? "Moved successfully" : "Copied successfully"))
-                if self?.tableView.isEditing == true {
+                if self?.navigationController?.isToolbarHidden == false {
                     self?.toggleSelectMode()
                 }
             } catch {
@@ -126,20 +126,92 @@ extension FileBrowserViewController {
     }
 
     func decompress(_ fileInfo: FileInfo) {
-        ProgressHUD.animate("uncompressing", interaction: false)
+        ProgressHUD.animate("Decompressing", interaction: false)
         Task {
-            let f = fileInfo.url.deletingLastPathComponent()
-            let fileNameWithoutExt = fileInfo.fileName.deletingSuffix(".zip")
-            var dest = f.appending(path: fileNameWithoutExt)
+            let parentDir = fileInfo.url.deletingLastPathComponent()
             let fileManager = FileManager.default
-            var cnt = 1
-            while fileManager.fileExists(atPath: dest.path) {
-                dest = dest.deletingLastPathComponent().appending(path: fileNameWithoutExt + " \(cnt)")
-                cnt += 1
-            }
             do {
-                try fileManager.unzipItem(at: fileInfo.url, to: dest)
-                showSimpleSuccess(msg: "Uncompressed successfully")
+                // extract to temp directory
+                let tempDir = fileManager.temporaryDirectory.appending(path: UUID().uuidString)
+                try fileManager.unzipItem(at: fileInfo.url, to: tempDir)
+
+                let tempContents = try fileManager.contentsOfDirectory(at: tempDir, includingPropertiesForKeys: nil)
+
+                // single root entry: move it directly; multiple: wrap in a folder
+                let itemsToMove: [(source: URL, baseName: String, ext: String)]
+                if tempContents.count == 1, let item = tempContents.first {
+                    let isDir = (try? item.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true
+                    let ext = isDir ? "" : (item.pathExtension.isEmpty ? "" : "." + item.pathExtension)
+                    let baseName = isDir ? item.lastPathComponent : item.deletingPathExtension().lastPathComponent
+                    itemsToMove = [(item, baseName, ext)]
+                } else {
+                    // rename tempDir itself as the wrapper folder
+                    let baseName = fileInfo.fileName.deletingSuffix(".zip")
+                    itemsToMove = [(tempDir, baseName, "")]
+                }
+
+                for item in itemsToMove {
+                    var destName = item.baseName + item.ext
+                    var cnt = 1
+                    while fileManager.fileExists(atPath: parentDir.appending(path: destName).path) {
+                        destName = item.baseName + " \(cnt)" + item.ext
+                        cnt += 1
+                    }
+                    try fileManager.moveItem(at: item.source, to: parentDir.appending(path: destName))
+                }
+
+                try? fileManager.removeItem(at: tempDir)
+                showSimpleSuccess(msg: "Decompressed successfully")
+                self.fetchFilesAndUpdateDataSource()
+            } catch {
+                showSimpleError(err: error)
+            }
+        }
+    }
+
+    func compress(_ files: [FileInfo]) {
+        guard !files.isEmpty else { return }
+
+        ProgressHUD.animate(i18n("Compressing"), interaction: false)
+        Task {
+            do {
+                let baseName: String
+                if files.count == 1 {
+                    baseName = files[0].url.deletingPathExtension().lastPathComponent
+                } else {
+                    baseName = folderURL.lastPathComponent
+                }
+
+                var destURL = folderURL.appending(component: "\(baseName).zip")
+                let fileManager = FileManager.default
+                var cnt = 1
+                while fileManager.fileExists(atPath: destURL.path) {
+                    destURL = folderURL.appending(component: "\(baseName) \(cnt).zip")
+                    cnt += 1
+                }
+
+                let archive = try Archive(url: destURL, accessMode: .create)
+
+                for file in files {
+                    if file.isFolder {
+                        let dirURL = file.url.standardizedFileURL
+                        let basePath = dirURL.deletingLastPathComponent().path + "/"
+                        // add the folder itself
+                        try archive.addEntry(with: dirURL.lastPathComponent, fileURL: dirURL)
+
+                        if let enumerator = fileManager.enumerator(at: dirURL, includingPropertiesForKeys: nil) {
+                            while let fileURL = enumerator.nextObject() as? URL {
+                                let standardizedURL = fileURL.standardizedFileURL
+                                let relPath = standardizedURL.path.replacingOccurrences(of: basePath, with: "")
+                                try archive.addEntry(with: relPath, fileURL: standardizedURL)
+                            }
+                        }
+                    } else {
+                        try archive.addEntry(with: file.url.lastPathComponent, fileURL: file.url)
+                    }
+                }
+
+                showSimpleSuccess(msg: i18n("Compressed successfully"))
                 self.fetchFilesAndUpdateDataSource()
             } catch {
                 showSimpleError(err: error)

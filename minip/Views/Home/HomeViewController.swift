@@ -10,7 +10,7 @@ import Defaults
 import SwiftUI
 import UIKit
 
-class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITableViewDragDelegate, UITableViewDropDelegate {
     var apps: [AppInfo] = []
 
     lazy var tableView: UITableView = {
@@ -22,12 +22,14 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     lazy var addProjectBtn: UIBarButtonItem = {
         let menu = UIMenu(children: [
             UIAction(title: i18n("home.menu.create_project"), image: UIImage(systemName: "folder.badge.plus")) { _ in
-                ShowCreateNewProjectAlert(self, onCreatedSuccess: { newApp in
-                    self.apps.insert(newApp, at: 0)
-                    self.tableView.beginUpdates()
-                    self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-                    self.tableView.endUpdates()
-                })
+                ShowCreateNewProjectAlert(
+                    self,
+                    onCreatedSuccess: { newApp in
+                        self.apps.insert(newApp, at: 0)
+                        self.tableView.beginUpdates()
+                        self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                        self.tableView.endUpdates()
+                    })
             },
             UIAction(title: i18n("home.menu.load_from_web"), image: UIImage(systemName: "network")) { _ in
                 let vc = DownloadProjectViewController()
@@ -78,6 +80,9 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.dragInteractionEnabled = true
+        tableView.dragDelegate = self
+        tableView.dropDelegate = self
         tableView.allowsSelectionDuringEditing = false
         tableView.refreshControl = refreshControl
         view.addSubview(tableView)
@@ -131,9 +136,12 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 } else {
                     DispatchQueue.main.async {
                         let alert = UIAlertController(title: "NO Permission", message: "Camera is required to use in this application", preferredStyle: .alert)
-                        alert.addAction(.init(title: "OK", style: .default, handler: { _ in
-                            self?.dismiss(animated: false)
-                        }))
+                        alert.addAction(
+                            .init(
+                                title: "OK", style: .default,
+                                handler: { _ in
+                                    self?.dismiss(animated: false)
+                                }))
                         self?.present(alert, animated: true)
                     }
                 }
@@ -178,41 +186,53 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView Delegate
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        MiniAppManager.shared.openMiniApp(parent: self, appInfo: apps[indexPath.row], completion: {
-            self.tableView.deselectRow(at: indexPath, animated: false)
-        })
+        MiniAppManager.shared.openMiniApp(
+            parent: self, appInfo: apps[indexPath.row],
+            completion: {
+                self.tableView.deselectRow(at: indexPath, animated: false)
+            })
     }
 
     // MARK: - swipe actions
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: i18n("Delete"), handler: { _, _, completion in
-            let app = self.apps[indexPath.row]
-            let alert = UIAlertController(title: i18n("home.delete_alert_title"), message: i18nF("delete_alert_confirm_message", app.displayName ?? app.name), preferredStyle: .alert)
-            let confirm = UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in
-                MiniAppManager.shared.deleteMiniApp(app: self.apps[indexPath.row], completion: {
-                    self.apps.remove(at: indexPath.row)
-                    tableView.beginUpdates()
-                    tableView.deleteRows(at: [indexPath], with: .automatic)
-                    tableView.endUpdates()
-                    completion(true)
-                    showSimpleSuccess(msg: i18n("delete_successfully"))
-                })
+        let deleteAction = UIContextualAction(
+            style: .destructive, title: i18n("Delete"),
+            handler: { _, _, completion in
+                let app = self.apps[indexPath.row]
+                let alert = UIAlertController(title: i18n("home.delete_alert_title"), message: i18nF("delete_alert_confirm_message", app.displayName ?? app.name), preferredStyle: .alert)
+                let confirm = UIAlertAction(
+                    title: i18n("Delete"), style: .destructive,
+                    handler: { _ in
+                        MiniAppManager.shared.deleteMiniApp(
+                            app: self.apps[indexPath.row],
+                            completion: {
+                                self.apps.remove(at: indexPath.row)
+                                tableView.beginUpdates()
+                                tableView.deleteRows(at: [indexPath], with: .automatic)
+                                tableView.endUpdates()
+                                completion(true)
+                                showSimpleSuccess(msg: i18n("delete_successfully"))
+                            })
+                    })
+                let cancel = UIAlertAction(
+                    title: i18n("Cancel"), style: .default,
+                    handler: { _ in
+                        completion(false)
+                    })
+                alert.addAction(cancel)
+                alert.addAction(confirm)
+                self.present(alert, animated: true)
             })
-            let cancel = UIAlertAction(title: i18n("Cancel"), style: .default, handler: { _ in
-                completion(false)
-            })
-            alert.addAction(cancel)
-            alert.addAction(confirm)
-            self.present(alert, animated: true)
-        })
 
-        let settingsAction = UIContextualAction(style: .normal, title: i18n("Settings"), handler: { _, _, completion in
-            let vc = MiniAppSettingsViewController(style: .insetGrouped, app: self.apps[indexPath.row])
-            vc.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(vc, animated: true)
-            completion(true)
-        })
+        let settingsAction = UIContextualAction(
+            style: .normal, title: i18n("Settings"),
+            handler: { _, _, completion in
+                let vc = MiniAppSettingsViewController(style: .insetGrouped, app: self.apps[indexPath.row])
+                vc.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(vc, animated: true)
+                completion(true)
+            })
 
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [deleteAction, settingsAction])
         return swipeConfiguration
@@ -234,5 +254,79 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         tableView.setEditing(editing, animated: animated)
+    }
+
+    // MARK: - Context Menu
+
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let app = apps[indexPath.row]
+        return UIContextMenuConfiguration(identifier: indexPath as NSCopying, previewProvider: nil) { _ in
+            let openAction = UIAction(title: i18n("Open"), image: UIImage(systemName: "arrow.up.forward.app")) { [weak self] _ in
+                guard let self else { return }
+                MiniAppManager.shared.openMiniApp(parent: self, appInfo: app, completion: {})
+            }
+
+            let settingsAction = UIAction(title: i18n("Settings"), image: UIImage(systemName: "gear")) { [weak self] _ in
+                guard let self else { return }
+                let vc = MiniAppSettingsViewController(style: .insetGrouped, app: app)
+                vc.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+
+            let deleteAction = UIAction(title: i18n("Delete"), image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
+                guard let self else { return }
+                let alert = UIAlertController(title: i18n("home.delete_alert_title"), message: i18nF("delete_alert_confirm_message", app.displayName ?? app.name), preferredStyle: .alert)
+                let confirm = UIAlertAction(title: i18n("Delete"), style: .destructive) { _ in
+                    MiniAppManager.shared.deleteMiniApp(
+                        app: app,
+                        completion: {
+                            self.apps.remove(at: indexPath.row)
+                            tableView.beginUpdates()
+                            tableView.deleteRows(at: [indexPath], with: .automatic)
+                            tableView.endUpdates()
+                            showSimpleSuccess(msg: i18n("delete_successfully"))
+                        })
+                }
+                let cancel = UIAlertAction(title: i18n("Cancel"), style: .default)
+                alert.addAction(cancel)
+                alert.addAction(confirm)
+                self.present(alert, animated: true)
+            }
+
+            return UIMenu(children: [openAction, settingsAction, deleteAction])
+        }
+    }
+
+    // MARK: - Drag Delegate
+
+    func tableView(_ tableView: UITableView, itemsForBeginning session: any UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        let dragItem = UIDragItem(itemProvider: NSItemProvider())
+        dragItem.localObject = apps[indexPath.row]
+        return [dragItem]
+    }
+
+    // MARK: - Drop Delegate
+
+    func tableView(_ tableView: UITableView, dropSessionDidUpdate session: any UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UITableViewDropProposal {
+        guard tableView.hasActiveDrag else {
+            return UITableViewDropProposal(operation: .cancel)
+        }
+        return UITableViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+    }
+
+    func tableView(_ tableView: UITableView, performDropWith coordinator: any UITableViewDropCoordinator) {
+        guard let destinationIndexPath = coordinator.destinationIndexPath,
+            let item = coordinator.items.first,
+            let sourceIndexPath = item.sourceIndexPath
+        else { return }
+
+        tableView.performBatchUpdates {
+            let movedItem = apps.remove(at: sourceIndexPath.row)
+            apps.insert(movedItem, at: destinationIndexPath.row)
+            let movedSortItem = Defaults[.appSortList].remove(at: sourceIndexPath.row)
+            Defaults[.appSortList].insert(movedSortItem, at: destinationIndexPath.row)
+            tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+        }
+        coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
     }
 }

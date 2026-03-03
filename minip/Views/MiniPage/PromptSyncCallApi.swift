@@ -52,7 +52,7 @@ extension MiniPageViewController {
              .getDeviceInfoSync,
              .fsAccessSync,
              .fsMkdirSync,
-             .fsReadDirSync,
+             .fsReaddirSync,
              .fsRmdirSync,
              .fsReadFileSync,
              .fsWriteFileSync,

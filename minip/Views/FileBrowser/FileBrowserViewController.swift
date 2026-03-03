@@ -30,22 +30,45 @@ class FileBrowserViewController: UITableViewController {
     }()
 
     lazy var shareSelectedBtn = {
-        let btn = UIBarButtonItem(title: i18n("Share"), style: .plain, target: self, action: #selector(shareSelected))
+        let btn = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up"), style: .plain, target: self, action: #selector(shareSelected))
         return btn
     }()
 
     lazy var copyBtn = {
-        let btn = UIBarButtonItem(title: i18n("Copy"), style: .plain, target: self, action: #selector(copySelected))
+        let btn = UIBarButtonItem(image: UIImage(systemName: "doc.on.doc"), style: .plain, target: self, action: #selector(copySelected))
         return btn
     }()
 
     lazy var moveBtn = {
-        let btn = UIBarButtonItem(title: i18n("Move"), style: .plain, target: self, action: #selector(moveSelected))
+        let btn = UIBarButtonItem(image: UIImage(systemName: "folder"), style: .plain, target: self, action: #selector(moveSelected))
         return btn
     }()
 
     lazy var deleteBtn = {
-        let btn = UIBarButtonItem(image: UIImage(systemName: "trash.fill"), style: .plain, target: self, action: #selector(deleteSelected))
+        let btn = UIBarButtonItem(image: UIImage(systemName: "trash"), style: .plain, target: self, action: #selector(deleteSelected))
+        return btn
+    }()
+    
+    lazy var moreBtn: UIBarButtonItem = {
+        let deferred = UIDeferredMenuElement.uncached { [weak self] completion in
+            guard let self else { completion([]); return }
+            let selectedRows = tableView.indexPathsForSelectedRows ?? []
+            let selectedFiles = selectedRows.map { self.files[$0.row] }
+            if selectedFiles.count == 1,
+               let utType = try? selectedFiles[0].url.resourceValues(forKeys: [.contentTypeKey]).contentType,
+               utType.conforms(to: .zip)
+            {
+                completion([UIAction(title: i18n("Decompress"), image: UIImage(systemName: "archivebox")) { _ in
+                    self.decompress(selectedFiles[0])
+                    if self.tableView.isEditing { self.toggleSelectMode() }
+                }])
+            } else {
+                completion([UIAction(title: i18n("Compress"), image: UIImage(systemName: "doc.zipper")) { _ in
+                    self.compressSelected()
+                }])
+            }
+        }
+        let btn = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), menu: UIMenu(children: [deferred]))
         return btn
     }()
 
@@ -90,6 +113,13 @@ class FileBrowserViewController: UITableViewController {
                 self?.createFileOrFolder(isFolder: true)
             }
         )
+        if !isModal {
+            actions.append(
+                UIAction(title: i18n("f.import_file"), image: UIImage(systemName: "square.and.arrow.down")) { [weak self] _ in
+                    self?.importFile()
+                }
+            )
+        }
         let menu = UIMenu(children: actions)
         let btn = UIBarButtonItem(image: UIImage(systemName: isModal ? "plus" : "plus.app.fill"), menu: menu)
         return btn
@@ -132,7 +162,7 @@ class FileBrowserViewController: UITableViewController {
         configureDataSource()
         fetchFilesAndUpdateDataSource()
 
-        tableView.rowHeight = 44
+        tableView.rowHeight = FileItemCell.iconSize + 14
         if !isModal {
             tableView.allowsMultipleSelectionDuringEditing = true
         }
@@ -239,18 +269,14 @@ extension FileBrowserViewController {
                     folderURLs.insert(folderURLs.remove(at: idx), at: 0)
                 }
             }
-            let allFilesAndFolders = folderURLs + fileURLs
+            let old = files
+            files = folderURLs + fileURLs
 
-            if files != allFilesAndFolders {
-                files = allFilesAndFolders
-                logger.debug("[FileBrowser] refreshing table view")
-                updateDataSource()
+            logger.debug("[FileBrowser] refreshing table view")
+            updateDataSource()
 
-                if tableView.isEditing == true {
-                    toggleSelectMode()
-                }
-            } else {
-                logger.debug("[FileBrowser] no changes")
+            if !isModal, navigationController?.isToolbarHidden == false, old != files {
+                toggleSelectMode()
             }
         } catch {
             showSimpleError(err: error)
@@ -277,10 +303,6 @@ extension FileBrowserViewController {
                         showSimpleSuccess()
 
                         self?.fetchFilesAndUpdateDataSource()
-
-                        if self?.tableView.isEditing == true {
-                            self?.toggleSelectMode()
-                        }
                     } onError: { err in
                         showSimpleError(err: err)
                     }
@@ -356,5 +378,43 @@ extension FileBrowserViewController {
                     }
                 }))
         present(alertController, animated: true)
+    }
+
+    func importFile() {
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.item], asCopy: true)
+        picker.allowsMultipleSelection = true
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+}
+
+extension FileBrowserViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        let fileManager = FileManager.default
+        var successCount = 0
+        var failCount = 0
+        for url in urls {
+            let fileName = url.deletingPathExtension().lastPathComponent
+            let ext = url.pathExtension
+            var dest = folderURL.appending(component: url.lastPathComponent)
+            var cnt = 1
+            while fileManager.fileExists(atPath: dest.path) {
+                let newName = ext.isEmpty ? "\(fileName) \(cnt)" : "\(fileName) \(cnt).\(ext)"
+                dest = folderURL.appending(component: newName)
+                cnt += 1
+            }
+            do {
+                try fileManager.copyItem(at: url, to: dest)
+                successCount += 1
+            } catch {
+                failCount += 1
+            }
+        }
+        fetchFilesAndUpdateDataSource()
+        if failCount == 0 {
+            showSimpleSuccess()
+        } else {
+            showSimpleError(err: ErrorMsg(errorDescription: "\(successCount) succeeded, \(failCount) failed"))
+        }
     }
 }

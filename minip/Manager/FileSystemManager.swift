@@ -86,29 +86,30 @@ class FileSystemManager {
         try fileManager.createDirectory(atPath: path, withIntermediateDirectories: recursive, attributes: nil)
     }
 
-    func readDir(path: String) throws -> [String] {
+    func readdir(path: String) throws -> [String] {
         let path = try appPathToURL(path).path
         let fileManager = FileManager.default
         return try fileManager.contentsOfDirectory(atPath: path)
     }
 
-    func rmdir(path: String, force: Bool) throws {
+    func rmdir(path: String, recursive: Bool) throws {
         let path = try appPathToURL(path).path
         let fileManager = FileManager.default
 
-        if !force {
-            var isDirectory: ObjCBool = false
-            guard fileManager.fileExists(atPath: path, isDirectory: &isDirectory), isDirectory.boolValue else {
-                throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "not directory"])
+        var isDirectory: ObjCBool = false
+        guard fileManager.fileExists(atPath: path, isDirectory: &isDirectory), isDirectory.boolValue else {
+            throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "not directory"])
+        }
+
+        if recursive {
+            try fileManager.removeItem(atPath: path)
+        } else {
+            let contents = try fileManager.contentsOfDirectory(atPath: path)
+            if !contents.isEmpty {
+                throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "directory is not empty"])
             }
+            try fileManager.removeItem(atPath: path)
         }
-
-        let contents = try fileManager.contentsOfDirectory(atPath: path)
-        if !contents.isEmpty {
-            throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "directory is not empty"])
-        }
-
-        try fileManager.removeItem(atPath: path)
     }
 
     func readFile(path: String) throws -> Data {

@@ -10,6 +10,10 @@
 "Files" = "文件";
 "Settings" = "设置";
 "Delete" = "删除";
+"Compress" = "压缩";
+"Decompress" = "解压";
+"Compressing" = "压缩中";
+"Compressed successfully" = "压缩成功";
 "Cancel" = "取消";
 "Create" = "创建";
 "Download" = "下载";
@@ -63,6 +67,7 @@
 // MARK: files
 "f.create_file" = "新建文件";
 "f.create_folder" = "新建文件夹";
+"f.import_file" = "导入文件";
 "f.create_file_tip" = "请输入文件名";
 "f.create_folder_tip" = "请输入文件夹名称";
 "f.file_name" = "文件名";
@@ -103,9 +108,9 @@
 "fs.note_warnning" = "如果你离开此页面、应用进入后台或设备屏幕关闭，文件服务器将自动关闭。";
 
 // MARK: settings
+"Language" = "语言";
 "s.clear_wkwebview_cache" = "清除WKWebView缓存";
 "s.clear_kfimage_cache" = "清除KFImage缓存";
-"s.allow_inspect_wkwebview" = "Allow Inspect WKWebView";
 "s.use_capsule_button" = "使用胶囊按钮";
 "s.documentation_source_code" = "文档和源码: [GitHub - Yosorable/Minip](https://github.com/yosorable/minip)";
 

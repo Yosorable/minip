@@ -21,6 +21,10 @@ public enum HighlightName: String {
     case punctuation
     case string
     case variableBuiltin = "variable.builtin"
+    case constant
+    case variable
+    case constructor
+    case embedded
 
     // html
     case tag

@@ -10,6 +10,10 @@
 "Files" = "Files";
 "Settings" = "Settings";
 "Delete" = "Delete";
+"Compress" = "Compress";
+"Decompress" = "Decompress";
+"Compressing" = "Compressing";
+"Compressed successfully" = "Compressed successfully";
 "Cancel" = "Cancel";
 "Create" = "Create";
 "Download" = "Download";
@@ -63,6 +67,7 @@
 // MARK: files
 "f.create_file" = "Create file";
 "f.create_folder" = "Create folder";
+"f.import_file" = "Import file";
 "f.create_file_tip" = "Please input file name";
 "f.create_folder_tip" = "Please input folder name";
 "f.file_name" = "File name";
@@ -103,9 +108,9 @@
 "fs.note_warnning" = "The file server will automatically shut down if you leave this page, the app goes to the background, or your device's screen turns off.";
 
 // MARK: settings
+"Language" = "Language";
 "s.clear_wkwebview_cache" = "Clear WKWebView Cache";
 "s.clear_kfimage_cache" = "Clear KFImage Cache";
-"s.allow_inspect_wkwebview" = "Allow Inspect WKWebView";
 "s.use_capsule_button" = "Use Capsule Button";
 "s.documentation_source_code" = "Documentation and source code: [GitHub - Yosorable/Minip](https://github.com/yosorable/minip)";
 

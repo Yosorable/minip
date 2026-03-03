@@ -13,8 +13,6 @@ public class VSCodeDarkTheme: EditorTheme {
 
     public var userInterfaceStyle: UIUserInterfaceStyle = .dark
 
-    public var font: UIFont = .monospacedSystemFont(ofSize: 14, weight: .regular)
-
     public var textColor: UIColor = .init(hexOrCSSName: "#aeafad")!
 
     public var gutterBackgroundColor: UIColor = .black // UIColor(hex: "#1f1f1f")!
@@ -22,8 +20,6 @@ public class VSCodeDarkTheme: EditorTheme {
     public var gutterHairlineColor: UIColor = .black // UIColor(hex: "#1f1f1f")!
 
     public var lineNumberColor: UIColor = .init(hexOrCSSName: "#6f7680")!
-
-    public var lineNumberFont: UIFont = .monospacedSystemFont(ofSize: 14, weight: .regular)
 
     public var selectedLineBackgroundColor: UIColor = .init(hexOrCSSName: "#1f1f1f")!
 
@@ -46,17 +42,17 @@ public class VSCodeDarkTheme: EditorTheme {
         switch highlightName {
         case .comment:
             return UIColor(hexOrCSSName: "#74985d")
-        case .operator, .punctuation:
+        case .operator, .punctuation, .delimiter:
             return UIColor(hexOrCSSName: "#d4d4d4")
         case .property:
             return UIColor(hexOrCSSName: "#aadafa")
-        case .function:
+        case .function, .method:
             return UIColor(hexOrCSSName: "#dcdcaf")
         case .string:
             return UIColor(hexOrCSSName: "#c5947c")
         case .number:
             return UIColor(hexOrCSSName: "#bacdab")
-        case .keyword:
+        case .keyword, .repeat, .conditional, .include:
             return UIColor(hexOrCSSName: "#679ad1")
         case .variableBuiltin:
             return UIColor(hexOrCSSName: "#aadafa")
@@ -66,6 +62,22 @@ public class VSCodeDarkTheme: EditorTheme {
             return UIColor(hexOrCSSName: "#aadafa")
         case .type:
             return UIColor(hexOrCSSName: "#71c6b1")
+        case .constant:
+            return UIColor(hexOrCSSName: "#4fc1ff")
+        case .variable, .parameter:
+            return UIColor(hexOrCSSName: "#9cdcfe")
+        case .constructor:
+            return UIColor(hexOrCSSName: "#71c6b1")
+        case .embedded, .none:
+            return UIColor(hexOrCSSName: "#d4d4d4")
+        case .escape:
+            return UIColor(hexOrCSSName: "#d7ba7d")
+        case .field:
+            return UIColor(hexOrCSSName: "#9cdcfe")
+        case .textTitle:
+            return UIColor(hexOrCSSName: "#679ad1")
+        case .textLiteral:
+            return UIColor(hexOrCSSName: "#c5947c")
         }
     }
 

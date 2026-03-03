@@ -34,7 +34,7 @@ struct AppInfo: Hashable, Codable, Defaults.Serializable {
     // MARK: For iOS
 
     var iOS_disableSwipeBackGesture: Bool?
-    var iOS_disableTextInteraction: Bool? // iOS 14.5+
+    var iOS_disableTextInteraction: Bool?
     var iOS_scrollbar: ScrollbarConfig?
 }
 

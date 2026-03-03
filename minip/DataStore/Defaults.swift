@@ -33,5 +33,5 @@ extension Defaults.Keys {
 
     static let lastTabIndex = Key<Int>("lastTabIndex", default: 0)
 
-    static let filebrowserLastFolder = Key<String>("filebrowserLastFolder", default: "")
+    static let filebrowserLastFolder = Key<String>("filebrowserLastFolder", default: "Documents")
 }

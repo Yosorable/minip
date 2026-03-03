@@ -48,7 +48,7 @@ extension MinipApi {
         }
     }
 
-    func fsReadDir(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
+    func fsReaddir(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
         guard let fs = MiniAppManager.shared.getFSManager() else {
             replyHandler(InteropUtils.fail(msg: "Error").toJsonString(), nil)
             return
@@ -59,7 +59,7 @@ extension MinipApi {
         }
 
         do {
-            try replyHandler(InteropUtils.succeedWithData(data: fs.readDir(path: path)).toJsonString(), nil)
+            try replyHandler(InteropUtils.succeedWithData(data: fs.readdir(path: path)).toJsonString(), nil)
         } catch {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)
         }
@@ -75,9 +75,9 @@ extension MinipApi {
             return
         }
 
-        let force = data["force"] as? Bool
+        let recursive = data["recursive"] as? Bool
         do {
-            try fs.rmdir(path: path, force: force ?? false)
+            try fs.rmdir(path: path, recursive: recursive ?? false)
             replyHandler(InteropUtils.succeed().toJsonString(), nil)
         } catch {
             replyHandler(InteropUtils.fail(msg: error.localizedDescription).toJsonString(), nil)

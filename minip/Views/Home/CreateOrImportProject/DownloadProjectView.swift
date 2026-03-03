@@ -25,9 +25,6 @@ class DownloadProjectViewController: UIHostingController<DownloadProjectView> {
         rootView.closeFunc = { [weak self] in
             self?.dismiss(animated: true)
         }
-        if let nvc = navigationController as? PannableNavigationViewController {
-            nvc.addPanGesture(vc: self)
-        }
     }
 }
 
@@ -52,15 +49,10 @@ struct DownloadProjectView: View {
             Section {
                 HStack {
                     Text("URL")
-                    if #available(iOS 15.0, *) {
-                        TextField(text: $downURL) {
-                            Text("Please enter the url")
-                        }
-                        .disabled(downloading)
-                    } else {
-                        TextField("", text: $downURL)
-                            .disabled(downloading)
+                    TextField(text: $downURL) {
+                        Text("Please enter the url")
                     }
+                    .disabled(downloading)
                 }
             } footer: {
                 HStack {
@@ -72,15 +64,10 @@ struct DownloadProjectView: View {
             Section {
                 Text("Filename")
 
-                if #available(iOS 15.0, *) {
-                    TextField(text: $downFilename) {
-                        Text("Please enter filename (not required)")
-                    }
-                    .disabled(downloading)
-                } else {
-                    TextField("Please enter filename (not required)", text: $downFilename)
-                        .disabled(downloading)
+                TextField(text: $downFilename) {
+                    Text("Please enter filename (not required)")
                 }
+                .disabled(downloading)
             } footer: {
                 Text("The downloaded file name will use the last url component item, if some error occurs, this text will be used (if it is empty, \"default.zip\" will be used).")
             }
@@ -90,31 +77,17 @@ struct DownloadProjectView: View {
             }
             if downloading || uncompressing {
                 Section {
-                    if #available(iOS 15.0, *) {
-                        Button(role: .destructive, action: {
-                            downloadReq?.cancel()
-                            downloading = false
-                        }, label: {
-                            HStack {
-                                Spacer()
-                                Text("Cancel")
-                                Spacer()
-                            }
-                        })
-                        .disabled(uncompressing)
-                    } else {
-                        Button {
-                            downloadReq?.cancel()
-                            downloading = false
-                        } label: {
-                            HStack {
-                                Spacer()
-                                Text("Cancel")
-                                    .foregroundColor(.red)
-                                Spacer()
-                            }
+                    Button(role: .destructive, action: {
+                        downloadReq?.cancel()
+                        downloading = false
+                    }, label: {
+                        HStack {
+                            Spacer()
+                            Text("Cancel")
+                            Spacer()
                         }
-                    }
+                    })
+                    .disabled(uncompressing)
                 } header: {
                     HStack {
                         Spacer()

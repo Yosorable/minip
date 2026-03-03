@@ -80,9 +80,7 @@ class MiniPageViewController: UIViewController {
             self.webview.tintColor = .systemBlue
             self.webview.scrollView.contentInsetAdjustmentBehavior = .always
             self.webview.translatesAutoresizingMaskIntoConstraints = true
-            if #available(iOS 14.5, *) {
-                self.webview.configuration.preferences.isTextInteractionEnabled = true
-            }
+            self.webview.configuration.preferences.isTextInteractionEnabled = true
             self.webview.uiDelegate = nil
             self.webview.navigationDelegate = nil
             self.webview.scrollView.showsVerticalScrollIndicator = true
@@ -111,12 +109,10 @@ class MiniPageViewController: UIViewController {
             webview.isInspectable = Defaults[.wkwebviewInspectable]
         }
 
-        if #available(iOS 14.5, *) {
-            if app.iOS_disableTextInteraction == true {
-                webview.configuration.preferences.isTextInteractionEnabled = false
-            } else {
-                webview.configuration.preferences.isTextInteractionEnabled = true
-            }
+        if app.iOS_disableTextInteraction == true {
+            webview.configuration.preferences.isTextInteractionEnabled = false
+        } else {
+            webview.configuration.preferences.isTextInteractionEnabled = true
         }
 
         view.addSubview(webview)
@@ -130,9 +126,7 @@ class MiniPageViewController: UIViewController {
                 navigationController?.navigationBar.standardAppearance = appearance
                 navigationController?.navigationBar.scrollEdgeAppearance = appearance
                 navigationController?.navigationBar.compactAppearance = appearance
-                if #available(iOS 15.0, *) {
-                    navigationController?.navigationBar.compactScrollEdgeAppearance = appearance
-                }
+                navigationController?.navigationBar.compactScrollEdgeAppearance = appearance
             }
             NSLayoutConstraint.activate([
                 webview.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -256,13 +250,6 @@ class MiniPageViewController: UIViewController {
 
         adaptColorScheme()
 
-        if isRoot && (app.orientation != "landscape" || app.navigationBarStatus != "hidden") {
-            if let tabVC = tabBarController as? PannableTabBarController {
-                tabVC.addPanGesture(vc: self)
-            } else if let navVC = navigationController as? PannableNavigationViewController {
-                navVC.addPanGesture(vc: self)
-            }
-        }
     }
 
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -321,12 +308,8 @@ class MiniPageViewController: UIViewController {
             completion: {
                 logger.info("[MiniPageViewController] clear open app info & reset orientation")
                 if MiniAppManager.shared.openedApp?.orientation == "landscape" {
-                    if #available(iOS 16.0, *) {
-                        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-                        windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .all))
-                    } else {
-                        UIDevice.current.setValue(UIInterfaceOrientation.unknown.rawValue, forKey: "orientation")
-                    }
+                    let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                    windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .all))
                 }
                 MiniAppManager.shared.clearOpenedApp()
             })

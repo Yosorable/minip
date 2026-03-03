@@ -5,6 +5,7 @@
 //  Created by LZY on 2025/3/16.
 //
 
+import AVFoundation
 import Defaults
 import SwiftUI
 import UIKit
@@ -18,6 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
+        try? AVAudioSession.sharedInstance().setCategory(.playback)
+
         window = UIWindow(windowScene: windowScene)
         let mainVC = UITabBarController()
 
@@ -46,7 +49,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
                 lastFolder.split(separator: "/").forEach {
                     url = url.appending(component: $0, directoryHint: .isDirectory)
-                    vcs.append(FileBrowserViewController(folderURL: url))
+                    if Global.shared.sandboxRootURL.standardizedFileURL.isContained(in: url) {
+                        vcs.append(FileBrowserViewController(folderURL: url))
+                    }
+                }
+ 
+                if vcs.count == 0 {
+                    vcs.append(FileBrowserViewController(folderURL: Global.shared.fileBrowserRootURL))
                 }
 
                 vc.viewControllers = vcs

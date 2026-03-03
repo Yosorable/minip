@@ -71,9 +71,13 @@ extension MinipApi {
         }
 
         if sourceRect != nil {
-            ImageCache.default.retrieveImage(forKey: url.absoluteString) { result in
-                let image = try? result.get().image
-                DispatchQueue.main.async { presentPreview(image) }
+            if url.scheme == "file" {
+                presentPreview(UIImage(contentsOfFile: url.path(percentEncoded: false)))
+            } else {
+                ImageCache.default.retrieveImage(forKey: url.absoluteString) { result in
+                    let image = try? result.get().image
+                    DispatchQueue.main.async { presentPreview(image) }
+                }
             }
         } else {
             presentPreview(nil)
@@ -93,6 +97,7 @@ extension MinipApi {
         }
         let player = AVPlayer(url: url)
         let playerVC = AVPlayerViewController()
+        playerVC.allowsPictureInPicturePlayback = false
         playerVC.player = player
         vc.present(playerVC, animated: true) {
             playerVC.player?.play()

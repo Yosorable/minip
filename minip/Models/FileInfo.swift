@@ -20,6 +20,10 @@ struct FileInfo: Hashable {
     }
 
     static func == (lhs: FileInfo, rhs: FileInfo) -> Bool {
-        return lhs.url == rhs.url && lhs.size == rhs.size && lhs.filesCount == rhs.filesCount
+        return lhs.url == rhs.url
+    }
+
+    func contentEquals(_ other: FileInfo) -> Bool {
+        return url == other.url && size == other.size && filesCount == other.filesCount && lastModified == other.lastModified
     }
 }

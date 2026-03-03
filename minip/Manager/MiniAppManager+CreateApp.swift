@@ -72,12 +72,16 @@ extension MiniAppManager {
           <button onclick="alert('This is message.')">Original Alert</button>
           <button disabled id="btn">Minip Alert</button>
           <button disabled id="st-btn">Go to Settings Page</button>
+          <button disabled id="play-btn">Play Video</button>
+          <button disabled id="play-audio-btn">Play Audio</button>
           <div id="msg"></div>
           <script type="module">
             import * as minip from "https://cdn.jsdelivr.net/npm/minip-bridge/dist/index.mjs"
             const msgDiv = document.querySelector("#msg")
             const btn = document.querySelector("#btn")
             const stBtn = document.querySelector("#st-btn")
+            const playBtn = document.querySelector("#play-btn")
+            const playAudioBtn = document.querySelector("#play-audio-btn")
             function showError(err) { 
                 let message = err ? (err.message ?? err.msg ?? err.data ?? JSON.stringify(err)) : "Unknown error"
                 msgDiv.innerText = `Some error occurs, message: ${message}` 
@@ -87,7 +91,7 @@ extension MiniAppManager {
                 title: "Alert",
                 message: "This is an alert.",
                 inputs: [
-                  { title: "username", key: "username" },
+                  { title: "username", key: "username", type: "text" },
                   { title: "password", key: "password", type: "password" },
                   { title: "number", key: "number", type: "number" }
                 ],
@@ -97,13 +101,17 @@ extension MiniAppManager {
                   { title: "Do Nothing", key: "DoNothing", style: "destructive" }
                 ]
               })
-              .then(res => msgDiv.innerText = JSON.stringify(res.data))
+              .then(res => msgDiv.innerText = JSON.stringify(res))
               .catch(showError)
             }
             btn.disabled = false
             btn.onclick = click
             stBtn.disabled = false
             stBtn.onclick = function() { minip.openSettings().catch(showError) }
+            playBtn.disabled = false
+            playBtn.onclick = function() { minip.previewVideo("https://media.w3.org/2010/05/sintel/trailer.mp4") }
+            playAudioBtn.disabled = false
+            playAudioBtn.onclick = function() { minip.previewVideo("https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3") }
           </script>
           <script>
             const preventDefault = (e) => e.preventDefault();

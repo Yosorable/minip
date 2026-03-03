@@ -12,22 +12,35 @@ private var previousUnrecognizedHighlightNames: [String] = []
 #endif
 
 public enum HighlightName: String {
+    case attribute
     case comment
+    case conditional
+    case constant
+    case constructor
+    case delimiter
+    case embedded
+    case escape
+    case field
     case function
+    case include
     case keyword
+    case method
+    case none
     case number
     case `operator`
+    case parameter
     case property
     case punctuation
+    case `repeat`
     case string
+    case tag
+    case type
+    case variable
     case variableBuiltin = "variable.builtin"
 
-    // html
-    case tag
-    case attribute
-
-    // py
-    case type
+    // markdown
+    case textTitle = "text.title"
+    case textLiteral = "text.literal"
 
     public init?(_ rawHighlightName: String) {
         var comps = rawHighlightName.split(separator: ".")

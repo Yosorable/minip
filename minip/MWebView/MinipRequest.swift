@@ -8,12 +8,15 @@
 import WebKit
 
 class MinipRequest: NSObject, WKURLSchemeHandler {
-    var schemeHandlers: [Int: WKURLSchemeTask] = [:]
+    private let lock = NSLock()
+    private var schemeHandlers: [ObjectIdentifier: URLSessionDataTask] = [:]
     static let shared = MinipRequest()
 
-    func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
-        schemeHandlers[urlSchemeTask.hash] = urlSchemeTask
+    private func taskID(_ task: WKURLSchemeTask) -> ObjectIdentifier {
+        ObjectIdentifier(task as AnyObject)
+    }
 
+    func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
         var request = urlSchemeTask.request
 
         guard let minipURL = request.url, var comp = URLComponents(url: minipURL, resolvingAgainstBaseURL: false) else {
@@ -39,11 +42,11 @@ class MinipRequest: NSObject, WKURLSchemeHandler {
             }
         }
         request.allHTTPHeaderFields = handledHeaders
-
         request.url = newURL
 
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self, self.removeTask(for: urlSchemeTask) != nil else { return }
+
             if let error = error {
                 urlSchemeTask.didFailWithError(error)
                 return
@@ -57,37 +60,45 @@ class MinipRequest: NSObject, WKURLSchemeHandler {
             var modifiedHeaders = response.allHeaderFields as? [String: String] ?? [:]
             modifiedHeaders["Access-Control-Allow-Origin"] = "*"
 
-            guard let resURL = response.url, let newResponse = HTTPURLResponse(
-                url: resURL,
-                statusCode: response.statusCode,
-                httpVersion: nil,
-                headerFields: modifiedHeaders
-            ) else {
+            guard let resURL = response.url,
+                let newResponse = HTTPURLResponse(
+                    url: resURL,
+                    statusCode: response.statusCode,
+                    httpVersion: nil,
+                    headerFields: modifiedHeaders
+                )
+            else {
                 urlSchemeTask.didFailWithError(NSError(domain: "MinipRequestHandlerError", code: 500, userInfo: nil))
                 return
             }
 
-            if self.schemeHandlers[urlSchemeTask.hash] != nil {
-                urlSchemeTask.didReceive(newResponse)
-                urlSchemeTask.didReceive(data)
-                urlSchemeTask.didFinish()
-                self.schemeHandlers.removeValue(forKey: urlSchemeTask.hash)
-            }
+            urlSchemeTask.didReceive(newResponse)
+            urlSchemeTask.didReceive(data)
+            urlSchemeTask.didFinish()
         }
+
+        lock.lock()
+        schemeHandlers[taskID(urlSchemeTask)] = task
+        lock.unlock()
+
         task.resume()
     }
 
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
-        schemeHandlers.removeValue(forKey: urlSchemeTask.hash)
+        removeTask(for: urlSchemeTask)?.cancel()
+    }
+
+    @discardableResult
+    private func removeTask(for urlSchemeTask: WKURLSchemeTask) -> URLSessionDataTask? {
+        lock.lock()
+        let task = schemeHandlers.removeValue(forKey: taskID(urlSchemeTask))
+        lock.unlock()
+        return task
     }
 }
 
 class MinipURLSchemePing: NSObject, WKURLSchemeHandler {
-    var schemeHandlers: [Int: WKURLSchemeTask] = [:]
-
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
-        schemeHandlers[urlSchemeTask.hash] = urlSchemeTask
-
         let request = urlSchemeTask.request
 
         var res = "pong".data(using: .utf8)!
@@ -96,22 +107,16 @@ class MinipURLSchemePing: NSObject, WKURLSchemeHandler {
             res.append(data)
         }
 
-        if schemeHandlers[urlSchemeTask.hash] != nil {
-            let url = request.url!
-            let headers = [
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET, POST",
-//                "Content-Type": "application/json"
-            ]
-            let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: headers)!
-            urlSchemeTask.didReceive(response)
-            urlSchemeTask.didReceive(res)
-            urlSchemeTask.didFinish()
-            schemeHandlers.removeValue(forKey: urlSchemeTask.hash)
-        }
+        let url = request.url!
+        let headers = [
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST",
+        ]
+        let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: headers)!
+        urlSchemeTask.didReceive(response)
+        urlSchemeTask.didReceive(res)
+        urlSchemeTask.didFinish()
     }
 
-    func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
-        schemeHandlers.removeValue(forKey: urlSchemeTask.hash)
-    }
+    func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {}
 }

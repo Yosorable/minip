@@ -1,0 +1,738 @@
+{
+  "minip-bridge": [
+    {
+      "label": "MResponseStatusCode",
+      "kind": 13,
+      "detail": "enum"
+    },
+    {
+      "label": "navigateTo",
+      "kind": 3,
+      "detail": "(data: {\n    page: string;\n    title?: string;\n}) => Promise<void>",
+      "insertText": "navigateTo($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "navigateBack",
+      "kind": 3,
+      "detail": "(delta?: number) => Promise<void>",
+      "insertText": "navigateBack()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "redirectTo",
+      "kind": 3,
+      "detail": "(data: {\n    page: string;\n    title?: string;\n}) => Promise<void>",
+      "insertText": "redirectTo($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "openWebsite",
+      "kind": 3,
+      "detail": "(url: string) => Promise<void>",
+      "insertText": "openWebsite($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "openSettings",
+      "kind": 3,
+      "detail": "() => Promise<void>",
+      "insertText": "openSettings()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "closeApp",
+      "kind": 3,
+      "detail": "() => Promise<void>",
+      "insertText": "closeApp()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "showAppDetail",
+      "kind": 3,
+      "detail": "() => Promise<void>",
+      "insertText": "showAppDetail()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "installApp",
+      "kind": 3,
+      "detail": "(url: string) => Promise<void>",
+      "insertText": "installApp($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "getInstalledAppList",
+      "kind": 3,
+      "detail": "() => Promise<AppInfo[]>",
+      "insertText": "getInstalledAppList()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "getAppInfo",
+      "kind": 3,
+      "detail": "() => Promise<AppInfo>",
+      "insertText": "getAppInfo()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "updateCurrentApp",
+      "kind": 3,
+      "detail": "(url: string) => Promise<void>",
+      "insertText": "updateCurrentApp($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "setNavigationBarTitle",
+      "kind": 3,
+      "detail": "(title: string) => Promise<void>",
+      "insertText": "setNavigationBarTitle($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "setNavigationBarColor",
+      "kind": 3,
+      "detail": "(config: {\n    foregroundColor: string;\n    backgroundColor: string;\n}) => Promise<void>",
+      "insertText": "setNavigationBarColor($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "enablePullDownRefresh",
+      "kind": 3,
+      "detail": "() => Promise<void>",
+      "insertText": "enablePullDownRefresh()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "disablePullDownRefresh",
+      "kind": 3,
+      "detail": "() => Promise<void>",
+      "insertText": "disablePullDownRefresh()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "onPullDownRefresh",
+      "kind": 3,
+      "detail": "(callback: (e: Event) => any) => void",
+      "insertText": "onPullDownRefresh($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "startPullDownRefresh",
+      "kind": 3,
+      "detail": "() => Promise<void>",
+      "insertText": "startPullDownRefresh()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "stopPullDownRefresh",
+      "kind": 3,
+      "detail": "() => Promise<void>",
+      "insertText": "stopPullDownRefresh()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "showHUD",
+      "kind": 3,
+      "detail": "(req: ShowHUDRequest) => Promise<void>",
+      "insertText": "showHUD($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "hideHUD",
+      "kind": 3,
+      "detail": "() => Promise<void>",
+      "insertText": "hideHUD()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "showAlert",
+      "kind": 3,
+      "detail": "(config: AlertConfig) => Promise<ShowAlertData>",
+      "insertText": "showAlert($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "previewImage",
+      "kind": 3,
+      "detail": "(url: string, options?: {\n    sourceImage?: HTMLImageElement;\n}) => Promise<void>",
+      "insertText": "previewImage($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "previewVideo",
+      "kind": 3,
+      "detail": "(url: string) => Promise<void>",
+      "insertText": "previewVideo($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "showPicker",
+      "kind": 3,
+      "detail": "(type: \"singleColumn\", data: SingleColumnPickerConfig) => Promise<number | null | undefined>",
+      "insertText": "showPicker($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "getKVStorage",
+      "kind": 3,
+      "detail": "(key: string) => Promise<string>",
+      "insertText": "getKVStorage($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "setKVStorage",
+      "kind": 3,
+      "detail": "(key: string, value: string) => Promise<void>",
+      "insertText": "setKVStorage($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "deleteKVStorage",
+      "kind": 3,
+      "detail": "(key: string) => Promise<void>",
+      "insertText": "deleteKVStorage($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "clearKVStorage",
+      "kind": 3,
+      "detail": "() => Promise<void>",
+      "insertText": "clearKVStorage()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "getKVStorageSync",
+      "kind": 3,
+      "detail": "(key: string) => string",
+      "insertText": "getKVStorageSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "setKVStorageSync",
+      "kind": 3,
+      "detail": "(key: string, value: string) => void",
+      "insertText": "setKVStorageSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "deleteKVStorageSync",
+      "kind": 3,
+      "detail": "(key: string) => void",
+      "insertText": "deleteKVStorageSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "clearKVStorageSync",
+      "kind": 3,
+      "detail": "() => void",
+      "insertText": "clearKVStorageSync()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "vibrate",
+      "kind": 3,
+      "detail": "(type?: \"light\" | \"medium\" | \"heavy\") => Promise<void>",
+      "insertText": "vibrate()",
+      "insertTextFormat": 2,
+      "documentation": "@param type medium as default"
+    },
+    {
+      "label": "getClipboardData",
+      "kind": 3,
+      "detail": "() => Promise<string>",
+      "insertText": "getClipboardData()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "setClipboardData",
+      "kind": 3,
+      "detail": "(data: string) => Promise<void>",
+      "insertText": "setClipboardData($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "scanQRCode",
+      "kind": 3,
+      "detail": "() => Promise<string | undefined | null>",
+      "insertText": "scanQRCode()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "getDeviceInfo",
+      "kind": 3,
+      "detail": "() => Promise<DeviceInfo>",
+      "insertText": "getDeviceInfo()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "getDeviceInfoSync",
+      "kind": 3,
+      "detail": "() => DeviceInfo",
+      "insertText": "getDeviceInfoSync()",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "sqliteOpenDB",
+      "kind": 3,
+      "detail": "(path: string) => Promise<number>",
+      "insertText": "sqliteOpenDB($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "sqliteCloseDB",
+      "kind": 3,
+      "detail": "(dbKey: number) => Promise<void>",
+      "insertText": "sqliteCloseDB($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "sqlitePrepare",
+      "kind": 3,
+      "detail": "(dbKey: number, sql: string) => Promise<{\n    stmtKey: number;\n    reader: boolean;\n}>",
+      "insertText": "sqlitePrepare($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "sqliteStatementAll",
+      "kind": 3,
+      "detail": "(dbKey: number, stmtKey: number, parameters: ReadonlyArray<unknown>) => Promise<unknown[]>",
+      "insertText": "sqliteStatementAll($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "sqliteStatementRun",
+      "kind": 3,
+      "detail": "(dbKey: number, stmtKey: number, parameters: ReadonlyArray<unknown>) => Promise<{\n    changes: number | bigint;\n    lastInsertRowid: number | bigint;\n}>",
+      "insertText": "sqliteStatementRun($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "sqliteExecute",
+      "kind": 3,
+      "detail": "(dbKey: number, sql: string, parameters: ReadonlyArray<unknown>) => Promise<{\n    reader: boolean;\n    runRes?: {\n        changes: number | bigint;\n        lastInsertRowid: number | bigint;\n    };\n    entityData?: unknown[];\n}>",
+      "insertText": "sqliteExecute($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "sqliteCreateIterator",
+      "kind": 3,
+      "detail": "(dbKey: number, stmtKey: number, parameters: ReadonlyArray<unknown>) => Promise<void>",
+      "insertText": "sqliteCreateIterator($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "sqliteIteratorNext",
+      "kind": 3,
+      "detail": "(dbKey: number, stmtKey: number) => Promise<unknown | undefined>",
+      "insertText": "sqliteIteratorNext($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "sqliteIteratorRelease",
+      "kind": 3,
+      "detail": "(dbKey: number, stmtKey: number) => Promise<void>",
+      "insertText": "sqliteIteratorRelease($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "getMemoryStorage",
+      "kind": 3,
+      "detail": "(key: string) => Promise<string>",
+      "insertText": "getMemoryStorage($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "setMemoryStorage",
+      "kind": 3,
+      "detail": "(key: string, value: string) => Promise<void>",
+      "insertText": "setMemoryStorage($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "setMemoryStorageIfNotExist",
+      "kind": 3,
+      "detail": "(key: string, value: string) => Promise<boolean>",
+      "insertText": "setMemoryStorageIfNotExist($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "removeMemoryStorage",
+      "kind": 3,
+      "detail": "(key: string) => Promise<void>",
+      "insertText": "removeMemoryStorage($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "clearMemoryStorage",
+      "kind": 3,
+      "detail": "() => Promise<void>",
+      "insertText": "clearMemoryStorage()",
+      "insertTextFormat": 2
+    }
+  ],
+  "minip-bridge/fs": [
+    {
+      "label": "enrichStats",
+      "kind": 3,
+      "detail": "(file: FileStats) => FileStats",
+      "insertText": "enrichStats($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "access",
+      "kind": 3,
+      "detail": "(path: string, mode?: number) => Promise<void>",
+      "insertText": "access($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "accessSync",
+      "kind": 3,
+      "detail": "(path: string, mode?: number) => void",
+      "insertText": "accessSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "existsSync",
+      "kind": 3,
+      "detail": "(path: string) => boolean",
+      "insertText": "existsSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "unlink",
+      "kind": 3,
+      "detail": "(path: string) => Promise<void>",
+      "insertText": "unlink($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "unlinkSync",
+      "kind": 3,
+      "detail": "(path: string) => void",
+      "insertText": "unlinkSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "rename",
+      "kind": 3,
+      "detail": "(oldPath: string, newPath: string) => Promise<void>",
+      "insertText": "rename($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "renameSync",
+      "kind": 3,
+      "detail": "(oldPath: string, newPath: string) => void",
+      "insertText": "renameSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "stat",
+      "kind": 3,
+      "detail": "(path: string) => Promise<FileStats>",
+      "insertText": "stat($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "statSync",
+      "kind": 3,
+      "detail": "(path: string) => FileStats",
+      "insertText": "statSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "rm",
+      "kind": 3,
+      "detail": "(path: string) => Promise<void>",
+      "insertText": "rm($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "rmSync",
+      "kind": 3,
+      "detail": "(path: string) => void",
+      "insertText": "rmSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "cp",
+      "kind": 3,
+      "detail": "(src: string, dest: string, recursive?: boolean) => Promise<void>",
+      "insertText": "cp($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "cpSync",
+      "kind": 3,
+      "detail": "(src: string, dest: string, recursive?: boolean) => void",
+      "insertText": "cpSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "mkdir",
+      "kind": 3,
+      "detail": "(path: string, recursive?: boolean) => Promise<void>",
+      "insertText": "mkdir($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "mkdirSync",
+      "kind": 3,
+      "detail": "(path: string, recursive?: boolean) => void",
+      "insertText": "mkdirSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "readdir",
+      "kind": 3,
+      "detail": "(path: string) => Promise<string[]>",
+      "insertText": "readdir($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "readdirSync",
+      "kind": 3,
+      "detail": "(path: string) => string[]",
+      "insertText": "readdirSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "rmdir",
+      "kind": 3,
+      "detail": "(path: string, recursive?: boolean) => Promise<void>",
+      "insertText": "rmdir($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "rmdirSync",
+      "kind": 3,
+      "detail": "(path: string, recursive?: boolean) => void",
+      "insertText": "rmdirSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "readFile",
+      "kind": 3,
+      "detail": "(path: string, encoding?: string) => Promise<Uint8Array | string>",
+      "insertText": "readFile($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "readFileSync",
+      "kind": 3,
+      "detail": "(path: string, encoding?: string) => Uint8Array | string",
+      "insertText": "readFileSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "writeFile",
+      "kind": 3,
+      "detail": "(path: string, data: Uint8Array | string) => Promise<void>",
+      "insertText": "writeFile($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "writeFileSync",
+      "kind": 3,
+      "detail": "(path: string, data: Uint8Array | string) => void",
+      "insertText": "writeFileSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "appendFile",
+      "kind": 3,
+      "detail": "(path: string, data: Uint8Array | string) => Promise<void>",
+      "insertText": "appendFile($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "appendFileSync",
+      "kind": 3,
+      "detail": "(path: string, data: Uint8Array | string) => void",
+      "insertText": "appendFileSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "copyFile",
+      "kind": 3,
+      "detail": "(src: string, dest: string) => Promise<void>",
+      "insertText": "copyFile($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "copyFileSync",
+      "kind": 3,
+      "detail": "(src: string, dest: string) => void",
+      "insertText": "copyFileSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "truncate",
+      "kind": 3,
+      "detail": "(path: string, length?: number) => Promise<void>",
+      "insertText": "truncate($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "truncateSync",
+      "kind": 3,
+      "detail": "(path: string, length?: number) => void",
+      "insertText": "truncateSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "OpenFlags",
+      "kind": 13,
+      "detail": "enum"
+    },
+    {
+      "label": "open",
+      "kind": 3,
+      "detail": "(path: string, flags: OpenFlags | number, mode?: number) => Promise<number>",
+      "insertText": "open($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "openSync",
+      "kind": 3,
+      "detail": "(path: string, flags: OpenFlags | number, mode?: number) => number",
+      "insertText": "openSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "close",
+      "kind": 3,
+      "detail": "(fd: number) => Promise<void>",
+      "insertText": "close($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "closeSync",
+      "kind": 3,
+      "detail": "(fd: number) => void",
+      "insertText": "closeSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "fstat",
+      "kind": 3,
+      "detail": "(fd: number) => Promise<FileStats>",
+      "insertText": "fstat($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "fstatSync",
+      "kind": 3,
+      "detail": "(fd: number) => FileStats",
+      "insertText": "fstatSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "ftruncate",
+      "kind": 3,
+      "detail": "(fd: number, length?: number) => Promise<void>",
+      "insertText": "ftruncate($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "ftruncateSync",
+      "kind": 3,
+      "detail": "(fd: number, length?: number) => void",
+      "insertText": "ftruncateSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "read",
+      "kind": 3,
+      "detail": "(fd: number, buffer: Uint8Array, offset: number, length: number, position?: number) => Promise<number>",
+      "insertText": "read($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "readSync",
+      "kind": 3,
+      "detail": "(fd: number, buffer: Uint8Array, offset: number, length: number, position?: number) => number",
+      "insertText": "readSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "write",
+      "kind": 3,
+      "detail": "(fd: number, buffer: Uint8Array, offset: number, length: number, position?: number) => Promise<number>",
+      "insertText": "write($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "writeSync",
+      "kind": 3,
+      "detail": "(fd: number, buffer: Uint8Array, offset: number, length: number, position?: number) => number",
+      "insertText": "writeSync($0)",
+      "insertTextFormat": 2
+    }
+  ],
+  "minip-bridge/path": [
+    {
+      "label": "sep",
+      "kind": 21,
+      "detail": "unknown = \"/\""
+    },
+    {
+      "label": "join",
+      "kind": 3,
+      "detail": "(segments: string[]) => string",
+      "insertText": "join($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "resolve",
+      "kind": 3,
+      "detail": "(segments: string[]) => string",
+      "insertText": "resolve($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "normalize",
+      "kind": 3,
+      "detail": "(path: string) => string",
+      "insertText": "normalize($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "dirname",
+      "kind": 3,
+      "detail": "(path: string) => string",
+      "insertText": "dirname($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "basename",
+      "kind": 3,
+      "detail": "(path: string, ext?: string) => string",
+      "insertText": "basename($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "extname",
+      "kind": 3,
+      "detail": "(path: string) => string",
+      "insertText": "extname($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "isAbsolute",
+      "kind": 3,
+      "detail": "(path: string) => boolean",
+      "insertText": "isAbsolute($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "relative",
+      "kind": 3,
+      "detail": "(from: string, to: string) => string",
+      "insertText": "relative($0)",
+      "insertTextFormat": 2
+    }
+  ]
+}

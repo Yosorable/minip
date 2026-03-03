@@ -22,24 +22,18 @@ class QRScannerViewController: UIViewController {
         setupQRScannerView()
     }
 
-    override var prefersInterfaceOrientationLocked: Bool {
-        false
-    }
-
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        .portrait
-    }
-
-    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        .portrait
-    }
-
     private func setupQRScannerView() {
         view.backgroundColor = .black
         qrScannerView = QRScannerView(frame: view.bounds)
         view.addSubview(qrScannerView)
         qrScannerView.translatesAutoresizingMaskIntoConstraints = false
-        qrScannerView.configure(delegate: self, input: .init(isBlurEffectEnabled: true))
+        var orientation: AVCaptureVideoOrientation = .portrait
+        if let interfaceOrientation = view.window?.windowScene?.effectiveGeometry.interfaceOrientation
+            ?? UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first?.effectiveGeometry.interfaceOrientation,
+           let videoOrientation = AVCaptureVideoOrientation(rawValue: interfaceOrientation.rawValue) {
+            orientation = videoOrientation
+        }
+        qrScannerView.configure(delegate: self, input: .init(isBlurEffectEnabled: true), videoOrientation: orientation)
         qrScannerView.startRunning()
 
         flashButton = FlashButton()

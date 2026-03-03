@@ -42,6 +42,9 @@ class MinipApi {
         case hideHUD
         case showAlert
         case showPicker
+
+        // MARK: Media
+
         case previewImage
         case previewVideo
 
@@ -95,7 +98,7 @@ class MinipApi {
 
         case fsAccess
         case fsMkdir
-        case fsReadDir
+        case fsReaddir
         case fsRmdir
         case fsReadFile
         case fsWriteFile
@@ -117,7 +120,7 @@ class MinipApi {
         // Sync
         case fsAccessSync
         case fsMkdirSync
-        case fsReadDirSync
+        case fsReaddirSync
         case fsRmdirSync
         case fsReadFileSync
         case fsWriteFileSync
@@ -285,8 +288,8 @@ class MinipApi {
             api.fsAccess(param: param, replyHandler: replyHandler)
         case .fsMkdir, .fsMkdirSync:
             api.fsMkdir(param: param, replyHandler: replyHandler)
-        case .fsReadDir, .fsReadDirSync:
-            api.fsReadDir(param: param, replyHandler: replyHandler)
+        case .fsReaddir, .fsReaddirSync:
+            api.fsReaddir(param: param, replyHandler: replyHandler)
         case .fsRmdir, .fsRmdirSync:
             api.fsRmdir(param: param, replyHandler: replyHandler)
         case .fsReadFile, .fsReadFileSync:

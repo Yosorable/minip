@@ -110,7 +110,7 @@ struct AppDetailView: View {
     }
 
     func description() -> some View {
-        if #available(iOS 15, *), let desc = self.appInfo.description, let md = try? AttributedString(markdown: desc) {
+        if let desc = self.appInfo.description, let md = try? AttributedString(markdown: desc) {
             Text(md)
                 .font(.system(size: 14))
                 .foregroundColor(.secondary)
@@ -127,7 +127,6 @@ struct AppDetailView: View {
                 let this = self
                 let ss = MiniAppSettingsViewController(style: .insetGrouped, app: this.appInfo)
                 let vc = BackableNavigationController(rootViewController: ss)
-                vc.addPanGesture(vc: ss)
                 vc.modalPresentationStyle = .overFullScreen
                 this.parentVC?.present(vc, animated: true)
             })
@@ -166,10 +165,8 @@ struct AppDetailView: View {
                 let vc = ConsoleViewController()
                 let nvc = UINavigationController(rootViewController: vc)
                 nvc.view.tintColor = pvc?.view.tintColor
-                if #available(iOS 15.0, *) {
-                    if let presentVC = nvc.sheetPresentationController {
-                        presentVC.detents = [.medium()]
-                    }
+                if let presentVC = nvc.sheetPresentationController {
+                    presentVC.detents = [.medium()]
                 }
                 pvc?.present(nvc, animated: true)
             })

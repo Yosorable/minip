@@ -31,13 +31,14 @@ extension FileBrowserViewController {
         if tableView.isEditing {
             if toolbarItems == nil {
                 let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-                toolbarItems = [selectAllBtn, flexibleSpace, shareSelectedBtn, copyBtn, moveBtn, deleteBtn]
+                toolbarItems = [shareSelectedBtn, copyBtn, moveBtn, deleteBtn, flexibleSpace, moreBtn]
             }
             let enableBtn = (tableView.indexPathsForSelectedRows?.count ?? 0) != 0
             copyBtn.isEnabled = enableBtn
             moveBtn.isEnabled = enableBtn
             deleteBtn.isEnabled = enableBtn
             shareSelectedBtn.isEnabled = enableBtn
+            moreBtn.isEnabled = enableBtn
             if files.count == 0 {
                 selectAllBtn.title = i18n("Select All")
                 selectAllBtn.isEnabled = false
@@ -47,7 +48,13 @@ extension FileBrowserViewController {
                 selectAllBtn.title = i18n("Select All")
             }
             selectAllBtn.isEnabled = files.count != 0
-            return
+            navigationItem.leftBarButtonItem = selectAllBtn
+        } else {
+            if folderURL == Global.shared.fileBrowserRootURL {
+                navigationItem.leftBarButtonItem = openWebServerBtn
+            } else {
+                navigationItem.leftBarButtonItem = nil
+            }
         }
     }
 
@@ -127,5 +134,14 @@ extension FileBrowserViewController {
         avc.popoverPresentationController?.sourceRect = view.bounds
 
         present(avc, animated: true)
+    }
+
+    func compressSelected() {
+        let res = checkSelectedItems()
+        guard !res.selectedItemFileInfo.isEmpty else { return }
+        compress(res.selectedItemFileInfo)
+        if tableView.isEditing {
+            toggleSelectMode()
+        }
     }
 }

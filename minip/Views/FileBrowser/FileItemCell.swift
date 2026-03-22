@@ -85,6 +85,10 @@ class FileItemCell: UITableViewCell {
 
         let urlChanged = old?.url != info.url
 
+        if old?.isFolder != info.isFolder {
+            itemImageView.image = nil
+        }
+
         if info.isFolder {
             sizeLabel.isHidden = true
 
@@ -107,15 +111,19 @@ class FileItemCell: UITableViewCell {
                 let request = QLThumbnailGenerator.Request(fileAt: info.url, size: CGSize(width: Self.iconSize, height: Self.iconSize), scale: scale, representationTypes: .all)
                 thumbnailRequest = request
                 QLThumbnailGenerator.shared.generateBestRepresentation(for: request) { [weak self] representation, _ in
+                    var finaleImage: UIImage?
+
+                    if let representation {
+                        let image = representation.uiImage
+                        let needsBorder = representation.type != .icon
+                        finaleImage = image.withRoundedCorners(radius: 1, border: needsBorder)
+                    } else {
+                        finaleImage = UIImage(named: "file")
+                    }
+
                     DispatchQueue.main.async {
                         guard let self, self.thumbnailRequest === request else { return }
-                        if let representation {
-                            let image = representation.uiImage
-                            let needsBorder = representation.type != .icon
-                            self.itemImageView.image = image.withRoundedCorners(radius: 1, border: needsBorder)
-                        } else {
-                            self.itemImageView.image = UIImage(named: "file")
-                        }
+                        self.itemImageView.image = finaleImage
                     }
                 }
             }

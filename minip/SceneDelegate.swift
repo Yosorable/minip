@@ -49,11 +49,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
                 lastFolder.split(separator: "/").forEach {
                     url = url.appending(component: $0, directoryHint: .isDirectory)
-                    if Global.shared.sandboxRootURL.standardizedFileURL.isContained(in: url) {
+                    if url.standardizedFileURL.isContained(in: Global.shared.sandboxRootURL.standardizedFileURL) {
                         vcs.append(FileBrowserViewController(folderURL: url))
                     }
                 }
- 
+
                 if vcs.count == 0 {
                     vcs.append(FileBrowserViewController(folderURL: Global.shared.fileBrowserRootURL))
                 }

@@ -100,6 +100,8 @@ class MiniPageViewController: UIViewController {
             MiniAppManager.shared.openedApp = app
         }
 
+        setupAppLifecycleObservers()
+
         let showNav = app.navigationBarStatus != "hidden"
 
         webview = MWebViewPool.shared.getReusedWebView(forHolder: self)
@@ -279,17 +281,53 @@ class MiniPageViewController: UIViewController {
         webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"pulldownrefresh\"))")
     }
 
+    // MARK: - App Page Lifecycle Events
+
+    private func dispatchPageEvent(_ name: String, reason: String, isAppClosing: Bool? = nil) {
+        var detail = "reason: \"\(reason)\""
+        if let isAppClosing {
+            detail += ", isAppClosing: \(isAppClosing)"
+        }
+        webview.evaluateJavaScript(
+            "window.dispatchEvent(new CustomEvent(\"\(name)\", { detail: { \(detail) } }))"
+        )
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
-        webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"viewDidAppear\"))")
+        dispatchPageEvent("appPageShow", reason: "show")
     }
 
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-
-        webview.evaluateJavaScript("window.dispatchEvent(new CustomEvent(\"viewDidDisappear\"))")
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        let isAppClosing = MiniAppManager.shared.isClosingApp
+        if isMovingFromParent || isAppClosing {
+            dispatchPageEvent("appPageHide", reason: "destroy", isAppClosing: isAppClosing)
+        } else {
+            dispatchPageEvent("appPageHide", reason: "hide")
+        }
     }
+
+    private func setupAppLifecycleObservers() {
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(appDidEnterBackground),
+            name: UIApplication.didEnterBackgroundNotification, object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(appWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification, object: nil
+        )
+    }
+
+    @objc private func appDidEnterBackground() {
+        dispatchPageEvent("appPageHide", reason: "background")
+    }
+
+    @objc private func appWillEnterForeground() {
+        dispatchPageEvent("appPageShow", reason: "foreground")
+    }
+
+    // MARK: - Refresh Control
 
     func addRefreshControl() {
         guard refreshControl == nil else {
@@ -303,6 +341,7 @@ class MiniPageViewController: UIViewController {
 
     @objc
     func close() {
+        MiniAppManager.shared.isClosingApp = true
         dismiss(
             animated: true,
             completion: {

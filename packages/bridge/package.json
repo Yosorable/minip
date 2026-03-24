@@ -1,0 +1,45 @@
+{
+  "name": "minip-bridge",
+  "version": "1.0.31",
+  "description": "minip webview bridge",
+  "main": "index.ts",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.mts"
+    },
+    "./kysely": {
+      "import": "./dist/kysely/index.mjs",
+      "types": "./dist/kysely/index.d.mts"
+    },
+    "./fs": {
+      "import": "./dist/fs/index.mjs",
+      "types": "./dist/fs/index.d.mts"
+    },
+    "./path": {
+      "import": "./dist/path/index.mjs",
+      "types": "./dist/path/index.d.mts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --noEmit && tsup"
+  },
+  "keywords": [],
+  "author": "yosorable",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^9.19.0",
+    "prettier": "^3.4.2",
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yosorable/minip"
+  },
+  "dependencies": {
+    "kysely": "^0.28.11"
+  }
+}

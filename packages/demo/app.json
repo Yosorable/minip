@@ -1,0 +1,33 @@
+{
+  "name": "minip-demo",
+  "displayName": "Minip Api demo",
+  "appId": "d538c758-0e9e-4d80-99c8-98dbcaffe25c",
+  "homepage": "index.html",
+  "author": "Yosorable",
+  "website": "https://github.com/Yosorable/minip-demo",
+  "navigationBarStatus": "display",
+  "icon": "app.jpg",
+  "version": "0.0.7",
+  "tabs": [
+    {
+      "path": "index.html",
+      "title": "Home",
+      "systemImage": "house.fill"
+    },
+    {
+      "path": "index.html?page=Categories",
+      "title": "Categories",
+      "systemImage": "text.book.closed.fill"
+    },
+    {
+      "path": "index.html?page=Profile",
+      "title": "Profile",
+      "systemImage": "person.fill"
+    },
+    {
+      "path": "index.html?page=Settings",
+      "title": "Settings",
+      "systemImage": "gearshape.fill"
+    }
+  ]
+}

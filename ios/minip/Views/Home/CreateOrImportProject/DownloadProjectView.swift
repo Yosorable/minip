@@ -1,0 +1,182 @@
+//
+//  DownloadProjectView.swift
+//  minip
+//
+//  Created by ByteDance on 2023/7/14.
+//
+
+import Alamofire
+import Defaults
+import ProgressHUD
+import SwiftUI
+
+class DownloadProjectViewController: UIHostingController<DownloadProjectView> {
+    init() {
+        super.init(rootView: DownloadProjectView())
+    }
+
+    @available(*, unavailable)
+    @MainActor @preconcurrency dynamic required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        rootView.closeFunc = { [weak self] in
+            self?.dismiss(animated: true)
+        }
+    }
+}
+
+struct DownloadProjectView: View {
+    var onSuccess: (() -> Void)?
+    var closeFunc: (() -> Void)?
+
+    @State var downURL: String = Defaults[.lastDownloadedURL]
+    @State var downFilename: String = ""
+
+    @State var showAlert = false
+    @State var alertMsg = ""
+
+    @State var downloading: Bool = false
+    @State var downProgress: Progress? = nil
+    @State var uncompressing: Bool = false
+
+    @State var downloadReq: DownloadRequest? = nil
+
+    var body: some View {
+        List {
+            Section {
+                HStack {
+                    Text("URL")
+                    TextField(text: $downURL) {
+                        Text("Please enter the url")
+                    }
+                    .disabled(downloading)
+                }
+            } footer: {
+                HStack {
+                    Text("Only support .zip file")
+                        .foregroundColor(.secondary)
+                }
+            }
+
+            Section {
+                Text("Filename")
+
+                TextField(text: $downFilename) {
+                    Text("Please enter filename (not required)")
+                }
+                .disabled(downloading)
+            } footer: {
+                Text("The downloaded file name will use the last url component item, if some error occurs, this text will be used (if it is empty, \"default.zip\" will be used).")
+            }
+
+            Section {} footer: {
+                Text("Downloaded files are saved at tmp directory in documents. You need to delete them manually.")
+            }
+            if downloading || uncompressing {
+                Section {
+                    Button(role: .destructive, action: {
+                        downloadReq?.cancel()
+                        downloading = false
+                    }, label: {
+                        HStack {
+                            Spacer()
+                            Text("Cancel")
+                            Spacer()
+                        }
+                    })
+                    .disabled(uncompressing)
+                } header: {
+                    HStack {
+                        Spacer()
+                        if downloading {
+                            Text("Downloading")
+                        } else if uncompressing {
+                            Text("Uncompressing")
+                        }
+                        Text("...")
+                        Spacer()
+                    }
+                }
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(Text("home.menu.load_from_web"))
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    closeFunc?()
+                } label: {
+                    Text("Cancel")
+                }
+                .disabled(downloading || uncompressing)
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    downloadFile()
+                } label: {
+                    Text("Download")
+                        .disabled(downloading || downURL.isEmpty || uncompressing)
+                }
+            }
+        }
+        .onChange(of: showAlert, perform: { newValue in
+            if newValue {
+                let alert = UIAlertController(title: "Error", message: alertMsg, preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                getTopViewController()?.present(alert, animated: true, completion: nil)
+            }
+        })
+    }
+
+    func downloadFile() {
+        guard let downurl = URL(string: downURL) else {
+            alertMsg = "Error URL"
+            showAlert = true
+            return
+        }
+        downloading = true
+        let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let destination: (URL, HTTPURLResponse) -> (URL, DownloadRequest.Options) = { _, res in
+            let pathComponent = res.suggestedFilename ?? "default.zip"
+
+            let finalPath = docURL.appending(path: ".tmp", directoryHint: .isDirectory).appending(component: pathComponent)
+            return (finalPath, [.createIntermediateDirectories, .removePreviousFile])
+        }
+        downloadReq = AF.download(downurl, to: destination)
+            .downloadProgress { progress in
+                downProgress = progress
+                logger.debug("[downloadFile] \(progress.fractionCompleted)")
+            }
+            .response(completionHandler: { resp in
+                downloading = false
+                if let err = resp.error {
+                    alertMsg = err.localizedDescription
+                    showAlert = true
+                    return
+                } else if let tmpUrl = resp.fileURL {
+                    uncompressing = true
+                    ProgressHUD.success("Download succeeded, uncompressing")
+                    unCompress(file: tmpUrl)
+                    uncompressing = false
+                    Defaults[.lastDownloadedURL] = downURL
+                    return
+                }
+                alertMsg = "Unknow error"
+                showAlert = true
+            })
+    }
+
+    func unCompress(file: URL) {
+        InstallMiniApp(pkgFile: file, onSuccess: {
+            ProgressHUD.succeed(i18n("Success"))
+            closeFunc?()
+            onSuccess?()
+        }, onFailed: { err in
+            alertMsg = err
+            showAlert = true
+        })
+    }
+}

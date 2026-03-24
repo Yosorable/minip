@@ -1,0 +1,128 @@
+/*
+  Localizable.strings
+  minip
+
+  Created by LZY on 2025/2/21.
+
+*/
+
+"Projects" = "Proyectos";
+"Files" = "Archivos";
+"Settings" = "Ajustes";
+"Delete" = "Eliminar";
+"Compress" = "Comprimir";
+"Decompress" = "Descomprimir";
+"Compressing" = "Comprimiendo";
+"Compressed successfully" = "Comprimido correctamente";
+"Cancel" = "Cancelar";
+"Create" = "Crear";
+"Download" = "Descargar";
+"Success" = "Éxito";
+"success" = "Éxito";
+"created_successfully" = "Creado con éxito";
+"project_created_successfully" = "Proyecto creado con éxito";
+"delete_alert_confirm_message" = "¿Seguro que deseas eliminar %1$@?";
+"delete_successfully" = "Proyecto eliminado con éxito";
+"Confirm" = "Confirmar";
+"Privacy" = "Privacidad";
+"Permission" = "Permiso";
+"Allow" = "Permitir";
+"Deny" = "Denegar";
+"Save" = "Guardar";
+"Reload" = "Recargar";
+"Appearance" = "Apariencia";
+"Follow System" = "Seguir sistema";
+"Light" = "Claro";
+"Dark" = "Oscuro";
+"More" = "Más";
+"Copy" = "Copiar";
+"Move" = "Mover";
+"Rename" = "Renombrar";
+"Select" = "Seleccionar";
+"Select All" = "Seleccionar todo";
+"Deselect All" = "Deseleccionar todo";
+"File" = "Archivo";
+"Folder" = "Carpeta";
+"Share" = "Compartir";
+"Text" = "Texto";
+"Image" = "Imagen";
+"Close" = "Cerrar";
+"Start" = "Iniciar";
+"Stop" = "Detener";
+"Network" = "Red";
+
+// MARK: home
+"home.menu.create_project" = "Crear nuevo proyecto";
+"home.menu.load_from_web" = "Cargar desde la web";
+"home.menu.load_from_file" = "Cargar desde archivo";
+"home.delete_alert_title" = "Eliminar proyecto";
+"home.no_project" = "No hay nada aquí";
+"home.no_project_msg_part1" = "Toca el botón ";
+"home.no_project_msg_part2" = " en la esquina superior derecha para crear nuevos proyectos.";
+
+"cp.create_project" = "Crear proyecto";
+"cp.name" = "nombre";
+"cp.display_name" = "nombre para mostrar";
+
+// MARK: files
+"f.create_file" = "Crear archivo";
+"f.create_folder" = "Crear carpeta";
+"f.import_file" = "Importar archivo";
+"f.create_file_tip" = "Ingresa el nombre del archivo";
+"f.create_folder_tip" = "Ingresa el nombre de la carpeta";
+"f.file_name" = "Nombre del archivo";
+"f.folder_name" = "Nombre de la carpeta";
+
+"f.clean_trash" = "Vaciar";
+"f.clean_trash_confirm" = "¿Seguro que deseas vaciar la papelera?";
+
+"f.delete_file_confirm_message" = "¿Seguro que deseas eliminar este archivo: %1$@ ?";
+"f.delete_folder_confirm_message" = "¿Seguro que deseas eliminar esta carpeta: %1$@ ?";
+"f.moved_to_trash" = "Movido a la papelera";
+"f.deleted_success" = "Eliminado con éxito";
+
+"f.delete_selected_confirm_message" = "¿Seguro que deseas eliminar %1$@ elementos seleccionados?";
+
+"f.copy_files_message" = "Copiar %@ archivos";
+"f.copy_folders_message" = "Copiar %@ carpetas";
+"f.copy_files_folders_message" = "Copiar %@ archivos y carpetas";
+"f.move_files_message" = "Mover %@ archivos";
+"f.move_folders_message" = "Mover %@ carpetas";
+"f.move_files_folders_message" = "Mover %@ archivos y carpetas";
+
+"f.empty_folder" = "Carpeta vacía";
+"f.empty_folder_msg_p1" = "Toca el botón ";
+"f.empty_folder_msg_p2" = " en la esquina superior derecha para crear nuevos archivos o carpetas.";
+"f.empty_trash_msg" = "Todo limpio.";
+
+"f.select_file_type" = "Tipo de archivo desconocido, selecciona el tipo para abrirlo.";
+
+"Renamed successfully" = "Renombrado con éxito";
+
+// MARK: file server
+"fs.title" = "Servidor de archivos";
+"fs.not_running" = "El servidor de archivos no está en ejecución";
+"fs.note_step1" = "1. Inicia el servidor de archivos.";
+"fs.note_step2" = "2. En la misma red, abre la URL mostrada en el navegador de otro dispositivo.";
+"fs.note_step3" = "3. Transfiere archivos.";
+"fs.note_warnning" = "El servidor de archivos se cerrará automáticamente si sales de esta página, la app pasa a segundo plano o la pantalla se apaga.";
+
+// MARK: settings
+"Language" = "Idioma";
+"s.clear_wkwebview_cache" = "Borrar caché de WKWebView";
+"s.clear_kfimage_cache" = "Borrar caché de KFImage";
+"s.use_capsule_button" = "Usar botón cápsula";
+"s.documentation_source_code" = "Documentación y código fuente: [GitHub - Yosorable/Minip](https://github.com/yosorable/minip)";
+
+// MARK: MiniApp Privacy
+"mp.camera" = "Cámara";
+"mp.clipboard" = "Portapapeles";
+"mp.install_project" = "Instalar proyecto";
+"mp.get_projects_list" = "Obtener lista de proyectos";
+"mp.open_project" = "Abrir proyecto";
+
+"mp.request_camera_permission" = "%1$@ solicita acceso a la cámara";
+"mp.request_clipboard_permission" = "%1$@ solicita acceso al portapapeles";
+"mp.request_install_project_permission" = "%1$@ solicita permiso para instalar un proyecto";
+"mp.request_read_projects_list_permission" = "%1$@ solicita permiso para leer la lista de proyectos";
+"mp.request_open_project_permission" = "%1$@ solicita permiso para abrir otro proyecto";

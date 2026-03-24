@@ -1,0 +1,128 @@
+/*
+  Localizable.strings
+  minip
+
+  Created by LZY on 2025/2/21.
+
+*/
+
+"Projects" = "Проекты";
+"Files" = "Файлы";
+"Settings" = "Настройки";
+"Delete" = "Удалить";
+"Compress" = "Сжать";
+"Decompress" = "Распаковать";
+"Compressing" = "Сжатие";
+"Compressed successfully" = "Успешно сжато";
+"Cancel" = "Отмена";
+"Create" = "Создать";
+"Download" = "Скачать";
+"Success" = "Успешно";
+"success" = "Успешно";
+"created_successfully" = "Успешно создано";
+"project_created_successfully" = "Проект успешно создан";
+"delete_alert_confirm_message" = "Вы уверены, что хотите удалить %1$@?";
+"delete_successfully" = "Проект успешно удалён";
+"Confirm" = "Подтвердить";
+"Privacy" = "Конфиденциальность";
+"Permission" = "Разрешение";
+"Allow" = "Разрешить";
+"Deny" = "Отклонить";
+"Save" = "Сохранить";
+"Reload" = "Обновить";
+"Appearance" = "Оформление";
+"Follow System" = "Как в системе";
+"Light" = "Светлая";
+"Dark" = "Тёмная";
+"More" = "Ещё";
+"Copy" = "Копировать";
+"Move" = "Переместить";
+"Rename" = "Переименовать";
+"Select" = "Выбрать";
+"Select All" = "Выбрать все";
+"Deselect All" = "Снять выбор";
+"File" = "Файл";
+"Folder" = "Папка";
+"Share" = "Поделиться";
+"Text" = "Текст";
+"Image" = "Изображение";
+"Close" = "Закрыть";
+"Start" = "Запустить";
+"Stop" = "Остановить";
+"Network" = "Сеть";
+
+// MARK: home
+"home.menu.create_project" = "Создать новый проект";
+"home.menu.load_from_web" = "Загрузить из интернета";
+"home.menu.load_from_file" = "Загрузить из файла";
+"home.delete_alert_title" = "Удалить проект";
+"home.no_project" = "Здесь пусто";
+"home.no_project_msg_part1" = "Нажмите кнопку ";
+"home.no_project_msg_part2" = " в правом верхнем углу, чтобы создать новые проекты.";
+
+"cp.create_project" = "Создать проект";
+"cp.name" = "имя";
+"cp.display_name" = "отображаемое имя";
+
+// MARK: files
+"f.create_file" = "Создать файл";
+"f.create_folder" = "Создать папку";
+"f.import_file" = "Импортировать файл";
+"f.create_file_tip" = "Введите имя файла";
+"f.create_folder_tip" = "Введите имя папки";
+"f.file_name" = "Имя файла";
+"f.folder_name" = "Имя папки";
+
+"f.clean_trash" = "Очистить";
+"f.clean_trash_confirm" = "Вы уверены, что хотите очистить корзину?";
+
+"f.delete_file_confirm_message" = "Вы уверены, что хотите удалить этот файл: %1$@ ?";
+"f.delete_folder_confirm_message" = "Вы уверены, что хотите удалить эту папку: %1$@ ?";
+"f.moved_to_trash" = "Перемещено в корзину";
+"f.deleted_success" = "Успешно удалено";
+
+"f.delete_selected_confirm_message" = "Вы уверены, что хотите удалить %1$@ выбранных элементов?";
+
+"f.copy_files_message" = "Копировать %@ файлов";
+"f.copy_folders_message" = "Копировать %@ папок";
+"f.copy_files_folders_message" = "Копировать %@ файлов и папок";
+"f.move_files_message" = "Переместить %@ файлов";
+"f.move_folders_message" = "Переместить %@ папок";
+"f.move_files_folders_message" = "Переместить %@ файлов и папок";
+
+"f.empty_folder" = "Пустая папка";
+"f.empty_folder_msg_p1" = "Нажмите кнопку ";
+"f.empty_folder_msg_p2" = " в правом верхнем углу, чтобы создать файлы или папки.";
+"f.empty_trash_msg" = "Всё очищено.";
+
+"f.select_file_type" = "Неизвестный тип файла, выберите тип для открытия.";
+
+"Renamed successfully" = "Успешно переименовано";
+
+// MARK: file server
+"fs.title" = "Файловый сервер";
+"fs.not_running" = "Файловый сервер не запущен";
+"fs.note_step1" = "1. Запустите файловый сервер.";
+"fs.note_step2" = "2. В той же сети откройте отображаемый URL в браузере другого устройства.";
+"fs.note_step3" = "3. Передайте файлы.";
+"fs.note_warnning" = "Файловый сервер автоматически остановится, если вы покинете эту страницу, приложение перейдёт в фоновый режим или экран выключится.";
+
+// MARK: settings
+"Language" = "Язык";
+"s.clear_wkwebview_cache" = "Очистить кеш WKWebView";
+"s.clear_kfimage_cache" = "Очистить кеш KFImage";
+"s.use_capsule_button" = "Использовать кнопку-капсулу";
+"s.documentation_source_code" = "Документация и исходный код: [GitHub - Yosorable/Minip](https://github.com/yosorable/minip)";
+
+// MARK: MiniApp Privacy
+"mp.camera" = "Камера";
+"mp.clipboard" = "Буфер обмена";
+"mp.install_project" = "Установить проект";
+"mp.get_projects_list" = "Получить список проектов";
+"mp.open_project" = "Открыть проект";
+
+"mp.request_camera_permission" = "%1$@ запрашивает доступ к камере";
+"mp.request_clipboard_permission" = "%1$@ запрашивает доступ к буферу обмена";
+"mp.request_install_project_permission" = "%1$@ запрашивает разрешение на установку проекта";
+"mp.request_read_projects_list_permission" = "%1$@ запрашивает разрешение на чтение списка проектов";
+"mp.request_open_project_permission" = "%1$@ запрашивает разрешение на открытие другого проекта";

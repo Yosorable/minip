@@ -1,0 +1,12 @@
+{
+  "name": "minip",
+  "private": true,
+  "packageManager": "pnpm@10.6.5",
+  "scripts": {
+    "bridge:build": "pnpm --filter minip-bridge build",
+    "demo:build": "pnpm --filter minip-demo build",
+    "demo:bundle": "pnpm --filter minip-demo bundle",
+    "lsp:build": "pnpm --filter language-service-bundler build",
+    "bridge:publish": "pnpm --filter minip-bridge publish"
+  }
+}

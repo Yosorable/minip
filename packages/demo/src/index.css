@@ -1,0 +1,94 @@
+html {
+  color-scheme: light dark;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+  word-break: break-all;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+button {
+  background: transparent;
+  padding: 0.3rem;
+  font-size: 1rem;
+  border: 2px solid gray;
+  color: black;
+  border-radius: 10px;
+}
+
+.fade-in {
+  animation: fadeIn ease 0.3s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+hr {
+  color: gray;
+  background-color: gray;
+  border: none;
+  height: 1px;
+  opacity: 0.3;
+  margin: 0 0 0 12px;
+}
+
+.list-background {
+  border-radius: 20px;
+  background-color: #f1f1f6;
+}
+
+.res-div {
+  height: 100px;
+  width: 100%;
+  overflow-y: auto;
+  background-color: lightblue;
+  white-space: pre-wrap;
+}
+
+input {
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  button {
+    /* border: 2px solid white; */
+    color: white;
+  }
+
+  hr {
+    color: #3b3b3f;
+    border-color: #3b3b3f;
+  }
+
+  .list-background {
+    background-color: #1e1e21;
+  }
+
+  .res-div {
+    background-color: #4b6b9f;
+  }
+}

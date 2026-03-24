@@ -98,6 +98,9 @@ fastlane/test_output
 
 iOSInjectionProject/
 
-# Language Service Bundler
-tools/language-service-bundler/node_modules/
+# Node
+node_modules/
+
+# pnpm
+pnpm-lock.yaml
 

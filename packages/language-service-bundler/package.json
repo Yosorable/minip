@@ -1,0 +1,19 @@
+{
+  "name": "language-service-bundler",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/generate-minip-completions.js && node scripts/generate-lib-dts.js && node esbuild.config.js"
+  },
+  "dependencies": {
+    "minip-bridge": "workspace:*",
+    "typescript": "^5.7.0",
+    "vscode-css-languageservice": "^6.3.1",
+    "vscode-html-languageservice": "^5.3.1",
+    "vscode-languageserver-textdocument": "^1.0.12",
+    "vscode-languageserver-types": "^3.17.5"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.3"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "minip-demo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b && vite build",
+    "bundle": "pnpm build && vite preview"
+  },
+  "dependencies": {
+    "kysely": "^0.28.11",
+    "minip-bridge": "workspace:*",
+    "solid-js": "^1.9.5"
+  },
+  "devDependencies": {
+    "@types/archiver": "^6.0.3",
+    "@types/qrcode": "^1.5.5",
+    "archiver": "^7.0.1",
+    "qrcode": "^1.5.4",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0",
+    "vite-plugin-solid": "^2.11.2"
+  }
+}

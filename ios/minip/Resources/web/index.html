@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minip File Server</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <div class="header-title">Minip File Server</div>
+    </header>
+
+    <div class="breadcrumb" id="breadcrumb">
+      <span class="breadcrumb-item active" data-path="">Root Directory</span>
+    </div>
+
+    <div class="file-list">
+      <div class="file-list-header">
+        <span>Name</span>
+        <span>Size</span>
+        <span>Modified Time</span>
+        <span>Operations</span>
+      </div>
+
+      <div id="file-list-content">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <span>Loading...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="uploadModal">
+    <div class="modal-content">
+      <div class="modal-header">Upload Files</div>
+      <div class="modal-body">
+        <input type="file" id="fileInput" multiple style="display: none;">
+
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+          <button class="btn btn-primary" id="selectFileBtn">
+            <i class="fas fa-file-upload"></i> Select File
+          </button>
+        </div>
+
+        <div class="upload-file-list" id="uploadFileList"></div>
+
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar">0%</div>
+        </div>
+        <div class="upload-status" id="uploadStatus">Ready to upload...</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="uploadModalCancel">Cancel</button>
+        <button class="btn btn-primary" id="uploadModalConfirm">Start</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm -->
+  <div class="modal" id="confirmModal">
+    <div class="modal-content">
+      <div class="modal-header" id="confirmModalTitle">Confirm</div>
+      <div class="modal-body" id="confirmModalMessage">Are you sure you want to delete this ${fileType ===
+        "folder" ? "folder" : "file"} "${fileName}"? This operation cannot be undone.</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="confirmModalCancel">Cancel</button>
+        <button class="btn btn-danger" id="confirmModalConfirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rename -->
+  <div class="modal" id="renameModal">
+    <div class="modal-content">
+      <div class="modal-header">Rename</div>
+      <div class="modal-body">
+        <input type="text" class="input-field" id="renameInput" placeholder="Enter new name">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="renameModalCancel">Cancel</button>
+        <button class="btn btn-primary" id="renameModalConfirm">Rename</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create file -->
+  <div class="modal" id="createFileModal">
+    <div class="modal-content">
+      <div class="modal-header">Create file</div>
+      <div class="modal-body">
+        <input type="text" class="input-field" id="createFileInput" placeholder="Enter file name (including extension)">
+        <div class="error-message" id="createFileError"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="createFileModalCancel">Cancel</button>
+        <button class="btn btn-success" id="createFileModalConfirm">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create folder -->
+  <div class="modal" id="createFolderModal">
+    <div class="modal-content">
+      <div class="modal-header">Create folder</div>
+      <div class="modal-body">
+        <input type="text" class="input-field" id="createFolderInput" placeholder="Enter folder name">
+        <div class="error-message" id="createFolderError"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="createFolderModalCancel">Cancel</button>
+        <button class="btn btn-success" id="createFolderModalConfirm">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast message -->
+  <div class="toast" id="toast"></div>
+
+  <script src="index.js"></script>
+</body>
+
+</html>

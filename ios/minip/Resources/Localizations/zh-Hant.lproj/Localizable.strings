@@ -1,0 +1,128 @@
+/*
+  Localizable.strings
+  minip
+
+  Created by LZY on 2025/2/21.
+
+*/
+
+"Projects" = "專案";
+"Files" = "檔案";
+"Settings" = "設定";
+"Delete" = "刪除";
+"Compress" = "壓縮";
+"Decompress" = "解壓";
+"Compressing" = "壓縮中";
+"Compressed successfully" = "壓縮成功";
+"Cancel" = "取消";
+"Create" = "建立";
+"Download" = "下載";
+"Success" = "成功";
+"success" = "成功";
+"created_successfully" = "建立成功";
+"project_created_successfully" = "專案建立成功";
+"delete_alert_confirm_message" = "確認刪除 %1$@ ？";
+"delete_successfully" = "刪除成功";
+"Confirm" = "確認";
+"Privacy" = "隱私";
+"Permission" = "權限";
+"Allow" = "允許";
+"Deny" = "拒絕";
+"Save" = "儲存";
+"Reload" = "重新載入";
+"Appearance" = "外觀";
+"Follow System" = "跟隨系統";
+"Light" = "淺色";
+"Dark" = "深色";
+"More" = "更多";
+"Copy" = "拷貝";
+"Move" = "移動";
+"Rename" = "重新命名";
+"Select" = "選擇";
+"Select All" = "全選";
+"Deselect All" = "取消全選";
+"File" = "檔案";
+"Folder" = "資料夾";
+"Share" = "分享";
+"Text" = "文字";
+"Image" = "圖片";
+"Close" = "關閉";
+"Start" = "開始";
+"Stop" = "停止";
+"Network" = "網路";
+
+// MARK: home
+"home.menu.create_project" = "建立新專案";
+"home.menu.load_from_web" = "從網路載入";
+"home.menu.load_from_file" = "從檔案載入";
+"home.delete_alert_title" = "刪除專案";
+"home.no_project" = "這裡空空如也";
+"home.no_project_msg_part1" = "點擊右上角的 ";
+"home.no_project_msg_part2" = " 按鈕來建立新專案。";
+
+"cp.create_project" = "建立專案";
+"cp.name" = "名稱";
+"cp.display_name" = "顯示名稱";
+
+// MARK: files
+"f.create_file" = "新建檔案";
+"f.create_folder" = "新建資料夾";
+"f.import_file" = "匯入檔案";
+"f.create_file_tip" = "請輸入檔案名稱";
+"f.create_folder_tip" = "請輸入資料夾名稱";
+"f.file_name" = "檔案名稱";
+"f.folder_name" = "資料夾名稱";
+
+"f.clean_trash" = "清空";
+"f.clean_trash_confirm" = "確認清空垃圾桶？";
+
+"f.delete_file_confirm_message" = "刪除此檔案：%1$@ ？";
+"f.delete_folder_confirm_message" = "刪除此資料夾：%1$@ ？";
+"f.moved_to_trash" = "已移至垃圾桶";
+"f.deleted_success" = "刪除成功";
+
+"f.delete_selected_confirm_message" = "確認刪除所選的%1$@項？";
+
+"f.copy_files_message" = "拷貝%@個檔案";
+"f.copy_folders_message" = "拷貝%@個資料夾";
+"f.copy_files_folders_message" = "拷貝%@個檔案和資料夾";
+"f.move_files_message" = "移動%@個檔案";
+"f.move_folders_message" = "移動%@個資料夾";
+"f.move_files_folders_message" = "移動%@個檔案和資料夾";
+
+"f.empty_folder" = "空資料夾";
+"f.empty_folder_msg_p1" = "點擊右上角的 ";
+"f.empty_folder_msg_p2" = " 按鈕來新建檔案或資料夾。";
+"f.empty_trash_msg" = "已經清理乾淨了。";
+
+"f.select_file_type" = "檔案類型未知，請選擇開啟方式";
+
+"Renamed successfully" = "重新命名成功";
+
+// MARK: file server
+"fs.title" = "檔案伺服器";
+"fs.not_running" = "檔案伺服器未執行";
+"fs.note_step1" = "1. 啟動檔案伺服器。";
+"fs.note_step2" = "2. 在同一網路中，使用其他裝置的瀏覽器開啟顯示的URL。";
+"fs.note_step3" = "3. 傳輸檔案。";
+"fs.note_warnning" = "如果你離開此頁面、應用程式進入背景或裝置螢幕關閉，檔案伺服器將自動關閉。";
+
+// MARK: settings
+"Language" = "語言";
+"s.clear_wkwebview_cache" = "清除WKWebView快取";
+"s.clear_kfimage_cache" = "清除KFImage快取";
+"s.use_capsule_button" = "使用膠囊按鈕";
+"s.documentation_source_code" = "文件和原始碼：[GitHub - Yosorable/Minip](https://github.com/yosorable/minip)";
+
+// MARK: MiniApp Privacy
+"mp.camera" = "相機";
+"mp.clipboard" = "剪貼簿";
+"mp.install_project" = "安裝專案";
+"mp.get_projects_list" = "專案列表";
+"mp.open_project" = "開啟專案";
+
+"mp.request_camera_permission" = "%1$@ 請求相機權限";
+"mp.request_clipboard_permission" = "%1$@ 請求剪貼簿權限";
+"mp.request_install_project_permission" = "%1$@ 請求安裝專案權限";
+"mp.request_read_projects_list_permission" = "%1$@ 請求取得專案列表權限";
+"mp.request_open_project_permission" = "%1$@ 請求開啟其他專案權限";

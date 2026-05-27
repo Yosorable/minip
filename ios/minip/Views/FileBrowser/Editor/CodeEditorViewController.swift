@@ -405,7 +405,8 @@ class CodeEditorViewController: UIViewController {
         let scanLen = min(col, nsLine.length)
         var wordLen = 0
         for i in stride(from: scanLen - 1, through: 0, by: -1) {
-            let ch = Character(UnicodeScalar(nsLine.character(at: i))!)
+            guard let scalar = UnicodeScalar(nsLine.character(at: i)) else { break }
+            let ch = Character(scalar)
             if Self.isWordChar(ch) {
                 wordLen += 1
             } else {

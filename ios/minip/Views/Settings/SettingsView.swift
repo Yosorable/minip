@@ -101,6 +101,7 @@ struct SettingsView: View {
     @Default(.useCapsuleButton) var useCapsuleButton
     @Default(.colorScheme) var colorScheme
     @Default(.useSanboxRoot) var useSandboxRoot
+    @Default(.enableWebView120FPS) var enableWebView120FPS
 
     var body: some View {
         NavigationStack {
@@ -199,6 +200,16 @@ struct SettingsView: View {
                                 Text("Allow Inspecting WKWebView")
                             } icon: {
                                 SettingsIcon(systemName: "ladybug.fill", color: .red)
+                            }
+                        })
+
+                    Toggle(
+                        isOn: $enableWebView120FPS,
+                        label: {
+                            Label {
+                                Text("Enable WKWebView High Refresh Rate")
+                            } icon: {
+                                SettingsIcon(systemName: "speedometer", color: .pink)
                             }
                         })
 

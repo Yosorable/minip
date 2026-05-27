@@ -31,6 +31,9 @@ extension Defaults.Keys {
     // use sandbox root as file browser root path
     static let useSanboxRoot = Key<Bool>("useSandboxRoot", default: false)
 
+    // lift WKWebView 60fps cap (enable high refresh rate / 120fps)
+    static let enableWebView120FPS = Key<Bool>("enableWebView120FPS", default: true)
+
     static let lastTabIndex = Key<Int>("lastTabIndex", default: 0)
 
     static let filebrowserLastFolder = Key<String>("filebrowserLastFolder", default: "Documents")

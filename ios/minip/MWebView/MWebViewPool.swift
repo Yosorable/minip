@@ -5,6 +5,7 @@
 //  Created by LZY on 2023/11/1.
 //
 
+import Defaults
 import OSLog
 import UIKit
 import WebKit
@@ -15,8 +16,6 @@ protocol MWebViewPoolProtocol: AnyObject {
 }
 
 public class MWebViewPool: NSObject {
-    private let processPool = WKProcessPool()
-
     // webviews be owned by viewcontrollers
     public var visibleWebViewSet = Set<MWebView>()
     // webviews in recycle pool
@@ -72,7 +71,6 @@ extension MWebViewPool {
     func createNewWebvew() -> MWebView {
         logger.debug("[MWebViewPool] create new")
         let cfg = MWebView.defaultConfiguration()
-        cfg.processPool = processPool
         cfg.setURLSchemeHandler(MinipRequest.shared, forURLScheme: "miniphttp")
         cfg.setURLSchemeHandler(MinipRequest.shared, forURLScheme: "miniphttps")
 
@@ -134,6 +132,8 @@ public extension MWebViewPool {
         webView.id = counter
         counter += 1
         lock.signal()
+
+        MWebView.setHighRefreshRate(webView.configuration.preferences, enabled: Defaults[.enableWebView120FPS])
 
         return webView
     }

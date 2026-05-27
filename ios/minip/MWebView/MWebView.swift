@@ -21,6 +21,24 @@ public class MWebView: WKWebView {
         return nil
     }
 
+    static func setHighRefreshRate(_ preferences: WKPreferences, enabled: Bool) {
+        let featureKey = "PreferPageRenderingUpdatesNear60FPSEnabled"
+
+        guard let features = WKPreferences.perform(NSSelectorFromString("_features"))?
+                .takeUnretainedValue() as? [NSObject],
+              let feature = features.first(where: {
+                  $0.value(forKey: "key") as? String == featureKey
+              })
+        else { return }
+
+        let setSel = NSSelectorFromString("_setEnabled:forFeature:")
+        guard let method = class_getInstanceMethod(WKPreferences.self, setSel) else { return }
+
+        typealias SetEnabledFn = @convention(c) (NSObject, Selector, Bool, NSObject) -> Void
+        let fn = unsafeBitCast(method_getImplementation(method), to: SetEnabledFn.self)
+        fn(preferences, setSel, !enabled, feature)
+    }
+
     static func defaultConfiguration() -> WKWebViewConfiguration {
         let config = WKWebViewConfiguration()
 

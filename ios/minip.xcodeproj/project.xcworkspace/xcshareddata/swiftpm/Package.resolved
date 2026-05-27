@@ -1,5 +1,5 @@
 {
-  "originHash" : "cc5c437bc1b5a0fc9b1d3209f20cf97eed8949cfc9c676b403744ab451d58330",
+  "originHash" : "8091841bdb2ba70f37cf3f821f783b4cf9a81bfc10a062f517079a4a14706a12",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -87,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/simonbs/Runestone",
       "state" : {
-        "revision" : "1fad339aab99cf2136ce6bf8c32da3265b2e85e5",
-        "version" : "0.5.1"
+        "revision" : "592434a103a4d1ab83e14f87ac6eef569dd7a99d",
+        "version" : "0.5.2"
       }
     },
     {

@@ -12,7 +12,7 @@ import UIKit
 import os.log
 
 func showSimpleSuccess(msg: String? = nil) {
-    ProgressHUD.succeed(msg ?? i18n("Success"))
+    ProgressHUD.succeed(msg ?? "Success")
 }
 
 func showSimpleError(err: Error? = nil) {

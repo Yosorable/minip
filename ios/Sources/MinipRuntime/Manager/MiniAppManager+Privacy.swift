@@ -18,30 +18,30 @@ enum MiniAppPermissionTypes: String, CaseIterable {
         let name = app.displayName ?? app.name
         switch self {
         case .camera:
-            return i18nF("mp.request_camera_permission", name)
+            return String(format: "%1$@ requests camera permission", name)
         case .clipboard:
-            return i18nF("mp.request_clipboard_permission", name)
+            return String(format: "%1$@ requests clipboard permission", name)
         case .installProject:
-            return i18nF("mp.request_install_project_permission", name)
+            return String(format: "%1$@ requests permission to install project", name)
         case .getInstalledProjectsList:
-            return i18nF("mp.request_read_projects_list_permission", name)
+            return String(format: "%1$@ requests permission to read the project list", name)
         case .openProject:
-            return i18nF("mp.request_open_project_permission", name)
+            return String(format: "%1$@ requests permission to open another project", name)
         }
     }
 
     func getTitle() -> String {
         switch self {
         case .camera:
-            i18n("mp.camera")
+            "Camera"
         case .clipboard:
-            i18n("mp.clipboard")
+            "Clipboard"
         case .installProject:
-            i18n("mp.install_project")
+            "Install Project"
         case .getInstalledProjectsList:
-            i18n("mp.get_projects_list")
+            "Get Projects List"
         case .openProject:
-            i18n("mp.open_project")
+            "Open Project"
         }
     }
 }
@@ -71,12 +71,12 @@ extension MiniAppManager {
         }
 
         // request permission
-        let alert = UIAlertController(title: i18n("Permission"), message: permissionType.getDescription(app: app), preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: i18n("Deny"), style: .cancel, handler: { _ in
+        let alert = UIAlertController(title: "Permission", message: permissionType.getDescription(app: app), preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Deny", style: .cancel, handler: { _ in
             try? db.put(value: false, forKey: key)
             onFailed?(ErrorMsg(errorDescription: "Not allow"))
         }))
-        alert.addAction(UIAlertAction(title: i18n("Allow"), style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Allow", style: .default, handler: { _ in
             try? db.put(value: true, forKey: key)
             onSuccess?()
         }))

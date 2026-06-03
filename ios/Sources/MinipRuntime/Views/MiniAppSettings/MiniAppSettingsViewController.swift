@@ -22,7 +22,7 @@ class MiniAppSettingsViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = i18n("Settings")
+        title = "Settings"
 
         if navigationController is BackableNavigationController {
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(closePage))
@@ -81,7 +81,7 @@ class MiniAppSettingsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return i18n("Privacy")
+            return "Privacy"
         case 1:
             return "URL Scheme"
         default:

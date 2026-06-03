@@ -109,7 +109,7 @@ class ImagePreviewViewController: UIViewController {
             shortShake()
 
             let alertController = UIAlertController(title: "Actions", message: "Select an action", preferredStyle: .actionSheet)
-            alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             alertController.addAction(UIAlertAction(title: "Save to album", style: .default, handler: { [weak self] _ in
                 guard let img = self?.zoomableImageView.imageView.image, let pngData = img.pngData() else {
                     showSimpleError(err: ErrorMsg(errorDescription: "Error image"))

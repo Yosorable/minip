@@ -5,10 +5,9 @@
 //  Created by LZY on 2025/2/1.
 //
 
-import Defaults
 import UIKit
 
-public struct AppInfo: Hashable, Codable, Defaults.Serializable {
+public struct AppInfo: Hashable, Codable {
     var name: String
     var displayName: String?
     var appId: String

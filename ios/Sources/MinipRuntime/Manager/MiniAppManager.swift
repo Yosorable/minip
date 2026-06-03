@@ -5,7 +5,6 @@
 //  Created by LZY on 2023/9/26.
 //
 
-import Defaults
 import FlyingFox
 import Foundation
 import Kingfisher
@@ -28,6 +27,12 @@ public class MiniAppManager {
     /// `"myapp"` → `myapp://open/<appId>` and `myapp://install/<url>`.
     /// Leave `nil` (default) to disable the deep-link UI and `URLSchemeHandler`.
     public var urlScheme: String?
+
+    /// Enable the Safari Web Inspector for miniapp WebViews (turn on in debug builds).
+    public var webViewInspectable: Bool = false
+
+    /// Lift the WKWebView 60fps cap (enable high refresh rate / 120fps).
+    public var enableWebView120FPS: Bool = true
 
     var isClosingApp = false
     var webViewLogs = [String]()
@@ -78,50 +83,10 @@ public class MiniAppManager {
             logger.error("[getAppInfos] \(error.localizedDescription)")
         }
 
-        var appIdSortListIndexMap = [String: Int]()
-        let appIdSortList = Defaults[.appSortList]
-
-        for i in 0 ..< appIdSortList.count {
-            appIdSortListIndexMap[appIdSortList[i]] = i
-        }
-
-        tmpApps.sort(by: { l, r in
-            let idx1 = appIdSortListIndexMap[l.appId]
-            let idx2 = appIdSortListIndexMap[r.appId]
-            if let i1 = idx1, let i2 = idx2 {
-                return i1 < i2
-            } else if idx1 != nil {
-                return false
-            } else if idx2 != nil {
-                return true
-            }
-            return true
-        })
-
-        var newSortList = [String]()
-        for ele in tmpApps {
-            newSortList.append(ele.appId)
-        }
-        if newSortList != appIdSortList {
-            Defaults[.appSortList] = newSortList
-        }
-
-        // ignore files property
-        let withoutFiles = tmpApps.map {
-            var t = $0
-            t.files = nil
-            return t
-        }
-        if withoutFiles != Defaults[.appInfoList] {
-            Defaults[.appInfoList] = withoutFiles
-            logger.debug("[getAppInfos] not equal")
-        }
+        // Stable, deterministic order. Display ordering is the host's concern.
+        tmpApps.sort { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
 
         return tmpApps
-    }
-
-    func getAppInfosFromCache() -> [AppInfo] {
-        return Defaults[.appInfoList]
     }
 
     func getFSManager() -> FileSystemManager? {

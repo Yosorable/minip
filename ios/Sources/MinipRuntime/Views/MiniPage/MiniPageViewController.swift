@@ -7,7 +7,6 @@
 
 import AVFoundation
 import AVKit
-import Defaults
 import Kingfisher
 import OSLog
 import PanModal
@@ -25,8 +24,6 @@ class MiniPageViewController: UIViewController {
     var refreshControl: UIRefreshControl?
     var initialTouchPoint: CGPoint = .init(x: 0, y: 0)
     var isRoot: Bool
-
-    var capsuleMoreButton: UIView?
 
     init(app: AppInfo, page: String? = nil, title: String? = nil, isRoot: Bool = false) {
         self.app = app
@@ -108,7 +105,7 @@ class MiniPageViewController: UIViewController {
         webview.uiDelegate = self
         webview.navigationDelegate = self
         if #available(iOS 16.4, *) {
-            webview.isInspectable = Defaults[.wkwebviewInspectable]
+            webview.isInspectable = MiniAppManager.shared.webViewInspectable
         }
 
         if app.iOS_disableTextInteraction == true {
@@ -200,51 +197,14 @@ class MiniPageViewController: UIViewController {
         }
 
         if showNav {
-            if #available(iOS 26.0, *) {
-                navigationItem.rightBarButtonItems = [
-                    UIBarButtonItem(
-                        image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(close)
-                    ),
-                    UIBarButtonItem(
-                        image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(showAppDetail)
-                    ),
-                ]
-            } else if !Defaults[.useCapsuleButton] {
-                navigationItem.rightBarButtonItems = [
-                    UIBarButtonItem(
-                        image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(close)
-                    ),
-                    UIBarButtonItem(
-                        image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(showAppDetail)
-                    ),
-                ]
-            } else {
-                let moreButton = UIButton(type: .system)
-                moreButton.setImage(UIImage(named: "capsule-more", in: .module, with: nil), for: .normal)
-                moreButton.addTarget(self, action: #selector(showAppDetail), for: .touchUpInside)
-
-                capsuleMoreButton = moreButton
-
-                let closeButton = UIButton(type: .system)
-                closeButton.setImage(UIImage(named: "capsule-close", in: .module, with: nil), for: .normal)
-                closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
-
-                let stackView = UIStackView(arrangedSubviews: [moreButton, closeButton])
-                stackView.axis = .horizontal
-                stackView.spacing = 0
-                stackView.distribution = .equalSpacing
-
-                NSLayoutConstraint.activate([
-                    moreButton.widthAnchor.constraint(equalToConstant: 132 / 3),
-                    moreButton.heightAnchor.constraint(equalToConstant: 96 / 3),
-                    closeButton.widthAnchor.constraint(equalToConstant: 132 / 3),
-                    closeButton.heightAnchor.constraint(equalToConstant: 96 / 3),
-                ])
-
-                navigationItem.rightBarButtonItems = [
-                    UIBarButtonItem(customView: stackView)
-                ]
-            }
+            navigationItem.rightBarButtonItems = [
+                UIBarButtonItem(
+                    image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(close)
+                ),
+                UIBarButtonItem(
+                    image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(showAppDetail)
+                ),
+            ]
         } else {
             navigationController?.setNavigationBarHidden(true, animated: false)
             webview.scrollView.contentInsetAdjustmentBehavior = .never
@@ -355,7 +315,7 @@ class MiniPageViewController: UIViewController {
     }
     @objc
     func showAppDetail() {
-        showAppDetail(moreButton: capsuleMoreButton ?? (navigationItem.rightBarButtonItems?.last?.value(forKey: "view") as? UIView))
+        showAppDetail(moreButton: navigationItem.rightBarButtonItems?.last?.value(forKey: "view") as? UIView)
     }
 
     @objc

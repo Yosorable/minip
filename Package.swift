@@ -12,7 +12,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.0.0"),
-        .package(url: "https://github.com/sindresorhus/Defaults", branch: "main"),
         .package(url: "https://github.com/agisboye/SwiftLMDB", from: "2.0.0"),
         .package(url: "https://github.com/swhitty/FlyingFox.git", from: "0.20.0"),
         .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.0.0"),
@@ -25,7 +24,6 @@ let package = Package(
             name: "MinipRuntime",
             dependencies: [
                 "Alamofire",
-                "Defaults",
                 "SwiftLMDB",
                 "Kingfisher",
                 "PanModal",

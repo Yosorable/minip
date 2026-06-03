@@ -23,11 +23,6 @@ public class MiniAppManager {
         set { Global.shared.miniAppsRootURL = newValue }
     }
 
-    /// Custom URL scheme the host app registers for miniapp deep links, e.g.
-    /// `"myapp"` → `myapp://open/<appId>` and `myapp://install/<url>`.
-    /// Leave `nil` (default) to disable the deep-link UI and `URLSchemeHandler`.
-    public var urlScheme: String?
-
     /// Enable the Safari Web Inspector for miniapp WebViews (turn on in debug builds).
     public var webViewInspectable: Bool = false
 

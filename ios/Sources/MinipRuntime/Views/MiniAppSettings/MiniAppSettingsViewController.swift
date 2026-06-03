@@ -31,7 +31,6 @@ class MiniAppSettingsViewController: UITableViewController {
         }
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "PrivacyCell")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "URLSchemeCell")
     }
 
     @objc func closePage() {
@@ -56,38 +55,16 @@ class MiniAppSettingsViewController: UITableViewController {
         return res
     }()
 
-    /// Deep link for this miniapp, or nil when the host hasn't configured a
-    /// URL scheme — in which case the "URL Scheme" section is hidden entirely.
-    private var deepLink: String? {
-        guard let scheme = MiniAppManager.shared.urlScheme, !scheme.isEmpty else { return nil }
-        return "\(scheme)://open/\(app.appId)"
-    }
-
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return deepLink != nil ? 2 : 1
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return privacySettings.count
-        case 1:
-            return 1
-        default:
-            return 0
-        }
+        return privacySettings.count
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 0:
-            return "Privacy"
-        case 1:
-            return "URL Scheme"
-        default:
-            break
-        }
-        return nil
+        return section == 0 ? "Privacy" : nil
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -106,30 +83,10 @@ class MiniAppSettingsViewController: UITableViewController {
             content.text = privacyItem.title
             cell.contentConfiguration = content
             return cell
-        case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "URLSchemeCell", for: indexPath)
-            var content = cell.defaultContentConfiguration()
-            content.text = "Open"
-            content.secondaryText = deepLink ?? ""
-            content.secondaryTextProperties.color = .secondaryLabel
-            cell.contentConfiguration = content
-            cell.accessoryType = .none
-            return cell
         default:
             break
         }
         return UITableViewCell()
-    }
-
-    // MARK: - TableView Delegate
-
-    // cell tap
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 1, let deepLink {
-            UIPasteboard.general.string = deepLink
-            showSimpleSuccess(msg: "Copied to clipboard successfully.")
-            tableView.deselectRow(at: indexPath, animated: true)
-        }
     }
 
     // MARK: - Privacy Switch

@@ -83,6 +83,18 @@ public class MiniAppManager {
         return tmpApps
     }
 
+    /// Pre-warm a pooled WebView so the first miniapp opens noticeably faster.
+    /// Optional — the pool also warms lazily on first open, and this is a no-op
+    /// once warmed. Call at a convenient idle moment after launch. Hops to the
+    /// main thread since it creates a WKWebView.
+    public func prewarmWebView() {
+        if Thread.isMainThread {
+            MWebViewPool.shared.prepareReuseWebView()
+        } else {
+            DispatchQueue.main.async { MWebViewPool.shared.prepareReuseWebView() }
+        }
+    }
+
     func getFSManager() -> FileSystemManager? {
         if self.fileSystemManager != nil {
             return self.fileSystemManager

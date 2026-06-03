@@ -85,9 +85,8 @@ extension MWebViewPool {
         lock.signal()
     }
 
-    /// Pre-warm a pooled WebView so the first miniapp opens faster.
-    /// Optional: the host may call this at launch; the pool also warms lazily.
-    public func prepareReuseWebView() {
+    /// Pre-warm a pooled WebView. Host-facing entry is `MiniAppManager.prewarmWebView()`.
+    func prepareReuseWebView() {
         guard reusableWebViewSet.count <= 0 else { return }
         reusableWebViewSet.insert(createNewWebvew())
     }

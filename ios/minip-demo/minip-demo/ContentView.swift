@@ -41,7 +41,7 @@ struct ContentView: View {
     private func openDemoMiniApp() {
         let manager = MiniAppManager.shared
 
-        // The runtime serves miniapps from the app's Documents directory, so on
+        // The runtime stores miniapps under Library/minip by default, so on
         // first launch we install the bundled package there. Idempotent: once
         // installed, getAppInfos() finds it and we skip straight to opening.
         if manager.getAppInfos().isEmpty {

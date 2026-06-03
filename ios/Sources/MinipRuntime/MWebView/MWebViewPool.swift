@@ -14,19 +14,19 @@ protocol MWebViewPoolProtocol: AnyObject {
     func webviewWillEnterPool()
 }
 
-public class MWebViewPool: NSObject {
+class MWebViewPool: NSObject {
     // webviews be owned by viewcontrollers
-    public var visibleWebViewSet = Set<MWebView>()
+    var visibleWebViewSet = Set<MWebView>()
     // webviews in recycle pool
-    public var reusableWebViewSet = Set<MWebView>()
+    var reusableWebViewSet = Set<MWebView>()
 
-    public var counter = 0
+    var counter = 0
 
     fileprivate let lock = DispatchSemaphore(value: 1)
 
-    public static let shared = MWebViewPool()
+    static let shared = MWebViewPool()
 
-    override public init() {
+    override init() {
         super.init()
         // observe memory warnning, clear reuse pool
         NotificationCenter.default.addObserver(self,
@@ -94,7 +94,7 @@ extension MWebViewPool {
 
 // MARK: reuse pool management
 
-public extension MWebViewPool {
+extension MWebViewPool {
     func getReusedWebView(forHolder holder: AnyObject?) -> MWebView {
         assert(holder != nil, "MWebView holder cannot be nil")
         guard let holder = holder else {

@@ -5,17 +5,7 @@
 //  Created by ByteDance on 2023/7/8.
 //
 
-import SwiftUI
-
-extension Color {
-    init?(hexOrCSSName: String) {
-        if let uiColor = UIColor(hexOrCSSName: hexOrCSSName) {
-            self.init(uiColor)
-        } else {
-            return nil
-        }
-    }
-}
+import UIKit
 
 extension UIColor {
     private static let CSS3ColorMap: [String: UIColor] = [

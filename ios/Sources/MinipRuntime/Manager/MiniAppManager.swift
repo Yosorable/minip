@@ -12,8 +12,8 @@ import Kingfisher
 import SwiftLMDB
 import UIKit
 
-class MiniAppManager {
-    static let shared = MiniAppManager()
+public class MiniAppManager {
+    public static let shared = MiniAppManager()
     let EmojiAppNames = ["🍇", "🍈", "🍉", "🍊", "🍋", "🍌", "🍍", "🥭", "🍎", "🍏", "🍐", "🍑", "🍒", "🍓", "🥝", "🍅", "🥥", "🥑", "🍆", "🥔", "🥕", "🌽", "🌶", "🥒", "🥬", "🥦", "🍄", "🥜", "🌰"]
     var openedApp: AppInfo?
     var isClosingApp = false
@@ -33,7 +33,7 @@ class MiniAppManager {
         self.webViewLogs.append(msg)
     }
 
-    func getAppInfos() -> [AppInfo] {
+    public func getAppInfos() -> [AppInfo] {
         let start = DispatchTime.now()
         defer {
             let end = DispatchTime.now()
@@ -194,7 +194,7 @@ extension MiniAppManager {
         return vc
     }
 
-    func openMiniApp(parent: UIViewController, window: UIWindow? = nil, appInfo: AppInfo, animated: Bool = true, completion: (() -> Void)? = nil) {
+    public func openMiniApp(parent: UIViewController, window: UIWindow? = nil, appInfo: AppInfo, animated: Bool = true, completion: (() -> Void)? = nil) {
         let app = appInfo
 
         Task {

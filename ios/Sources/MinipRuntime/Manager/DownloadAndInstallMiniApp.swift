@@ -9,7 +9,7 @@ import Alamofire
 import Foundation
 import ZIPFoundation
 
-func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((String)->Void)? = nil, validateAppInfoFunc: ((AppInfo)->Bool)? = nil, signalAppListChangedOnSuccess: Bool = true) {
+public func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((String)->Void)? = nil, validateAppInfoFunc: ((AppInfo)->Bool)? = nil, signalAppListChangedOnSuccess: Bool = true) {
     let fileManager = FileManager.default
 
     let tempDirURL = fileManager.temporaryDirectory

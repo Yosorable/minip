@@ -8,7 +8,7 @@
 import Defaults
 import UIKit
 
-struct AppInfo: Hashable, Codable, Defaults.Serializable {
+public struct AppInfo: Hashable, Codable, Defaults.Serializable {
     var name: String
     var displayName: String?
     var appId: String

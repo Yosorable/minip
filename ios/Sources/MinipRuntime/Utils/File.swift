@@ -27,35 +27,6 @@ func formatFileSize(_ bytes: UInt64) -> String {
     return String(format: "%.2f%@", size, units[unitIndex])
 }
 
-func cleanTrashAsync(
-    onComplete: (() -> Void)? = nil,
-    onError: ((Error) -> Void)? = nil
-) {
-    DispatchQueue.global().async {
-        let trashURL = FileManager.default.urls(
-            for: .documentDirectory,
-            in: .userDomainMask
-        )[0].appending(component: ".Trash", directoryHint: .isDirectory)
-
-        do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(
-                at: trashURL,
-                includingPropertiesForKeys: nil
-            )
-            for fileURL in fileURLs {
-                try FileManager.default.removeItem(at: fileURL)
-            }
-            DispatchQueue.main.async {
-                onComplete?()
-            }
-        } catch {
-            DispatchQueue.main.async {
-                onError?(error)
-            }
-        }
-    }
-}
-
 func listFilesAndFolders(in directory: URL) throws -> (
     folders: [FileInfo], files: [FileInfo]
 ) {

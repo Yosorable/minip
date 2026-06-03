@@ -42,7 +42,7 @@ class MiniPageViewController: UIViewController {
             title = t
         }
         let fileManager = FileManager.default
-        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let documentsURL = Global.shared.miniAppsRootURL
 
         var url: URL
         // TODO: Relative path like (based on previous page)
@@ -164,7 +164,7 @@ class MiniPageViewController: UIViewController {
         }
 
         let fileManager = FileManager.default
-        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let documentsURL = Global.shared.miniAppsRootURL
 
         var url: URL
         // TODO: Relative path like (based on previous page)

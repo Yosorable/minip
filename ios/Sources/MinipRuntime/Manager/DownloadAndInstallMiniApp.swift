@@ -40,7 +40,7 @@ func DownloadMiniAppPackageToTmpFolder(_ downURL: String, onError: @escaping (Er
         return
     }
 
-    let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    let docURL = Global.shared.miniAppsRootURL
     let destination: (URL, HTTPURLResponse)->(URL, DownloadRequest.Options) = { _, res in
         let pathComponent = res.suggestedFilename ?? "default.zip"
 
@@ -101,7 +101,7 @@ private func installByAppJSON(in appJSONURL: URL, validateAppInfoFunc: ((AppInfo
 
         let parentFolderURL = appJSONURL.deletingLastPathComponent()
 
-        let rootDirectory = Global.shared.documentsRootURL
+        let rootDirectory = Global.shared.miniAppsRootURL
         let targetFolderURL = rootDirectory.appendingPathComponent(newAppInfo.name)
 
         // safe delete old file by AppInfo.files

@@ -14,8 +14,15 @@ import UIKit
 
 public class MiniAppManager {
     public static let shared = MiniAppManager()
-    let EmojiAppNames = ["🍇", "🍈", "🍉", "🍊", "🍋", "🍌", "🍍", "🥭", "🍎", "🍏", "🍐", "🍑", "🍒", "🍓", "🥝", "🍅", "🥥", "🥑", "🍆", "🥔", "🥕", "🌽", "🌶", "🥒", "🥬", "🥦", "🍄", "🥜", "🌰"]
     var openedApp: AppInfo?
+
+    /// Root directory for all miniapp runtime data (installs + `.data` KV store).
+    /// Defaults to `<App>/Library/minip`. Set this **before** opening or
+    /// installing any miniapp to relocate the store.
+    public var miniAppsRootURL: URL {
+        get { Global.shared.miniAppsRootURL }
+        set { Global.shared.miniAppsRootURL = newValue }
+    }
 
     /// Custom URL scheme the host app registers for miniapp deep links, e.g.
     /// `"myapp"` → `myapp://open/<appId>` and `myapp://install/<url>`.
@@ -49,7 +56,7 @@ public class MiniAppManager {
         }
         var tmpApps: [AppInfo] = []
         let fileManager = FileManager.default
-        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let documentsURL = Global.shared.miniAppsRootURL
         do {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
             let decoder = JSONDecoder()
@@ -211,7 +218,7 @@ extension MiniAppManager {
                     server = HTTPServer(address: try! .inet(ip4: "127.0.0.1", port: 60008), logger: LoggerForFlyingFox())
                     self.httpServer = server
                     let fileManager = FileManager.default
-                    let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                    let documentsURL = Global.shared.miniAppsRootURL
 
                     let dirHandler = DirectoryHTTPHandler(root: documentsURL)
                     await server.appendRoute("GET /*") { req in

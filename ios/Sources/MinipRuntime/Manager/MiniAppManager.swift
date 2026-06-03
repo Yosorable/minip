@@ -8,7 +8,6 @@
 import FlyingFox
 import Foundation
 import Kingfisher
-import SwiftLMDB
 import UIKit
 
 public class MiniAppManager {

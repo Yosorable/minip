@@ -11,7 +11,6 @@ let package = Package(
         .library(name: "MinipRuntime", targets: ["MinipRuntime"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/agisboye/SwiftLMDB", from: "2.0.0"),
         .package(url: "https://github.com/swhitty/FlyingFox.git", from: "0.20.0"),
         .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.0.0"),
         .package(url: "https://github.com/Yosorable/ProgressHUD.git", branch: "master"),
@@ -21,7 +20,6 @@ let package = Package(
         .target(
             name: "MinipRuntime",
             dependencies: [
-                "SwiftLMDB",
                 "Kingfisher",
                 "ProgressHUD",
                 "ZIPFoundation",

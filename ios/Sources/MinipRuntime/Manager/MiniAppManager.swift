@@ -16,6 +16,12 @@ public class MiniAppManager {
     public static let shared = MiniAppManager()
     let EmojiAppNames = ["🍇", "🍈", "🍉", "🍊", "🍋", "🍌", "🍍", "🥭", "🍎", "🍏", "🍐", "🍑", "🍒", "🍓", "🥝", "🍅", "🥥", "🥑", "🍆", "🥔", "🥕", "🌽", "🌶", "🥒", "🥬", "🥦", "🍄", "🥜", "🌰"]
     var openedApp: AppInfo?
+
+    /// Custom URL scheme the host app registers for miniapp deep links, e.g.
+    /// `"myapp"` → `myapp://open/<appId>` and `myapp://install/<url>`.
+    /// Leave `nil` (default) to disable the deep-link UI and `URLSchemeHandler`.
+    public var urlScheme: String?
+
     var isClosingApp = false
     var webViewLogs = [String]()
 

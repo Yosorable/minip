@@ -9,16 +9,19 @@ import Foundation
 import ProgressHUD
 import UIKit
 
-class URLSchemeHandler {
+public class URLSchemeHandler {
     public enum Methods: String {
-        case open // minip://open/{appname or appid}
-        case install // minip://install/{url}
+        case open // <scheme>://open/{appname or appid}
+        case install // <scheme>://install/{url}
     }
 
-    static let shared = URLSchemeHandler()
+    public static let shared = URLSchemeHandler()
 
     public func handle(_ urlStr: String) throws {
-        guard let url = NSURLComponents(string: urlStr), url.scheme?.lowercased() == "minip", let method = Methods(rawValue: url.host ?? "") else {
+        guard let scheme = MiniAppManager.shared.urlScheme, !scheme.isEmpty else {
+            throw ErrorMsg(errorDescription: "url scheme not configured")
+        }
+        guard let url = NSURLComponents(string: urlStr), url.scheme?.lowercased() == scheme.lowercased(), let method = Methods(rawValue: url.host ?? "") else {
             throw ErrorMsg(errorDescription: "unsupported url scheme")
         }
 

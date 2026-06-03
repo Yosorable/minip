@@ -56,8 +56,15 @@ class MiniAppSettingsViewController: UITableViewController {
         return res
     }()
 
+    /// Deep link for this miniapp, or nil when the host hasn't configured a
+    /// URL scheme — in which case the "URL Scheme" section is hidden entirely.
+    private var deepLink: String? {
+        guard let scheme = MiniAppManager.shared.urlScheme, !scheme.isEmpty else { return nil }
+        return "\(scheme)://open/\(app.appId)"
+    }
+
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return deepLink != nil ? 2 : 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -103,7 +110,7 @@ class MiniAppSettingsViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "URLSchemeCell", for: indexPath)
             var content = cell.defaultContentConfiguration()
             content.text = "Open"
-            content.secondaryText = "minip://open/\(app.appId)"
+            content.secondaryText = deepLink ?? ""
             content.secondaryTextProperties.color = .secondaryLabel
             cell.contentConfiguration = content
             cell.accessoryType = .none
@@ -118,8 +125,8 @@ class MiniAppSettingsViewController: UITableViewController {
 
     // cell tap
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 1 {
-            UIPasteboard.general.string = "minip://open/\(app.appId)"
+        if indexPath.section == 1, let deepLink {
+            UIPasteboard.general.string = deepLink
             showSimpleSuccess(msg: "Copied to clipboard successfully.")
             tableView.deselectRow(at: indexPath, animated: true)
         }

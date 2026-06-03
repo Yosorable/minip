@@ -1,0 +1,39 @@
+{
+  "name": "vite-plugin-minip",
+  "version": "1.0.0",
+  "description": "Vite plugin that packages a web app into a Minip mini app (.zip + app.json), and shows an install QR code on preview.",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.mts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --noEmit && tsup"
+  },
+  "keywords": ["vite-plugin", "minip", "miniapp"],
+  "author": "yosorable",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yosorable/minip"
+  },
+  "peerDependencies": {
+    "vite": ">=5"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "@types/archiver": "^6.0.3",
+    "@types/node": "^22.0.0",
+    "@types/qrcode": "^1.5.5",
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.2.0"
+  }
+}

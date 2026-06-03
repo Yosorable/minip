@@ -2,8 +2,14 @@
   "name": "minip",
   "private": true,
   "packageManager": "pnpm@10.6.5",
+  "pnpm": {
+    "overrides": {
+      "@types/node": "^22.19.0"
+    }
+  },
   "scripts": {
     "bridge:build": "pnpm --filter minip-bridge build",
+    "plugin:build": "pnpm --filter vite-plugin-minip build",
     "demo:build": "pnpm --filter minip-demo build",
     "demo:bundle": "pnpm --filter minip-demo bundle",
     "bridge:publish": "pnpm --filter minip-bridge publish"

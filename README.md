@@ -4,6 +4,20 @@
 
 Drop the Swift package into any iOS app, point it at a mini app package, and open it — no build toolchain or server of your own required.
 
+## Try it: the Minip app
+
+**Minip** is a full iOS app built on this runtime — get it on the App Store to run and install mini apps without writing any native code:
+
+<a href="https://apps.apple.com/us/app/minip-editor/id6463115915" target="_blank"><img width="150" alt="Download on the App Store" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"/></a>
+
+|                                |                                |                                |
+| ------------------------------ | ------------------------------ | ------------------------------ |
+| ![](assets/screenshots/01.PNG) | ![](assets/screenshots/02.PNG) | ![](assets/screenshots/03.PNG) |
+
+Scan this QR code with the Minip app to install the demo mini app:
+
+![](assets/qrcode.jpg)
+
 ## Requirements
 
 - iOS 16+

@@ -7,7 +7,6 @@
 
 import Foundation
 import Kingfisher
-import PanModal
 import SwiftUI
 import UIKit
 
@@ -40,8 +39,6 @@ class AppDetailViewController: UIViewController {
             view.tintColor = UIColor(hexOrCSSName: tintColor)
         }
 
-        panModalSetNeedsLayoutUpdate()
-
         let subview = UIHostingController(
             rootView: AppDetailView(appInfo: appInfo, parentVC: parentVC, detailVC: self)
         ).view
@@ -68,19 +65,5 @@ class AppDetailViewController: UIViewController {
             return .portrait
         }
         return .all
-    }
-}
-
-extension AppDetailViewController: PanModalPresentable {
-    var panScrollable: UIScrollView? {
-        return nil
-    }
-
-    var shortFormHeight: PanModalHeight {
-        return .contentHeight(300)
-    }
-
-    var longFormHeight: PanModalHeight {
-        return .maxHeightWithTopInset(40)
     }
 }

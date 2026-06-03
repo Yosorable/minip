@@ -323,6 +323,10 @@ class MiniPageViewController: UIViewController {
         if let sheet = detailVC.sheetPresentationController {
             sheet.detents = [.medium(), .large()]
             sheet.prefersGrabberVisible = true
+            // iPhone landscape (compact height): keep it a bottom-edge card with a
+            // dimmed, tap-to-dismiss backdrop instead of a stuck full-screen cover.
+            sheet.prefersEdgeAttachedInCompactHeight = true
+            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
         }
         present(detailVC, animated: true)
     }

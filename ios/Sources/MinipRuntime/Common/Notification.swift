@@ -8,7 +8,5 @@
 import Foundation
 
 extension Notification.Name {
-    static let appListUpdated = Notification.Name("AppListUpdated")
-    static let mainControllerInitSuccess = Notification.Name("MainControllerInitSuccess")
     static let logAppended = Notification.Name("LogAppended")
 }

@@ -9,7 +9,7 @@ import Alamofire
 import Foundation
 import ZIPFoundation
 
-public func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((String)->Void)? = nil, validateAppInfoFunc: ((AppInfo)->Bool)? = nil, signalAppListChangedOnSuccess: Bool = true) {
+public func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed: ((String)->Void)? = nil, validateAppInfoFunc: ((AppInfo)->Bool)? = nil) {
     let fileManager = FileManager.default
 
     let tempDirURL = fileManager.temporaryDirectory
@@ -24,9 +24,6 @@ public func InstallMiniApp(pkgFile: URL, onSuccess: (()->Void)? = nil, onFailed:
         }
         try installByAppJSON(in: appJSONURL, validateAppInfoFunc: validateAppInfoFunc)
         onSuccess?()
-        if signalAppListChangedOnSuccess {
-            NotificationCenter.default.post(name: .appListUpdated, object: nil)
-        }
         deleteFolder(at: unzipDirURL)
     } catch {
         onFailed?(error.localizedDescription)

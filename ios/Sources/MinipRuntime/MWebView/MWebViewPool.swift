@@ -33,11 +33,6 @@ public class MWebViewPool: NSObject {
                                                selector: #selector(didReceiveMemoryWarningNotification),
                                                name: UIApplication.didReceiveMemoryWarningNotification,
                                                object: nil)
-        // main controller inited
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(mainControllerInit),
-                                               name: .mainControllerInitSuccess,
-                                               object: nil)
         logger.debug("[MWebViewPool] init pool")
     }
 
@@ -50,13 +45,6 @@ public class MWebViewPool: NSObject {
 // MARK: Observers
 
 extension MWebViewPool {
-    @objc func mainControllerInit() {
-        logger.debug("[MWebViewPool] mainControllerInit, prepare reuse webview")
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.25) {
-            self.prepareReuseWebView()
-        }
-    }
-
     @objc fileprivate func didReceiveMemoryWarningNotification() {
         lock.wait()
         reusableWebViewSet.removeAll()
@@ -97,7 +85,9 @@ extension MWebViewPool {
         lock.signal()
     }
 
-    func prepareReuseWebView() {
+    /// Pre-warm a pooled WebView so the first miniapp opens faster.
+    /// Optional: the host may call this at launch; the pool also warms lazily.
+    public func prepareReuseWebView() {
         guard reusableWebViewSet.count <= 0 else { return }
         reusableWebViewSet.insert(createNewWebvew())
     }

@@ -5,7 +5,6 @@
 //  Created by LZY on 2024/12/9.
 //
 
-import Alamofire
 import Foundation
 import ZIPFoundation
 
@@ -37,24 +36,37 @@ func DownloadMiniAppPackageToTmpFolder(_ downURL: String, onError: @escaping (Er
         return
     }
 
-    let docURL = Global.shared.miniAppsRootURL
-    let destination: (URL, HTTPURLResponse)->(URL, DownloadRequest.Options) = { _, res in
-        let pathComponent = res.suggestedFilename ?? "default.zip"
-
-        let finalPath = docURL.appending(path: ".tmp", directoryHint: .isDirectory).appending(path: pathComponent)
-        return (finalPath, [.createIntermediateDirectories, .removePreviousFile])
-    }
-    let downloadReq = AF.download(downurl, to: destination)
-        .response(completionHandler: { resp in
-            if let err = resp.error {
-                onError(ErrorMsg(errorDescription: err.localizedDescription))
-                return
-            } else if let tmpUrl = resp.fileURL {
-                onSuccess(tmpUrl)
-                return
+    let tmpDirURL = Global.shared.miniAppsRootURL.appending(path: ".tmp", directoryHint: .isDirectory)
+    URLSession.shared.downloadTask(with: downurl) { tempURL, response, error in
+        // downloadTask completes on a background queue; callers present UI, so
+        // hop back to main (Alamofire did this implicitly).
+        let finish: (Result<URL, ErrorMsg>) -> Void = { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let url): onSuccess(url)
+                case .failure(let err): onError(err)
+                }
             }
-            onError(ErrorMsg(errorDescription: "Unknow error"))
-        })
+        }
+        if let error {
+            finish(.failure(ErrorMsg(errorDescription: error.localizedDescription)))
+            return
+        }
+        guard let tempURL else {
+            finish(.failure(ErrorMsg(errorDescription: "Unknow error")))
+            return
+        }
+        let fm = FileManager.default
+        let dest = tmpDirURL.appending(path: response?.suggestedFilename ?? "default.zip")
+        do {
+            try fm.createDirectory(at: tmpDirURL, withIntermediateDirectories: true)
+            if fm.fileExists(atPath: dest.path) { try fm.removeItem(at: dest) }
+            try fm.moveItem(at: tempURL, to: dest)
+            finish(.success(dest))
+        } catch {
+            finish(.failure(ErrorMsg(errorDescription: error.localizedDescription)))
+        }
+    }.resume()
 }
 
 private func findAppJSON(in directory: URL) throws->URL? {

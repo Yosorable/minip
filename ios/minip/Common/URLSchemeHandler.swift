@@ -83,11 +83,13 @@ extension URLSchemeHandler {
         DownloadMiniAppPackageToTmpFolder(urlStr, onError: { err in
             showSimpleError(err: err)
         }, onSuccess: { pkgURL in
-            InstallMiniApp(pkgFile: pkgURL, onSuccess: {
-                showSimpleSuccess()
-            }, onFailed: { errMsg in
-                showSimpleError(err: ErrorMsg(errorDescription: errMsg))
-            })
+            Task {
+                await InstallMiniApp(pkgFile: pkgURL, onSuccess: {
+                    showSimpleSuccess()
+                }, onFailed: { errMsg in
+                    showSimpleError(err: ErrorMsg(errorDescription: errMsg))
+                })
+            }
         })
     }
 }

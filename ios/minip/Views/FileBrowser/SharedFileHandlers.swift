@@ -6,8 +6,8 @@
 //
 
 import ProgressHUD
+import SwiftArchive
 import UIKit
-import ZIPFoundation
 
 extension FileBrowserViewController {
     func moveOrCopyFiles(files: [FileInfo], isMove: Bool) {
@@ -217,7 +217,10 @@ extension FileBrowserViewController {
             do {
                 // extract to temp directory
                 let tempDir = fileManager.temporaryDirectory.appending(path: UUID().uuidString)
-                try fileManager.unzipItem(at: fileInfo.url, to: tempDir)
+                defer { try? fileManager.removeItem(at: tempDir) }
+
+                let archive = try ArchiveReader(url: fileInfo.url, format: .zip)
+                try await archive.extract(to: tempDir)
 
                 let tempContents = try fileManager.contentsOfDirectory(at: tempDir, includingPropertiesForKeys: nil)
 
@@ -244,7 +247,6 @@ extension FileBrowserViewController {
                     try fileManager.moveItem(at: item.source, to: parentDir.appending(path: destName))
                 }
 
-                try? fileManager.removeItem(at: tempDir)
                 showSimpleSuccess(msg: "Decompressed successfully")
                 self.fetchFilesAndUpdateDataSource()
             } catch {
@@ -274,26 +276,8 @@ extension FileBrowserViewController {
                     cnt += 1
                 }
 
-                let archive = try Archive(url: destURL, accessMode: .create)
-
-                for file in files {
-                    if file.isFolder {
-                        let dirURL = file.url.standardizedFileURL
-                        let basePath = dirURL.deletingLastPathComponent().path + "/"
-                        // add the folder itself
-                        try archive.addEntry(with: dirURL.lastPathComponent, fileURL: dirURL)
-
-                        if let enumerator = fileManager.enumerator(at: dirURL, includingPropertiesForKeys: nil) {
-                            while let fileURL = enumerator.nextObject() as? URL {
-                                let standardizedURL = fileURL.standardizedFileURL
-                                let relPath = standardizedURL.path.replacingOccurrences(of: basePath, with: "")
-                                try archive.addEntry(with: relPath, fileURL: standardizedURL)
-                            }
-                        }
-                    } else {
-                        try archive.addEntry(with: file.url.lastPathComponent, fileURL: file.url)
-                    }
-                }
+                let inputs = files.map { ZipInput(sourceURL: $0.url.standardizedFileURL) }
+                try await ZipArchive.create(at: destURL, inputs: inputs)
 
                 showSimpleSuccess(msg: i18n("Compressed successfully"))
                 self.fetchFilesAndUpdateDataSource()

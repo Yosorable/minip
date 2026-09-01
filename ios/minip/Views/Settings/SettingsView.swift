@@ -6,7 +6,6 @@
 //
 
 import AVKit
-import Alamofire
 import Defaults
 import Kingfisher
 import ProgressHUD
@@ -26,7 +25,6 @@ private struct SafariView: UIViewControllerRepresentable {
 
 private struct LicensesView: View {
     private static let libraries: [(String, String)] = [
-        ("Alamofire", "https://github.com/Alamofire/Alamofire/blob/master/LICENSE"),
         ("BlurUIKit", "https://github.com/TimOliver/BlurUIKit/blob/main/LICENSE"),
         ("CLMDB", "https://github.com/agisboye/CLMDB"),
         ("Defaults", "https://github.com/sindresorhus/Defaults/blob/main/license"),
@@ -34,13 +32,12 @@ private struct LicensesView: View {
         ("JetBrains Mono", "https://github.com/JetBrains/JetBrainsMono/blob/master/OFL.txt"),
         ("KeyboardToolbar", "https://github.com/simonbs/KeyboardToolbar/blob/main/LICENSE"),
         ("Kingfisher", "https://github.com/onevcat/Kingfisher/blob/master/LICENSE"),
-        ("PanModal", "https://github.com/Yosorable/PanModal/blob/master/LICENSE"),
         ("ProgressHUD", "https://github.com/Yosorable/ProgressHUD/blob/master/LICENSE"),
         ("Runestone", "https://github.com/simonbs/Runestone/blob/main/LICENSE"),
+        ("SwiftArchive", "https://github.com/SeedxOS/SwiftArchive/blob/main/LICENSE"),
         ("SwiftLMDB", "https://github.com/agisboye/SwiftLMDB/blob/master/LICENSE"),
         ("tree-sitter", "https://github.com/tree-sitter/tree-sitter/blob/master/LICENSE"),
         ("TreeSitterLanguages", "https://github.com/simonbs/TreeSitterLanguages/blob/main/LICENSE"),
-        ("ZIPFoundation", "https://github.com/weichsel/ZIPFoundation/blob/development/LICENSE"),
     ]
 
     @State private var safariURL: URL?

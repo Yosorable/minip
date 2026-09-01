@@ -5,7 +5,6 @@
 //  Created by ByteDance on 2023/7/14.
 //
 
-import Alamofire
 import Defaults
 import ProgressHUD
 import SwiftUI
@@ -39,10 +38,9 @@ struct DownloadProjectView: View {
     @State var alertMsg = ""
 
     @State var downloading: Bool = false
-    @State var downProgress: Progress? = nil
     @State var uncompressing: Bool = false
 
-    @State var downloadReq: DownloadRequest? = nil
+    @State var downloadTask: URLSessionDownloadTask? = nil
 
     var body: some View {
         List {
@@ -78,7 +76,8 @@ struct DownloadProjectView: View {
             if downloading || uncompressing {
                 Section {
                     Button(role: .destructive, action: {
-                        downloadReq?.cancel()
+                        downloadTask?.cancel()
+                        downloadTask = nil
                         downloading = false
                     }, label: {
                         HStack {
@@ -138,45 +137,35 @@ struct DownloadProjectView: View {
             return
         }
         downloading = true
-        let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let destination: (URL, HTTPURLResponse) -> (URL, DownloadRequest.Options) = { _, res in
-            let pathComponent = res.suggestedFilename ?? "default.zip"
-
-            let finalPath = docURL.appending(path: ".tmp", directoryHint: .isDirectory).appending(component: pathComponent)
-            return (finalPath, [.createIntermediateDirectories, .removePreviousFile])
-        }
-        downloadReq = AF.download(downurl, to: destination)
-            .downloadProgress { progress in
-                downProgress = progress
-                logger.debug("[downloadFile] \(progress.fractionCompleted)")
-            }
-            .response(completionHandler: { resp in
-                downloading = false
-                if let err = resp.error {
-                    alertMsg = err.localizedDescription
-                    showAlert = true
-                    return
-                } else if let tmpUrl = resp.fileURL {
-                    uncompressing = true
-                    ProgressHUD.success("Download succeeded, uncompressing")
-                    unCompress(file: tmpUrl)
-                    uncompressing = false
-                    Defaults[.lastDownloadedURL] = downURL
-                    return
-                }
-                alertMsg = "Unknow error"
+        let fallbackFilename = downFilename.isEmpty ? "default.zip" : downFilename
+        downloadTask = downloadFileToTmpFolder(downurl, fallbackFilename: fallbackFilename) { result in
+            downloadTask = nil
+            downloading = false
+            switch result {
+            case .success(let temporaryURL):
+                uncompressing = true
+                ProgressHUD.success("Download succeeded, uncompressing")
+                unCompress(file: temporaryURL)
+                Defaults[.lastDownloadedURL] = downURL
+            case .failure(let error):
+                guard (error as? URLError)?.code != .cancelled else { return }
+                alertMsg = error.localizedDescription
                 showAlert = true
-            })
+            }
+        }
     }
 
     func unCompress(file: URL) {
-        InstallMiniApp(pkgFile: file, onSuccess: {
-            ProgressHUD.succeed(i18n("Success"))
-            closeFunc?()
-            onSuccess?()
-        }, onFailed: { err in
-            alertMsg = err
-            showAlert = true
-        })
+        Task {
+            await InstallMiniApp(pkgFile: file, onSuccess: {
+                ProgressHUD.succeed(i18n("Success"))
+                closeFunc?()
+                onSuccess?()
+            }, onFailed: { err in
+                alertMsg = err
+                showAlert = true
+            })
+            uncompressing = false
+        }
     }
 }

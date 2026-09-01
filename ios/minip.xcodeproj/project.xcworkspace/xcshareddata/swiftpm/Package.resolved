@@ -1,15 +1,6 @@
 {
-  "originHash" : "8091841bdb2ba70f37cf3f821f783b4cf9a81bfc10a062f517079a4a14706a12",
+  "originHash" : "3f6ec4d79600130e6154fa64634f092d6a0a045c318a94d49b346eb26b599452",
   "pins" : [
-    {
-      "identity" : "alamofire",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Alamofire/Alamofire.git",
-      "state" : {
-        "revision" : "bc268c28fb170f494de9e9927c371b8342979ece",
-        "version" : "5.7.1"
-      }
-    },
     {
       "identity" : "bluruikit",
       "kind" : "remoteSourceControl",
@@ -65,15 +56,6 @@
       }
     },
     {
-      "identity" : "panmodal",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Yosorable/PanModal",
-      "state" : {
-        "branch" : "master",
-        "revision" : "b7cb68260ebf5b701ebea103befd430bfed816ba"
-      }
-    },
-    {
       "identity" : "progresshud",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Yosorable/ProgressHUD.git",
@@ -89,6 +71,14 @@
       "state" : {
         "revision" : "592434a103a4d1ab83e14f87ac6eef569dd7a99d",
         "version" : "0.5.2"
+      }
+    },
+    {
+      "identity" : "swiftarchive",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SeedxOS/SwiftArchive.git",
+      "state" : {
+        "revision" : "d701f5855a4facd382da7d5e901329fd559573a1"
       }
     },
     {
@@ -116,15 +106,6 @@
       "state" : {
         "revision" : "15cf3a9ec3ab95e0d058b7df9f35619123c9e02d",
         "version" : "0.1.10"
-      }
-    },
-    {
-      "identity" : "zipfoundation",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/weichsel/ZIPFoundation",
-      "state" : {
-        "revision" : "02b6abe5f6eef7e3cbd5f247c5cc24e246efcfe0",
-        "version" : "0.9.19"
       }
     }
   ],

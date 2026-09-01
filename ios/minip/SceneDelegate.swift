@@ -42,15 +42,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 var vcs: [UIViewController] = []
 
                 var url = Global.shared.sandboxRootURL
+                let sandboxRootURL = Global.shared.sandboxRootURL.standardizedFileURL
 
                 if Global.shared.fileBrowserRootURL == Global.shared.sandboxRootURL {
                     vcs.append(FileBrowserViewController(folderURL: Global.shared.fileBrowserRootURL))
                 }
 
                 lastFolder.split(separator: "/").forEach {
-                    url = url.appending(component: $0, directoryHint: .isDirectory)
-                    if url.standardizedFileURL.isContained(in: Global.shared.sandboxRootURL.standardizedFileURL) {
-                        vcs.append(FileBrowserViewController(folderURL: url))
+                    url = url.appending(component: String($0), directoryHint: .isDirectory)
+                    let standardizedURL = url.standardizedFileURL
+                    if standardizedURL.pathComponents.starts(with: sandboxRootURL.pathComponents) {
+                        vcs.append(FileBrowserViewController(folderURL: standardizedURL))
                     }
                 }
 

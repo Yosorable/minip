@@ -10,7 +10,6 @@ import AVKit
 import Defaults
 import Kingfisher
 import OSLog
-import PanModal
 import SafariServices
 import SwiftUI
 import UIKit
@@ -361,21 +360,19 @@ class MiniPageViewController: UIViewController {
     }
     @objc
     func showAppDetail() {
-        showAppDetail(moreButton: capsuleMoreButton ?? (navigationItem.rightBarButtonItems?.last?.value(forKey: "view") as? UIView))
-    }
-
-    @objc
-    func showAppDetail(moreButton: UIView? = nil) {
         let detailVC = AppDetailViewController(
             project: project,
             reloadPageFunc: { [weak self] in
                 self?.webview.reload()
             }, parentVC: self)
 
-        if let moreBtn = moreButton {
-            presentPanModal(detailVC, sourceView: moreBtn, sourceRect: moreBtn.bounds)
-        } else {
-            presentPanModal(detailVC)
+        detailVC.modalPresentationStyle = .pageSheet
+        if let sheet = detailVC.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.selectedDetentIdentifier = .medium
+            sheet.prefersGrabberVisible = true
+            sheet.prefersEdgeAttachedInCompactHeight = true
         }
+        present(detailVC, animated: true)
     }
 }

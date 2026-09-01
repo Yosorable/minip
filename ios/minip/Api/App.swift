@@ -51,11 +51,13 @@ extension MinipApi {
         DownloadMiniAppPackageToTmpFolder(url, onError: { err in
             replyHandler(InteropUtils.fail(msg: err.localizedDescription).toJsonString(), nil)
         }, onSuccess: { pkgURL in
-            InstallMiniApp(pkgFile: pkgURL, onSuccess: {
-                replyHandler(InteropUtils.succeed().toJsonString(), nil)
-            }, onFailed: { errMsg in
-                replyHandler(InteropUtils.fail(msg: errMsg).toJsonString(), nil)
-            })
+            Task {
+                await InstallMiniApp(pkgFile: pkgURL, onSuccess: {
+                    replyHandler(InteropUtils.succeed().toJsonString(), nil)
+                }, onFailed: { errMsg in
+                    replyHandler(InteropUtils.fail(msg: errMsg).toJsonString(), nil)
+                })
+            }
         })
     }
 
@@ -71,13 +73,15 @@ extension MinipApi {
         DownloadMiniAppPackageToTmpFolder(url, onError: { err in
             replyHandler(InteropUtils.fail(msg: err.localizedDescription).toJsonString(), nil)
         }, onSuccess: { pkgURL in
-            InstallMiniApp(pkgFile: pkgURL, onSuccess: {
-                replyHandler(InteropUtils.succeed().toJsonString(), nil)
-            }, onFailed: { errMsg in
-                replyHandler(InteropUtils.fail(msg: errMsg).toJsonString(), nil)
-            }, validateAppInfoFunc: { appInfo in
-                return appInfo.appId == appID
-            })
+            Task {
+                await InstallMiniApp(pkgFile: pkgURL, onSuccess: {
+                    replyHandler(InteropUtils.succeed().toJsonString(), nil)
+                }, onFailed: { errMsg in
+                    replyHandler(InteropUtils.fail(msg: errMsg).toJsonString(), nil)
+                }, validateAppInfoFunc: { appInfo in
+                    return appInfo.appId == appID
+                })
+            }
         })
     }
 }

@@ -35,7 +35,7 @@ struct AppDetailView: View {
             VStack {
                 self.iconView()
             }
-            .padding(.top)
+            .padding(.top, 28)
 
             VStack {
                 Text(self.project.title)

@@ -12,14 +12,11 @@ import ZIPFoundation
 
 extension FileBrowserViewController {
     func configureDataSource() {
-        dataSource = UITableViewDiffableDataSource<Int, FileInfo>(tableView: tableView) { [weak self] tableView, indexPath, _ in
+        dataSource = UITableViewDiffableDataSource<Int, FileInfo>(tableView: tableView) { [weak self] tableView, indexPath, fileInfo in
             let cell = tableView.dequeueReusableCell(withIdentifier: FileItemCell.identifier, for: indexPath) as! FileItemCell
-            guard let fileInfo = self?.files[indexPath.row] else {
-                return nil
-            }
             var displayName: NSAttributedString? = nil
-            if self?.folderURL == Global.shared.projectDataFolderURL, let appName = MiniAppManager.shared.getAppInfosFromCache().filter({ $0.appId == fileInfo.fileName }).first?.name {
-                let dName = fileInfo.fileName + " " + appName
+            if self?.folderURL == Global.shared.projectDataFolderURL, let projectTitle = self?.projectTitlesByAppId[fileInfo.fileName] {
+                let dName = fileInfo.fileName + " " + projectTitle
                 let attributedString = NSMutableAttributedString(string: dName)
                 let grayTextStartIndex = (fileInfo.fileName + " ").utf16.count
                 let grayTextLength = dName.utf16.count - grayTextStartIndex
@@ -41,6 +38,12 @@ extension FileBrowserViewController {
     }
 
     func updateDataSource() {
+        if folderURL == Global.shared.projectDataFolderURL {
+            projectTitlesByAppId = MiniAppManager.shared.getInstalledProjects().reduce(into: [:]) { result, project in
+                result[project.appId] = project.title
+            }
+        }
+
         let existingMap = Dictionary(uniqueKeysWithValues: dataSource.snapshot().itemIdentifiers.map { ($0.url, $0) })
         var snapshot = NSDiffableDataSourceSnapshot<Int, FileInfo>()
         snapshot.appendSections([0])
@@ -87,7 +90,7 @@ extension FileBrowserViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let fileInfo = files[indexPath.row]
+        guard let fileInfo = dataSource.itemIdentifier(for: indexPath) else { return }
         let cell = tableView.cellForRow(at: indexPath)
         if tableView.isEditing {
             updateToobarButtonStatus()
@@ -189,7 +192,7 @@ extension FileBrowserViewController {
             return nil
         }
 
-        let fileInfo = files[indexPath.row]
+        guard let fileInfo = dataSource.itemIdentifier(for: indexPath) else { return nil }
         let cell = tableView.cellForRow(at: indexPath)
         let cannotDelete = fileInfo.url == Global.shared.documentsTrashURL || fileInfo.url == Global.shared.dataFolderURL
         let isInTrashRoot = folderURL == Global.shared.documentsTrashURL
@@ -267,7 +270,7 @@ extension FileBrowserViewController {
     override func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         if isModal { return nil }
 
-        let fileInfo = files[indexPath.row]
+        guard let fileInfo = dataSource.itemIdentifier(for: indexPath) else { return nil }
         let isInTrashRoot = folderURL == Global.shared.documentsTrashURL
         let cannotDelete = fileInfo.url == Global.shared.documentsTrashURL || fileInfo.url == Global.shared.dataFolderURL
 

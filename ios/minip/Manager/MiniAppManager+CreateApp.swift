@@ -9,7 +9,7 @@ import Defaults
 import Foundation
 
 extension MiniAppManager {
-    func createMiniApp(name: String? = nil, displayName: String? = nil) throws -> AppInfo {
+    func createMiniApp(name: String? = nil, displayName: String? = nil) throws -> InstalledProject {
         // generate random name by emoji
         let name = (name != nil && name != "") ? name! : {
             var nameRange: [String] = []
@@ -150,6 +150,6 @@ extension MiniAppManager {
         } catch {
             throw ErrorMsg(errorDescription: "Cannot create file, error: \(error.localizedDescription)")
         }
-        return appConfig
+        return InstalledProject(appInfo: appConfig, rootURL: appFolder)
     }
 }

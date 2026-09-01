@@ -80,8 +80,9 @@ class AppCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with app: AppInfo) {
-        appNameLabel.text = app.displayName ?? app.name
+    func configure(with project: InstalledProject) {
+        let app = project.appInfo
+        appNameLabel.text = project.title
         authorLabel.text = "@" + (app.author ?? "no_author")
         appIdLabel.text = app.appId
         appIconImageView.image = nil
@@ -91,9 +92,8 @@ class AppCell: UITableViewCell {
                 iconURL = URL(string: icon)
                 appIconImageView.kf.setImage(with: iconURL)
             } else {
-                if let iconURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appending(path: app.name, directoryHint: .isDirectory).appending(path: icon) {
-                    appIconImageView.image = UIImage(contentsOfFile: iconURL.path)
-                }
+                let iconURL = project.rootURL.appending(path: icon)
+                appIconImageView.image = UIImage(contentsOfFile: iconURL.path)
             }
         }
     }

@@ -9,8 +9,8 @@ import Defaults
 import UIKit
 
 struct AppInfo: Hashable, Codable, Defaults.Serializable {
-    var name: String
-    var displayName: String?
+    var name: String // manifest/package name; only suggests the initial directory name
+    var displayName: String? // optional user-facing project name
     var appId: String
     var author: String?
     var website: String?
@@ -36,6 +36,33 @@ struct AppInfo: Hashable, Codable, Defaults.Serializable {
     var iOS_disableSwipeBackGesture: Bool?
     var iOS_disableTextInteraction: Bool?
     var iOS_scrollbar: ScrollbarConfig?
+}
+
+/// Runtime representation of an installed project.
+///
+/// `AppInfo.name` belongs to the project manifest and must not be used to
+/// locate the project after installation. Users can rename the containing
+/// directory from the Files app at any time, so file access always goes
+/// through `rootURL` discovered while scanning Documents.
+struct InstalledProject: Hashable {
+    let appInfo: AppInfo
+    let rootURL: URL
+
+    init(appInfo: AppInfo, rootURL: URL) {
+        self.appInfo = appInfo
+        self.rootURL = rootURL.standardizedFileURL
+    }
+
+    var appId: String {
+        appInfo.appId
+    }
+
+    var title: String {
+        if let displayName = appInfo.displayName, !displayName.isEmpty {
+            return displayName
+        }
+        return rootURL.lastPathComponent
+    }
 }
 
 extension AppInfo {

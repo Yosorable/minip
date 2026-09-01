@@ -47,7 +47,7 @@ extension URLSchemeHandler {
     }
 
     private func open(_ appIdOrName: String) throws {
-        if MiniAppManager.shared.openedApp?.appId == appIdOrName || MiniAppManager.shared.openedApp?.name == appIdOrName {
+        if MiniAppManager.shared.openedProject?.appId == appIdOrName || MiniAppManager.shared.openedProject?.appInfo.name == appIdOrName {
             return
         }
 
@@ -55,16 +55,16 @@ extension URLSchemeHandler {
             throw ErrorMsg(errorDescription: "unknown error")
         }
 
-        var foundApp: AppInfo?
+        var foundProject: InstalledProject?
 
-        for ele in MiniAppManager.shared.getAppInfos() {
-            if ele.appId == appIdOrName || ele.name == appIdOrName {
-                foundApp = ele
+        for project in MiniAppManager.shared.getInstalledProjects() {
+            if project.appId == appIdOrName || project.appInfo.name == appIdOrName {
+                foundProject = project
                 break
             }
         }
 
-        guard let app = foundApp else {
+        guard let project = foundProject else {
             throw ErrorMsg(errorDescription: "app doesn't exist")
         }
 
@@ -72,7 +72,7 @@ extension URLSchemeHandler {
             throw ErrorMsg(errorDescription: "unknown error")
         }
 
-        MiniAppManager.shared.openMiniApp(parent: vc, appInfo: app, animated: false)
+        MiniAppManager.shared.openMiniApp(parent: vc, project: project, animated: false)
     }
 
     private func install(_ urlStr: String) throws {

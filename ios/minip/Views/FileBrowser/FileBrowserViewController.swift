@@ -19,6 +19,7 @@ class FileBrowserViewController: UITableViewController {
     var onCancel: (() -> Void)?
     var files: [FileInfo]!
     var dataSource: UITableViewDiffableDataSource<Int, FileInfo>!
+    var projectTitlesByAppId: [String: String] = [:]
 
     lazy var openWebServerBtn = {
         let btn = UIBarButtonItem(image: UIImage(systemName: "server.rack"), style: .plain, target: self, action: #selector(openWebServer))
@@ -54,7 +55,7 @@ class FileBrowserViewController: UITableViewController {
         let deferred = UIDeferredMenuElement.uncached { [weak self] completion in
             guard let self else { completion([]); return }
             let selectedRows = tableView.indexPathsForSelectedRows ?? []
-            let selectedFiles = selectedRows.map { self.files[$0.row] }
+            let selectedFiles = selectedRows.compactMap { self.dataSource.itemIdentifier(for: $0) }
             if selectedFiles.count == 1,
                let utType = try? selectedFiles[0].url.resourceValues(forKeys: [.contentTypeKey]).contentType,
                utType.conforms(to: .zip)

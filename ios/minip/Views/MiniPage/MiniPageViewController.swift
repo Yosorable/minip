@@ -18,22 +18,40 @@ import WebKit
 
 class MiniPageViewController: UIViewController {
     var webview: MWebView!
-    var app: AppInfo
+    let project: InstalledProject
+    var resolvedProject: InstalledProject {
+        if let openedProject = MiniAppManager.shared.openedProject,
+           openedProject.appId == project.appId {
+            return openedProject
+        }
+        return project
+    }
+    var app: AppInfo {
+        resolvedProject.appInfo
+    }
     var page: String
     var _title: String?
     var pageURL: URL?
     var refreshControl: UIRefreshControl?
     var initialTouchPoint: CGPoint = .init(x: 0, y: 0)
     var isRoot: Bool
+    private var loadedLocalRootURL: URL?
 
     var capsuleMoreButton: UIView?
 
-    init(app: AppInfo, page: String? = nil, title: String? = nil, isRoot: Bool = false) {
-        self.app = app
-        self.page = page ?? app.homepage
-        _title = title ?? app.title
+    init(project: InstalledProject, page: String? = nil, title: String? = nil, isRoot: Bool = false) {
+        self.project = project
+        self.page = page ?? project.appInfo.homepage
+        _title = title ?? project.appInfo.title
         self.isRoot = isRoot
         super.init(nibName: nil, bundle: nil)
+    }
+
+    private func localPageURL(for page: String, rootURL: URL) -> URL {
+        let relativePage = page.hasPrefix("/") ? String(page.dropFirst()) : page
+        let baseURL = URL(fileURLWithPath: rootURL.path, isDirectory: true)
+        return URL(string: relativePage, relativeTo: baseURL)?.absoluteURL
+            ?? baseURL.appendingPathComponent(relativePage)
     }
 
     func redirectTo(page pg: String, title t: String? = nil) {
@@ -41,13 +59,11 @@ class MiniPageViewController: UIViewController {
         if let t = t {
             title = t
         }
-        let fileManager = FileManager.default
-        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-
         var url: URL
         // TODO: Relative path like (based on previous page)
         if page.hasPrefix("http://") || page.hasPrefix("https://") {
             url = URL(string: page)!
+            loadedLocalRootURL = nil
             logger.info("[webview] load remote: \(url)")
             let req = URLRequest(url: url)
             webview.load(req)
@@ -56,13 +72,16 @@ class MiniPageViewController: UIViewController {
                 page = "/" + page
             }
             url = URL(string: addr + "\(page)")!
+            loadedLocalRootURL = nil
             logger.info("[webview] load localhost: \(url)")
             let req = URLRequest(url: url)
             webview.load(req)
         } else {
-            url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appending(path: "\(app.name)/\(page)")
+            let rootURL = resolvedProject.rootURL
+            url = localPageURL(for: page, rootURL: rootURL)
+            loadedLocalRootURL = rootURL
             logger.info("[webview] load file: \(url)")
-            webview.loadFileURL(url, allowingReadAccessTo: documentsURL.appendingPathComponent(app.name))
+            webview.loadFileURL(url, allowingReadAccessTo: rootURL)
         }
         pageURL = url
     }
@@ -96,8 +115,8 @@ class MiniPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // TODO: why nil?
-        if MiniAppManager.shared.openedApp == nil {
-            MiniAppManager.shared.openedApp = app
+        if MiniAppManager.shared.openedProject == nil {
+            MiniAppManager.shared.openedProject = project
         }
 
         setupAppLifecycleObservers()
@@ -163,13 +182,11 @@ class MiniPageViewController: UIViewController {
             webview.scrollView.bounces = !(scrollBarConfig.disableBounces ?? false)
         }
 
-        let fileManager = FileManager.default
-        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
-
         var url: URL
         // TODO: Relative path like (based on previous page)
         if page.hasPrefix("http://") || page.hasPrefix("https://") {
             url = URL(string: page)!
+            loadedLocalRootURL = nil
             logger.info("[webview] load remote: \(url)")
             let req = URLRequest(url: url)
             webview.load(req)
@@ -178,17 +195,20 @@ class MiniPageViewController: UIViewController {
                 page = "/" + page
             }
             url = URL(string: addr + "\(page)")!
+            loadedLocalRootURL = nil
             logger.info("[webview] load localhost: \(url)")
             let req = URLRequest(url: url)
             webview.load(req)
         } else {
-            url = URL(string: documentsURL.absoluteString + "\(app.name)/\(page)") ?? documentsURL.appending(path: "\(app.name)/\(page)")
+            let rootURL = resolvedProject.rootURL
+            url = localPageURL(for: page, rootURL: rootURL)
+            loadedLocalRootURL = rootURL
             logger.info("[webview] load file: \(url)")
-            webview.loadFileURL(url, allowingReadAccessTo: documentsURL.appending(component: app.name))
+            webview.loadFileURL(url, allowingReadAccessTo: rootURL)
         }
         pageURL = url
 
-        title = _title ?? app.displayName ?? app.name
+        title = _title ?? resolvedProject.title
 
         if let tc = app.tintColor {
             navigationController?.navigationBar.tintColor = UIColor(hexOrCSSName: tc)
@@ -317,6 +337,10 @@ class MiniPageViewController: UIViewController {
             self, selector: #selector(appWillEnterForeground),
             name: UIApplication.willEnterForegroundNotification, object: nil
         )
+        NotificationCenter.default.addObserver(
+            self, selector: #selector(appListUpdated),
+            name: .appListUpdated, object: nil
+        )
     }
 
     @objc private func appDidEnterBackground() {
@@ -325,6 +349,18 @@ class MiniPageViewController: UIViewController {
 
     @objc private func appWillEnterForeground() {
         dispatchPageEvent("appPageShow", reason: "foreground")
+    }
+
+    @objc private func appListUpdated() {
+        guard isViewLoaded else { return }
+
+        let currentProject = resolvedProject
+        if _title == nil {
+            title = currentProject.title
+        }
+        if let loadedLocalRootURL, loadedLocalRootURL != currentProject.rootURL {
+            redirectTo(page: page)
+        }
     }
 
     // MARK: - Refresh Control
@@ -361,7 +397,7 @@ class MiniPageViewController: UIViewController {
     @objc
     func showAppDetail(moreButton: UIView? = nil) {
         let detailVC = AppDetailViewController(
-            appInfo: app,
+            project: resolvedProject,
             reloadPageFunc: { [weak self] in
                 self?.webview.reload()
             }, parentVC: self)

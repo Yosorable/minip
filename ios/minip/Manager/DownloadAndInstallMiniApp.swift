@@ -102,7 +102,18 @@ private func installByAppJSON(in appJSONURL: URL, validateAppInfoFunc: ((AppInfo
         let parentFolderURL = appJSONURL.deletingLastPathComponent()
 
         let rootDirectory = Global.shared.documentsRootURL
-        let targetFolderURL = rootDirectory.appendingPathComponent(newAppInfo.name)
+        let installedMatches = MiniAppManager.shared.getInstalledProjects().filter { $0.appId == newAppInfo.appId }
+        let targetFolderURL: URL
+        if installedMatches.count == 1 {
+            targetFolderURL = installedMatches[0].rootURL
+        } else if installedMatches.count > 1 {
+            throw ErrorMsg(errorDescription: "multiple installed projects share the same appId")
+        } else {
+            guard !newAppInfo.name.isEmpty, !newAppInfo.name.contains("/") else {
+                throw ErrorMsg(errorDescription: "invalid app name")
+            }
+            targetFolderURL = uniqueInstallDirectory(named: newAppInfo.name, in: rootDirectory)
+        }
 
         // safe delete old file by AppInfo.files
         if let filesList = newAppInfo.files {
@@ -141,6 +152,17 @@ private func installByAppJSON(in appJSONURL: URL, validateAppInfoFunc: ((AppInfo
         logger.error("[installByAppJSON] \(error)")
         throw ErrorMsg(errorDescription: "\(error)")
     }
+}
+
+private func uniqueInstallDirectory(named name: String, in rootDirectory: URL) -> URL {
+    let fileManager = FileManager.default
+    var targetURL = rootDirectory.appending(component: name, directoryHint: .isDirectory)
+    var suffix = 1
+    while fileManager.fileExists(atPath: targetURL.path) {
+        targetURL = rootDirectory.appending(component: "\(name) \(suffix)", directoryHint: .isDirectory)
+        suffix += 1
+    }
+    return targetURL
 }
 
 private func deleteFolder(at url: URL) {

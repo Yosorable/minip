@@ -11,7 +11,7 @@ import SwiftUI
 import UIKit
 
 class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITableViewDragDelegate, UITableViewDropDelegate {
-    var apps: [AppInfo] = []
+    var apps: [InstalledProject] = []
 
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: self.view.bounds, style: .insetGrouped)
@@ -70,7 +70,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewDidLoad()
         title = i18n("Projects")
 
-        apps = MiniAppManager.shared.getAppInfos()
+        apps = MiniAppManager.shared.getInstalledProjects()
         if Defaults[.firstStart] && apps.count == 0 {
             Defaults[.firstStart] = false
             if let newApp = try? MiniAppManager.shared.createMiniApp() {
@@ -105,13 +105,27 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @objc func refreshData() {
         logger.debug("[HomeViewController] refresh table view data")
         Task {
-            let newApps = MiniAppManager.shared.getAppInfos()
+            let newApps = MiniAppManager.shared.getInstalledProjects()
             await MainActor.run {
                 self.apps = newApps
                 self.tableView.reloadData()
                 self.refreshControl.endRefreshing()
             }
         }
+    }
+
+    private func removeProjectFromList(_ project: InstalledProject) {
+        guard let row = apps.firstIndex(where: {
+            $0.appId == project.appId && $0.rootURL == project.rootURL
+        }) else {
+            refreshData()
+            return
+        }
+
+        apps.remove(at: row)
+        tableView.beginUpdates()
+        tableView.deleteRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
+        tableView.endUpdates()
     }
 
     @objc func scanQRCode() {
@@ -187,7 +201,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         MiniAppManager.shared.openMiniApp(
-            parent: self, appInfo: apps[indexPath.row],
+            parent: self, project: apps[indexPath.row],
             completion: {
                 self.tableView.deselectRow(at: indexPath, animated: false)
             })
@@ -199,18 +213,15 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let deleteAction = UIContextualAction(
             style: .destructive, title: i18n("Delete"),
             handler: { _, _, completion in
-                let app = self.apps[indexPath.row]
-                let alert = UIAlertController(title: i18n("home.delete_alert_title"), message: i18nF("delete_alert_confirm_message", app.displayName ?? app.name), preferredStyle: .alert)
+                let project = self.apps[indexPath.row]
+                let alert = UIAlertController(title: i18n("home.delete_alert_title"), message: i18nF("delete_alert_confirm_message", project.title), preferredStyle: .alert)
                 let confirm = UIAlertAction(
                     title: i18n("Delete"), style: .destructive,
                     handler: { _ in
                         MiniAppManager.shared.deleteMiniApp(
-                            app: self.apps[indexPath.row],
+                            project: project,
                             completion: {
-                                self.apps.remove(at: indexPath.row)
-                                tableView.beginUpdates()
-                                tableView.deleteRows(at: [indexPath], with: .automatic)
-                                tableView.endUpdates()
+                                self.removeProjectFromList(project)
                                 completion(true)
                                 showSimpleSuccess(msg: i18n("delete_successfully"))
                             })
@@ -228,7 +239,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let settingsAction = UIContextualAction(
             style: .normal, title: i18n("Settings"),
             handler: { _, _, completion in
-                let vc = MiniAppSettingsViewController(style: .insetGrouped, app: self.apps[indexPath.row])
+                let vc = MiniAppSettingsViewController(style: .insetGrouped, app: self.apps[indexPath.row].appInfo)
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
                 completion(true)
@@ -263,27 +274,24 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return UIContextMenuConfiguration(identifier: indexPath as NSCopying, previewProvider: nil) { _ in
             let openAction = UIAction(title: i18n("Open"), image: UIImage(systemName: "arrow.up.forward.app")) { [weak self] _ in
                 guard let self else { return }
-                MiniAppManager.shared.openMiniApp(parent: self, appInfo: app, completion: {})
+                MiniAppManager.shared.openMiniApp(parent: self, project: app, completion: {})
             }
 
             let settingsAction = UIAction(title: i18n("Settings"), image: UIImage(systemName: "gear")) { [weak self] _ in
                 guard let self else { return }
-                let vc = MiniAppSettingsViewController(style: .insetGrouped, app: app)
+                let vc = MiniAppSettingsViewController(style: .insetGrouped, app: app.appInfo)
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             }
 
             let deleteAction = UIAction(title: i18n("Delete"), image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
                 guard let self else { return }
-                let alert = UIAlertController(title: i18n("home.delete_alert_title"), message: i18nF("delete_alert_confirm_message", app.displayName ?? app.name), preferredStyle: .alert)
+                let alert = UIAlertController(title: i18n("home.delete_alert_title"), message: i18nF("delete_alert_confirm_message", app.title), preferredStyle: .alert)
                 let confirm = UIAlertAction(title: i18n("Delete"), style: .destructive) { _ in
                     MiniAppManager.shared.deleteMiniApp(
-                        app: app,
+                        project: app,
                         completion: {
-                            self.apps.remove(at: indexPath.row)
-                            tableView.beginUpdates()
-                            tableView.deleteRows(at: [indexPath], with: .automatic)
-                            tableView.endUpdates()
+                            self.removeProjectFromList(app)
                             showSimpleSuccess(msg: i18n("delete_successfully"))
                         })
                 }

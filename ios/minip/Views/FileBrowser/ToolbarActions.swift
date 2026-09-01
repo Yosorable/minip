@@ -9,7 +9,8 @@ import UIKit
 
 extension FileBrowserViewController {
     @objc func selectOrDeselectAll() {
-        if (tableView.indexPathsForSelectedRows?.count ?? 0) == files.count {
+        let itemCount = dataSource.snapshot().numberOfItems
+        if (tableView.indexPathsForSelectedRows?.count ?? 0) == itemCount {
             for section in 0..<tableView.numberOfSections {
                 for row in 0..<tableView.numberOfRows(inSection: section) {
                     let indexPath = IndexPath(row: row, section: section)
@@ -39,15 +40,16 @@ extension FileBrowserViewController {
             deleteBtn.isEnabled = enableBtn
             shareSelectedBtn.isEnabled = enableBtn
             moreBtn.isEnabled = enableBtn
-            if files.count == 0 {
+            let itemCount = dataSource.snapshot().numberOfItems
+            if itemCount == 0 {
                 selectAllBtn.title = i18n("Select All")
                 selectAllBtn.isEnabled = false
-            } else if (tableView.indexPathsForSelectedRows?.count ?? 0) == files.count {
+            } else if (tableView.indexPathsForSelectedRows?.count ?? 0) == itemCount {
                 selectAllBtn.title = i18n("Deselect All")
             } else {
                 selectAllBtn.title = i18n("Select All")
             }
-            selectAllBtn.isEnabled = files.count != 0
+            selectAllBtn.isEnabled = itemCount != 0
             navigationItem.leftBarButtonItem = selectAllBtn
         } else {
             if folderURL == Global.shared.fileBrowserRootURL {
@@ -58,28 +60,24 @@ extension FileBrowserViewController {
         }
     }
 
-    // isValid, selected item urls, selected item indexes
-    fileprivate func checkSelectedItems() -> (isValid: Bool, selectedItemURL: [URL], selectedItemIndex: [Int], selectedItemFileInfo: [FileInfo]) {
+    fileprivate func checkSelectedItems() -> (isValid: Bool, selectedItemURL: [URL], selectedItemFileInfo: [FileInfo]) {
         var isValid = true
-        var selectedItemIndexInTableView = [Int]()
         var selectedItemFileInfo = [FileInfo]()
-        let selectedItemURL: [URL] = tableView.indexPathsForSelectedRows?.map {
-            let fileInfo = self.files[$0.row]
+        let selectedItemURL: [URL] = tableView.indexPathsForSelectedRows?.compactMap {
+            guard let fileInfo = dataSource.itemIdentifier(for: $0) else { return nil }
             selectedItemFileInfo.append(fileInfo)
-            selectedItemIndexInTableView.append($0.row)
             if fileInfo.url == Global.shared.documentsTrashURL || fileInfo.url == Global.shared.dataFolderURL {
                 isValid = false
             }
             return fileInfo.url
         } ?? []
-        return (isValid, selectedItemURL, selectedItemIndexInTableView, selectedItemFileInfo)
+        return (isValid, selectedItemURL, selectedItemFileInfo)
     }
 
     @objc func deleteSelected() {
         let res = checkSelectedItems()
         let containsCannotDeleteItems = !res.isValid
         let toDeleteURLs = res.selectedItemURL
-        let toDeleteIndexInTableView = res.selectedItemIndex
 
         logger.debug("[FileBrowser] to delete file: \(toDeleteURLs.map { $0.lastPathComponent })")
 
@@ -93,22 +91,22 @@ extension FileBrowserViewController {
             let alertController = UIAlertController(title: i18n("Confirm"), message: i18nF("f.delete_selected_confirm_message", "\(toDeleteURLs.count)"), preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
             alertController.addAction(UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { [weak self] _ in
-                var successDeleted = [IndexPath]()
+                var successCount = 0
                 do {
-                    for (index, url) in toDeleteURLs.enumerated() {
+                    for url in toDeleteURLs {
                         if isInTrashRoot {
                             try FileManager.default.removeItem(at: url)
                         } else {
                             try FileManager.default.trashItem(at: url, resultingItemURL: nil)
                         }
-                        successDeleted.append(IndexPath(row: toDeleteIndexInTableView[index], section: 0))
+                        successCount += 1
                     }
                     showSimpleSuccess(msg: i18n(isInTrashRoot ? "f.deleted_success" : "f.moved_to_trash"))
                 } catch {
                     showSimpleError(err: error)
                 }
                 self?.toggleSelectMode()
-                if successDeleted.count > 0 {
+                if successCount > 0 {
                     self?.fetchFilesAndUpdateDataSource()
                 }
             }))

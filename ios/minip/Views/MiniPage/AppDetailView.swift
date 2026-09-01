@@ -9,20 +9,23 @@ import Kingfisher
 import SwiftUI
 
 struct AppDetailView: View {
-    let appInfo: AppInfo
+    let project: InstalledProject
+    var appInfo: AppInfo {
+        project.appInfo
+    }
     weak var parentVC: UIViewController?
     weak var detailVC: AppDetailViewController?
     var iconURL: URL?
-    init(appInfo: AppInfo, parentVC: UIViewController?, detailVC: AppDetailViewController?) {
-        self.appInfo = appInfo
+    init(project: InstalledProject, parentVC: UIViewController?, detailVC: AppDetailViewController?) {
+        self.project = project
         self.parentVC = parentVC
         self.detailVC = detailVC
 
-        if let icon = appInfo.icon {
+        if let icon = project.appInfo.icon {
             if icon.starts(with: "http://") || icon.starts(with: "https://") {
                 self.iconURL = URL(string: icon)
             } else {
-                self.iconURL = Global.shared.documentsRootURL.appending(path: self.appInfo.name, directoryHint: .isDirectory).appending(path: icon)
+                self.iconURL = project.rootURL.appending(path: icon)
             }
         }
     }
@@ -35,7 +38,7 @@ struct AppDetailView: View {
             .padding(.top)
 
             VStack {
-                Text(self.appInfo.name)
+                Text(self.project.title)
                     .lineLimit(1)
                     .padding(.top)
                 Spacer()

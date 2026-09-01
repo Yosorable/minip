@@ -7,7 +7,7 @@
 
 import UIKit
 
-func ShowCreateNewProjectAlert(_ parentVC: UIViewController, onCreatedSuccess: @escaping (AppInfo) -> Void) {
+func ShowCreateNewProjectAlert(_ parentVC: UIViewController, onCreatedSuccess: @escaping (InstalledProject) -> Void) {
     let alert = UIAlertController(title: i18n("cp.create_project"), message: nil, preferredStyle: .alert)
     alert.addTextField(configurationHandler: { tf in
         tf.placeholder = i18n("cp.name")

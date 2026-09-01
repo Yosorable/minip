@@ -12,11 +12,14 @@ import SwiftUI
 import UIKit
 
 class AppDetailViewController: UIViewController {
-    var appInfo: AppInfo
+    let project: InstalledProject
+    var appInfo: AppInfo {
+        project.appInfo
+    }
     var reloadPageFunc: (() -> Void)?
     weak var parentVC: UIViewController?
-    init(appInfo: AppInfo, reloadPageFunc: (() -> Void)? = nil, parentVC: UIViewController) {
-        self.appInfo = appInfo
+    init(project: InstalledProject, reloadPageFunc: (() -> Void)? = nil, parentVC: UIViewController) {
+        self.project = project
         self.reloadPageFunc = reloadPageFunc
         self.parentVC = parentVC
         super.init(nibName: nil, bundle: nil)
@@ -43,7 +46,7 @@ class AppDetailViewController: UIViewController {
         panModalSetNeedsLayoutUpdate()
 
         let subview = UIHostingController(
-            rootView: AppDetailView(appInfo: appInfo, parentVC: parentVC, detailVC: self)
+            rootView: AppDetailView(project: project, parentVC: parentVC, detailVC: self)
         ).view
         guard let subview = subview else {
             return

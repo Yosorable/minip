@@ -14,8 +14,8 @@ enum MiniAppPermissionTypes: String, CaseIterable {
     case getInstalledProjectsList
     case openProject
 
-    func getDescription(app: AppInfo) -> String {
-        let name = app.displayName ?? app.name
+    func getDescription(app: AppInfo, projectTitle: String? = nil) -> String {
+        let name = projectTitle ?? app.displayName ?? app.name
         switch self {
         case .camera:
             return i18nF("mp.request_camera_permission", name)
@@ -71,7 +71,8 @@ extension MiniAppManager {
         }
 
         // request permission
-        let alert = UIAlertController(title: i18n("Permission"), message: permissionType.getDescription(app: app), preferredStyle: .alert)
+        let projectTitle = openedProject?.appId == app.appId ? openedProject?.title : nil
+        let alert = UIAlertController(title: i18n("Permission"), message: permissionType.getDescription(app: app, projectTitle: projectTitle), preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: i18n("Deny"), style: .cancel, handler: { _ in
             try? db.put(value: false, forKey: key)
             onFailed?(ErrorMsg(errorDescription: "Not allow"))

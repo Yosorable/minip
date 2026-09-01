@@ -21,7 +21,7 @@ extension MinipApi {
         guard let vc = param.webView?.holderObject as? MiniPageViewController else {
             return
         }
-        let newVC = MiniPageViewController(project: vc.resolvedProject, page: page, title: title)
+        let newVC = MiniPageViewController(project: vc.project, page: page, title: title)
         if vc.isRoot {
             newVC.hidesBottomBarWhenPushed = true
         }

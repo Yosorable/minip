@@ -41,9 +41,9 @@ struct AppInfo: Hashable, Codable, Defaults.Serializable {
 /// Runtime representation of an installed project.
 ///
 /// `AppInfo.name` belongs to the project manifest and must not be used to
-/// locate the project after installation. Users can rename the containing
-/// directory from the Files app at any time, so file access always goes
-/// through `rootURL` discovered while scanning Documents.
+/// locate the project after installation. `rootURL` is discovered while
+/// scanning Documents and remains fixed for the lifetime of a running
+/// project session.
 struct InstalledProject: Hashable {
     let appInfo: AppInfo
     let rootURL: URL

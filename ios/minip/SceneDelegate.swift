@@ -94,7 +94,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        MiniAppManager.shared.refreshOpenedProjectLocation()
         NotificationCenter.default.post(name: .appListUpdated, object: nil)
 
         guard let serv = MiniAppManager.shared.httpServer else {

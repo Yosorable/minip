@@ -115,19 +115,6 @@ class MiniAppManager {
         return Defaults[.appInfoList]
     }
 
-    func refreshOpenedProjectLocation() {
-        guard let openedProject else { return }
-
-        let matches = getInstalledProjects().filter { $0.appId == openedProject.appId }
-        if let sameLocation = matches.first(where: { $0.rootURL == openedProject.rootURL }) {
-            self.openedProject = sameLocation
-        } else if matches.count == 1 {
-            self.openedProject = matches[0]
-        } else if matches.count > 1 {
-            logger.error("[refreshOpenedProjectLocation] multiple projects share appId: \(openedProject.appId)")
-        }
-    }
-
     func getFSManager() -> FileSystemManager? {
         if self.fileSystemManager != nil {
             return self.fileSystemManager

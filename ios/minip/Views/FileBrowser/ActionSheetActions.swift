@@ -37,7 +37,6 @@ extension FileBrowserViewController {
                 try fileManager.moveItem(at: fileInfo.url, to: newURL)
                 self?.fetchFilesAndUpdateDataSource()
                 if strongSelf.folderURL.standardizedFileURL == Global.shared.documentsRootURL.standardizedFileURL {
-                    MiniAppManager.shared.refreshOpenedProjectLocation()
                     NotificationCenter.default.post(name: .appListUpdated, object: nil)
                 }
                 showSimpleSuccess(msg: i18n("Renamed successfully"))

@@ -91,26 +91,11 @@ class MiniAppManager {
             Preferences.appSortList = newSortList
         }
 
-        // ignore files property
-        let withoutFiles = projects.map {
-            var t = $0.appInfo
-            t.files = nil
-            return t
-        }
-        if withoutFiles != Preferences.appInfoList {
-            Preferences.appInfoList = withoutFiles
-            logger.debug("[getInstalledProjects] cache updated")
-        }
-
         return projects
     }
 
     func getAppInfos() -> [AppInfo] {
         getInstalledProjects().map(\.appInfo)
-    }
-
-    func getAppInfosFromCache() -> [AppInfo] {
-        return Preferences.appInfoList
     }
 
     func getFSManager() -> FileSystemManager? {

@@ -9,14 +9,12 @@ import Foundation
 
 /// Typed access to values stored in `UserDefaults`.
 ///
-/// The key names and `appInfoList` representation intentionally match the
-/// previously used Defaults package so existing installations require no data
-/// migration when that dependency is removed.
+/// The key names intentionally match the previously used Defaults package so
+/// existing preference values remain available.
 enum Preferences {
     enum Key {
         static let lastDownloadedURL = "lastDownloadedURL"
         static let appSortList = "appSortList"
-        static let appInfoList = "appInfoList"
         static let wkwebviewInspectable = "wkwebviewInspectable"
         static let useCapsuleButton = "useCapsuleButton"
         static let firstStart = "firstStart"
@@ -37,37 +35,6 @@ enum Preferences {
     static var appSortList: [String] {
         get { store.stringArray(forKey: Key.appSortList) ?? [] }
         set { store.set(newValue, forKey: Key.appSortList) }
-    }
-
-    /// Defaults stored each Codable `AppInfo` as a JSON string inside a native
-    /// string array. Keep that representation to preserve existing app data.
-    static var appInfoList: [AppInfo] {
-        get {
-            let decoder = JSONDecoder()
-            return (store.stringArray(forKey: Key.appInfoList) ?? []).compactMap { value in
-                do {
-                    return try decoder.decode(AppInfo.self, from: Data(value.utf8))
-                } catch {
-                    logger.error("[Preferences] cannot decode app info: \(error.localizedDescription)")
-                    return nil
-                }
-            }
-        }
-        set {
-            let encoder = JSONEncoder()
-            do {
-                let values = try newValue.map { value in
-                    let data = try encoder.encode(value)
-                    guard let string = String(data: data, encoding: .utf8) else {
-                        throw ErrorMsg(errorDescription: "Cannot encode app info as UTF-8")
-                    }
-                    return string
-                }
-                store.set(values, forKey: Key.appInfoList)
-            } catch {
-                logger.error("[Preferences] cannot encode app info: \(error.localizedDescription)")
-            }
-        }
     }
 
     static var wkwebviewInspectable: Bool {

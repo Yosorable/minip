@@ -144,10 +144,6 @@ extension MiniAppManager {
             let jsonEncoder = JSONEncoder()
             let jsonDataEncoded = try jsonEncoder.encode(appConfig)
             try jsonDataEncoded.write(to: jsonFileURL)
-            var appInfoList = Preferences.appInfoList
-            appInfoList.insert(appConfig, at: 0)
-            Preferences.appInfoList = appInfoList
-
             var appSortList = Preferences.appSortList
             appSortList.insert(appConfig.appId, at: 0)
             Preferences.appSortList = appSortList

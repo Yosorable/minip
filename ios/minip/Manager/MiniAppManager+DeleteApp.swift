@@ -14,10 +14,9 @@ extension MiniAppManager {
         let dataFolder = Global.shared.projectDataFolderURL.appending(component: app.appId, directoryHint: .isDirectory)
         do {
             try fileManager.trashItem(at: project.rootURL, resultingItemURL: nil)
-            let db = KVStorageManager.shared.getPrivacyDB()
             for per in MiniAppPermissionTypes.allCases {
                 let key = app.appId + "-" + per.rawValue
-                try db?.deleteValue(forKey: key)
+                try KVStorageManager.shared.deleteValue(forKey: key, namespace: KVStorageManager.privacyNamespace)
             }
 
             if fileManager.fileExists(atPath: dataFolder.path), try fileManager.contentsOfDirectory(atPath: dataFolder.path).isEmpty {

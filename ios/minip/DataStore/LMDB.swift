@@ -8,47 +8,88 @@
 import Foundation
 import SwiftLMDB
 
-class KVStorageManager {
-    static let shared = KVStorageManager()
-    var environment: Environment?
-    var dbMap: [String: Database] = .init()
-    init() {
-        let defaultURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appending(component: ".data", directoryHint: .isDirectory)
-        let (exist, _) = fileOrFolderExists(path: defaultURL.path)
-        do {
-            if !exist {
-                try FileManager.default.createDirectory(at: defaultURL, withIntermediateDirectories: true)
+/// Read/write access to the legacy LMDB store.
+///
+/// Keep this type isolated from the active KV implementation so the legacy
+/// dependency can be removed under the cleanup conditions documented on
+/// `KVStorageManager` without changing the active SQLite implementation.
+final class LegacyLMDBStorage {
+    private let environment: Environment
+    private var databaseCache: [String: Database] = [:]
+
+    static func storeExists(in directoryURL: URL) -> Bool {
+        FileManager.default.fileExists(atPath: directoryURL.appendingPathComponent("data.mdb").path)
+    }
+
+    init(directoryURL: URL, createIfNeeded: Bool) throws {
+        let fileManager = FileManager.default
+        if !fileManager.fileExists(atPath: directoryURL.path) {
+            guard createIfNeeded else {
+                throw ErrorMsg(errorDescription: "Legacy KV storage does not exist")
             }
-            environment = try Environment(path: defaultURL.path, flags: [], maxDBs: 128)
-        } catch {
-            logger.error("[KVStoreManager] \(error)")
+            try fileManager.createDirectory(at: directoryURL, withIntermediateDirectories: true)
         }
+
+        environment = try Environment(path: directoryURL.path, flags: [], maxDBs: 128)
     }
 
-    func getDB(dbName: String) -> Database? {
-        // built in db
-        if dbName == ".privacy" {
-            return nil
+    func databaseNames() throws -> [String] {
+        let database = try environment.openDatabase()
+        let names = try database.map { entry in
+            guard let name = String(data: entry.key, encoding: .utf8) else {
+                throw ErrorMsg(errorDescription: "Legacy KV storage contains an invalid database name")
+            }
+            return name
         }
-        guard let res = dbMap[dbName] else {
-            let res = try? environment?.openDatabase(named: dbName, flags: [.create])
-            dbMap[dbName] = res
-            return res
+        guard names.count == database.count else {
+            throw ErrorMsg(errorDescription: "Cannot enumerate every legacy KV database")
         }
-        return res
-    }
-    
-    func getPrivacyDB() -> Database? {
-        let dbName = ".privacy"
-        guard let res = dbMap[dbName] else {
-            let res = try? environment?.openDatabase(named: dbName, flags: [.create])
-            dbMap[dbName] = res
-            return res
-        }
-        return res
+        return names
     }
 
-    func removeDB(dbName: String) {
-        dbMap.removeValue(forKey: dbName)
+    func entries(inDatabaseNamed name: String) throws -> [(key: Data, value: Data)] {
+        let database = try environment.openDatabase(named: name)
+        let entries = database.map { ($0.key, $0.value) }
+        guard entries.count == database.count else {
+            throw ErrorMsg(errorDescription: "Cannot read every entry in a legacy KV database")
+        }
+        return entries
+    }
+
+    func string(forKey key: String, namespace: String) throws -> String? {
+        try database(named: namespace).get(type: String.self, forKey: key)
+    }
+
+    func set(_ value: String, forKey key: String, namespace: String) throws {
+        try database(named: namespace).put(value: value, forKey: key)
+    }
+
+    func bool(forKey key: String, namespace: String) throws -> Bool? {
+        try database(named: namespace).get(type: Bool.self, forKey: key)
+    }
+
+    func set(_ value: Bool, forKey key: String, namespace: String) throws {
+        try database(named: namespace).put(value: value, forKey: key)
+    }
+
+    func deleteValue(forKey key: String, namespace: String) throws {
+        try database(named: namespace).deleteValue(forKey: key)
+    }
+
+    func clear(namespace: String) throws {
+        try database(named: namespace).empty()
+    }
+
+    func release(namespace: String) {
+        databaseCache.removeValue(forKey: namespace)
+    }
+
+    private func database(named name: String) throws -> Database {
+        if let database = databaseCache[name] {
+            return database
+        }
+        let database = try environment.openDatabase(named: name, flags: [.create])
+        databaseCache[name] = database
+        return database
     }
 }

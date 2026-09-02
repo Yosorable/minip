@@ -48,12 +48,6 @@ enum MiniAppPermissionTypes: String, CaseIterable {
 
 extension MiniAppManager {
     func getOrRequestPermission(permissionType: MiniAppPermissionTypes, app: AppInfo? = nil, onSuccess: (() -> Void)? = nil, onFailed: ((Error) -> Void)? = nil, parentVC: UIViewController? = nil) {
-        guard let db = KVStorageManager.shared.getPrivacyDB() else {
-            let error = ErrorMsg(errorDescription: "[MiniAPPPermision] cannot open permission db")
-            logger.error("\(error.localizedDescription)")
-            onFailed?(error)
-            return
-        }
         guard let app = app ?? openedApp else {
             let error = ErrorMsg(errorDescription: "[MiniAPPPermision] not app permission to get")
             logger.error("\(error.localizedDescription)")
@@ -61,7 +55,14 @@ extension MiniAppManager {
             return
         }
         let key = app.appId + "-" + permissionType.rawValue
-        let val = try? db.get(type: Bool.self, forKey: key)
+        let val: Bool?
+        do {
+            val = try KVStorageManager.shared.bool(forKey: key, namespace: KVStorageManager.privacyNamespace)
+        } catch {
+            logger.error("[MiniAppPermission] \(error.localizedDescription)")
+            onFailed?(error)
+            return
+        }
         if val == true {
             onSuccess?()
             return
@@ -73,22 +74,25 @@ extension MiniAppManager {
         // request permission
         let projectTitle = openedProject?.appId == app.appId ? openedProject?.title : nil
         let alert = UIAlertController(title: i18n("Permission"), message: permissionType.getDescription(app: app, projectTitle: projectTitle), preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: i18n("Deny"), style: .cancel, handler: { _ in
-            try? db.put(value: false, forKey: key)
-            onFailed?(ErrorMsg(errorDescription: "Not allow"))
-        }))
-        alert.addAction(UIAlertAction(title: i18n("Allow"), style: .default, handler: { _ in
-            try? db.put(value: true, forKey: key)
-            onSuccess?()
-        }))
+        alert.addAction(
+            UIAlertAction(
+                title: i18n("Deny"), style: .cancel,
+                handler: { _ in
+                    try? KVStorageManager.shared.set(false, forKey: key, namespace: KVStorageManager.privacyNamespace)
+                    onFailed?(ErrorMsg(errorDescription: "Not allow"))
+                }))
+        alert.addAction(
+            UIAlertAction(
+                title: i18n("Allow"), style: .default,
+                handler: { _ in
+                    try? KVStorageManager.shared.set(true, forKey: key, namespace: KVStorageManager.privacyNamespace)
+                    onSuccess?()
+                }))
 
         (parentVC ?? getTopViewController())?.present(alert, animated: true)
     }
 
     func clearAllPermissions() {
-        guard let db = KVStorageManager.shared.getPrivacyDB() else {
-            return
-        }
-        try? db.empty()
+        try? KVStorageManager.shared.clear(namespace: KVStorageManager.privacyNamespace)
     }
 }

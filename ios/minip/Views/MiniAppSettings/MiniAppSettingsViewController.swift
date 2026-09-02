@@ -46,10 +46,13 @@ class MiniAppSettingsViewController: UITableViewController {
         var res: [(title: String, key: String, isEnabled: Bool)] = []
 
         for per in MiniAppPermissionTypes.allCases {
-            let db = KVStorageManager.shared.getPrivacyDB()
             let key = app.appId + "-" + per.rawValue
-            if let val = try? db?.get(type: Bool.self, forKey: key) {
-                res.append((per.getTitle(), key, val))
+            do {
+                if let value = try KVStorageManager.shared.bool(forKey: key, namespace: KVStorageManager.privacyNamespace) {
+                    res.append((per.getTitle(), key, value))
+                }
+            } catch {
+                logger.error("[MiniAppPermission] \(error.localizedDescription)")
             }
         }
 
@@ -131,12 +134,10 @@ class MiniAppSettingsViewController: UITableViewController {
         let index = sender.tag
         let item = privacySettings[index]
         privacySettings[index].isEnabled = sender.isOn
-        if let db = KVStorageManager.shared.getPrivacyDB() {
-            do {
-                try db.put(value: sender.isOn, forKey: item.key)
-            } catch {
-                logger.error("[MiniAppPermission] \(error.localizedDescription)")
-            }
+        do {
+            try KVStorageManager.shared.set(sender.isOn, forKey: item.key, namespace: KVStorageManager.privacyNamespace)
+        } catch {
+            logger.error("[MiniAppPermission] \(error.localizedDescription)")
         }
     }
 }

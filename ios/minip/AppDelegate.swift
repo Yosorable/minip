@@ -11,6 +11,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         _ = MWebViewPool.shared
+        _ = KVStorageManager.shared
         NotificationCenter.default.post(name: .mainControllerInitSuccess, object: nil)
         return true
     }

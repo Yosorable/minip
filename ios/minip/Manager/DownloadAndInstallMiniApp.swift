@@ -163,10 +163,7 @@ private func installByAppJSON(in appJSONURL: URL, validateAppInfoFunc: ((AppInfo
         // safe delete old file by AppInfo.files
         if let filesList = newAppInfo.files {
             var toDeleteFiles = [URL]()
-            var mp = [String: AppInfo.File]()
-            for ele in filesList {
-                mp[ele.path] = ele
-            }
+            let newFilePaths = Set(filesList.map(\.path))
 
             let oldAppJsonPath = targetFolderURL.appendingPathComponent("app.json")
 
@@ -175,7 +172,7 @@ private func installByAppJSON(in appJSONURL: URL, validateAppInfoFunc: ((AppInfo
                let oldFilesList = oldJson.files
             {
                 for ele in oldFilesList {
-                    if !mp.keys.contains(ele.path) {
+                    if !newFilePaths.contains(ele.path) {
                         let tmpPath = targetFolderURL.appending(path: ele.path)
                         toDeleteFiles.append(tmpPath)
                     }

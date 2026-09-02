@@ -5,7 +5,6 @@
 //  Created by ByteDance on 2023/7/14.
 //
 
-import Defaults
 import ProgressHUD
 import SwiftUI
 
@@ -31,7 +30,7 @@ struct DownloadProjectView: View {
     var onSuccess: (() -> Void)?
     var closeFunc: (() -> Void)?
 
-    @State var downURL: String = Defaults[.lastDownloadedURL]
+    @State var downURL: String = Preferences.lastDownloadedURL
     @State var downFilename: String = ""
 
     @State var showAlert = false
@@ -146,7 +145,7 @@ struct DownloadProjectView: View {
                 uncompressing = true
                 ProgressHUD.success("Download succeeded, uncompressing")
                 unCompress(file: temporaryURL)
-                Defaults[.lastDownloadedURL] = downURL
+                Preferences.lastDownloadedURL = downURL
             case .failure(let error):
                 guard (error as? URLError)?.code != .cancelled else { return }
                 alertMsg = error.localizedDescription

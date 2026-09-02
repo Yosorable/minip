@@ -5,7 +5,6 @@
 //  Created by LZY on 2025/2/13.
 //
 
-import Defaults
 import Foundation
 
 extension MiniAppManager {
@@ -145,8 +144,13 @@ extension MiniAppManager {
             let jsonEncoder = JSONEncoder()
             let jsonDataEncoded = try jsonEncoder.encode(appConfig)
             try jsonDataEncoded.write(to: jsonFileURL)
-            Defaults[.appInfoList].insert(appConfig, at: 0)
-            Defaults[.appSortList].insert(appConfig.appId, at: 0)
+            var appInfoList = Preferences.appInfoList
+            appInfoList.insert(appConfig, at: 0)
+            Preferences.appInfoList = appInfoList
+
+            var appSortList = Preferences.appSortList
+            appSortList.insert(appConfig.appId, at: 0)
+            Preferences.appSortList = appSortList
         } catch {
             throw ErrorMsg(errorDescription: "Cannot create file, error: \(error.localizedDescription)")
         }

@@ -6,7 +6,6 @@
 //
 
 import AVKit
-import Defaults
 import Kingfisher
 import ProgressHUD
 import SafariServices
@@ -27,7 +26,6 @@ private struct LicensesView: View {
     private static let libraries: [(String, String)] = [
         ("BlurUIKit", "https://github.com/TimOliver/BlurUIKit/blob/main/LICENSE"),
         ("CLMDB", "https://github.com/agisboye/CLMDB"),
-        ("Defaults", "https://github.com/sindresorhus/Defaults/blob/main/license"),
         ("FlyingFox", "https://github.com/swhitty/FlyingFox/blob/main/LICENSE"),
         ("JetBrains Mono", "https://github.com/JetBrains/JetBrainsMono/blob/master/OFL.txt"),
         ("KeyboardToolbar", "https://github.com/simonbs/KeyboardToolbar/blob/main/LICENSE"),
@@ -94,11 +92,11 @@ private struct SettingsIcon: View {
 }
 
 struct SettingsView: View {
-    @Default(.wkwebviewInspectable) var wkwebviewInspectable
-    @Default(.useCapsuleButton) var useCapsuleButton
-    @Default(.colorScheme) var colorScheme
-    @Default(.useSanboxRoot) var useSandboxRoot
-    @Default(.enableWebView120FPS) var enableWebView120FPS
+    @AppStorage(Preferences.Key.wkwebviewInspectable) var wkwebviewInspectable = false
+    @AppStorage(Preferences.Key.useCapsuleButton) var useCapsuleButton = false
+    @AppStorage(Preferences.Key.colorScheme) var colorScheme = 0
+    @AppStorage(Preferences.Key.useSandboxRoot) var useSandboxRoot = false
+    @AppStorage(Preferences.Key.enableWebView120FPS) var enableWebView120FPS = true
 
     var body: some View {
         NavigationStack {

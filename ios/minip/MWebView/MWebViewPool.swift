@@ -5,7 +5,6 @@
 //  Created by LZY on 2023/11/1.
 //
 
-import Defaults
 import OSLog
 import UIKit
 import WebKit
@@ -133,7 +132,7 @@ public extension MWebViewPool {
         counter += 1
         lock.signal()
 
-        MWebView.setHighRefreshRate(webView.configuration.preferences, enabled: Defaults[.enableWebView120FPS])
+        MWebView.setHighRefreshRate(webView.configuration.preferences, enabled: Preferences.enableWebView120FPS)
 
         return webView
     }

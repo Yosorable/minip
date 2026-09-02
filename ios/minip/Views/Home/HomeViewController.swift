@@ -6,7 +6,6 @@
 //
 
 import AVFoundation
-import Defaults
 import SwiftUI
 import UIKit
 
@@ -71,8 +70,8 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         title = i18n("Projects")
 
         apps = MiniAppManager.shared.getInstalledProjects()
-        if Defaults[.firstStart] && apps.count == 0 {
-            Defaults[.firstStart] = false
+        if Preferences.firstStart && apps.count == 0 {
+            Preferences.firstStart = false
             if let newApp = try? MiniAppManager.shared.createMiniApp() {
                 apps.append(newApp)
             }
@@ -258,8 +257,10 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
         let movedItem = apps.remove(at: fromIndexPath.row)
         apps.insert(movedItem, at: toIndexPath.row)
-        let movedItemS = Defaults[.appSortList].remove(at: fromIndexPath.row)
-        Defaults[.appSortList].insert(movedItemS, at: toIndexPath.row)
+        var appSortList = Preferences.appSortList
+        let movedItemS = appSortList.remove(at: fromIndexPath.row)
+        appSortList.insert(movedItemS, at: toIndexPath.row)
+        Preferences.appSortList = appSortList
     }
 
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -331,8 +332,10 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.performBatchUpdates {
             let movedItem = apps.remove(at: sourceIndexPath.row)
             apps.insert(movedItem, at: destinationIndexPath.row)
-            let movedSortItem = Defaults[.appSortList].remove(at: sourceIndexPath.row)
-            Defaults[.appSortList].insert(movedSortItem, at: destinationIndexPath.row)
+            var appSortList = Preferences.appSortList
+            let movedSortItem = appSortList.remove(at: sourceIndexPath.row)
+            appSortList.insert(movedSortItem, at: destinationIndexPath.row)
+            Preferences.appSortList = appSortList
             tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
         }
         coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)

@@ -7,7 +7,6 @@
 
 import AVFoundation
 import AVKit
-import Defaults
 import Kingfisher
 import OSLog
 import SafariServices
@@ -115,7 +114,7 @@ class MiniPageViewController: UIViewController {
         webview.uiDelegate = self
         webview.navigationDelegate = self
         if #available(iOS 16.4, *) {
-            webview.isInspectable = Defaults[.wkwebviewInspectable]
+            webview.isInspectable = Preferences.wkwebviewInspectable
         }
 
         if app.iOS_disableTextInteraction == true {
@@ -214,7 +213,7 @@ class MiniPageViewController: UIViewController {
                         image: UIImage(systemName: "ellipsis"), style: .plain, target: self, action: #selector(showAppDetail)
                     ),
                 ]
-            } else if !Defaults[.useCapsuleButton] {
+            } else if !Preferences.useCapsuleButton {
                 navigationItem.rightBarButtonItems = [
                     UIBarButtonItem(
                         image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(close)

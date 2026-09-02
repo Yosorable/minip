@@ -6,7 +6,6 @@
 //
 
 import AVFoundation
-import Defaults
 import SwiftUI
 import UIKit
 
@@ -24,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         let mainVC = UITabBarController()
 
-        window?.overrideUserInterfaceStyle = if Defaults[.colorScheme] == 1 { .light } else if Defaults[.colorScheme] == 2 { .dark } else { .unspecified }
+        window?.overrideUserInterfaceStyle = if Preferences.colorScheme == 1 { .light } else if Preferences.colorScheme == 2 { .dark } else { .unspecified }
 
         mainVC.viewControllers = [
             {
@@ -38,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 vc.navigationBar.prefersLargeTitles = true
                 vc.tabBarItem = UITabBarItem(title: i18n("Files"), image: UIImage(systemName: "folder.fill"), tag: 1)
 
-                let lastFolder = Defaults[.filebrowserLastFolder]
+                let lastFolder = Preferences.filebrowserLastFolder
                 var vcs: [UIViewController] = []
 
                 var url = Global.shared.sandboxRootURL
@@ -71,7 +70,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }(),
         ]
 
-        mainVC.selectedIndex = Defaults[.lastTabIndex]
+        mainVC.selectedIndex = Preferences.lastTabIndex
 
         window?.rootViewController = mainVC
         window?.makeKeyAndVisible()
@@ -127,13 +126,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let rootVC = window?.rootViewController as? UITabBarController, let fileBrowserNavigationVC = rootVC.viewControllers?[1] as? UINavigationController else { return }
 
         // tab index
-        Defaults[.lastTabIndex] = rootVC.selectedIndex
+        Preferences.lastTabIndex = rootVC.selectedIndex
 
         // file browser path
         if let currentPath = (fileBrowserNavigationVC.viewControllers.last as? FileBrowserViewController)?.folderURL.path(percentEncoded: false) {
             let root = Global.shared.sandboxRootURL.path(percentEncoded: false)
             let lastFolder = currentPath.deletingPrefix(root).deletingSuffix("/")
-            Defaults[.filebrowserLastFolder] = lastFolder
+            Preferences.filebrowserLastFolder = lastFolder
         }
     }
 }

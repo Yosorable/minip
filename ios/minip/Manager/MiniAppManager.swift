@@ -5,7 +5,6 @@
 //  Created by LZY on 2023/9/26.
 //
 
-import Defaults
 import FlyingFox
 import Foundation
 import Kingfisher
@@ -68,7 +67,7 @@ class MiniAppManager {
         }
 
         var appIdSortListIndexMap = [String: Int]()
-        let appIdSortList = Defaults[.appSortList]
+        let appIdSortList = Preferences.appSortList
 
         for i in 0 ..< appIdSortList.count {
             appIdSortListIndexMap[appIdSortList[i]] = i
@@ -89,7 +88,7 @@ class MiniAppManager {
 
         let newSortList = projects.map(\.appId)
         if newSortList != appIdSortList {
-            Defaults[.appSortList] = newSortList
+            Preferences.appSortList = newSortList
         }
 
         // ignore files property
@@ -98,8 +97,8 @@ class MiniAppManager {
             t.files = nil
             return t
         }
-        if withoutFiles != Defaults[.appInfoList] {
-            Defaults[.appInfoList] = withoutFiles
+        if withoutFiles != Preferences.appInfoList {
+            Preferences.appInfoList = withoutFiles
             logger.debug("[getInstalledProjects] cache updated")
         }
 
@@ -111,7 +110,7 @@ class MiniAppManager {
     }
 
     func getAppInfosFromCache() -> [AppInfo] {
-        return Defaults[.appInfoList]
+        return Preferences.appInfoList
     }
 
     func getFSManager() -> FileSystemManager? {

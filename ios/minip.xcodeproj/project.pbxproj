@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B1B32D42A61783400DA573F /* Defaults in Frameworks */ = {isa = PBXBuildFile; productRef = 2B1B32D32A61783400DA573F /* Defaults */; };
 		2BC331B42A62D47700441447 /* SwiftLMDB in Frameworks */ = {isa = PBXBuildFile; productRef = 2BC331B32A62D47700441447 /* SwiftLMDB */; };
 		2BD9B1AA2A5BD4D300036AFD /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = 2BD9B1A92A5BD4D300036AFD /* Runestone */; };
 		2BD9B1D62A5C09C700036AFD /* KeyboardToolbar in Frameworks */ = {isa = PBXBuildFile; productRef = 2BD9B1D52A5C09C700036AFD /* KeyboardToolbar */; };
@@ -92,7 +91,6 @@
 				48EEFDE62F5A658600F0C6C6 /* TreeSitterRegexRunestone in Frameworks */,
 				48EEFDE22F5A657700F0C6C6 /* TreeSitterMarkdownInlineRunestone in Frameworks */,
 				48EEFDEC2F5A937700F0C6C6 /* TreeSitterTypeScriptRunestone in Frameworks */,
-				2B1B32D42A61783400DA573F /* Defaults in Frameworks */,
 				484970CA2F5D6D02004AD67B /* TreeSitterSQLRunestone in Frameworks */,
 				484970DA2F5D6E62004AD67B /* TreeSitterRubyRunestone in Frameworks */,
 				48EEFDD62F5A651200F0C6C6 /* TreeSitterCSSRunestone in Frameworks */,
@@ -157,7 +155,6 @@
 			packageProductDependencies = (
 				2BD9B1A92A5BD4D300036AFD /* Runestone */,
 				2BD9B1D52A5C09C700036AFD /* KeyboardToolbar */,
-				2B1B32D32A61783400DA573F /* Defaults */,
 				2BC331B32A62D47700441447 /* SwiftLMDB */,
 				487E38922A8FBA48003464D7 /* Kingfisher */,
 				4800EA082CF1C93300F49842 /* FlyingFox */,
@@ -234,7 +231,6 @@
 			packageReferences = (
 				2BD9B1A82A5BD4D300036AFD /* XCRemoteSwiftPackageReference "Runestone" */,
 				2BD9B1D42A5C09C700036AFD /* XCRemoteSwiftPackageReference "KeyboardToolbar" */,
-				2B1B32D22A61783400DA573F /* XCRemoteSwiftPackageReference "Defaults" */,
 				2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */,
 				487E38912A8FBA47003464D7 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				4800EA072CF1C93300F49842 /* XCRemoteSwiftPackageReference "FlyingFox" */,
@@ -501,14 +497,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2B1B32D22A61783400DA573F /* XCRemoteSwiftPackageReference "Defaults" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sindresorhus/Defaults";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/agisboye/SwiftLMDB";
@@ -576,11 +564,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2B1B32D32A61783400DA573F /* Defaults */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2B1B32D22A61783400DA573F /* XCRemoteSwiftPackageReference "Defaults" */;
-			productName = Defaults;
-		};
 		2BC331B32A62D47700441447 /* SwiftLMDB */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */;

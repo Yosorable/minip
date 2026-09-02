@@ -5,7 +5,6 @@
 //  Created by LZY on 2025/3/18.
 //
 
-import Defaults
 import Foundation
 
 final class Global {
@@ -28,6 +27,6 @@ final class Global {
         documentsTrashURL = documentsRootURL.appending(component: ".Trash", directoryHint: .isDirectory)
         dataFolderURL = documentsRootURL.appending(component: ".data", directoryHint: .isDirectory)
         projectDataFolderURL = dataFolderURL.appending(component: "appdata", directoryHint: .isDirectory)
-        fileBrowserRootURL = Defaults[.useSanboxRoot] ? sandboxRootURL : documentsRootURL
+        fileBrowserRootURL = Preferences.useSandboxRoot ? sandboxRootURL : documentsRootURL
     }
 }

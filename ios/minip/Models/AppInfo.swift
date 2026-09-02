@@ -5,10 +5,9 @@
 //  Created by LZY on 2025/2/1.
 //
 
-import Defaults
 import UIKit
 
-struct AppInfo: Hashable, Codable, Defaults.Serializable {
+struct AppInfo: Hashable, Codable {
     var name: String // manifest/package name; only suggests the initial directory name
     var displayName: String? // optional user-facing project name
     var appId: String

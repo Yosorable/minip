@@ -1,88 +1,50 @@
-//
-//  Route.swift
-//  minip
-//
-//  Created by LZY on 2025/2/9.
-//
-
 import Foundation
 import SafariServices
 
 extension MinipApi {
-    func navigateTo(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        let data = (param.data as? [String: String])
-        guard let page = data?["page"] else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
+    func navigateTo(param: Parameter) throws {
+        let controller = try param.viewController
+        guard let navigation = controller.navigationController else {
+            throw MinipError(.invalidState, "The page has no navigation controller")
         }
-        let title = data?["title"]
-
-        // released page
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        let newVC = MiniPageViewController(project: vc.project, page: page, title: title)
-        if vc.isRoot {
-            newVC.hidesBottomBarWhenPushed = true
-        }
-        vc.navigationController?.pushViewController(newVC, animated: true)
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
+        let page = try param.string("page")
+        let next = MiniPageViewController(project: controller.project, page: page, title: try param.optionalString("title"))
+        if controller.isRoot { next.hidesBottomBarWhenPushed = true }
+        navigation.pushViewController(next, animated: true)
     }
 
-    func navigateBack(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
+    func navigateBack(param: Parameter) throws {
+        let controller = try param.viewController
+        let delta = try param.int("delta", default: 1)
+        guard delta > 0 else { throw MinipError.invalidArgument("delta") }
+        guard let navigation = controller.navigationController, navigation.topViewController === controller else {
+            throw MinipError(.invalidState, "The calling page is not the active navigation page")
         }
-        var delta = ((param.data as? [String: Any])?["delta"] as? Int) ?? 1
-        if vc.navigationController?.topViewController == vc {
-            while delta > 0, (vc.navigationController?.viewControllers.count ?? 1) > 1 {
-                delta -= 1
-                vc.navigationController?.popViewController(animated: true)
-            }
-        }
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
+        let index = max(0, navigation.viewControllers.count - 1 - delta)
+        navigation.popToViewController(navigation.viewControllers[index], animated: true)
     }
 
-    func redirectTo(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        let data = (param.data as? [String: String])
-        guard let page = data?["page"] else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
-        }
-        let title = data?["title"]
-
-        // released page
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        vc.redirectTo(page: page, title: title)
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
+    func redirectTo(param: Parameter) throws {
+        try param.viewController.redirectTo(page: param.string("page"), title: param.optionalString("title"))
     }
 
-    func openWebsite(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
+    func openWebsite(param: Parameter) throws {
+        let controller = try param.requirePresentation()
+        guard let url = URL(string: try param.string("url")), ["http", "https"].contains(url.scheme?.lowercased() ?? "") else {
+            throw MinipError.invalidArgument("url")
         }
-        guard let urlStr = (param.data as? [String: String])?["url"], let url = URL(string: urlStr) else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
+        let safari = SFSafariViewController(url: url)
+        if let tint = controller.app.tintColor, let color = UIColor(hexOrCSSName: tint) {
+            safari.preferredControlTintColor = color
         }
-        let safariVC = SFSafariViewController(url: url)
-        if let tc = vc.app.tintColor, let co = UIColor(hexOrCSSName: tc) {
-            safariVC.preferredControlTintColor = co
-        }
-        vc.present(safariVC, animated: true)
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
+        controller.present(safari, animated: true)
     }
 
-    func openSettings(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        let ss = MiniAppSettingsViewController(style: .insetGrouped, app: vc.app)
-        let navVC = BackableNavigationController(rootViewController: ss)
-        navVC.modalPresentationStyle = .overFullScreen
-        vc.present(navVC, animated: true)
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
+    func openSettings(param: Parameter) throws {
+        let controller = try param.requirePresentation()
+        let settings = MiniAppSettingsViewController(style: .insetGrouped, app: controller.app)
+        let navigation = BackableNavigationController(rootViewController: settings)
+        navigation.modalPresentationStyle = .overFullScreen
+        controller.present(navigation, animated: true)
     }
 }

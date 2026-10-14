@@ -19,8 +19,7 @@ extension QRScannerViewController: UIImagePickerControllerDelegate, UINavigation
 
             if let qrCodeContent = self?.detectQRCode(in: image) {
                 DispatchQueue.main.async { [weak self] in
-                    self?.dismiss(animated: true)
-                    self?.onSucceed?(qrCodeContent)
+                    self?.finish(.success(qrCodeContent))
                 }
             } else {
                 self?.showError(message: "No QRCode in this image")

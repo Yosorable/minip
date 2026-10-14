@@ -1,5 +1,5 @@
 import jsBridge from "../bridge";
-import { MResponseWithData } from "../types";
+import { MinipError, MinipErrorCode } from "../bridge";
 import { FileStats } from "../types/filestats";
 
 const S_IFMT = 0o170000;
@@ -27,41 +27,20 @@ export function enrichStats(file: FileStats): FileStats {
 }
 
 export async function access(path: string, mode?: number): Promise<void> {
-  return jsBridge
-    .callNative({
-      api: "fsAccess",
-      data: {
-        path,
-        mode,
-      },
-    })
-    .then((res) => {
-      const r = res as MResponseWithData<boolean>;
-      if (!r.hasData() || !r.data) {
-        throw new Error(r.msg ?? "cannot access this file or directory");
-      }
-    });
+  return jsBridge.callNative({ api: "fsAccess", data: { path, mode } });
 }
 
-export function accessSync(path: string, mode?: number) {
-  const res = jsBridge.callNativeSync({
-    api: "fsAccessSync",
-    data: {
-      path,
-      mode,
-    },
-  }) as MResponseWithData<boolean>;
-  if (!res.hasData() || !res.data) {
-    throw new Error(res.msg ?? "cannot access this file or directory");
-  }
+export function accessSync(path: string, mode?: number): void {
+  return jsBridge.callNativeSync({ api: "fsAccess", data: { path, mode } });
 }
 
 export function existsSync(path: string): boolean {
   try {
     accessSync(path);
     return true;
-  } catch {
-    return false;
+  } catch (error) {
+    if (error instanceof MinipError && error.code === MinipErrorCode.NOT_FOUND) return false;
+    throw error;
   }
 }
 
@@ -76,7 +55,7 @@ export async function unlink(path: string) {
 
 export function unlinkSync(path: string) {
   jsBridge.callNativeSync({
-    api: "fsUnlinkSync",
+    api: "fsUnlink",
     data: {
       path,
     },
@@ -95,7 +74,7 @@ export async function rename(oldPath: string, newPath: string) {
 
 export function renameSync(oldPath: string, newPath: string) {
   jsBridge.callNativeSync({
-    api: "fsRenameSync",
+    api: "fsRename",
     data: {
       oldPath,
       newPath,
@@ -103,26 +82,12 @@ export function renameSync(oldPath: string, newPath: string) {
   });
 }
 
-export async function stat(path: string) {
-  const res = (await jsBridge.callNative({
-    api: "fsStat",
-    data: {
-      path,
-    },
-  })) as MResponseWithData<FileStats>;
-
-  return enrichStats(res.data);
+export async function stat(path: string): Promise<FileStats> {
+  return enrichStats(await jsBridge.callNative<FileStats>({ api: "fsStat", data: { path } }));
 }
 
-export function statSync(path: string) {
-  const res = jsBridge.callNativeSync({
-    api: "fsStatSync",
-    data: {
-      path,
-    },
-  }) as MResponseWithData<FileStats>;
-
-  return enrichStats(res.data);
+export function statSync(path: string): FileStats {
+  return enrichStats(jsBridge.callNativeSync<FileStats>({ api: "fsStat", data: { path } }));
 }
 
 export async function rm(path: string) {
@@ -136,7 +101,7 @@ export async function rm(path: string) {
 
 export function rmSync(path: string) {
   jsBridge.callNativeSync({
-    api: "fsRmSync",
+    api: "fsRm",
     data: {
       path,
     },
@@ -156,7 +121,7 @@ export async function cp(src: string, dest: string, recursive?: boolean) {
 
 export function cpSync(src: string, dest: string, recursive?: boolean) {
   jsBridge.callNativeSync({
-    api: "fsCpSync",
+    api: "fsCp",
     data: {
       src,
       dest,

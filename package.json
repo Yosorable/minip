@@ -8,5 +8,10 @@
     "demo:bundle": "pnpm --filter minip-demo bundle",
     "lsp:build": "pnpm --filter language-service-bundler build",
     "bridge:publish": "pnpm --filter minip-bridge publish"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@msgpack/msgpack@3.1.3": "patches/@msgpack__msgpack@3.1.3.patch"
+    }
   }
 }

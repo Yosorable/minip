@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B20000000000000000000001 /* SwiftMsgpack in Frameworks */ = {isa = PBXBuildFile; productRef = B20000000000000000000002 /* SwiftMsgpack */; };
 		2BC331B42A62D47700441447 /* SwiftLMDB in Frameworks */ = {isa = PBXBuildFile; productRef = 2BC331B32A62D47700441447 /* SwiftLMDB */; };
 		2BD9B1AA2A5BD4D300036AFD /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = 2BD9B1A92A5BD4D300036AFD /* Runestone */; };
 		2BD9B1D62A5C09C700036AFD /* KeyboardToolbar in Frameworks */ = {isa = PBXBuildFile; productRef = 2BD9B1D52A5C09C700036AFD /* KeyboardToolbar */; };
@@ -68,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B20000000000000000000001 /* SwiftMsgpack in Frameworks */,
 				484970D02F5D6D1B004AD67B /* TreeSitterGoRunestone in Frameworks */,
 				4800EA0B2CF1C93300F49842 /* FlyingSocks in Frameworks */,
 				48CE69232D90EAE80072AF47 /* SwiftArchive in Frameworks */,
@@ -153,6 +155,7 @@
 			);
 			name = minip;
 			packageProductDependencies = (
+				B20000000000000000000002 /* SwiftMsgpack */,
 				2BD9B1A92A5BD4D300036AFD /* Runestone */,
 				2BD9B1D52A5C09C700036AFD /* KeyboardToolbar */,
 				2BC331B32A62D47700441447 /* SwiftLMDB */,
@@ -229,6 +232,7 @@
 			);
 			mainGroup = 48DF6B90288D32C800D523C1;
 			packageReferences = (
+				B20000000000000000000003 /* XCRemoteSwiftPackageReference "swift-msgpack" */,
 				2BD9B1A82A5BD4D300036AFD /* XCRemoteSwiftPackageReference "Runestone" */,
 				2BD9B1D42A5C09C700036AFD /* XCRemoteSwiftPackageReference "KeyboardToolbar" */,
 				2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */,
@@ -396,7 +400,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = minip/minip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
@@ -420,7 +424,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.44;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -439,7 +443,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = minip/minip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"minip/Preview Content\"";
 				DEVELOPMENT_TEAM = 4UWZ7NY5YH;
 				ENABLE_PREVIEWS = YES;
@@ -463,7 +467,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.44;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.lzyable.minip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -497,6 +501,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		B20000000000000000000003 /* XCRemoteSwiftPackageReference "swift-msgpack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nnabeyang/swift-msgpack.git";
+			requirement = {kind = exactVersion; version = 1.2.1; };
+		};
 		2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/agisboye/SwiftLMDB";
@@ -564,6 +573,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B20000000000000000000002 /* SwiftMsgpack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B20000000000000000000003 /* XCRemoteSwiftPackageReference "swift-msgpack" */;
+			productName = SwiftMsgpack;
+		};
 		2BC331B32A62D47700441447 /* SwiftLMDB */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2BC331B22A62D47700441447 /* XCRemoteSwiftPackageReference "SwiftLMDB" */;

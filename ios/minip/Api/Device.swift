@@ -1,81 +1,43 @@
-//
-//  Device.swift
-//  minip
-//
-//  Created by LZY on 2025/2/9.
-//
-
 import AVFoundation
 import UIKit
 
 extension MinipApi {
-    func vibrate(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let data = param.data as? [String: String],
-              let tp = data["type"]
-        else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
+    func vibrate(param: Parameter) throws {
+        let style: UIImpactFeedbackGenerator.FeedbackStyle
+        switch try param.optionalString("type") ?? "medium" {
+        case "light": style = .light
+        case "medium": style = .medium
+        case "heavy": style = .heavy
+        default: throw MinipError.invalidArgument("type")
         }
-        var generator = UIImpactFeedbackGenerator(style: .medium)
-        if tp == "light" {
-            generator = UIImpactFeedbackGenerator(style: .light)
-        } else if tp == "medium" {
-            generator = UIImpactFeedbackGenerator(style: .medium)
-        } else if tp == "heavy" {
-            generator = UIImpactFeedbackGenerator(style: .heavy)
-        }
-        generator.impactOccurred()
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
+        UIImpactFeedbackGenerator(style: style).impactOccurred()
     }
 
-    func getClipboardData(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        if let txt = UIPasteboard.general.string {
-            replyHandler(InteropUtils.succeedWithData(data: txt).toJsonString(), nil)
-            return
-        }
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
+    func getClipboardData(param: Parameter) throws -> String? {
+        UIPasteboard.general.string
     }
 
-    func setClipboardData(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let data = (param.data as? [String: Any])?["data"] as? String else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
-        }
-        UIPasteboard.general.string = data
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
+    func setClipboardData(param: Parameter) throws {
+        UIPasteboard.general.string = try param.string("data")
     }
 
-    func scanQRCode(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        let qvc = QRScannerViewController()
-        qvc.modalPresentationStyle = .fullScreen
-        qvc.onSucceed = { code in
-            replyHandler(InteropUtils.succeedWithData(data: code).toJsonString(), nil)
-        }
-        qvc.onCanceled = {
-            replyHandler(InteropUtils.succeed(msg: "Canceled").toJsonString(), nil)
-        }
-        qvc.onFailed = { err in
-            replyHandler(InteropUtils.fail(msg: err.localizedDescription).toJsonString(), nil)
-        }
-
+    func scanQRCode(param: Parameter) async throws -> String? {
+        let authorized: Bool
         switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            vc.present(qvc, animated: true)
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { granted in
-                if granted {
-                    DispatchQueue.main.async {
-                        vc.present(qvc, animated: true)
-                    }
-                } else {
-                    replyHandler(InteropUtils.fail(msg: "NO Permission: Camera is required to use in this application").toJsonString(), nil)
-                }
-            }
-        default:
-            replyHandler(InteropUtils.fail(msg: "NO Permission: Camera is required to use in this application").toJsonString(), nil)
+        case .authorized: authorized = true
+        case .notDetermined: authorized = await AVCaptureDevice.requestAccess(for: .video)
+        default: authorized = false
+        }
+        guard authorized else { throw MinipError(.permissionDenied, "Camera permission is required") }
+        let controller = try param.requirePresentation()
+        return try await withCheckedThrowingContinuation { continuation in
+            let completion = BridgeContinuation(continuation)
+            let scanner = QRScannerViewController()
+            scanner.modalPresentationStyle = .fullScreen
+            scanner.onSucceed = { completion.finish(.success($0)) }
+            scanner.onCanceled = { completion.finish(.success(nil)) }
+            scanner.onFailed = { completion.finish(.failure($0)) }
+            controller.present(scanner, animated: true)
         }
     }
 
@@ -91,7 +53,6 @@ extension MinipApi {
             let width: Double
             let height: Double
         }
-
         struct SafeAreaInfo: Codable {
             let left: Double
             let right: Double
@@ -100,40 +61,23 @@ extension MinipApi {
         }
     }
 
-    func getDeviceInfoSync(param: Parameter) -> String? {
-        guard let _ = param.webView?.holderObject as? MiniPageViewController,
-              let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let sceneDelegate = scene.delegate as? SceneDelegate,
-              let window = sceneDelegate.window
-        else {
-            return nil
+    func getDeviceInfo(param: Parameter) throws -> DeviceInfo {
+        guard let window = try param.webView.window ?? param.viewController.viewIfLoaded?.window else {
+            throw MinipError(.invalidState, "The calling page has no window")
         }
-        let language = Locale.preferredLanguages.first ?? "Unknown"
-
         var systemInfo = utsname()
         uname(&systemInfo)
-        let machineMirror = Mirror(reflecting: systemInfo.machine)
-        let identifier = machineMirror.children.reduce("") { identifier, element in
-            guard let value = element.value as? Int8, value != 0 else { return identifier }
-            return identifier + String(UnicodeScalar(UInt8(value)))
+        let model = Mirror(reflecting: systemInfo.machine).children.reduce("") { value, element in
+            guard let byte = element.value as? Int8, byte != 0 else { return value }
+            return value + String(UnicodeScalar(UInt8(bitPattern: byte)))
         }
-        let model = identifier
-
-        let system = "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
-        let screenSize = window.screen.bounds.size
-        let screen = DeviceInfo.ScreenInfo(width: Double(screenSize.width), height: Double(screenSize.height))
-        var safeArea = DeviceInfo.SafeAreaInfo(left: 0, right: 0, top: 0, bottom: 0)
-        let safeInsets = window.safeAreaInsets
-        safeArea = DeviceInfo.SafeAreaInfo(left: Double(safeInsets.left),
-                                           right: Double(safeInsets.right),
-                                           top: Double(safeInsets.top),
-                                           bottom: Double(safeInsets.bottom))
-
-        return InteropUtils.succeedWithData(data: DeviceInfo(language: language, brand: "Apple", model: model, system: system, screen: screen, safeAreaInfo: safeArea)).toJsonString()
-    }
-
-    func getDeviceInfo(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let res = getDeviceInfoSync(param: param) else { return }
-        replyHandler(res, nil)
+        let screen = window.screen.bounds.size
+        let insets = window.safeAreaInsets
+        return DeviceInfo(
+            language: Locale.preferredLanguages.first ?? "Unknown",
+            brand: "Apple", model: model,
+            system: "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)",
+            screen: .init(width: Double(screen.width), height: Double(screen.height)),
+            safeAreaInfo: .init(left: Double(insets.left), right: Double(insets.right), top: Double(insets.top), bottom: Double(insets.bottom)))
     }
 }

@@ -1,0 +1,82 @@
+diff --git a/dist.cjs/Decoder.cjs b/dist.cjs/Decoder.cjs
+index 23ac40abfd357c9fe5d41ef3b09b7160d2f234ec..78ecbc96beb52ebec50deaeba4c13276d06f0808 100644
+--- a/dist.cjs/Decoder.cjs
++++ b/dist.cjs/Decoder.cjs
+@@ -543,16 +543,18 @@ class Decoder {
+                     }
+                 }
+                 else if (state.type === STATE_MAP_KEY) {
+-                    if (object === "__proto__") {
+-                        throw new DecodeError_ts_1.DecodeError("The key __proto__ is not allowed");
+-                    }
+                     state.key = this.mapKeyConverter(object);
+                     state.type = STATE_MAP_VALUE;
+                     continue DECODE;
+                 }
+                 else {
+                     // it must be `state.type === State.MAP_VALUE` here
+-                    state.map[state.key] = object;
++                    // Preserve arbitrary map keys without invoking Object.prototype's setter.
++                    if (state.key === "__proto__") {
++                        Object.defineProperty(state.map, state.key, { value: object, writable: true, enumerable: true, configurable: true });
++                    } else {
++                        state.map[state.key] = object;
++                    }
+                     state.readCount++;
+                     if (state.readCount === state.size) {
+                         object = state.map;
+diff --git a/dist.esm/Decoder.mjs b/dist.esm/Decoder.mjs
+index 924bcf655d1e8a2cfef6c340eb694a526cee70bc..2c2ce348300db368c526395596f996330224db33 100644
+--- a/dist.esm/Decoder.mjs
++++ b/dist.esm/Decoder.mjs
+@@ -540,16 +540,18 @@ export class Decoder {
+                     }
+                 }
+                 else if (state.type === STATE_MAP_KEY) {
+-                    if (object === "__proto__") {
+-                        throw new DecodeError("The key __proto__ is not allowed");
+-                    }
+                     state.key = this.mapKeyConverter(object);
+                     state.type = STATE_MAP_VALUE;
+                     continue DECODE;
+                 }
+                 else {
+                     // it must be `state.type === State.MAP_VALUE` here
+-                    state.map[state.key] = object;
++                    // Preserve arbitrary map keys without invoking Object.prototype's setter.
++                    if (state.key === "__proto__") {
++                        Object.defineProperty(state.map, state.key, { value: object, writable: true, enumerable: true, configurable: true });
++                    } else {
++                        state.map[state.key] = object;
++                    }
+                     state.readCount++;
+                     if (state.readCount === state.size) {
+                         object = state.map;
+diff --git a/src/Decoder.ts b/src/Decoder.ts
+index bba88042e52f5dce10bab73364862f5e36bc143f..42ae9438fc512aa5f5ad3deab721dd5d2246efc0 100644
+--- a/src/Decoder.ts
++++ b/src/Decoder.ts
+@@ -651,17 +651,18 @@ export class Decoder<ContextType = undefined> {
+             continue DECODE;
+           }
+         } else if (state.type === STATE_MAP_KEY) {
+-          if (object === "__proto__") {
+-            throw new DecodeError("The key __proto__ is not allowed");
+-          }
+-
+           state.key = this.mapKeyConverter(object);
+           state.type = STATE_MAP_VALUE;
+           continue DECODE;
+         } else {
+           // it must be `state.type === State.MAP_VALUE` here
+ 
+-          state.map[state.key!] = object;
++          // Preserve arbitrary map keys without invoking Object.prototype's setter.
++          if (state.key === "__proto__") {
++            Object.defineProperty(state.map, state.key, { value: object, writable: true, enumerable: true, configurable: true });
++          } else {
++            state.map[state.key!] = object;
++          }
+           state.readCount++;
+ 
+           if (state.readCount === state.size) {

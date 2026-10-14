@@ -78,6 +78,8 @@ extension MWebViewPool {
 
         cfg.setURLSchemeHandler(MinipURLSchemePing(), forURLScheme: "minipping")
         cfg.userContentController.addScriptMessageHandler(MinipNativeInteraction(), contentWorld: .page, name: MinipNativeInteraction.name)
+        // LEGACY_BRIDGE_COMPAT: Remove this registration when retiring SDK 1.x.
+        cfg.userContentController.addScriptMessageHandler(LegacyNativeInteraction(), contentWorld: .page, name: LegacyNativeInteraction.name)
 
         let webview = MWebView(frame: CGRect.zero, configuration: cfg)
         webview.isOpaque = false

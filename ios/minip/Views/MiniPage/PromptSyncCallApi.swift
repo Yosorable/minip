@@ -1,10 +1,3 @@
-//
-//  Prompt.swift
-//  minip
-//
-//  Created by LZY on 2025/2/9.
-//
-
 import WebKit
 
 extension MiniPageViewController {
@@ -15,64 +8,26 @@ extension MiniPageViewController {
         initiatedByFrame frame: WKFrameInfo,
         completionHandler: @escaping (String?) -> Void
     ) {
-        guard let bodyData = prompt.data(using: .utf8),
-              let jsonObj = try? JSONSerialization.jsonObject(with: bodyData) as? [String: Any],
-              let apiName = jsonObj["api"] as? String
-        else {
-            completionHandler(MinipApi.InteropUtils.fail(msg: "Error request").toJsonString())
+        // LEGACY_BRIDGE_COMPAT: Remove this early branch when retiring SDK 1.x.
+        // MessagePack requests continue through the V2 path below.
+        if LegacyBridgeAdapter.recognizesPrompt(prompt) {
+            completionHandler(LegacyNativeInteraction.handlePrompt(prompt, webView: webView))
             return
         }
-
-        guard let apiName = MinipApi.APIName(rawValue: apiName), let webView = webView as? MWebView else {
-            do {
-                let encoder = JSONEncoder()
-                let resData = try encoder.encode(MinipApi.InteropUtils.fail(msg: "API not found"))
-                logger.debug("[minip-api] sync call error, req: \(defaultText ?? "")")
-                completionHandler(String(data: resData))
-            } catch {
-                completionHandler(MinipApi.InteropUtils.fail(msg: error.localizedDescription).toJsonString())
+        let result: Result<BridgePayload?, Error>
+        do {
+            let request = try BridgeCodec.decodeRequest(prompt)
+            guard let api = MinipApi.APIName(rawValue: request.api) else {
+                throw MinipError(.apiNotFound, "Unknown API: \(request.api)")
             }
-            return
+            guard let webView = webView as? MWebView else {
+                throw MinipError(.invalidState, "The calling page is unavailable")
+            }
+            let parameter = MinipApi.Parameter(webView: webView, data: request.data ?? [:])
+            result = .success(try MinipApi.shared.callSync(apiName: api, param: parameter))
+        } catch {
+            result = .failure(error)
         }
-
-        let wid = webView.id ?? -1
-        logger.debug("[minip-api-sync] call api [\(apiName.rawValue)] from [webview:\(wid == -1 ? "unknown" : "\(wid)")] with [\(prompt.count < 1000 ? prompt : "data length: \(prompt.count)")]")
-
-        let api = MinipApi.shared
-        let param = MinipApi.Parameter(webView: webView, data: jsonObj["data"])
-        let replyHandler: (Any?, String?) -> Void = { res, _ in
-            completionHandler(res as? String)
-        }
-
-        switch apiName {
-        case .getKVStorageSync,
-             .setKVStorageSync,
-             .deleteKVStorageSync,
-             .clearKVStorageSync,
-             .getDeviceInfoSync,
-             .fsAccessSync,
-             .fsMkdirSync,
-             .fsReaddirSync,
-             .fsRmdirSync,
-             .fsReadFileSync,
-             .fsWriteFileSync,
-             .fsAppendFileSync,
-             .fsCopyFileSync,
-             .fsUnlinkSync,
-             .fsRenameSync,
-             .fsStatSync,
-             .fsTruncateSync,
-             .fsRmSync,
-             .fsCpSync,
-             .fsOpenSync,
-             .fsCloseSync,
-             .fsFstatSync,
-             .fsFtruncateSync,
-             .fsReadSync,
-             .fsWriteSync:
-            api.call(apiName: apiName, param: param, replyHandler: replyHandler)
-        default:
-            completionHandler("API \(apiName.rawValue) is not implemented or not allowed")
-        }
+        completionHandler(try? BridgeCodec.encode(result))
     }
 }

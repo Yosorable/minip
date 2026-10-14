@@ -56,13 +56,25 @@ public class MWebView: WKWebView {
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
 
         let overrideConsole = """
+            (function() {
+                function format(value) {
+                  try {
+                    const text = typeof value === "object"
+                      ? JSON.stringify(value, (_, item) => typeof item === "bigint" ? `${item}n` : item)
+                      : typeof value === "bigint" ? `${value}n` : String(value)
+                    return String(text).substring(0, 5000)
+                  } catch {
+                    return "[Unserializable]"
+                  }
+                }
+
                 function log(emoji, type, args) {
-                  window.webkit.messageHandlers.logging.postMessage(
-                    `${emoji} JS ${type}: ${Object.values(args)
-                      .map(v => typeof(v) === "undefined" ? "undefined" : typeof(v) === "object" ? JSON.stringify(v) : v.toString())
-                      .map(v => v.substring(0, 5000)) // Limit msg to 5000 chars
-                      .join(", ")}`
-                  )
+                  // Logging must not interrupt the mini app if serialization or forwarding fails.
+                  try {
+                    window.webkit.messageHandlers.logging.postMessage(
+                      `${emoji} JS ${type}: ${Array.from(args, format).join(", ")}`
+                    )
+                  } catch {}
                 }
 
                 let originalLog = console.log
@@ -78,6 +90,7 @@ public class MWebView: WKWebView {
                 window.addEventListener("error", function(e) {
                    log("💥", "Uncaught", [`${e.message} at ${e.filename}:${e.lineno}:${e.colno}`])
                 })
+            })();
             """
 
         class LoggingMessageHandler: NSObject, WKScriptMessageHandler {

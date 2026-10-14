@@ -15,7 +15,7 @@ const device: ApiCategory = {
       name: "get clipboard data",
       exec: (setRes) => {
         getClipboardData()
-          .then((res) => setRes(res))
+          .then((res) => setRes(res ?? "Clipboard is empty"))
           .catch((err) =>
             setRes(
               err ? (err.message ?? JSON.stringify(err)) : "Unknown error",

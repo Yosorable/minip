@@ -35,3 +35,14 @@ npm i minip-bridge
 import { navigateTo } from "minip-bridge";
 navigateTo({ page: "index.html", title: "title" });
 ```
+
+Minip Bridge 2 requires Minip 1.0 or later. It uses MessagePack for all native calls,
+returns values directly, and throws `MinipError` for failures.
+
+<!-- LEGACY_BRIDGE_COMPAT: Remove this paragraph when retiring SDK 1.x. -->
+Minip 1.0 temporarily accepts the SDK 1.x JSON bridge so existing mini apps can
+continue running during migration. New projects should use SDK 2. See the
+[compatibility removal guide](packages/bridge/LEGACY_COMPATIBILITY.md).
+
+See the [Bridge 2 migration guide](packages/bridge/MIGRATION.md) for error handling,
+binary data, nullable results, and validation commands.

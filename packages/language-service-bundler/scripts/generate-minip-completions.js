@@ -31,6 +31,7 @@ function getSignature(node, sourceFile) {
   if (ts.isEnumDeclaration(node)) {
     return 'enum';
   }
+  if (ts.isClassDeclaration(node)) return 'class';
 
   return '';
 }
@@ -65,6 +66,7 @@ function getLSPKind(node) {
     return 6; // Variable
   }
   if (ts.isEnumDeclaration(node)) return 13; // Enum
+  if (ts.isClassDeclaration(node)) return 7; // Class
   return 6; // Variable
 }
 
@@ -109,7 +111,7 @@ function parseFile(filePath) {
           declarations.set(name, decl);
         }
       }
-    } else if (ts.isEnumDeclaration(node) && node.name) {
+    } else if ((ts.isEnumDeclaration(node) || ts.isClassDeclaration(node)) && node.name) {
       const name = node.name.getText(sourceFile);
       declarations.set(name, node);
     }

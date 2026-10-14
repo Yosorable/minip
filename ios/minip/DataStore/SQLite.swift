@@ -1,304 +1,217 @@
-//
-//  SQLite.swift
-//  minip
-//
-//  Created by LZY on 2025/3/21.
-//
-
 import Foundation
 import SQLite3
 
-// TODO: support blob, release statement when errors occur
-class SQLiteDBManager {
-    let SQLITE_TRANSIENT = unsafeBitCast(OpaquePointer(bitPattern: -1), to: sqlite3_destructor_type.self)
-
+final class SQLiteDBManager {
     static let shared = SQLiteDBManager()
-    var counter = 0
-
-    var pathToDBKey: [String: Int] = [:]
-    var dbMap: [Int: OpaquePointer] = [:]
-
-    var stmtMap: [Int: OpaquePointer] = [:]
-    var stmtToDBKey: [Int: Int] = [:]
+    private let transient = unsafeBitCast(OpaquePointer(bitPattern: -1), to: sqlite3_destructor_type.self)
+    private var counter = 0
+    private var pathToDBKey: [String: Int] = [:]
+    private var dbMap: [Int: OpaquePointer] = [:]
+    private var stmtMap: [Int: OpaquePointer] = [:]
+    private var stmtToDBKey: [Int: Int] = [:]
+    private var iterators: Set<Int> = []
 
     func clear() {
-        counter = 0
-        pathToDBKey.removeAll()
-        stmtMap.forEach { sqlite3_finalize($1) }
+        for statement in stmtMap.values { sqlite3_finalize(statement) }
+        for database in dbMap.values { sqlite3_close(database) }
         stmtMap.removeAll()
         stmtToDBKey.removeAll()
-        dbMap.forEach { sqlite3_close($1) }
+        iterators.removeAll()
         dbMap.removeAll()
+        pathToDBKey.removeAll()
+    }
+
+    private func database(_ key: Int) throws -> OpaquePointer {
+        guard let database = dbMap[key] else { throw MinipError(.invalidState, "Database is not open") }
+        return database
+    }
+
+    private func statement(dbKey: Int, stmtKey: Int) throws -> OpaquePointer {
+        _ = try database(dbKey)
+        guard stmtToDBKey[stmtKey] == dbKey, let statement = stmtMap[stmtKey] else {
+            throw MinipError(.invalidState, "Statement is not open in this database")
+        }
+        return statement
+    }
+
+    private func error(_ database: OpaquePointer?) -> MinipError {
+        MinipError(.databaseError, String(cString: sqlite3_errmsg(database)), details: [
+            "sqliteCode": .signed(Int64(sqlite3_extended_errcode(database))),
+        ])
+    }
+
+    private func release(_ key: Int) {
+        if let statement = stmtMap.removeValue(forKey: key) { sqlite3_finalize(statement) }
+        stmtToDBKey.removeValue(forKey: key)
+        iterators.remove(key)
     }
 
     func openDB(path: String) throws -> openDBResult {
-        if let key = pathToDBKey[path], dbMap[key] != nil {
-            return openDBResult(dbKey: key)
-        } else {
-            var db: OpaquePointer?
-            if sqlite3_open(path, &db) == SQLITE_OK, let db = db {
-                let key = counter
-                counter += 1
-                pathToDBKey[path] = key
-                dbMap[key] = db
-                return openDBResult(dbKey: key)
-            } else {
-                var msg = "unknown error"
-                if let errorMessage = sqlite3_errmsg(db) {
-                    msg = String(cString: errorMessage)
-                }
-                logger.error("[SQLiteDBManager] cannot open sqlite db at \(path), \(msg)")
-                throw ErrorMsg(errorDescription: msg)
-            }
+        if let key = pathToDBKey[path], dbMap[key] != nil { return openDBResult(dbKey: key) }
+        var pointer: OpaquePointer?
+        guard sqlite3_open(path, &pointer) == SQLITE_OK, let database = pointer else {
+            let failure = error(pointer)
+            if let pointer { sqlite3_close(pointer) }
+            throw failure
         }
+        let key = counter
+        counter += 1
+        dbMap[key] = database
+        pathToDBKey[path] = key
+        return openDBResult(dbKey: key)
     }
 
-    func closeDB(dbKey: Int) {
-        for (stmtKey, ownerDBKey) in stmtToDBKey where ownerDBKey == dbKey {
-            if let stmt = stmtMap.removeValue(forKey: stmtKey) {
-                sqlite3_finalize(stmt)
-            }
-            stmtToDBKey.removeValue(forKey: stmtKey)
-        }
-
-        if let db = dbMap.removeValue(forKey: dbKey) {
-            sqlite3_close(db)
-        }
+    func closeDB(dbKey: Int) throws {
+        let database = try database(dbKey)
+        for key in stmtToDBKey.filter({ $0.value == dbKey }).map(\.key) { release(key) }
+        guard sqlite3_close(database) == SQLITE_OK else { throw error(database) }
+        dbMap.removeValue(forKey: dbKey)
         pathToDBKey = pathToDBKey.filter { $0.value != dbKey }
     }
 
     func prepareStmt(dbKey: Int, sql: String) throws -> prepareResult {
-        guard let db = dbMap[dbKey] else {
-            throw ErrorMsg(errorDescription: "db not opened")
+        let database = try database(dbKey)
+        guard !sql.utf8.contains(0) else { throw MinipError.invalidArgument("sql") }
+        var pointer: OpaquePointer?
+        guard sqlite3_prepare_v2(database, sql, -1, &pointer, nil) == SQLITE_OK else {
+            if let pointer { sqlite3_finalize(pointer) }
+            throw error(database)
         }
-        var stmt: OpaquePointer?
-        if sqlite3_prepare_v2(db, sql, -1, &stmt, nil) == SQLITE_OK, let stmt = stmt {
-            let key = counter
-            counter += 1
-            stmtMap[key] = stmt
-            stmtToDBKey[key] = dbKey
-            let reader = sqlite3_stmt_readonly(stmt) != 0
-
-            return prepareResult(stmtKey: key, reader: reader)
-        }
-
-        var msg = "unknown error"
-        if let errorMessage = sqlite3_errmsg(db) {
-            msg = String(cString: errorMessage)
-        }
-        var sqlMsg = sql
-        if sqlMsg.count >= 20 {
-            sqlMsg = String(sqlMsg.prefix(17)) + "..."
-        }
-        logger.error("[SQLiteDBManager] cannot open prepare sql (\(sqlMsg), \(msg)")
-        throw ErrorMsg(errorDescription: msg)
+        guard let statement = pointer else { throw MinipError.invalidArgument("sql") }
+        let key = counter
+        counter += 1
+        stmtMap[key] = statement
+        stmtToDBKey[key] = dbKey
+        return prepareResult(stmtKey: key, reader: sqlite3_column_count(statement) > 0)
     }
 
-    func allStmt(dbKey: Int, stmtKey: Int, parameters: [Any]) throws -> [[String: Any]] {
-        guard dbMap[dbKey] != nil, let stmt = stmtMap[stmtKey] else {
-            throw ErrorMsg(errorDescription: "cannot find this statement")
+    private func bind(_ parameters: [BridgeValue], to statement: OpaquePointer) throws {
+        guard sqlite3_bind_parameter_count(statement) == parameters.count else {
+            throw MinipError(.invalidArgument, "SQLite parameter count does not match", details: ["parameter": .string("parameters")])
         }
-
-        defer {
-            sqlite3_finalize(stmt)
-            stmtMap.removeValue(forKey: stmtKey)
-            stmtToDBKey.removeValue(forKey: stmtKey)
-        }
-
-        if sqlite3_bind_parameter_count(stmt) != parameters.count {
-            throw ErrorMsg(errorDescription: "parameters not match")
-        }
-
-        for (index, param) in parameters.enumerated() {
+        for (index, parameter) in parameters.enumerated() {
             let position = Int32(index + 1)
-            if let intParam = param as? Int64 {
-                sqlite3_bind_int64(stmt, position, intParam)
-            } else if let doubleParam = param as? Double {
-                sqlite3_bind_double(stmt, position, doubleParam)
-            } else if let stringParam = param as? String {
-                sqlite3_bind_text(stmt, position, stringParam, -1, SQLITE_TRANSIENT)
-            } else if param is NSNull {
-                sqlite3_bind_null(stmt, position)
-            } else {
-                throw ErrorMsg(errorDescription: "unsupported type")
-            }
-        }
-
-        var result: [[String: Any]] = []
-        let columnCount = sqlite3_column_count(stmt)
-
-        while sqlite3_step(stmt) == SQLITE_ROW {
-            var row: [String: Any] = [:]
-
-            for i in 0..<columnCount {
-                let columnName = String(cString: sqlite3_column_name(stmt, i))
-                let columnType = sqlite3_column_type(stmt, i)
-
-                switch columnType {
-                case SQLITE_INTEGER:
-                    row[columnName] = sqlite3_column_int64(stmt, i)
-                case SQLITE_FLOAT:
-                    row[columnName] = sqlite3_column_double(stmt, i)
-                case SQLITE_TEXT:
-                    row[columnName] = String(cString: sqlite3_column_text(stmt, i))
-                case SQLITE_NULL:
-                    row[columnName] = NSNull()
-                default:
-                    logger.error("[SQLiteDBManager] unsupported sqlite type")
+            let status: Int32
+            switch parameter {
+            case .null: status = sqlite3_bind_null(statement, position)
+            case .bool(let value): status = sqlite3_bind_int(statement, position, value ? 1 : 0)
+            case .signed(let value): status = sqlite3_bind_int64(statement, position, value)
+            case .unsigned(let value):
+                guard let signed = Int64(exactly: value) else { throw MinipError(.invalidArgument, "SQLite integers must fit Int64") }
+                status = sqlite3_bind_int64(statement, position, signed)
+            case .number(let value):
+                guard value.isFinite else { throw MinipError.invalidArgument("parameters") }
+                status = sqlite3_bind_double(statement, position, value)
+            case .string(let value):
+                guard let count = Int32(exactly: value.utf8.count) else { throw MinipError.invalidArgument("parameters") }
+                status = value.withCString { sqlite3_bind_text(statement, position, $0, count, transient) }
+            case .bytes(let value):
+                guard let count = Int32(exactly: value.count) else { throw MinipError.invalidArgument("parameters") }
+                if value.isEmpty {
+                    status = sqlite3_bind_zeroblob(statement, position, 0)
+                } else {
+                    status = value.withUnsafeBytes { sqlite3_bind_blob(statement, position, $0.baseAddress, count, transient) }
                 }
+            case .array, .object:
+                throw MinipError(.invalidArgument, "Unsupported SQLite parameter type")
             }
-            result.append(row)
+            guard status == SQLITE_OK else { throw error(sqlite3_db_handle(statement)) }
         }
+    }
 
+    private func row(_ statement: OpaquePointer) throws -> [String: BridgeValue] {
+        var result: [String: BridgeValue] = [:]
+        for column in 0..<sqlite3_column_count(statement) {
+            let name = String(cString: sqlite3_column_name(statement, column))
+            switch sqlite3_column_type(statement, column) {
+            case SQLITE_INTEGER: result[name] = .signed(sqlite3_column_int64(statement, column))
+            case SQLITE_FLOAT: result[name] = .number(sqlite3_column_double(statement, column))
+            case SQLITE_TEXT:
+                let count = Int(sqlite3_column_bytes(statement, column))
+                let text = sqlite3_column_text(statement, column)
+                let bytes = UnsafeBufferPointer(start: text, count: count)
+                guard let value = String(bytes: bytes, encoding: .utf8) else { throw MinipError(.databaseError, "SQLite text is not valid UTF-8") }
+                result[name] = .string(value)
+            case SQLITE_BLOB:
+                let count = Int(sqlite3_column_bytes(statement, column))
+                let value = sqlite3_column_blob(statement, column)
+                result[name] = .bytes(count == 0 ? Data() : Data(bytes: value!, count: count))
+            case SQLITE_NULL: result[name] = .null
+            default: throw MinipError(.databaseError, "Unsupported SQLite result type")
+            }
+        }
         return result
     }
 
-    func runStmt(dbKey: Int, stmtKey: Int, parameters: [Any]) throws -> runStmtResult {
-        guard let stmt = stmtMap[stmtKey], let db = dbMap[dbKey] else {
-            throw ErrorMsg(errorDescription: "cannot find db or statement")
-        }
-
-        defer {
-            sqlite3_finalize(stmt)
-            stmtMap.removeValue(forKey: stmtKey)
-            stmtToDBKey.removeValue(forKey: stmtKey)
-        }
-
-        if sqlite3_bind_parameter_count(stmt) != parameters.count {
-            throw ErrorMsg(errorDescription: "parameters not match")
-        }
-
-        for (index, param) in parameters.enumerated() {
-            let position = Int32(index + 1)
-            if let intParam = param as? Int64 {
-                sqlite3_bind_int64(stmt, position, intParam)
-            } else if let doubleParam = param as? Double {
-                sqlite3_bind_double(stmt, position, doubleParam)
-            } else if let stringParam = param as? String {
-                sqlite3_bind_text(stmt, position, stringParam, -1, SQLITE_TRANSIENT)
-            } else if param is NSNull {
-                sqlite3_bind_null(stmt, position)
-            } else {
-                throw ErrorMsg(errorDescription: "unsupported type")
-            }
-        }
-
-        var affectedRows: Int
-        var lastInsertRowID: Int
-        if sqlite3_step(stmt) == SQLITE_DONE {
-            affectedRows = Int(sqlite3_changes(db))
-            lastInsertRowID = Int(sqlite3_last_insert_rowid(db))
-        } else {
-            let msg = String(cString: sqlite3_errmsg(db))
-            logger.error("[SQLiteDBManager] run sql error: \(msg)")
-            throw ErrorMsg(errorDescription: msg)
-        }
-
-        return runStmtResult(changes: affectedRows, lastInsertRowid: lastInsertRowID)
-    }
-
-    // MARK: Stream Query
-
-    func iterateStmt(dbKey: Int, stmtKey: Int, parameters: [Any]) throws {
-        guard dbMap[dbKey] != nil, let stmt = stmtMap[stmtKey] else {
-            throw ErrorMsg(errorDescription: "cannot find this statement")
-        }
-
-        if sqlite3_bind_parameter_count(stmt) != parameters.count {
-            sqlite3_finalize(stmt)
-            stmtMap.removeValue(forKey: stmtKey)
-            stmtToDBKey.removeValue(forKey: stmtKey)
-            throw ErrorMsg(errorDescription: "parameters not match")
-        }
-
-        for (index, param) in parameters.enumerated() {
-            let position = Int32(index + 1)
-            if let intParam = param as? Int64 {
-                sqlite3_bind_int64(stmt, position, intParam)
-            } else if let doubleParam = param as? Double {
-                sqlite3_bind_double(stmt, position, doubleParam)
-            } else if let stringParam = param as? String {
-                sqlite3_bind_text(stmt, position, stringParam, -1, SQLITE_TRANSIENT)
-            } else if param is NSNull {
-                sqlite3_bind_null(stmt, position)
-            } else {
-                throw ErrorMsg(errorDescription: "unsupported type")
+    func allStmt(dbKey: Int, stmtKey: Int, parameters: [BridgeValue]) throws -> [[String: BridgeValue]] {
+        let statement = try statement(dbKey: dbKey, stmtKey: stmtKey)
+        guard !iterators.contains(stmtKey) else { throw MinipError(.invalidState, "Statement already has an active iterator") }
+        defer { release(stmtKey) }
+        try bind(parameters, to: statement)
+        var result: [[String: BridgeValue]] = []
+        while true {
+            switch sqlite3_step(statement) {
+            case SQLITE_ROW: result.append(try row(statement))
+            case SQLITE_DONE: return result
+            default: throw error(sqlite3_db_handle(statement))
             }
         }
     }
 
-    func iterateStmtNext(dbKey: Int, stmtKey: Int) throws -> [String: Any]? {
-        guard dbMap[dbKey] != nil, let stmt = stmtMap[stmtKey] else {
-            throw ErrorMsg(errorDescription: "cannot find this statement")
+    func runStmt(dbKey: Int, stmtKey: Int, parameters: [BridgeValue]) throws -> runStmtResult {
+        let statement = try statement(dbKey: dbKey, stmtKey: stmtKey)
+        guard !iterators.contains(stmtKey) else { throw MinipError(.invalidState, "Statement already has an active iterator") }
+        defer { release(stmtKey) }
+        guard sqlite3_column_count(statement) == 0 else { throw MinipError(.invalidArgument, "Use a query API for statements that return rows") }
+        try bind(parameters, to: statement)
+        guard sqlite3_step(statement) == SQLITE_DONE else { throw error(sqlite3_db_handle(statement)) }
+        let database = try database(dbKey)
+        return runStmtResult(changes: Int(sqlite3_changes(database)), lastInsertRowid: sqlite3_last_insert_rowid(database))
+    }
+
+    func iterateStmt(dbKey: Int, stmtKey: Int, parameters: [BridgeValue]) throws {
+        let statement = try statement(dbKey: dbKey, stmtKey: stmtKey)
+        guard !iterators.contains(stmtKey) else { throw MinipError(.invalidState, "Iterator is already active") }
+        do {
+            try bind(parameters, to: statement)
+            iterators.insert(stmtKey)
+        } catch {
+            release(stmtKey)
+            throw error
         }
-        let columnCount = sqlite3_column_count(stmt)
+    }
 
-        if sqlite3_step(stmt) == SQLITE_ROW {
-            var row: [String: Any] = [:]
-
-            for i in 0..<columnCount {
-                let columnName = String(cString: sqlite3_column_name(stmt, i))
-                let columnType = sqlite3_column_type(stmt, i)
-
-                switch columnType {
-                case SQLITE_INTEGER:
-                    row[columnName] = sqlite3_column_int64(stmt, i)
-                case SQLITE_FLOAT:
-                    row[columnName] = sqlite3_column_double(stmt, i)
-                case SQLITE_TEXT:
-                    row[columnName] = String(cString: sqlite3_column_text(stmt, i))
-                case SQLITE_NULL:
-                    row[columnName] = NSNull()
-                default:
-                    logger.error("[SQLiteDBManager] unsupported sqlite type")
-                }
+    func iterateStmtNext(dbKey: Int, stmtKey: Int) throws -> [String: BridgeValue]? {
+        let statement = try statement(dbKey: dbKey, stmtKey: stmtKey)
+        guard iterators.contains(stmtKey) else { throw MinipError(.invalidState, "Iterator is not active") }
+        do {
+            switch sqlite3_step(statement) {
+            case SQLITE_ROW: return try row(statement)
+            case SQLITE_DONE: release(stmtKey); return nil
+            default: throw error(sqlite3_db_handle(statement))
             }
-            return row
+        } catch {
+            release(stmtKey)
+            throw error
         }
-
-        sqlite3_finalize(stmt)
-        stmtMap.removeValue(forKey: stmtKey)
-        stmtToDBKey.removeValue(forKey: stmtKey)
-        return nil
     }
 
     func iterateStmtRelease(dbKey: Int, stmtKey: Int) throws {
-        guard dbMap[dbKey] != nil, let stmt = stmtMap[stmtKey] else {
-            throw ErrorMsg(errorDescription: "already released")
+        _ = try database(dbKey)
+        guard stmtMap[stmtKey] != nil else { return }
+        _ = try statement(dbKey: dbKey, stmtKey: stmtKey)
+        release(stmtKey)
+    }
+
+    func execute(dbKey: Int, sql: String, parameters: [BridgeValue]) throws -> (reader: Bool, runRes: runStmtResult?, entityData: [[String: BridgeValue]]?) {
+        let prepared = try prepareStmt(dbKey: dbKey, sql: sql)
+        if prepared.reader {
+            return (true, nil, try allStmt(dbKey: dbKey, stmtKey: prepared.stmtKey, parameters: parameters))
         }
-
-        sqlite3_finalize(stmt)
-        stmtMap.removeValue(forKey: stmtKey)
-        stmtToDBKey.removeValue(forKey: stmtKey)
+        return (false, try runStmt(dbKey: dbKey, stmtKey: prepared.stmtKey, parameters: parameters), nil)
     }
 
-    // MARK: execute
-
-    func execute(dbKey: Int, sql: String, parameters: [Any]) throws -> (reader: Bool, runRes: runStmtResult?, entityData: [[String: Any]]?) {
-        let prepareRes = try prepareStmt(dbKey: dbKey, sql: sql)
-        var runRes: runStmtResult?
-        var entityData: [[String: Any]]?
-        if prepareRes.reader {
-            entityData = try allStmt(dbKey: dbKey, stmtKey: prepareRes.stmtKey, parameters: parameters)
-        } else {
-            runRes = try runStmt(dbKey: dbKey, stmtKey: prepareRes.stmtKey, parameters: parameters)
-        }
-        return (prepareRes.reader, runRes, entityData)
-    }
-}
-
-extension SQLiteDBManager {
-    struct openDBResult: Codable {
-        var dbKey: Int
-    }
-
-    struct prepareResult: Codable {
-        var stmtKey: Int
-        var reader: Bool
-    }
-
-    struct runStmtResult: Codable {
-        var changes: Int
-        var lastInsertRowid: Int
-    }
+    struct openDBResult: Codable { let dbKey: Int }
+    struct prepareResult: Codable { let stmtKey: Int; let reader: Bool }
+    struct runStmtResult: Codable { let changes: Int; let lastInsertRowid: Int64 }
 }

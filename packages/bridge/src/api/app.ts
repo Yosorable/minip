@@ -1,46 +1,26 @@
 import jsBridge from "../bridge";
-import { AppInfo, MResponseWithData } from "../types";
+import type { AppInfo } from "../types";
 
 export async function closeApp(): Promise<void> {
-  await jsBridge.callNative({
-    api: "closeApp",
-  });
+  return jsBridge.callNative<void>({ api: "closeApp" });
 }
 
 export async function showAppDetail(): Promise<void> {
-  await jsBridge.callNative({
-    api: "showAppDetail",
-  });
+  return jsBridge.callNative<void>({ api: "showAppDetail" });
 }
 
 export async function installApp(url: string): Promise<void> {
-  await jsBridge.callNative({
-    api: "installApp",
-    data: {
-      url,
-    },
-  });
+  return jsBridge.callNative<void>({ api: "installApp", data: { url } });
 }
 
 export async function getInstalledAppList(): Promise<AppInfo[]> {
-  const res = await jsBridge.callNative({
-    api: "getInstalledAppList",
-  });
-  return (res as MResponseWithData<AppInfo[]>).data;
+  return jsBridge.callNative<AppInfo[]>({ api: "getInstalledAppList" });
 }
 
 export async function getAppInfo(): Promise<AppInfo> {
-  const res = await jsBridge.callNative({
-    api: "getAppInfo",
-  });
-  return (res as MResponseWithData<AppInfo>).data;
+  return jsBridge.callNative<AppInfo>({ api: "getAppInfo" });
 }
 
 export async function updateCurrentApp(url: string): Promise<void> {
-  await jsBridge.callNative({
-    api: "updateCurrentApp",
-    data: {
-      url,
-    },
-  });
+  return jsBridge.callNative<void>({ api: "updateCurrentApp", data: { url } });
 }

@@ -16,6 +16,36 @@ class QRScannerViewController: UIViewController {
     var onCanceled: (()->Void)?
     var onSucceed: ((String)->Void)?
     var onFailed: ((Error)->Void)?
+    private var completed = false
+
+    func finish(_ result: Result<String?, Error>) {
+        guard !completed else { return }
+        completed = true
+        qrScannerView?.stopRunning()
+        let succeed = onSucceed
+        let cancel = onCanceled
+        let fail = onFailed
+        let notify: () -> Void = {
+            switch result {
+            case .success(let code):
+                if let code { succeed?(code) } else { cancel?() }
+            case .failure(let error): fail?(error)
+            }
+        }
+        onSucceed = nil
+        onCanceled = nil
+        onFailed = nil
+        if presentingViewController != nil { dismiss(animated: true, completion: notify) }
+        else { notify() }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if presentingViewController == nil || isBeingDismissed || presentingViewController?.isBeingDismissed == true {
+            qrScannerView?.stopRunning()
+            finish(.success(nil))
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,8 +138,7 @@ class QRScannerViewController: UIViewController {
     }
 
     @objc func tapCloseButton() {
-        dismiss(animated: true)
-        onCanceled?()
+        finish(.success(nil))
     }
 
     @objc func tapFlashButton(_ sender: UIButton) {
@@ -128,15 +157,13 @@ class QRScannerViewController: UIViewController {
 
 extension QRScannerViewController: QRScannerViewDelegate {
     func qrScannerView(_ qrScannerView: QRScannerView, didFailure error: QRScannerError) {
-        onFailed?(error)
-        dismiss(animated: true)
+        finish(.failure(error))
     }
 
     func qrScannerView(_ qrScannerView: QRScannerView, didSuccess code: String) {
         qrScannerView.stopRunning()
         DispatchQueue.main.asyncAfter(deadline: .now() + qrScannerView.animationDuration + 0.1) { [weak self] in
-            self?.dismiss(animated: true)
-            self?.onSucceed?(code)
+            self?.finish(.success(code))
         }
     }
 }

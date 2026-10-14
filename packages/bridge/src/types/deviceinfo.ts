@@ -1,5 +1,6 @@
 export interface DeviceInfo {
   language: string;
+  brand: string;
   model: string;
   system: string;
   screen: ScreenInfo;

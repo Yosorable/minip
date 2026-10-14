@@ -53,41 +53,9 @@ interface DateAndTimePickerConfig {
     dateFormat?: string;
 }
 
-interface MRequestBase {
-    /**
-     * Api name.
-     */
-    api: string;
-}
-interface MRequestWithData<T> extends MRequestBase {
-    data?: T;
-}
-type MRequest<T> = MRequestBase | MRequestWithData<T>;
-
 interface ShowAlertData {
     action: string;
     inputs: Record<string, string>;
-}
-
-declare enum MResponseStatusCode {
-    SUCCESS = 0,
-    FAILED = 7
-}
-interface MResponse {
-    /**
-     * Integer, 0 for succeeded, other for failed.
-     * Auto reject in promise when failed.
-     */
-    code: MResponseStatusCode;
-    /**
-     * Error msg or other info.
-     */
-    msg?: string;
-    isSuccess(): boolean;
-}
-interface MResponseWithData<T> extends MResponse {
-    data: T;
-    hasData(): boolean;
 }
 
 interface AppInfo {
@@ -131,6 +99,7 @@ interface File {
 
 interface DeviceInfo {
     language: string;
+    brand: string;
     model: string;
     system: string;
     screen: ScreenInfo;
@@ -178,59 +147,56 @@ declare function startPullDownRefresh(): Promise<void>;
 declare function stopPullDownRefresh(): Promise<void>;
 declare function showHUD(req: ShowHUDRequest): Promise<void>;
 declare function hideHUD(): Promise<void>;
-declare function showAlert(config: AlertConfig): Promise<ShowAlertData>;
+declare function showAlert(config: AlertConfig): Promise<ShowAlertData | null>;
 declare function previewImage(url: string, options?: {
     sourceImage?: HTMLImageElement;
 }): Promise<void>;
 declare function previewVideo(url: string): Promise<void>;
-declare function showPicker(type: "singleColumn", data: SingleColumnPickerConfig): Promise<number | null | undefined>;
-declare function showPicker(type: "multipleColumns", data: MultipleColumnsPickerConfig): Promise<number[] | null | undefined>;
-declare function showPicker(type: "date" | "time", data: DateAndTimePickerConfig): Promise<string | null | undefined>;
+declare function showPicker(type: "singleColumn", data: SingleColumnPickerConfig): Promise<number | null>;
+declare function showPicker(type: "multipleColumns", data: MultipleColumnsPickerConfig): Promise<number[] | null>;
+declare function showPicker(type: "date" | "time", data: DateAndTimePickerConfig): Promise<string | null>;
 
-declare function getKVStorage(key: string): Promise<string>;
+declare function getKVStorage(key: string): Promise<string | null>;
 declare function setKVStorage(key: string, value: string): Promise<void>;
 declare function deleteKVStorage(key: string): Promise<void>;
 declare function clearKVStorage(): Promise<void>;
-declare function getKVStorageSync(key: string): string;
+declare function getKVStorageSync(key: string): string | null;
 declare function setKVStorageSync(key: string, value: string): void;
 declare function deleteKVStorageSync(key: string): void;
 declare function clearKVStorageSync(): void;
 
-/**
- *
- * @param type medium as default
- */
 declare function vibrate(type?: "light" | "medium" | "heavy"): Promise<void>;
-declare function getClipboardData(): Promise<string>;
+declare function getClipboardData(): Promise<string | null>;
 declare function setClipboardData(data: string): Promise<void>;
-declare function scanQRCode(): Promise<string | undefined | null>;
+declare function scanQRCode(): Promise<string | null>;
 declare function getDeviceInfo(): Promise<DeviceInfo>;
 declare function getDeviceInfoSync(): DeviceInfo;
 
+interface SQLiteRunResult {
+    changes: number | bigint;
+    lastInsertRowid: number | bigint;
+}
+type SQLiteExecutionResult = {
+    reader: true;
+    entityData: Record<string, unknown>[];
+} | {
+    reader: false;
+    runRes: SQLiteRunResult;
+};
 declare function sqliteOpenDB(path: string): Promise<number>;
 declare function sqliteCloseDB(dbKey: number): Promise<void>;
 declare function sqlitePrepare(dbKey: number, sql: string): Promise<{
     stmtKey: number;
     reader: boolean;
 }>;
-declare function sqliteStatementAll(dbKey: number, stmtKey: number, parameters: ReadonlyArray<unknown>): Promise<unknown[]>;
-declare function sqliteStatementRun(dbKey: number, stmtKey: number, parameters: ReadonlyArray<unknown>): Promise<{
-    changes: number | bigint;
-    lastInsertRowid: number | bigint;
-}>;
-declare function sqliteExecute(dbKey: number, sql: string, parameters: ReadonlyArray<unknown>): Promise<{
-    reader: boolean;
-    runRes?: {
-        changes: number | bigint;
-        lastInsertRowid: number | bigint;
-    };
-    entityData?: unknown[];
-}>;
+declare function sqliteStatementAll(dbKey: number, stmtKey: number, parameters: ReadonlyArray<unknown>): Promise<Record<string, unknown>[]>;
+declare function sqliteStatementRun(dbKey: number, stmtKey: number, parameters: ReadonlyArray<unknown>): Promise<SQLiteRunResult>;
+declare function sqliteExecute(dbKey: number, sql: string, parameters: ReadonlyArray<unknown>): Promise<SQLiteExecutionResult>;
 declare function sqliteCreateIterator(dbKey: number, stmtKey: number, parameters: ReadonlyArray<unknown>): Promise<void>;
-declare function sqliteIteratorNext(dbKey: number, stmtKey: number): Promise<unknown | undefined>;
+declare function sqliteIteratorNext(dbKey: number, stmtKey: number): Promise<Record<string, unknown> | null>;
 declare function sqliteIteratorRelease(dbKey: number, stmtKey: number): Promise<void>;
 
-declare function getMemoryStorage(key: string): Promise<string>;
+declare function getMemoryStorage(key: string): Promise<string | null>;
 declare function setMemoryStorage(key: string, value: string): Promise<void>;
 declare function setMemoryStorageIfNotExist(key: string, value: string): Promise<boolean>;
 declare function removeMemoryStorage(key: string): Promise<void>;
@@ -252,18 +218,48 @@ interface AppPageHideEvent extends CustomEvent {
 declare function onAppPageShow(callback: (e: AppPageShowEvent) => void): () => void;
 declare function onAppPageHide(callback: (e: AppPageHideEvent) => void): () => void;
 
+declare const MinipErrorCode: {
+    readonly INVALID_ARGUMENT: "INVALID_ARGUMENT";
+    readonly API_NOT_FOUND: "API_NOT_FOUND";
+    readonly NOT_SUPPORTED: "NOT_SUPPORTED";
+    readonly NOT_FOUND: "NOT_FOUND";
+    readonly ALREADY_EXISTS: "ALREADY_EXISTS";
+    readonly PERMISSION_DENIED: "PERMISSION_DENIED";
+    readonly INVALID_STATE: "INVALID_STATE";
+    readonly IO_ERROR: "IO_ERROR";
+    readonly DATABASE_ERROR: "DATABASE_ERROR";
+    readonly BRIDGE_UNAVAILABLE: "BRIDGE_UNAVAILABLE";
+    readonly BRIDGE_ERROR: "BRIDGE_ERROR";
+    readonly INVALID_RESPONSE: "INVALID_RESPONSE";
+    readonly INTERNAL_ERROR: "INTERNAL_ERROR";
+};
+type MinipErrorCode = (typeof MinipErrorCode)[keyof typeof MinipErrorCode];
+interface MinipErrorOptions {
+    api?: string;
+    details?: Record<string, unknown>;
+    cause?: unknown;
+}
+/** An API or bridge failure. Branch on code, never on the message text. */
+declare class MinipError extends Error {
+    readonly code: string;
+    readonly api?: string;
+    readonly details?: Record<string, unknown>;
+    readonly cause?: unknown;
+    constructor(code: string, message: string, options?: MinipErrorOptions);
+}
+
 interface WebKitCallable {
-    postMessage: (data: string) => Promise<string>;
+    postMessage(data: string): Promise<string>;
 }
 declare global {
     interface Window {
         webkit?: {
             messageHandlers?: {
-                MinipNativeInteraction?: WebKitCallable;
+                MinipNativeInteractionV2?: WebKitCallable;
             };
         };
         __minipPreviewElement?: HTMLImageElement;
     }
 }
 
-export { type AlertAction, type AlertConfig, type AlertInput, type AppInfo, type AppPageHideEvent, type AppPageShowEvent, type DateAndTimePickerConfig, type DeviceInfo, type HUDType, type MRequest, type MRequestBase, type MRequestWithData, type MResponse, MResponseStatusCode, type MResponseWithData, type MultipleColumnsPickerConfig, type PageHideReason, type PageShowReason, type ShowAlertData, type ShowHUDRequest, type SingleColumnPickerConfig, clearKVStorage, clearKVStorageSync, clearMemoryStorage, closeApp, deleteKVStorage, deleteKVStorageSync, disablePullDownRefresh, enablePullDownRefresh, getAppInfo, getClipboardData, getDeviceInfo, getDeviceInfoSync, getInstalledAppList, getKVStorage, getKVStorageSync, getMemoryStorage, hideHUD, installApp, navigateBack, navigateTo, onAppPageHide, onAppPageShow, onPullDownRefresh, openSettings, openWebsite, previewImage, previewVideo, redirectTo, removeMemoryStorage, scanQRCode, setClipboardData, setKVStorage, setKVStorageSync, setMemoryStorage, setMemoryStorageIfNotExist, setNavigationBarColor, setNavigationBarTitle, showAlert, showAppDetail, showHUD, showPicker, sqliteCloseDB, sqliteCreateIterator, sqliteExecute, sqliteIteratorNext, sqliteIteratorRelease, sqliteOpenDB, sqlitePrepare, sqliteStatementAll, sqliteStatementRun, startPullDownRefresh, stopPullDownRefresh, updateCurrentApp, vibrate };
+export { type AlertAction, type AlertConfig, type AlertInput, type AppInfo, type AppPageHideEvent, type AppPageShowEvent, type DateAndTimePickerConfig, type DeviceInfo, type HUDType, MinipError, MinipErrorCode, type MinipErrorOptions, type MultipleColumnsPickerConfig, type PageHideReason, type PageShowReason, type SQLiteExecutionResult, type SQLiteRunResult, type ShowAlertData, type ShowHUDRequest, type SingleColumnPickerConfig, clearKVStorage, clearKVStorageSync, clearMemoryStorage, closeApp, deleteKVStorage, deleteKVStorageSync, disablePullDownRefresh, enablePullDownRefresh, getAppInfo, getClipboardData, getDeviceInfo, getDeviceInfoSync, getInstalledAppList, getKVStorage, getKVStorageSync, getMemoryStorage, hideHUD, installApp, navigateBack, navigateTo, onAppPageHide, onAppPageShow, onPullDownRefresh, openSettings, openWebsite, previewImage, previewVideo, redirectTo, removeMemoryStorage, scanQRCode, setClipboardData, setKVStorage, setKVStorageSync, setMemoryStorage, setMemoryStorageIfNotExist, setNavigationBarColor, setNavigationBarTitle, showAlert, showAppDetail, showHUD, showPicker, sqliteCloseDB, sqliteCreateIterator, sqliteExecute, sqliteIteratorNext, sqliteIteratorRelease, sqliteOpenDB, sqlitePrepare, sqliteStatementAll, sqliteStatementRun, startPullDownRefresh, stopPullDownRefresh, updateCurrentApp, vibrate };

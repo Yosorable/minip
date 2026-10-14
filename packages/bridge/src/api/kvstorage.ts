@@ -1,62 +1,33 @@
 import jsBridge from "../bridge";
-import { MResponseWithData } from "../types";
 
-// async methods
-
-export async function getKVStorage(key: string): Promise<string> {
-  const res = await jsBridge.callNative({
-    api: "getKVStorage",
-    data: { key },
-  });
-  return (res as MResponseWithData<string>).data;
+export async function getKVStorage(key: string): Promise<string | null> {
+  return jsBridge.callNative<string | null>({ api: "getKVStorage", data: { key } });
 }
 
 export async function setKVStorage(key: string, value: string): Promise<void> {
-  await jsBridge.callNative({
-    api: "setKVStorage",
-    data: { key, value },
-  });
+  return jsBridge.callNative<void>({ api: "setKVStorage", data: { key, value } });
 }
 
 export async function deleteKVStorage(key: string): Promise<void> {
-  await jsBridge.callNative({
-    api: "deleteKVStorage",
-    data: { key },
-  });
+  return jsBridge.callNative<void>({ api: "deleteKVStorage", data: { key } });
 }
 
 export async function clearKVStorage(): Promise<void> {
-  await jsBridge.callNative({
-    api: "clearKVStorage",
-  });
+  return jsBridge.callNative<void>({ api: "clearKVStorage" });
 }
 
-// sync methods
-
-export function getKVStorageSync(key: string): string {
-  const res = jsBridge.callNativeSync({
-    api: "getKVStorageSync",
-    data: { key },
-  }) as MResponseWithData<string>;
-  return res.data;
+export function getKVStorageSync(key: string): string | null {
+  return jsBridge.callNativeSync<string | null>({ api: "getKVStorage", data: { key } });
 }
 
 export function setKVStorageSync(key: string, value: string): void {
-  jsBridge.callNativeSync({
-    api: "setKVStorageSync",
-    data: { key, value },
-  });
+  return jsBridge.callNativeSync<void>({ api: "setKVStorage", data: { key, value } });
 }
 
 export function deleteKVStorageSync(key: string): void {
-  jsBridge.callNativeSync({
-    api: "deleteKVStorageSync",
-    data: { key },
-  });
+  return jsBridge.callNativeSync<void>({ api: "deleteKVStorage", data: { key } });
 }
 
 export function clearKVStorageSync(): void {
-  jsBridge.callNativeSync({
-    api: "clearKVStorageSync",
-  });
+  return jsBridge.callNativeSync<void>({ api: "clearKVStorage" });
 }

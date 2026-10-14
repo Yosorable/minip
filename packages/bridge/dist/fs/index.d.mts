@@ -38,21 +38,25 @@ declare function cp(src: string, dest: string, recursive?: boolean): Promise<voi
 declare function cpSync(src: string, dest: string, recursive?: boolean): void;
 
 declare function mkdir(path: string, recursive?: boolean): Promise<void>;
-declare function mkdirSync(path: string, recursive?: boolean): void;
 declare function readdir(path: string): Promise<string[]>;
-declare function readdirSync(path: string): string[];
 declare function rmdir(path: string, recursive?: boolean): Promise<void>;
+declare function mkdirSync(path: string, recursive?: boolean): void;
+declare function readdirSync(path: string): string[];
 declare function rmdirSync(path: string, recursive?: boolean): void;
 
-declare function readFile(path: string, encoding?: string): Promise<Uint8Array | string>;
-declare function readFileSync(path: string, encoding?: string): Uint8Array | string;
+declare function readFile(path: string): Promise<Uint8Array>;
+declare function readFile(path: string, encoding: string): Promise<string>;
+declare function readFile(path: string, encoding: string | undefined): Promise<Uint8Array | string>;
+declare function readFileSync(path: string): Uint8Array;
+declare function readFileSync(path: string, encoding: string): string;
+declare function readFileSync(path: string, encoding: string | undefined): Uint8Array | string;
 declare function writeFile(path: string, data: Uint8Array | string): Promise<void>;
-declare function writeFileSync(path: string, data: Uint8Array | string): void;
 declare function appendFile(path: string, data: Uint8Array | string): Promise<void>;
-declare function appendFileSync(path: string, data: Uint8Array | string): void;
 declare function copyFile(src: string, dest: string): Promise<void>;
-declare function copyFileSync(src: string, dest: string): void;
 declare function truncate(path: string, length?: number): Promise<void>;
+declare function writeFileSync(path: string, data: Uint8Array | string): void;
+declare function appendFileSync(path: string, data: Uint8Array | string): void;
+declare function copyFileSync(src: string, dest: string): void;
 declare function truncateSync(path: string, length?: number): void;
 
 declare enum OpenFlags {
@@ -65,16 +69,16 @@ declare enum OpenFlags {
     O_APPEND = 1024
 }
 declare function open(path: string, flags: OpenFlags | number, mode?: number): Promise<number>;
-declare function openSync(path: string, flags: OpenFlags | number, mode?: number): number;
 declare function close(fd: number): Promise<void>;
-declare function closeSync(fd: number): void;
 declare function fstat(fd: number): Promise<FileStats>;
-declare function fstatSync(fd: number): FileStats;
 declare function ftruncate(fd: number, length?: number): Promise<void>;
-declare function ftruncateSync(fd: number, length?: number): void;
 declare function read(fd: number, buffer: Uint8Array, offset: number, length: number, position?: number): Promise<number>;
-declare function readSync(fd: number, buffer: Uint8Array, offset: number, length: number, position?: number): number;
 declare function write(fd: number, buffer: Uint8Array, offset: number, length: number, position?: number): Promise<number>;
+declare function openSync(path: string, flags: OpenFlags | number, mode?: number): number;
+declare function closeSync(fd: number): void;
+declare function fstatSync(fd: number): FileStats;
+declare function ftruncateSync(fd: number, length?: number): void;
+declare function readSync(fd: number, buffer: Uint8Array, offset: number, length: number, position?: number): number;
 declare function writeSync(fd: number, buffer: Uint8Array, offset: number, length: number, position?: number): number;
 
 export { OpenFlags, access, accessSync, appendFile, appendFileSync, close, closeSync, copyFile, copyFileSync, cp, cpSync, enrichStats, existsSync, fstat, fstatSync, ftruncate, ftruncateSync, mkdir, mkdirSync, open, openSync, read, readFile, readFileSync, readSync, readdir, readdirSync, rename, renameSync, rm, rmSync, rmdir, rmdirSync, stat, statSync, truncate, truncateSync, unlink, unlinkSync, write, writeFile, writeFileSync, writeSync };

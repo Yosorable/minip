@@ -8,10 +8,12 @@ import {
   sqlitePrepare,
   sqliteStatementAll,
   sqliteStatementRun
-} from "./chunk-4HUUDNXW.mjs";
+} from "./chunk-WKTUPFC2.mjs";
 import {
+  MinipError,
+  MinipErrorCode,
   bridge_default
-} from "./chunk-GXHJCCLG.mjs";
+} from "./chunk-U2FR746Y.mjs";
 
 // src/api/route.ts
 async function navigateTo(data) {
@@ -48,42 +50,22 @@ async function openSettings() {
 
 // src/api/app.ts
 async function closeApp() {
-  await bridge_default.callNative({
-    api: "closeApp"
-  });
+  return bridge_default.callNative({ api: "closeApp" });
 }
 async function showAppDetail() {
-  await bridge_default.callNative({
-    api: "showAppDetail"
-  });
+  return bridge_default.callNative({ api: "showAppDetail" });
 }
 async function installApp(url) {
-  await bridge_default.callNative({
-    api: "installApp",
-    data: {
-      url
-    }
-  });
+  return bridge_default.callNative({ api: "installApp", data: { url } });
 }
 async function getInstalledAppList() {
-  const res = await bridge_default.callNative({
-    api: "getInstalledAppList"
-  });
-  return res.data;
+  return bridge_default.callNative({ api: "getInstalledAppList" });
 }
 async function getAppInfo() {
-  const res = await bridge_default.callNative({
-    api: "getAppInfo"
-  });
-  return res.data;
+  return bridge_default.callNative({ api: "getAppInfo" });
 }
 async function updateCurrentApp(url) {
-  await bridge_default.callNative({
-    api: "updateCurrentApp",
-    data: {
-      url
-    }
-  });
+  return bridge_default.callNative({ api: "updateCurrentApp", data: { url } });
 }
 
 // src/api/ui.ts
@@ -136,11 +118,10 @@ async function hideHUD() {
   });
 }
 async function showAlert(config) {
-  const res = await bridge_default.callNative({
+  return bridge_default.callNative({
     api: "showAlert",
     data: config
   });
-  return res.data;
 }
 async function previewImage(url, options) {
   const img = options?.sourceImage;
@@ -152,7 +133,7 @@ async function previewImage(url, options) {
     api: "previewImage",
     data: {
       url,
-      rect
+      rect: rect ? { x: rect.x, y: rect.y, width: rect.width, height: rect.height } : void 0
     }
   });
 }
@@ -165,6 +146,9 @@ async function previewVideo(url) {
   });
 }
 async function showPicker(type, data) {
+  if (data === null || typeof data !== "object" || Object.getPrototypeOf(data) !== Object.prototype && Object.getPrototypeOf(data) !== null) {
+    throw new MinipError(MinipErrorCode.INVALID_ARGUMENT, "Picker data must be an object", { api: "showPicker" });
+  }
   let callData;
   if ((type === "time" || type === "date") && !data.dateFormat) {
     callData = {
@@ -177,132 +161,73 @@ async function showPicker(type, data) {
   } else {
     callData = { type, data };
   }
-  const res = await bridge_default.callNative({
+  return bridge_default.callNative({
     api: "showPicker",
     data: callData
   });
-  return res.data;
 }
 
 // src/api/kvstorage.ts
 async function getKVStorage(key) {
-  const res = await bridge_default.callNative({
-    api: "getKVStorage",
-    data: { key }
-  });
-  return res.data;
+  return bridge_default.callNative({ api: "getKVStorage", data: { key } });
 }
 async function setKVStorage(key, value) {
-  await bridge_default.callNative({
-    api: "setKVStorage",
-    data: { key, value }
-  });
+  return bridge_default.callNative({ api: "setKVStorage", data: { key, value } });
 }
 async function deleteKVStorage(key) {
-  await bridge_default.callNative({
-    api: "deleteKVStorage",
-    data: { key }
-  });
+  return bridge_default.callNative({ api: "deleteKVStorage", data: { key } });
 }
 async function clearKVStorage() {
-  await bridge_default.callNative({
-    api: "clearKVStorage"
-  });
+  return bridge_default.callNative({ api: "clearKVStorage" });
 }
 function getKVStorageSync(key) {
-  const res = bridge_default.callNativeSync({
-    api: "getKVStorageSync",
-    data: { key }
-  });
-  return res.data;
+  return bridge_default.callNativeSync({ api: "getKVStorage", data: { key } });
 }
 function setKVStorageSync(key, value) {
-  bridge_default.callNativeSync({
-    api: "setKVStorageSync",
-    data: { key, value }
-  });
+  return bridge_default.callNativeSync({ api: "setKVStorage", data: { key, value } });
 }
 function deleteKVStorageSync(key) {
-  bridge_default.callNativeSync({
-    api: "deleteKVStorageSync",
-    data: { key }
-  });
+  return bridge_default.callNativeSync({ api: "deleteKVStorage", data: { key } });
 }
 function clearKVStorageSync() {
-  bridge_default.callNativeSync({
-    api: "clearKVStorageSync"
-  });
+  return bridge_default.callNativeSync({ api: "clearKVStorage" });
 }
 
 // src/api/device.ts
-async function vibrate(type) {
-  await bridge_default.callNative({
-    api: "vibrate",
-    data: {
-      type: type ?? "medium"
-    }
-  });
+async function vibrate(type = "medium") {
+  return bridge_default.callNative({ api: "vibrate", data: { type } });
 }
 async function getClipboardData() {
-  const res = await bridge_default.callNative({
-    api: "getClipboardData"
-  });
-  return res.data;
+  return bridge_default.callNative({ api: "getClipboardData" });
 }
 async function setClipboardData(data) {
-  await bridge_default.callNative({
-    api: "setClipboardData",
-    data: {
-      data
-    }
-  });
+  return bridge_default.callNative({ api: "setClipboardData", data: { data } });
 }
 async function scanQRCode() {
-  const res = await bridge_default.callNative({ api: "scanQRCode" });
-  return res.data;
+  return bridge_default.callNative({ api: "scanQRCode" });
 }
 async function getDeviceInfo() {
-  const res = await bridge_default.callNative({ api: "getDeviceInfo" });
-  return res.data;
+  return bridge_default.callNative({ api: "getDeviceInfo" });
 }
 function getDeviceInfoSync() {
-  const res = bridge_default.callNativeSync({
-    api: "getDeviceInfoSync"
-  });
-  return res.data;
+  return bridge_default.callNativeSync({ api: "getDeviceInfo" });
 }
 
 // src/api/memory-cache.ts
 async function getMemoryStorage(key) {
-  const res = await bridge_default.callNative({
-    api: "getMemoryStorage",
-    data: { key }
-  });
-  return res.data;
+  return bridge_default.callNative({ api: "getMemoryStorage", data: { key } });
 }
 async function setMemoryStorage(key, value) {
-  await bridge_default.callNative({
-    api: "setMemoryStorage",
-    data: { key, value }
-  });
+  return bridge_default.callNative({ api: "setMemoryStorage", data: { key, value } });
 }
 async function setMemoryStorageIfNotExist(key, value) {
-  const res = await bridge_default.callNative({
-    api: "setMemoryStorageIfNotExist",
-    data: { key, value }
-  });
-  return res.data;
+  return bridge_default.callNative({ api: "setMemoryStorageIfNotExist", data: { key, value } });
 }
 async function removeMemoryStorage(key) {
-  await bridge_default.callNative({
-    api: "removeMemoryStorage",
-    data: { key }
-  });
+  return bridge_default.callNative({ api: "removeMemoryStorage", data: { key } });
 }
 async function clearMemoryStorage() {
-  await bridge_default.callNative({
-    api: "clearMemoryStorage"
-  });
+  return bridge_default.callNative({ api: "clearMemoryStorage" });
 }
 
 // src/api/events.ts
@@ -317,6 +242,8 @@ function onAppPageHide(callback) {
   return () => window.removeEventListener("appPageHide", handler);
 }
 export {
+  MinipError,
+  MinipErrorCode,
   clearKVStorage,
   clearKVStorageSync,
   clearMemoryStorage,

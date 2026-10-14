@@ -87,7 +87,7 @@ export default function FileSystem() {
     "read file": (isAsync) => {
       const start = Date.now();
 
-      let func = readFile;
+      let func: (path: string) => Promise<Uint8Array> = readFile;
       if (!isAsync) {
         func = (path: string) => {
           return new Promise((resolve, reject) => {

@@ -1,8 +1,8 @@
 import jsBridge from "../bridge";
+import { MinipError, MinipErrorCode } from "../bridge";
 import {
   AlertConfig,
   DateAndTimePickerConfig,
-  MResponseWithData,
   MultipleColumnsPickerConfig,
   ShowAlertData,
   ShowHUDRequest,
@@ -76,12 +76,11 @@ export async function hideHUD(): Promise<void> {
 }
 
 // alert
-export async function showAlert(config: AlertConfig): Promise<ShowAlertData> {
-  const res = await jsBridge.callNative({
+export async function showAlert(config: AlertConfig): Promise<ShowAlertData | null> {
+  return jsBridge.callNative<ShowAlertData | null>({
     api: "showAlert",
     data: config,
   });
-  return (res as MResponseWithData<ShowAlertData>).data;
 }
 
 // media
@@ -100,7 +99,7 @@ export async function previewImage(
     api: "previewImage",
     data: {
       url,
-      rect,
+      rect: rect ? { x: rect.x, y: rect.y, width: rect.width, height: rect.height } : undefined,
     },
   });
 }
@@ -118,15 +117,15 @@ export async function previewVideo(url: string): Promise<void> {
 export function showPicker(
   type: "singleColumn",
   data: SingleColumnPickerConfig,
-): Promise<number | null | undefined>;
+): Promise<number | null>;
 export function showPicker(
   type: "multipleColumns",
   data: MultipleColumnsPickerConfig,
-): Promise<number[] | null | undefined>;
+): Promise<number[] | null>;
 export function showPicker(
   type: "date" | "time",
   data: DateAndTimePickerConfig,
-): Promise<string | null | undefined>;
+): Promise<string | null>;
 
 export async function showPicker(
   type: "singleColumn" | "multipleColumns" | "date" | "time",
@@ -134,7 +133,10 @@ export async function showPicker(
     | SingleColumnPickerConfig
     | MultipleColumnsPickerConfig
     | DateAndTimePickerConfig,
-): Promise<number | number[] | string | null | undefined> {
+): Promise<number | number[] | string | null> {
+  if (data === null || typeof data !== "object" || (Object.getPrototypeOf(data) !== Object.prototype && Object.getPrototypeOf(data) !== null)) {
+    throw new MinipError(MinipErrorCode.INVALID_ARGUMENT, "Picker data must be an object", { api: "showPicker" });
+  }
   let callData;
   if (
     (type === "time" || type === "date") &&
@@ -150,11 +152,8 @@ export async function showPicker(
   } else {
     callData = { type, data };
   }
-  const res = await jsBridge.callNative({
+  return jsBridge.callNative<number | number[] | string | null>({
     api: "showPicker",
     data: callData,
   });
-  return (
-    res as MResponseWithData<number | number[] | string | null | undefined>
-  ).data;
 }

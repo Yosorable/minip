@@ -5,6 +5,7 @@ import {
   SelectQueryNode,
 } from "kysely";
 import { MinipSqliteDatabase } from "./sqlite-database";
+import { MinipError, MinipErrorCode } from "../../bridge";
 
 export class MinipSqliteConnection implements DatabaseConnection {
   readonly #db: MinipSqliteDatabase;
@@ -19,7 +20,7 @@ export class MinipSqliteConnection implements DatabaseConnection {
     }
     const res = await this.#db.execute(sql, parameters);
 
-    if (res.reader) {
+    if (res.reader === true) {
       return {
         rows: (res.entityData ?? []) as R[],
       };
@@ -46,18 +47,15 @@ export class MinipSqliteConnection implements DatabaseConnection {
     _chunkSize: number,
   ): AsyncIterableIterator<QueryResult<R>> {
     const { sql, parameters, query } = compiledQuery;
+    if (!SelectQueryNode.is(query)) {
+      throw new MinipError(MinipErrorCode.NOT_SUPPORTED, "Sqlite driver only supports streaming of select queries");
+    }
     const stmt = await this.#db.prepare(sql);
-    if (SelectQueryNode.is(query)) {
-      const iter = stmt.iterate(parameters) as AsyncIterableIterator<R>;
-      for await (const row of iter) {
-        yield {
-          rows: [row],
-        };
-      }
-    } else {
-      throw new Error(
-        "Sqlite driver only supports streaming of select queries",
-      );
+    const iter = stmt.iterate(parameters) as AsyncIterableIterator<R>;
+    for await (const row of iter) {
+      yield {
+        rows: [row],
+      };
     }
   }
 }

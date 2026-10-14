@@ -1,299 +1,204 @@
-//
-//  Untitled.swift
-//  minip
-//
-//  Created by LZY on 2025/2/9.
-//
-
-import AVFoundation
-import AVKit
-import Kingfisher
+import Foundation
 import ProgressHUD
 import UIKit
 
 extension MinipApi {
-    func setNavigationBarTitle(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        guard let title = (param.data as? [String: String])?["title"] else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
-        }
-        vc.title = title
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
+    func setNavigationBarTitle(param: Parameter) throws {
+        try param.viewController.title = param.string("title")
     }
 
-    func setNavigationBarColor(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        let data = param.data as? [String: Any]
-        guard
-            let foregroundColor = (data?["foregroundColor"] as? String),
-            let backgroundColor = (data?["backgroundColor"] as? String),
-            let fColor = UIColor(hexOrCSSName: foregroundColor),
-            let bColor = UIColor(hexOrCSSName: backgroundColor)
-        else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
+    func setNavigationBarColor(param: Parameter) throws {
+        let controller = try param.viewController
+        guard let foreground = UIColor(hexOrCSSName: try param.string("foregroundColor")),
+              let background = UIColor(hexOrCSSName: try param.string("backgroundColor")) else {
+            throw MinipError(.invalidArgument, "Invalid navigation bar color")
         }
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = bColor
-        appearance.titleTextAttributes = [.foregroundColor: fColor]
+        appearance.backgroundColor = background
+        appearance.titleTextAttributes = [.foregroundColor: foreground]
         appearance.shadowColor = .clear
-        if let tabVC = vc.tabBarController {
-            tabVC.viewControllers?.forEach { ele in
-                if let navc = ele as? UINavigationController {
-                    navc.navigationBar.standardAppearance = appearance
-                    navc.navigationBar.scrollEdgeAppearance = appearance
-                } else {
-                    ele.navigationController?.navigationBar.standardAppearance = appearance
-                    ele.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        for child in controller.tabBarController?.viewControllers ?? [controller] {
+            let navigation = (child as? UINavigationController) ?? child.navigationController
+            navigation?.navigationBar.standardAppearance = appearance
+            navigation?.navigationBar.scrollEdgeAppearance = appearance
+        }
+    }
+
+    func enablePullDownRefresh(param: Parameter) throws { try param.viewController.addRefreshControl() }
+
+    func disablePullDownRefresh(param: Parameter) throws {
+        let controller = try param.viewController
+        controller.refreshControl?.endRefreshing()
+        controller.refreshControl?.removeFromSuperview()
+        controller.refreshControl = nil
+    }
+
+    func startPullDownRefresh(param: Parameter) throws { try param.viewController.refreshControl?.beginRefreshing() }
+    func stopPullDownRefresh(param: Parameter) throws { try param.viewController.refreshControl?.endRefreshing() }
+
+    func showHUD(param: Parameter) throws {
+        let type = try param.string("type")
+        let title = try param.optionalString("title")
+        let message = try param.optionalString("message")
+        let delay = try param.number("delay")
+        guard delay == nil || delay! >= 0 else { throw MinipError.invalidArgument("delay") }
+        let seconds = delay.map { $0 / 1000 }
+        let interaction = try param.bool("interaction", default: true)
+        let text = [title, message].compactMap { $0 }.joined(separator: "\n")
+        switch type {
+        case "success": ProgressHUD.succeed(text, interaction: interaction, delay: seconds)
+        case "error": ProgressHUD.failed(text, interaction: interaction, delay: seconds)
+        case "progress": ProgressHUD.animate(text, interaction: interaction)
+        case "banner":
+            if let seconds { ProgressHUD.banner(title, message, delay: seconds) }
+            else { ProgressHUD.banner(title, message) }
+        default: throw MinipError.invalidArgument("type")
+        }
+    }
+
+    func hideHUD(param: Parameter) throws { ProgressHUD.dismiss() }
+
+    struct AlertInput {
+        let key: String
+        let type: String?
+        let title: String?
+        let defaultValue: String?
+    }
+
+    struct AlertAction {
+        let title: String?
+        let style: String?
+        let key: String
+    }
+
+    struct AlertConfig {
+        let title: String?
+        let message: String?
+        let preferredStyle: String?
+        let actions: [AlertAction]
+    }
+
+    struct AlertResult: Encodable {
+        let action: String
+        let inputs: [String: String]
+    }
+
+    func showAlert(param: Parameter) async throws -> AlertResult? {
+        let controller = try param.requirePresentation()
+        let actions = try param.array("actions").map { value in
+            let action = try param.object(value, name: "actions")
+            return try AlertAction(title: action.optionalString("title"), style: action.optionalString("style"), key: action.string("key"))
+        }
+        let inputs = try (param.optionalArray("inputs") ?? []).map { value in
+            let input = try param.object(value, name: "inputs")
+            return try AlertInput(key: input.string("key"), type: input.optionalString("type"), title: input.optionalString("title"), defaultValue: input.optionalString("defaultValue"))
+        }
+        let config = try AlertConfig(title: param.optionalString("title"), message: param.optionalString("message"), preferredStyle: param.optionalString("preferredStyle"), actions: actions)
+        guard !config.actions.isEmpty,
+              Set(config.actions.map(\.key)).count == config.actions.count,
+              config.actions.filter({ $0.style == "cancel" }).count <= 1,
+              config.actions.allSatisfy({ $0.style == nil || ["cancel", "destructive"].contains($0.style!) }),
+              config.preferredStyle == nil || ["alert", "actionSheet"].contains(config.preferredStyle!) else {
+            throw MinipError(.invalidArgument, "Invalid alert configuration")
+        }
+        guard Set(inputs.map(\.key)).count == inputs.count,
+              inputs.allSatisfy({ $0.type == nil || ["text", "number", "password"].contains($0.type!) }),
+              inputs.isEmpty || config.preferredStyle != "actionSheet" else {
+            throw MinipError.invalidArgument("inputs")
+        }
+        return try await withCheckedThrowingContinuation { continuation in
+            let completion = BridgeContinuation(continuation)
+            var selection: AlertResult?
+            let alert = UIAlertController(title: config.title, message: config.message, preferredStyle: config.preferredStyle == "actionSheet" ? .actionSheet : .alert)
+            for input in inputs {
+                alert.addTextField { field in
+                    field.placeholder = input.title
+                    field.text = input.defaultValue
+                    field.isSecureTextEntry = input.type == "password"
+                    if input.type == "number" { field.keyboardType = .numberPad }
                 }
             }
-        } else {
-            vc.navigationController?.navigationBar.standardAppearance = appearance
-            vc.navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        }
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
-    }
-
-    func enablePullDownRefresh(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        vc.addRefreshControl()
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
-    }
-
-    func disablePullDownRefresh(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        if let rf = vc.refreshControl {
-            rf.endRefreshing()
-            vc.refreshControl = nil
-            rf.removeFromSuperview()
-        }
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
-    }
-
-    func startPullDownRefresh(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        if let rf = vc.refreshControl {
-            rf.beginRefreshing()
-        }
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
-    }
-
-    func stopPullDownRefresh(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        vc.refreshControl?.endRefreshing()
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
-    }
-
-    func showHUD(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard param.webView?.holderObject as? MiniPageViewController != nil else {
-            return
-        }
-        let parameters = param.data as? [String: Any]
-        guard var type = parameters?["type"] as? String else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
-        }
-        let title = parameters?["title"] as? String
-        let subTitle = (parameters?["subTitle"] as? String) ?? (parameters?["message"] as? String)
-        let delay = parameters?["delay"] as? Double
-        let interaction = (parameters?["interaction"] as? Bool) ?? true
-
-        var msg: String?
-        if title != nil {
-            msg = title
-        }
-        if subTitle != nil {
-            if msg != nil {
-                msg! += "\n" + subTitle!
-            } else {
-                msg = subTitle
-            }
-        }
-        var dl: TimeInterval?
-        if let d = delay {
-            dl = d / 1000
-        }
-        type = type.lowercased()
-        if type == "success" {
-            ProgressHUD.succeed(msg, interaction: interaction, delay: dl)
-        } else if type == "error" {
-            ProgressHUD.failed(msg, interaction: interaction, delay: dl)
-        } else if type == "progress" {
-            ProgressHUD.animate(msg, interaction: interaction)
-        } else if type == "label" || type == "banner" {
-            if let delay = dl {
-                ProgressHUD.banner(title, subTitle, delay: delay)
-            } else {
-                ProgressHUD.banner(title, subTitle)
-            }
-        } else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
-        }
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
-    }
-
-    func hideHUD(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard param.webView?.holderObject as? MiniPageViewController != nil else {
-            return
-        }
-
-        ProgressHUD.dismiss()
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
-    }
-
-    struct AlertInput: Codable {
-        var key: String  // callback parameter
-        var type: String?  // text (default), password, number
-        var title: String?
-        var defaultValue: String?
-    }
-
-    struct AlertAction: Codable {
-        var title: String?
-        var style: String?
-        var key: String  // callback parameter
-    }
-
-    struct AlertConfig: Codable {
-        var title: String?
-        var message: String?
-        var preferredStyle: String?
-        var inputs: [AlertInput]?
-        var actions: [AlertAction]
-    }
-
-    func showAlert(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        let decoder = JSONDecoder()
-        guard let data = param.data,
-            let jsonData = try? JSONSerialization.data(withJSONObject: data, options: []),
-            let config = try? decoder.decode(AlertConfig.self, from: jsonData)
-        else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
-        }
-        let alert = UIAlertController(title: config.title, message: config.message, preferredStyle: config.preferredStyle == "actionSheet" ? .actionSheet : .alert)
-        if config.preferredStyle != "actionSheet", let inputs = config.inputs {
-            for ipt in inputs {
-                alert.addTextField(configurationHandler: { tf in
-                    tf.placeholder = ipt.title ?? ""
-                    if ipt.type == "password" {
-                        tf.isSecureTextEntry = true
-                    } else if ipt.type == "number" {
-                        tf.keyboardType = .numberPad
-                    }
-
-                    if let dft = ipt.defaultValue {
-                        tf.text = dft
-                    }
+            for action in config.actions {
+                let style: UIAlertAction.Style = action.style == "cancel" ? .cancel : action.style == "destructive" ? .destructive : .default
+                alert.addAction(UIAlertAction(title: action.title ?? action.key, style: style) { [weak alert] _ in
+                    var values: [String: String] = [:]
+                    for (input, field) in zip(inputs, alert?.textFields ?? []) { values[input.key] = field.text ?? "" }
+                    selection = AlertResult(action: action.key, inputs: values)
+                    alert?.dismiss(animated: true) { completion.finish(.success(selection)) }
                 })
             }
-        }
-        for act in config.actions {
-            var style = UIAlertAction.Style.default
-            if act.style == "cancel" {
-                style = .cancel
-            } else if act.style == "destructive" {
-                style = .destructive
+            alert.view.tintColor = controller.view.tintColor
+            if let popover = alert.popoverPresentationController {
+                popover.sourceView = controller.view
+                popover.sourceRect = controller.view.bounds
             }
-            alert.addAction(
-                UIAlertAction(title: act.title, style: style) { _ in
-                    struct AlertWithInputsRes: Codable {
-                        var action: String
-                        var inputs: [String: String]
-                    }
-                    var res = AlertWithInputsRes(action: act.key, inputs: [:])
-
-                    if let cfg = config.inputs, let tfs = alert.textFields {
-                        for (idx, tf) in tfs.enumerated() {
-                            res.inputs[cfg[idx].key] = tf.text
-                        }
-                    }
-
-                    replyHandler(InteropUtils.succeedWithData(data: res).toJsonString(), nil)
-                })
+            controller.present(alert, animated: true)
+            AlertDismissalObserver.attach(to: alert) { completion.finish(.success(selection)) }
         }
-        alert.view.tintColor = vc.view.tintColor
-
-        if let ppc = alert.popoverPresentationController {
-            ppc.sourceView = vc.view
-            ppc.sourceRect = vc.view.bounds
-        }
-        vc.present(alert, animated: true, completion: nil)
     }
 
-    // MARK: Picker
-
-    func showPicker(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
+    func showPicker(param: Parameter) async throws -> BridgeValue {
+        let controller = try param.requirePresentation()
+        guard let type = PickerType(rawValue: try param.string("type")) else { throw MinipError.invalidArgument("type") }
+        let data = try param.object(param.value("data"), name: "data")
+        let picker = PickerViewController()
+        picker.pickerType = type
+        do {
+            switch type {
+            case .singleColumn:
+                let value = try SingleColumnPickerView.Data(column: data.strings("column"), index: data.int("index"))
+                guard value.column.indices.contains(value.index) else { throw MinipError.invalidArgument("index") }
+                picker.singlePickerData = value
+            case .multipleColumns:
+                let columns = try data.array("columns").map { value -> [String] in
+                    guard case .array(let column) = value else { throw MinipError.invalidArgument("columns") }
+                    return try column.map { value in
+                        guard case .string(let text) = value else { throw MinipError.invalidArgument("columns") }
+                        return text
+                    }
+                }
+                let indices = try data.array("index").map { value -> Int in
+                    guard let integer = value.int64, let index = Int(exactly: integer) else { throw MinipError.invalidArgument("index") }
+                    return index
+                }
+                let value = MultiColumnsPickerView.Data(columns: columns, index: indices)
+                guard !value.columns.isEmpty, value.columns.count == value.index.count,
+                      zip(value.columns, value.index).allSatisfy({ $0.0.indices.contains($0.1) }) else { throw MinipError.invalidArgument("index") }
+                picker.multiPickerData = value
+            case .date, .time:
+                let value = try DatePickerView.Data(start: data.optionalString("start"), end: data.optionalString("end"), value: data.optionalString("value"), dateFormat: data.string("dateFormat"))
+                guard !value.dateFormat.isEmpty else { throw MinipError.invalidArgument("dateFormat") }
+                let formatter = DateFormatter()
+                formatter.dateFormat = value.dateFormat
+                for text in [value.start, value.end, value.value].compactMap({ $0 }) {
+                    guard formatter.date(from: text) != nil else { throw MinipError(.invalidArgument, "Date does not match dateFormat") }
+                }
+                if let start = value.start.flatMap(formatter.date), let end = value.end.flatMap(formatter.date), start > end {
+                    throw MinipError(.invalidArgument, "Date range starts after it ends")
+                }
+                picker.datePickerData = value
+            }
+        } catch {
+            if let error = error as? MinipError { throw error }
+            throw MinipError.invalidArgument("data")
         }
-        let data = param.data as? [String: Any]
-        guard
-            let typeStr = data?["type"] as? String,
-            let pickerType = PickerType(rawValue: typeStr),
-            let pickerData = data?["data"],
-            let jsonPickerData = try? JSONSerialization.data(withJSONObject: pickerData, options: [])
-        else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
+        return try await withCheckedThrowingContinuation { continuation in
+            let completion = BridgeContinuation(continuation)
+            picker.onConfirmed = { [weak picker] in
+                guard let picker else { completion.finish(.failure(MinipError(.invalidState, "Picker is unavailable"))); return }
+                switch type {
+                case .singleColumn:
+                    completion.finish(.success(picker.singlePickerResult.map { .signed(Int64($0)) } ?? .null))
+                case .multipleColumns:
+                    completion.finish(.success(picker.multiPickerResult.map { .array($0.map { .signed(Int64($0)) }) } ?? .null))
+                case .date, .time:
+                    completion.finish(.success(picker.datePickerResult.map(BridgeValue.string) ?? .null))
+                }
+            }
+            picker.onCanceled = { completion.finish(.success(.null)) }
+            picker.view.tintColor = controller.view.tintColor
+            controller.present(picker, animated: true)
         }
-        let decoder = JSONDecoder()
-        let pvc = PickerViewController()
-        pvc.pickerType = pickerType
-        if pickerType == .singleColumn {
-            guard let pickerData = try? decoder.decode(SingleColumnPickerView.Data.self, from: jsonPickerData) else {
-                replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-                return
-            }
-            pvc.singlePickerData = pickerData
-            pvc.onConfirmed = { [weak pvc] in
-                replyHandler(InteropUtils.succeedWithData(data: pvc?.singlePickerResult).toJsonString(), nil)
-            }
-        } else if pickerType == .multipleColumns {
-            guard let pickerData = try? decoder.decode(MultiColumnsPickerView.Data.self, from: jsonPickerData) else {
-                replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-                return
-            }
-            pvc.multiPickerData = pickerData
-            pvc.onConfirmed = { [weak pvc] in
-                replyHandler(InteropUtils.succeedWithData(data: pvc?.multiPickerResult).toJsonString(), nil)
-            }
-        } else if pickerType == .date || pickerType == .time {
-            guard let pickerData = try? decoder.decode(DatePickerView.Data.self, from: jsonPickerData) else {
-                replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-                return
-            }
-            pvc.datePickerData = pickerData
-            pvc.onConfirmed = { [weak pvc] in
-                replyHandler(InteropUtils.succeedWithData(data: pvc?.datePickerResult).toJsonString(), nil)
-            }
-        } else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
-        }
-        pvc.onCanceled = {
-            replyHandler(InteropUtils.succeed(msg: "Canceled").toJsonString(), nil)
-        }
-
-        pvc.view.tintColor = vc.view.tintColor
-        vc.present(pvc, animated: true)
     }
 }

@@ -1,6 +1,8 @@
 import {
+  MinipError,
+  MinipErrorCode,
   bridge_default
-} from "../chunk-GXHJCCLG.mjs";
+} from "../chunk-U2FR746Y.mjs";
 
 // src/fs/common.ts
 var S_IFMT = 61440;
@@ -24,37 +26,18 @@ function enrichStats(file) {
   return file;
 }
 async function access(path, mode) {
-  return bridge_default.callNative({
-    api: "fsAccess",
-    data: {
-      path,
-      mode
-    }
-  }).then((res) => {
-    const r = res;
-    if (!r.hasData() || !r.data) {
-      throw new Error(r.msg ?? "cannot access this file or directory");
-    }
-  });
+  return bridge_default.callNative({ api: "fsAccess", data: { path, mode } });
 }
 function accessSync(path, mode) {
-  const res = bridge_default.callNativeSync({
-    api: "fsAccessSync",
-    data: {
-      path,
-      mode
-    }
-  });
-  if (!res.hasData() || !res.data) {
-    throw new Error(res.msg ?? "cannot access this file or directory");
-  }
+  return bridge_default.callNativeSync({ api: "fsAccess", data: { path, mode } });
 }
 function existsSync(path) {
   try {
     accessSync(path);
     return true;
-  } catch {
-    return false;
+  } catch (error) {
+    if (error instanceof MinipError && error.code === MinipErrorCode.NOT_FOUND) return false;
+    throw error;
   }
 }
 async function unlink(path) {
@@ -67,7 +50,7 @@ async function unlink(path) {
 }
 function unlinkSync(path) {
   bridge_default.callNativeSync({
-    api: "fsUnlinkSync",
+    api: "fsUnlink",
     data: {
       path
     }
@@ -84,7 +67,7 @@ async function rename(oldPath, newPath) {
 }
 function renameSync(oldPath, newPath) {
   bridge_default.callNativeSync({
-    api: "fsRenameSync",
+    api: "fsRename",
     data: {
       oldPath,
       newPath
@@ -92,22 +75,10 @@ function renameSync(oldPath, newPath) {
   });
 }
 async function stat(path) {
-  const res = await bridge_default.callNative({
-    api: "fsStat",
-    data: {
-      path
-    }
-  });
-  return enrichStats(res.data);
+  return enrichStats(await bridge_default.callNative({ api: "fsStat", data: { path } }));
 }
 function statSync(path) {
-  const res = bridge_default.callNativeSync({
-    api: "fsStatSync",
-    data: {
-      path
-    }
-  });
-  return enrichStats(res.data);
+  return enrichStats(bridge_default.callNativeSync({ api: "fsStat", data: { path } }));
 }
 async function rm(path) {
   await bridge_default.callNative({
@@ -119,7 +90,7 @@ async function rm(path) {
 }
 function rmSync(path) {
   bridge_default.callNativeSync({
-    api: "fsRmSync",
+    api: "fsRm",
     data: {
       path
     }
@@ -137,7 +108,7 @@ async function cp(src, dest, recursive) {
 }
 function cpSync(src, dest, recursive) {
   bridge_default.callNativeSync({
-    api: "fsCpSync",
+    api: "fsCp",
     data: {
       src,
       dest,
@@ -148,186 +119,85 @@ function cpSync(src, dest, recursive) {
 
 // src/fs/dir.ts
 async function mkdir(path, recursive = false) {
-  await bridge_default.callNative({
-    api: "fsMkdir",
-    data: {
-      path,
-      recursive
-    }
-  });
+  return bridge_default.callNative({ api: "fsMkdir", data: { path, recursive } });
+}
+async function readdir(path) {
+  return bridge_default.callNative({ api: "fsReaddir", data: { path } });
+}
+async function rmdir(path, recursive = false) {
+  return bridge_default.callNative({ api: "fsRmdir", data: { path, recursive } });
 }
 function mkdirSync(path, recursive = false) {
-  bridge_default.callNativeSync({
-    api: "fsMkdirSync",
-    data: {
-      path,
-      recursive
-    }
-  });
-}
-function readdir(path) {
-  return bridge_default.callNative({
-    api: "fsReaddir",
-    data: {
-      path
-    }
-  }).then((res) => res).then((res) => res.data);
+  return bridge_default.callNativeSync({ api: "fsMkdir", data: { path, recursive } });
 }
 function readdirSync(path) {
-  const res = bridge_default.callNativeSync({
-    api: "fsReaddirSync",
-    data: {
-      path
-    }
-  });
-  return res.data;
+  return bridge_default.callNativeSync({ api: "fsReaddir", data: { path } });
 }
-async function rmdir(path, recursive) {
-  await bridge_default.callNative({
-    api: "fsRmdir",
-    data: {
-      path,
-      recursive
-    }
-  });
-}
-function rmdirSync(path, recursive) {
-  bridge_default.callNativeSync({
-    api: "fsRmdirSync",
-    data: {
-      path,
-      recursive
-    }
-  });
+function rmdirSync(path, recursive = false) {
+  return bridge_default.callNativeSync({ api: "fsRmdir", data: { path, recursive } });
 }
 
-// src/utils/utils.ts
-function uint8ArrayToBase64(data, offset = 0, length = 0) {
-  if (length === 0) {
-    length = data.byteLength;
+// src/fs/validation.ts
+function bufferRange(buffer, offset, length, api) {
+  if (!(buffer instanceof Uint8Array) || !Number.isSafeInteger(offset) || !Number.isSafeInteger(length) || offset < 0 || length < 0 || offset > buffer.byteLength || length > buffer.byteLength - offset) {
+    throw new MinipError(MinipErrorCode.INVALID_ARGUMENT, "Buffer offset and length must describe a valid byte range", { api });
   }
-  const slice = offset === 0 && length === data.byteLength ? data : data.subarray(offset, offset + length);
-  let binary = "";
-  for (let i = 0; i < slice.byteLength; i++) {
-    binary += String.fromCharCode(slice[i]);
-  }
-  return btoa(binary);
+  return buffer.subarray(offset, offset + length);
 }
-function base64ToUint8Array(base64) {
-  const binaryString = atob(base64);
-  const bytes = new Uint8Array(binaryString.length);
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
+function binaryResult(value, api) {
+  if (!(value instanceof Uint8Array)) {
+    throw new MinipError(MinipErrorCode.INVALID_RESPONSE, "Expected a binary file result", { api });
   }
-  return bytes;
+  return value;
 }
-function base64WriteToUint8Array(base64, buffer, offset) {
-  const binaryString = atob(base64);
-  for (let i = 0; i < binaryString.length; i++) {
-    buffer[offset + i] = binaryString.charCodeAt(i);
-  }
-  return binaryString.length;
+function fileBytes(value, api) {
+  if (typeof value === "string") return new TextEncoder().encode(value);
+  if (value instanceof Uint8Array) return value;
+  throw new MinipError(MinipErrorCode.INVALID_ARGUMENT, "File data must be a string or Uint8Array", { api });
 }
 
 // src/fs/file.ts
-function readFile(path, encoding) {
-  return bridge_default.callNative({
-    api: "fsReadFile",
-    data: {
-      path
-    }
-  }).then((res) => res.data).then((res) => {
-    const bytes = base64ToUint8Array(res);
-    return encoding ? new TextDecoder(encoding).decode(bytes) : bytes;
-  });
+function textDecoder(encoding, api) {
+  if (encoding === void 0) return void 0;
+  try {
+    return new TextDecoder(encoding);
+  } catch (cause) {
+    throw new MinipError(MinipErrorCode.INVALID_ARGUMENT, "Unsupported text encoding", { api, cause });
+  }
+}
+async function readFile(path, encoding) {
+  const decoder = textDecoder(encoding, "fsReadFile");
+  const bytes = binaryResult(await bridge_default.callNative({ api: "fsReadFile", data: { path } }), "fsReadFile");
+  return decoder ? decoder.decode(bytes) : bytes;
 }
 function readFileSync(path, encoding) {
-  const res = bridge_default.callNativeSync({
-    api: "fsReadFileSync",
-    data: {
-      path
-    }
-  });
-  const bytes = base64ToUint8Array(res.data);
-  return encoding ? new TextDecoder(encoding).decode(bytes) : bytes;
-}
-function toBase64(data) {
-  if (data instanceof Uint8Array) {
-    return uint8ArrayToBase64(data);
-  }
-  return uint8ArrayToBase64(new TextEncoder().encode(data));
+  const decoder = textDecoder(encoding, "fsReadFile");
+  const bytes = binaryResult(bridge_default.callNativeSync({ api: "fsReadFile", data: { path } }), "fsReadFile");
+  return decoder ? decoder.decode(bytes) : bytes;
 }
 async function writeFile(path, data) {
-  await bridge_default.callNative({
-    api: "fsWriteFile",
-    data: {
-      path,
-      data: toBase64(data)
-    }
-  });
-}
-function writeFileSync(path, data) {
-  bridge_default.callNativeSync({
-    api: "fsWriteFileSync",
-    data: {
-      path,
-      data: toBase64(data)
-    }
-  });
+  return bridge_default.callNative({ api: "fsWriteFile", data: { path, data: fileBytes(data, "fsWriteFile") } });
 }
 async function appendFile(path, data) {
-  await bridge_default.callNative({
-    api: "fsAppendFile",
-    data: {
-      path,
-      data: toBase64(data)
-    }
-  });
-}
-function appendFileSync(path, data) {
-  bridge_default.callNativeSync({
-    api: "fsAppendFileSync",
-    data: {
-      path,
-      data: toBase64(data)
-    }
-  });
+  return bridge_default.callNative({ api: "fsAppendFile", data: { path, data: fileBytes(data, "fsAppendFile") } });
 }
 async function copyFile(src, dest) {
-  await bridge_default.callNative({
-    api: "fsCopyFile",
-    data: {
-      src,
-      dest
-    }
-  });
-}
-function copyFileSync(src, dest) {
-  bridge_default.callNativeSync({
-    api: "fsCopyFileSync",
-    data: {
-      src,
-      dest
-    }
-  });
+  return bridge_default.callNative({ api: "fsCopyFile", data: { src, dest } });
 }
 async function truncate(path, length = 0) {
-  await bridge_default.callNative({
-    api: "fsTruncate",
-    data: {
-      path,
-      length
-    }
-  });
+  return bridge_default.callNative({ api: "fsTruncate", data: { path, length } });
+}
+function writeFileSync(path, data) {
+  return bridge_default.callNativeSync({ api: "fsWriteFile", data: { path, data: fileBytes(data, "fsWriteFile") } });
+}
+function appendFileSync(path, data) {
+  return bridge_default.callNativeSync({ api: "fsAppendFile", data: { path, data: fileBytes(data, "fsAppendFile") } });
+}
+function copyFileSync(src, dest) {
+  return bridge_default.callNativeSync({ api: "fsCopyFile", data: { src, dest } });
 }
 function truncateSync(path, length = 0) {
-  bridge_default.callNativeSync({
-    api: "fsTruncateSync",
-    data: {
-      path,
-      length
-    }
-  });
+  return bridge_default.callNativeSync({ api: "fsTruncate", data: { path, length } });
 }
 
 // src/fs/fd.ts
@@ -341,122 +211,51 @@ var OpenFlags = /* @__PURE__ */ ((OpenFlags2) => {
   OpenFlags2[OpenFlags2["O_APPEND"] = 1024] = "O_APPEND";
   return OpenFlags2;
 })(OpenFlags || {});
-function open(path, flags, mode) {
-  return bridge_default.callNative({
-    api: "fsOpen",
-    data: {
-      path,
-      flags,
-      mode
-    }
-  }).then((res) => res.data);
-}
-function openSync(path, flags, mode) {
-  const res = bridge_default.callNativeSync({
-    api: "fsOpenSync",
-    data: {
-      path,
-      flags,
-      mode
-    }
-  });
-  return res.data;
+async function open(path, flags, mode) {
+  return bridge_default.callNative({ api: "fsOpen", data: { path, flags, mode } });
 }
 async function close(fd) {
-  await bridge_default.callNative({
-    api: "fsClose",
-    data: {
-      fd
-    }
-  });
-}
-function closeSync(fd) {
-  bridge_default.callNativeSync({
-    api: "fsCloseSync",
-    data: {
-      fd
-    }
-  });
+  return bridge_default.callNative({ api: "fsClose", data: { fd } });
 }
 async function fstat(fd) {
-  const res = await bridge_default.callNative({
-    api: "fsFstat",
-    data: {
-      fd
-    }
-  });
-  return enrichStats(res.data);
-}
-function fstatSync(fd) {
-  const res = bridge_default.callNativeSync({
-    api: "fsFstatSync",
-    data: {
-      fd
-    }
-  });
-  return enrichStats(res.data);
+  return enrichStats(await bridge_default.callNative({ api: "fsFstat", data: { fd } }));
 }
 async function ftruncate(fd, length = 0) {
-  await bridge_default.callNative({
-    api: "fsFtruncate",
-    data: {
-      fd,
-      length
-    }
-  });
-}
-function ftruncateSync(fd, length = 0) {
-  bridge_default.callNativeSync({
-    api: "fsFtruncateSync",
-    data: {
-      fd,
-      length
-    }
-  });
+  return bridge_default.callNative({ api: "fsFtruncate", data: { fd, length } });
 }
 async function read(fd, buffer, offset, length, position) {
-  const res = await bridge_default.callNative({
-    api: "fsRead",
-    data: {
-      fd,
-      length,
-      position
-    }
-  });
-  return base64WriteToUint8Array(res.data, buffer, offset);
+  bufferRange(buffer, offset, length, "fsRead");
+  const bytes = binaryResult(await bridge_default.callNative({ api: "fsRead", data: { fd, length, position } }), "fsRead");
+  if (bytes.byteLength > length) throw new MinipError(MinipErrorCode.INVALID_RESPONSE, "Read returned more bytes than requested", { api: "fsRead" });
+  buffer.set(bytes, offset);
+  return bytes.byteLength;
+}
+async function write(fd, buffer, offset, length, position) {
+  const data = bufferRange(buffer, offset, length, "fsWrite");
+  return bridge_default.callNative({ api: "fsWrite", data: { fd, data, position } });
+}
+function openSync(path, flags, mode) {
+  return bridge_default.callNativeSync({ api: "fsOpen", data: { path, flags, mode } });
+}
+function closeSync(fd) {
+  return bridge_default.callNativeSync({ api: "fsClose", data: { fd } });
+}
+function fstatSync(fd) {
+  return enrichStats(bridge_default.callNativeSync({ api: "fsFstat", data: { fd } }));
+}
+function ftruncateSync(fd, length = 0) {
+  return bridge_default.callNativeSync({ api: "fsFtruncate", data: { fd, length } });
 }
 function readSync(fd, buffer, offset, length, position) {
-  const res = bridge_default.callNativeSync({
-    api: "fsReadSync",
-    data: {
-      fd,
-      length,
-      position
-    }
-  });
-  return base64WriteToUint8Array(res.data, buffer, offset);
-}
-function write(fd, buffer, offset, length, position) {
-  const base64 = uint8ArrayToBase64(buffer, offset, length);
-  return bridge_default.callNative({
-    api: "fsWrite",
-    data: {
-      fd,
-      data: base64,
-      position
-    }
-  }).then((res) => res.data);
+  bufferRange(buffer, offset, length, "fsRead");
+  const bytes = binaryResult(bridge_default.callNativeSync({ api: "fsRead", data: { fd, length, position } }), "fsRead");
+  if (bytes.byteLength > length) throw new MinipError(MinipErrorCode.INVALID_RESPONSE, "Read returned more bytes than requested", { api: "fsRead" });
+  buffer.set(bytes, offset);
+  return bytes.byteLength;
 }
 function writeSync(fd, buffer, offset, length, position) {
-  const base64 = uint8ArrayToBase64(buffer, offset, length);
-  return bridge_default.callNativeSync({
-    api: "fsWriteSync",
-    data: {
-      fd,
-      data: base64,
-      position
-    }
-  }).data;
+  const data = bufferRange(buffer, offset, length, "fsWrite");
+  return bridge_default.callNativeSync({ api: "fsWrite", data: { fd, data, position } });
 }
 export {
   OpenFlags,

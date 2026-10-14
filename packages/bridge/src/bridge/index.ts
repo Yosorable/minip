@@ -1,77 +1,56 @@
-import { MResponseStatusCode } from "../types";
-import { MRequest } from "../types/request";
+import { MinipError, MinipErrorCode } from "./error";
+import { BridgeRequest, decodeReply, encodeRequest } from "./protocol";
+
+export { MinipError, MinipErrorCode } from "./error";
+export type { MinipErrorOptions } from "./error";
 
 interface WebKitCallable {
-  postMessage: (data: string) => Promise<string>;
+  postMessage(data: string): Promise<string>;
 }
+
 declare global {
   interface Window {
     webkit?: {
       messageHandlers?: {
-        MinipNativeInteraction?: WebKitCallable;
+        MinipNativeInteractionV2?: WebKitCallable;
       };
     };
     __minipPreviewElement?: HTMLImageElement;
   }
 }
 
-let jsBridge: {
-  callNative: <T>(req?: MRequest<T>) => Promise<any>;
-  callNativeSync: <T>(req?: MRequest<T>) => any;
+function handler(api: string): WebKitCallable {
+  const bridge = typeof window === "undefined" ? undefined : window.webkit?.messageHandlers?.MinipNativeInteractionV2;
+  if (!bridge) throw new MinipError(MinipErrorCode.BRIDGE_UNAVAILABLE, "Minip Bridge 2 requires Minip 1.0 or later", { api });
+  return bridge;
+}
+
+function transportError(cause: unknown, api: string): MinipError {
+  if (cause instanceof MinipError) return cause;
+  return new MinipError(MinipErrorCode.BRIDGE_ERROR, cause instanceof Error ? cause.message : "The native bridge call failed", { api, cause });
+}
+
+const jsBridge = {
+  async callNative<T = void>(request: BridgeRequest): Promise<T> {
+    try {
+      const bridge = handler(request.api);
+      const reply = await bridge.postMessage(encodeRequest(request));
+      return decodeReply<T>(reply, request.api);
+    } catch (cause) {
+      throw transportError(cause, request.api);
+    }
+  },
+
+  callNativeSync<T = void>(request: BridgeRequest): T {
+    try {
+      handler(request.api);
+      const reply = window.prompt(encodeRequest(request));
+      if (reply === null) throw new MinipError(MinipErrorCode.BRIDGE_ERROR, "The synchronous bridge returned no response", { api: request.api });
+      return decodeReply<T>(reply, request.api);
+    } catch (cause) {
+      throw transportError(cause, request.api);
+    }
+  },
 };
-
-// apple webkit
-if (window.webkit?.messageHandlers?.MinipNativeInteraction) {
-  const _callNative = window.webkit.messageHandlers.MinipNativeInteraction;
-  jsBridge = {
-    callNative(req) {
-      return _callNative
-        .postMessage(JSON.stringify(req))
-        .then((res) => JSON.parse(res))
-        .then((res) => {
-          if (res.code === MResponseStatusCode.SUCCESS) {
-            res.isSuccess = () => true;
-            const hashData = res.data !== null && res.data !== undefined;
-            res.hasData = () => hashData;
-            return res;
-          } else {
-            throw new Error(res.msg ?? "Unknown error, res: ");
-          }
-        });
-    },
-    callNativeSync(req) {
-      const res = prompt(JSON.stringify(req));
-      if (res) {
-        const r = JSON.parse(res);
-
-        if (r.code === MResponseStatusCode.SUCCESS) {
-          r.isSuccess = () => true;
-          const hashData = r.data !== null && r.data !== undefined;
-          r.hasData = () => hashData;
-          return r;
-        } else {
-          throw new Error(r.msg ?? "Unknown error, res: ");
-        }
-      }
-      throw new Error("Unknown error");
-    },
-  };
-}
-// error
-else {
-  jsBridge = {
-    callNative() {
-      return new Promise((_, reject) => {
-        reject("Cannot find JavaScript Bridge!!!");
-      });
-    },
-    callNativeSync() {
-      return {
-        code: MResponseStatusCode.FAILED,
-        msg: "Cannot find JavaScript Bridge!!!",
-      };
-    },
-  };
-}
 
 export default jsBridge;

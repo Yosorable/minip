@@ -42,6 +42,6 @@ export class MinipSqliteDriver implements Driver {
   }
   async releaseConnection(connection: DatabaseConnection): Promise<void> {}
   async destroy(): Promise<void> {
-    this.#db?.close();
+    await this.#db?.close();
   }
 }

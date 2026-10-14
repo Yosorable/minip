@@ -6,8 +6,11 @@ import {
   sqliteIteratorRelease,
   sqliteOpenDB,
   sqlitePrepare
-} from "../chunk-4HUUDNXW.mjs";
-import "../chunk-GXHJCCLG.mjs";
+} from "../chunk-WKTUPFC2.mjs";
+import {
+  MinipError,
+  MinipErrorCode
+} from "../chunk-U2FR746Y.mjs";
 
 // src/kysely/index.ts
 import { Kysely as Kysely2, Migrator } from "kysely";
@@ -18,22 +21,35 @@ var MinipSQLiteQueryIterator = class {
   stmtKey;
   parameters;
   created = false;
+  done = false;
   constructor(dbKey, stmtKey, parameters) {
     this.dbKey = dbKey;
     this.stmtKey = stmtKey;
     this.parameters = parameters;
   }
   async next() {
-    if (!this.created) {
-      await sqliteCreateIterator(this.dbKey, this.stmtKey, this.parameters);
-      this.created = true;
+    if (this.done) return { value: void 0, done: true };
+    try {
+      if (!this.created) {
+        await sqliteCreateIterator(this.dbKey, this.stmtKey, this.parameters);
+        this.created = true;
+      }
+      const data = await sqliteIteratorNext(this.dbKey, this.stmtKey);
+      if (data !== null) return { value: data, done: false };
+      this.done = true;
+      return { value: void 0, done: true };
+    } catch (error) {
+      this.done = true;
+      try {
+        await sqliteIteratorRelease(this.dbKey, this.stmtKey);
+      } catch {
+      }
+      throw error;
     }
-    const data = await sqliteIteratorNext(this.dbKey, this.stmtKey);
-    if (data !== void 0 && data !== null) return { value: data, done: false };
-    return { value: void 0, done: true };
   }
   async return() {
-    if (this.created) {
+    if (!this.done) {
+      this.done = true;
       await sqliteIteratorRelease(this.dbKey, this.stmtKey);
     }
     return { value: void 0, done: true };
@@ -56,6 +72,7 @@ var MinipSqliteDatabase = class {
   async close() {
     if (this.id === -1) return;
     await sqliteCloseDB(this.id);
+    this.id = -1;
   }
   async ensureOpen() {
     if (this.id === -1) {
@@ -107,7 +124,7 @@ var MinipSqliteConnection = class {
       console.debug(sql, parameters);
     }
     const res = await this.#db.execute(sql, parameters);
-    if (res.reader) {
+    if (res.reader === true) {
       return {
         rows: res.entityData ?? []
       };
@@ -123,18 +140,15 @@ var MinipSqliteConnection = class {
   }
   async *streamQuery(compiledQuery, _chunkSize) {
     const { sql, parameters, query } = compiledQuery;
+    if (!SelectQueryNode.is(query)) {
+      throw new MinipError(MinipErrorCode.NOT_SUPPORTED, "Sqlite driver only supports streaming of select queries");
+    }
     const stmt = await this.#db.prepare(sql);
-    if (SelectQueryNode.is(query)) {
-      const iter = stmt.iterate(parameters);
-      for await (const row of iter) {
-        yield {
-          rows: [row]
-        };
-      }
-    } else {
-      throw new Error(
-        "Sqlite driver only supports streaming of select queries"
-      );
+    const iter = stmt.iterate(parameters);
+    for await (const row of iter) {
+      yield {
+        rows: [row]
+      };
     }
   }
 };
@@ -169,7 +183,7 @@ var MinipSqliteDriver = class {
   async releaseConnection(connection) {
   }
   async destroy() {
-    this.#db?.close();
+    await this.#db?.close();
   }
 };
 

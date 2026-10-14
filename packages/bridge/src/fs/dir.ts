@@ -1,62 +1,25 @@
 import jsBridge from "../bridge";
-import { MResponseWithData } from "../types";
 
-export async function mkdir(path: string, recursive: boolean = false) {
-  await jsBridge.callNative({
-    api: "fsMkdir",
-    data: {
-      path,
-      recursive
-    }
-  })
+export async function mkdir(path: string, recursive = false): Promise<void> {
+  return jsBridge.callNative<void>({ api: "fsMkdir", data: { path, recursive } });
 }
 
-export function mkdirSync(path: string, recursive: boolean = false) {
-  jsBridge.callNativeSync({
-    api: "fsMkdirSync",
-    data: {
-      path,
-      recursive
-    }
-  })
+export async function readdir(path: string): Promise<string[]> {
+  return jsBridge.callNative<string[]>({ api: "fsReaddir", data: { path } });
 }
 
-export function readdir(path: string): Promise<string[]> {
-  return jsBridge.callNative({
-    api: "fsReaddir",
-    data: {
-      path
-    }
-  }).then(res => res as MResponseWithData<string[]>)
-    .then(res => res.data)
+export async function rmdir(path: string, recursive = false): Promise<void> {
+  return jsBridge.callNative<void>({ api: "fsRmdir", data: { path, recursive } });
+}
+
+export function mkdirSync(path: string, recursive = false): void {
+  return jsBridge.callNativeSync<void>({ api: "fsMkdir", data: { path, recursive } });
 }
 
 export function readdirSync(path: string): string[] {
-  const res = jsBridge.callNativeSync({
-    api: "fsReaddirSync",
-    data: {
-      path
-    }
-  }) as MResponseWithData<string[]>
-  return res.data
+  return jsBridge.callNativeSync<string[]>({ api: "fsReaddir", data: { path } });
 }
 
-export async function rmdir(path: string, recursive?: boolean) {
-  await jsBridge.callNative({
-    api: "fsRmdir",
-    data: {
-      path,
-      recursive
-    }
-  })
-}
-
-export function rmdirSync(path: string, recursive?: boolean) {
-  jsBridge.callNativeSync({
-    api: "fsRmdirSync",
-    data: {
-      path,
-      recursive
-    }
-  })
+export function rmdirSync(path: string, recursive = false): void {
+  return jsBridge.callNativeSync<void>({ api: "fsRmdir", data: { path, recursive } });
 }

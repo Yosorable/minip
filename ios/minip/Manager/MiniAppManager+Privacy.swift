@@ -47,49 +47,34 @@ enum MiniAppPermissionTypes: String, CaseIterable {
 }
 
 extension MiniAppManager {
-    func getOrRequestPermission(permissionType: MiniAppPermissionTypes, app: AppInfo? = nil, onSuccess: (() -> Void)? = nil, onFailed: ((Error) -> Void)? = nil, parentVC: UIViewController? = nil) {
-        guard let app = app ?? openedApp else {
-            let error = ErrorMsg(errorDescription: "[MiniAPPPermision] not app permission to get")
-            logger.error("\(error.localizedDescription)")
-            onFailed?(error)
+    @MainActor
+    func requirePermission(_ permission: MiniAppPermissionTypes, app: AppInfo, parent: UIViewController) async throws {
+        let key = app.appId + "-" + permission.rawValue
+        let denied = MinipError(.permissionDenied, "Permission was not granted", details: ["permission": .string(permission.rawValue)])
+        if let allowed = try KVStorageManager.shared.bool(forKey: key, namespace: KVStorageManager.privacyNamespace) {
+            guard allowed else { throw denied }
             return
         }
-        let key = app.appId + "-" + permissionType.rawValue
-        let val: Bool?
-        do {
-            val = try KVStorageManager.shared.bool(forKey: key, namespace: KVStorageManager.privacyNamespace)
-        } catch {
-            logger.error("[MiniAppPermission] \(error.localizedDescription)")
-            onFailed?(error)
-            return
+        guard parent.viewIfLoaded?.window != nil, parent.presentedViewController == nil else {
+            throw MinipError(.invalidState, "The page cannot present a permission request right now")
         }
-        if val == true {
-            onSuccess?()
-            return
-        } else if val == false {
-            onFailed?(ErrorMsg(errorDescription: "Not allow"))
-            return
-        }
-
-        // request permission
         let projectTitle = openedProject?.appId == app.appId ? openedProject?.title : nil
-        let alert = UIAlertController(title: i18n("Permission"), message: permissionType.getDescription(app: app, projectTitle: projectTitle), preferredStyle: .alert)
-        alert.addAction(
-            UIAlertAction(
-                title: i18n("Deny"), style: .cancel,
-                handler: { _ in
-                    try? KVStorageManager.shared.set(false, forKey: key, namespace: KVStorageManager.privacyNamespace)
-                    onFailed?(ErrorMsg(errorDescription: "Not allow"))
-                }))
-        alert.addAction(
-            UIAlertAction(
-                title: i18n("Allow"), style: .default,
-                handler: { _ in
-                    try? KVStorageManager.shared.set(true, forKey: key, namespace: KVStorageManager.privacyNamespace)
-                    onSuccess?()
-                }))
-
-        (parentVC ?? getTopViewController())?.present(alert, animated: true)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            let completion = BridgeContinuation(continuation)
+            var decision: Result<Void, Error> = .failure(denied)
+            let alert = UIAlertController(title: i18n("Permission"), message: permission.getDescription(app: app, projectTitle: projectTitle), preferredStyle: .alert)
+            for allowed in [false, true] {
+                alert.addAction(UIAlertAction(title: i18n(allowed ? "Allow" : "Deny"), style: allowed ? .default : .cancel) { [weak alert] _ in
+                    do {
+                        try KVStorageManager.shared.set(allowed, forKey: key, namespace: KVStorageManager.privacyNamespace)
+                        decision = allowed ? .success(()) : .failure(denied)
+                    } catch { decision = .failure(error) }
+                    alert?.dismiss(animated: true) { completion.finish(decision) }
+                })
+            }
+            parent.present(alert, animated: true)
+            AlertDismissalObserver.attach(to: alert) { completion.finish(decision) }
+        }
     }
 
     func clearAllPermissions() {

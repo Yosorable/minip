@@ -5,6 +5,10 @@ import { createSignal, onMount } from "solid-js";
 import { Database } from "./database";
 import migrations from "./migrations";
 
+function formatResult(value: unknown) {
+  return JSON.stringify(value, (_, item) => typeof item === "bigint" ? `${item}n` : item, 2);
+}
+
 export default function SQLiteView() {
   const [msg, setMsg] = createSignal("");
   const [db, setDB] = createSignal<Kysely<Database>>();
@@ -27,7 +31,7 @@ export default function SQLiteView() {
       const res = await migrator?.migrateToLatest();
       if (res?.results) {
         console.debug(res?.results);
-        setMsg("migrate res:\n" + JSON.stringify(res?.results, null, 2));
+        setMsg("migrate res:\n" + formatResult(res?.results));
       } else if (res?.error) {
         // @ts-ignore
         const message = res?.error?.message;
@@ -68,7 +72,7 @@ export default function SQLiteView() {
       numInsertedOrUpdatedRows: res.numInsertedOrUpdatedRows?.toString(),
     };
     console.log(obj);
-    setMsg(`cost: ${elapsed} ms\n` + JSON.stringify(obj, null, 2));
+    setMsg(`cost: ${elapsed} ms\n` + formatResult(obj));
   }
 
   async function duplicateID() {
@@ -98,7 +102,7 @@ export default function SQLiteView() {
         insertId: res.insertId?.toString(),
         numInsertedOrUpdatedRows: res.numInsertedOrUpdatedRows?.toString(),
       };
-      setMsg(`cost: ${elapsed} ms\n` + JSON.stringify(obj, null, 2));
+      setMsg(`cost: ${elapsed} ms\n` + formatResult(obj));
       console.log(obj);
     } catch (err) {
       const msg = (err as Error).message;
@@ -116,7 +120,7 @@ export default function SQLiteView() {
       .then((res) => {
         const elapsed = Date.now() - start;
         console.log(res);
-        setMsg(`cost: ${elapsed} ms\n` + JSON.stringify(res, null, 2));
+        setMsg(`cost: ${elapsed} ms\n` + formatResult(res));
       });
   }
 
@@ -133,7 +137,7 @@ export default function SQLiteView() {
           numUpdatedRows: res.numUpdatedRows.toString(),
         };
         console.log(obj);
-        setMsg(`cost: ${elapsed} ms\n` + JSON.stringify(obj, null, 2));
+        setMsg(`cost: ${elapsed} ms\n` + formatResult(obj));
       });
   }
 
@@ -145,7 +149,7 @@ export default function SQLiteView() {
       numDeletedRows: result.numDeletedRows.toString(),
     };
     console.log(obj);
-    setMsg(`cost: ${elapsed} ms\n` + JSON.stringify(obj, null, 2));
+    setMsg(`cost: ${elapsed} ms\n` + formatResult(obj));
   }
 
   async function deleteAll() {
@@ -156,7 +160,7 @@ export default function SQLiteView() {
       numDeletedRows: result.numDeletedRows.toString(),
     };
     console.log(obj);
-    setMsg(`cost: ${elapsed} ms\n` + JSON.stringify(obj, null, 2));
+    setMsg(`cost: ${elapsed} ms\n` + formatResult(obj));
   }
 
   async function streamQueryAll() {
@@ -173,11 +177,7 @@ export default function SQLiteView() {
       setMsg(
         (curr) =>
           curr +
-          `step ${cnt}, cost: ${elapsedLine} ms\n${JSON.stringify(
-            person,
-            null,
-            2,
-          )}\n`,
+          `step ${cnt}, cost: ${elapsedLine} ms\n${formatResult(person)}\n`,
       );
     }
     const elapsed = Date.now() - start;
@@ -198,11 +198,7 @@ export default function SQLiteView() {
       setMsg(
         (curr) =>
           curr +
-          `step ${cnt}, cost: ${elapsedLine} ms\n${JSON.stringify(
-            person,
-            null,
-            2,
-          )}\n`,
+          `step ${cnt}, cost: ${elapsedLine} ms\n${formatResult(person)}\n`,
       );
       if (cnt === 1) break;
     }

@@ -24,6 +24,7 @@ class PickerViewController: UIViewController {
     var onCanceled: (() -> Void)?
 
     private var initialTouchPoint: CGPoint = .zero
+    private var completed = false
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -109,11 +110,28 @@ class PickerViewController: UIViewController {
     }
 
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        super.dismiss(animated: flag, completion: completion)
+        super.dismiss(animated: flag) { [weak self] in
+            self?.finish()
+            completion?()
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if presentingViewController == nil || isBeingDismissed || presentingViewController?.isBeingDismissed == true {
+            finish()
+        }
+    }
+
+    private func finish() {
+        guard !completed else { return }
+        completed = true
         if self.confirmed {
             self.onConfirmed?()
         } else {
             self.onCanceled?()
         }
+        onConfirmed = nil
+        onCanceled = nil
     }
 }

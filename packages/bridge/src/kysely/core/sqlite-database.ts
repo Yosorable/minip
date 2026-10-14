@@ -19,6 +19,7 @@ export class MinipSqliteDatabase {
   async close(): Promise<void> {
     if (this.id === -1) return;
     await sqliteCloseDB(this.id);
+    this.id = -1;
   }
   private async ensureOpen(): Promise<number> {
     if (this.id === -1) {

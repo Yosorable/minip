@@ -1,11 +1,6 @@
 {
   "minip-bridge": [
     {
-      "label": "MResponseStatusCode",
-      "kind": 13,
-      "detail": "enum"
-    },
-    {
       "label": "navigateTo",
       "kind": 3,
       "detail": "(data: {\n    page: string;\n    title?: string;\n}) => Promise<void>",
@@ -148,7 +143,7 @@
     {
       "label": "showAlert",
       "kind": 3,
-      "detail": "(config: AlertConfig) => Promise<ShowAlertData>",
+      "detail": "(config: AlertConfig) => Promise<ShowAlertData | null>",
       "insertText": "showAlert($0)",
       "insertTextFormat": 2
     },
@@ -169,14 +164,14 @@
     {
       "label": "showPicker",
       "kind": 3,
-      "detail": "(type: \"singleColumn\", data: SingleColumnPickerConfig) => Promise<number | null | undefined>",
+      "detail": "(type: \"singleColumn\", data: SingleColumnPickerConfig) => Promise<number | null>",
       "insertText": "showPicker($0)",
       "insertTextFormat": 2
     },
     {
       "label": "getKVStorage",
       "kind": 3,
-      "detail": "(key: string) => Promise<string>",
+      "detail": "(key: string) => Promise<string | null>",
       "insertText": "getKVStorage($0)",
       "insertTextFormat": 2
     },
@@ -204,7 +199,7 @@
     {
       "label": "getKVStorageSync",
       "kind": 3,
-      "detail": "(key: string) => string",
+      "detail": "(key: string) => string | null",
       "insertText": "getKVStorageSync($0)",
       "insertTextFormat": 2
     },
@@ -234,13 +229,12 @@
       "kind": 3,
       "detail": "(type?: \"light\" | \"medium\" | \"heavy\") => Promise<void>",
       "insertText": "vibrate()",
-      "insertTextFormat": 2,
-      "documentation": "@param type medium as default"
+      "insertTextFormat": 2
     },
     {
       "label": "getClipboardData",
       "kind": 3,
-      "detail": "() => Promise<string>",
+      "detail": "() => Promise<string | null>",
       "insertText": "getClipboardData()",
       "insertTextFormat": 2
     },
@@ -254,7 +248,7 @@
     {
       "label": "scanQRCode",
       "kind": 3,
-      "detail": "() => Promise<string | undefined | null>",
+      "detail": "() => Promise<string | null>",
       "insertText": "scanQRCode()",
       "insertTextFormat": 2
     },
@@ -296,21 +290,21 @@
     {
       "label": "sqliteStatementAll",
       "kind": 3,
-      "detail": "(dbKey: number, stmtKey: number, parameters: ReadonlyArray<unknown>) => Promise<unknown[]>",
+      "detail": "(dbKey: number, stmtKey: number, parameters: ReadonlyArray<unknown>) => Promise<Record<string, unknown>[]>",
       "insertText": "sqliteStatementAll($0)",
       "insertTextFormat": 2
     },
     {
       "label": "sqliteStatementRun",
       "kind": 3,
-      "detail": "(dbKey: number, stmtKey: number, parameters: ReadonlyArray<unknown>) => Promise<{\n    changes: number | bigint;\n    lastInsertRowid: number | bigint;\n}>",
+      "detail": "(dbKey: number, stmtKey: number, parameters: ReadonlyArray<unknown>) => Promise<SQLiteRunResult>",
       "insertText": "sqliteStatementRun($0)",
       "insertTextFormat": 2
     },
     {
       "label": "sqliteExecute",
       "kind": 3,
-      "detail": "(dbKey: number, sql: string, parameters: ReadonlyArray<unknown>) => Promise<{\n    reader: boolean;\n    runRes?: {\n        changes: number | bigint;\n        lastInsertRowid: number | bigint;\n    };\n    entityData?: unknown[];\n}>",
+      "detail": "(dbKey: number, sql: string, parameters: ReadonlyArray<unknown>) => Promise<SQLiteExecutionResult>",
       "insertText": "sqliteExecute($0)",
       "insertTextFormat": 2
     },
@@ -324,7 +318,7 @@
     {
       "label": "sqliteIteratorNext",
       "kind": 3,
-      "detail": "(dbKey: number, stmtKey: number) => Promise<unknown | undefined>",
+      "detail": "(dbKey: number, stmtKey: number) => Promise<Record<string, unknown> | null>",
       "insertText": "sqliteIteratorNext($0)",
       "insertTextFormat": 2
     },
@@ -338,7 +332,7 @@
     {
       "label": "getMemoryStorage",
       "kind": 3,
-      "detail": "(key: string) => Promise<string>",
+      "detail": "(key: string) => Promise<string | null>",
       "insertText": "getMemoryStorage($0)",
       "insertTextFormat": 2
     },
@@ -383,6 +377,17 @@
       "detail": "(callback: (e: AppPageHideEvent) => void) => () => void",
       "insertText": "onAppPageHide($0)",
       "insertTextFormat": 2
+    },
+    {
+      "label": "MinipErrorCode",
+      "kind": 21,
+      "detail": "{\n    readonly INVALID_ARGUMENT: \"INVALID_ARGUMENT\";\n    readonly API_NOT_FOUND: \"API_NOT_FOUND\";\n    readonly NOT_SUPPORTED: \"NOT_SUPPORTED\";\n    readonly NOT_FOUND: \"NOT_FOUND\";\n    readonly ALREADY_EXISTS: \"ALREADY_EXISTS\";\n    readonly PERMISSION_DENIED: \"PERMISSION_DENIED\";\n    readonly INVALID_STATE: \"INVALID_STATE\";\n    readonly IO_ERROR: \"IO_ERROR\";\n    readonly DATABASE_ERROR: \"DATABASE_ERROR\";\n    readonly BRIDGE_UNAVAILABLE: \"BRIDGE_UNAVAILABLE\";\n    readonly BRIDGE_ERROR: \"BRIDGE_ERROR\";\n    readonly INVALID_RESPONSE: \"INVALID_RESPONSE\";\n    readonly INTERNAL_ERROR: \"INTERNAL_ERROR\";\n}"
+    },
+    {
+      "label": "MinipError",
+      "kind": 7,
+      "detail": "class",
+      "documentation": "An API or bridge failure. Branch on code, never on the message text."
     }
   ],
   "minip-bridge/fs": [
@@ -492,13 +497,6 @@
       "insertTextFormat": 2
     },
     {
-      "label": "mkdirSync",
-      "kind": 3,
-      "detail": "(path: string, recursive?: boolean) => void",
-      "insertText": "mkdirSync($0)",
-      "insertTextFormat": 2
-    },
-    {
       "label": "readdir",
       "kind": 3,
       "detail": "(path: string) => Promise<string[]>",
@@ -506,17 +504,24 @@
       "insertTextFormat": 2
     },
     {
-      "label": "readdirSync",
-      "kind": 3,
-      "detail": "(path: string) => string[]",
-      "insertText": "readdirSync($0)",
-      "insertTextFormat": 2
-    },
-    {
       "label": "rmdir",
       "kind": 3,
       "detail": "(path: string, recursive?: boolean) => Promise<void>",
       "insertText": "rmdir($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "mkdirSync",
+      "kind": 3,
+      "detail": "(path: string, recursive?: boolean) => void",
+      "insertText": "mkdirSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "readdirSync",
+      "kind": 3,
+      "detail": "(path: string) => string[]",
+      "insertText": "readdirSync($0)",
       "insertTextFormat": 2
     },
     {
@@ -529,14 +534,14 @@
     {
       "label": "readFile",
       "kind": 3,
-      "detail": "(path: string, encoding?: string) => Promise<Uint8Array | string>",
+      "detail": "(path: string) => Promise<Uint8Array>",
       "insertText": "readFile($0)",
       "insertTextFormat": 2
     },
     {
       "label": "readFileSync",
       "kind": 3,
-      "detail": "(path: string, encoding?: string) => Uint8Array | string",
+      "detail": "(path: string) => Uint8Array",
       "insertText": "readFileSync($0)",
       "insertTextFormat": 2
     },
@@ -548,24 +553,10 @@
       "insertTextFormat": 2
     },
     {
-      "label": "writeFileSync",
-      "kind": 3,
-      "detail": "(path: string, data: Uint8Array | string) => void",
-      "insertText": "writeFileSync($0)",
-      "insertTextFormat": 2
-    },
-    {
       "label": "appendFile",
       "kind": 3,
       "detail": "(path: string, data: Uint8Array | string) => Promise<void>",
       "insertText": "appendFile($0)",
-      "insertTextFormat": 2
-    },
-    {
-      "label": "appendFileSync",
-      "kind": 3,
-      "detail": "(path: string, data: Uint8Array | string) => void",
-      "insertText": "appendFileSync($0)",
       "insertTextFormat": 2
     },
     {
@@ -576,17 +567,31 @@
       "insertTextFormat": 2
     },
     {
-      "label": "copyFileSync",
-      "kind": 3,
-      "detail": "(src: string, dest: string) => void",
-      "insertText": "copyFileSync($0)",
-      "insertTextFormat": 2
-    },
-    {
       "label": "truncate",
       "kind": 3,
       "detail": "(path: string, length?: number) => Promise<void>",
       "insertText": "truncate($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "writeFileSync",
+      "kind": 3,
+      "detail": "(path: string, data: Uint8Array | string) => void",
+      "insertText": "writeFileSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "appendFileSync",
+      "kind": 3,
+      "detail": "(path: string, data: Uint8Array | string) => void",
+      "insertText": "appendFileSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "copyFileSync",
+      "kind": 3,
+      "detail": "(src: string, dest: string) => void",
+      "insertText": "copyFileSync($0)",
       "insertTextFormat": 2
     },
     {
@@ -609,24 +614,10 @@
       "insertTextFormat": 2
     },
     {
-      "label": "openSync",
-      "kind": 3,
-      "detail": "(path: string, flags: OpenFlags | number, mode?: number) => number",
-      "insertText": "openSync($0)",
-      "insertTextFormat": 2
-    },
-    {
       "label": "close",
       "kind": 3,
       "detail": "(fd: number) => Promise<void>",
       "insertText": "close($0)",
-      "insertTextFormat": 2
-    },
-    {
-      "label": "closeSync",
-      "kind": 3,
-      "detail": "(fd: number) => void",
-      "insertText": "closeSync($0)",
       "insertTextFormat": 2
     },
     {
@@ -637,24 +628,10 @@
       "insertTextFormat": 2
     },
     {
-      "label": "fstatSync",
-      "kind": 3,
-      "detail": "(fd: number) => FileStats",
-      "insertText": "fstatSync($0)",
-      "insertTextFormat": 2
-    },
-    {
       "label": "ftruncate",
       "kind": 3,
       "detail": "(fd: number, length?: number) => Promise<void>",
       "insertText": "ftruncate($0)",
-      "insertTextFormat": 2
-    },
-    {
-      "label": "ftruncateSync",
-      "kind": 3,
-      "detail": "(fd: number, length?: number) => void",
-      "insertText": "ftruncateSync($0)",
       "insertTextFormat": 2
     },
     {
@@ -665,17 +642,45 @@
       "insertTextFormat": 2
     },
     {
-      "label": "readSync",
-      "kind": 3,
-      "detail": "(fd: number, buffer: Uint8Array, offset: number, length: number, position?: number) => number",
-      "insertText": "readSync($0)",
-      "insertTextFormat": 2
-    },
-    {
       "label": "write",
       "kind": 3,
       "detail": "(fd: number, buffer: Uint8Array, offset: number, length: number, position?: number) => Promise<number>",
       "insertText": "write($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "openSync",
+      "kind": 3,
+      "detail": "(path: string, flags: OpenFlags | number, mode?: number) => number",
+      "insertText": "openSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "closeSync",
+      "kind": 3,
+      "detail": "(fd: number) => void",
+      "insertText": "closeSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "fstatSync",
+      "kind": 3,
+      "detail": "(fd: number) => FileStats",
+      "insertText": "fstatSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "ftruncateSync",
+      "kind": 3,
+      "detail": "(fd: number, length?: number) => void",
+      "insertText": "ftruncateSync($0)",
+      "insertTextFormat": 2
+    },
+    {
+      "label": "readSync",
+      "kind": 3,
+      "detail": "(fd: number, buffer: Uint8Array, offset: number, length: number, position?: number) => number",
+      "insertText": "readSync($0)",
       "insertTextFormat": 2
     },
     {

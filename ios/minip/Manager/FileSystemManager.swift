@@ -52,36 +52,31 @@ class FileSystemManager {
     private func appPathToURL(_ path: String) throws -> URL {
         let res = dataDirURL.appending(path: path).standardizedFileURL
 
-        if !res.path.hasPrefix(dataDirURL.path) {
-            throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "no premission"])
+        if path.utf8.contains(0) {
+            throw NSError(domain: NSPOSIXErrorDomain, code: Int(EINVAL))
+        }
+        if res.path != dataDirURL.path && !res.path.hasPrefix(dataDirURL.path + "/") {
+            throw NSError(domain: "FileSystemManager", code: Int(EACCES), userInfo: [NSLocalizedDescriptionKey: "Path is outside the application directory"])
         }
 
         return res
     }
 
-    func access(path: String, mode: Int = 0) throws -> Bool {
-        let path = try appPathToURL(path).path
-        let fileManager = FileManager.default
+    func resolvedURL(for path: String) throws -> URL { try appPathToURL(path) }
 
-        switch mode {
-        case 1:
-            return fileManager.isReadableFile(atPath: path)
-        case 2:
-            return fileManager.isWritableFile(atPath: path)
-        case 3:
-            return fileManager.isReadableFile(atPath: path) && fileManager.isWritableFile(atPath: path)
-        case 4:
-            return fileManager.isExecutableFile(atPath: path)
-        default:
-            return fileManager.fileExists(atPath: path)
-        }
+    func access(path: String, mode: Int = 0) throws -> Bool {
+        let modes: [Int32] = [F_OK, R_OK, W_OK, R_OK | W_OK, X_OK]
+        guard modes.indices.contains(mode) else { throw NSError(domain: NSPOSIXErrorDomain, code: Int(EINVAL)) }
+        let path = try appPathToURL(path).path
+        guard Darwin.access(path, modes[mode]) == 0 else { throw NSError(domain: NSPOSIXErrorDomain, code: Int(errno)) }
+        return true
     }
 
     func mkdir(path: String, recursive: Bool) throws {
         let path = try appPathToURL(path).path
         let fileManager = FileManager.default
         if fileManager.fileExists(atPath: path) {
-            throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "exist"])
+            throw NSError(domain: "FileSystemManager", code: Int(EEXIST), userInfo: [NSLocalizedDescriptionKey: "File already exists"])
         }
         try fileManager.createDirectory(atPath: path, withIntermediateDirectories: recursive, attributes: nil)
     }
@@ -97,8 +92,11 @@ class FileSystemManager {
         let fileManager = FileManager.default
 
         var isDirectory: ObjCBool = false
-        guard fileManager.fileExists(atPath: path, isDirectory: &isDirectory), isDirectory.boolValue else {
-            throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "not directory"])
+        guard fileManager.fileExists(atPath: path, isDirectory: &isDirectory) else {
+            throw NSError(domain: NSPOSIXErrorDomain, code: Int(ENOENT))
+        }
+        guard isDirectory.boolValue else {
+            throw NSError(domain: "FileSystemManager", code: Int(ENOTDIR), userInfo: [NSLocalizedDescriptionKey: "Not a directory"])
         }
 
         if recursive {
@@ -106,7 +104,7 @@ class FileSystemManager {
         } else {
             let contents = try fileManager.contentsOfDirectory(atPath: path)
             if !contents.isEmpty {
-                throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "directory is not empty"])
+                throw NSError(domain: "FileSystemManager", code: Int(ENOTEMPTY), userInfo: [NSLocalizedDescriptionKey: "Directory is not empty"])
             }
             try fileManager.removeItem(atPath: path)
         }
@@ -129,8 +127,8 @@ class FileSystemManager {
         if fileManager.fileExists(atPath: path) {
             let fileHandle = try FileHandle(forWritingTo: url)
             defer { fileHandle.closeFile() }
-            fileHandle.seekToEndOfFile()
-            fileHandle.write(data)
+            try fileHandle.seekToEnd()
+            try fileHandle.write(contentsOf: data)
         } else {
             try data.write(to: url)
         }
@@ -185,7 +183,7 @@ class FileSystemManager {
         let path = try appPathToURL(path).path
         let fileManager = FileManager.default
         guard fileManager.fileExists(atPath: path) else {
-            throw NSError(domain: "FileSystemManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "file not found"])
+            throw NSError(domain: "FileSystemManager", code: Int(ENOENT), userInfo: [NSLocalizedDescriptionKey: "File not found"])
         }
 
         try fileManager.removeItem(atPath: path)
@@ -202,7 +200,7 @@ class FileSystemManager {
         if let type = attributes[.type] as? FileAttributeType {
             if type == .typeDirectory {
                 guard recursive else {
-                    throw NSError(domain: "FileSystemManager", code: -3, userInfo: [NSLocalizedDescriptionKey: "Cannot copy directory without recursive flag"])
+                    throw NSError(domain: "FileSystemManager", code: Int(EISDIR), userInfo: [NSLocalizedDescriptionKey: "Cannot copy directory without recursive flag"])
                 }
 
                 try fileManager.createDirectory(atPath: destURL.path, withIntermediateDirectories: true, attributes: nil)
@@ -230,6 +228,7 @@ class FileSystemManager {
     }
 
     func close(fd: Int32) throws {
+        guard openedFDs.contains(fd) else { throw NSError(domain: NSPOSIXErrorDomain, code: Int(EBADF)) }
         let result = Darwin.close(fd)
         if result != 0 {
             throw NSError(domain: "FileSystemManager", code: Int(errno), userInfo: [NSLocalizedDescriptionKey: String(cString: strerror(errno))])
@@ -238,6 +237,7 @@ class FileSystemManager {
     }
 
     func fstat(fd: Int32) throws -> FileStats {
+        guard openedFDs.contains(fd) else { throw NSError(domain: NSPOSIXErrorDomain, code: Int(EBADF)) }
         var statInfo = Darwin.stat()
         if Darwin.fstat(fd, &statInfo) != 0 {
             throw NSError(domain: "FileSystemManager", code: Int(errno), userInfo: [NSLocalizedDescriptionKey: String(cString: strerror(errno))])
@@ -247,13 +247,15 @@ class FileSystemManager {
     }
 
     func ftruncate(fd: Int32, length: off_t) throws {
+        guard openedFDs.contains(fd) else { throw NSError(domain: NSPOSIXErrorDomain, code: Int(EBADF)) }
         if Darwin.ftruncate(fd, length) != 0 {
             throw NSError(domain: "FileSystemManager", code: Int(errno), userInfo: [NSLocalizedDescriptionKey: String(cString: strerror(errno))])
         }
     }
 
     func read(fd: Int32, length: Int, position: Int?) throws -> Data {
-        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
+        guard openedFDs.contains(fd) else { throw NSError(domain: NSPOSIXErrorDomain, code: Int(EBADF)) }
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: max(1, length))
         defer { buffer.deallocate() }
 
         if let pos = position, lseek(fd, off_t(pos), SEEK_SET) == -1 {
@@ -269,6 +271,7 @@ class FileSystemManager {
     }
 
     func write(fd: Int32, data: Data, position: Int?) throws -> Int {
+        guard openedFDs.contains(fd) else { throw NSError(domain: NSPOSIXErrorDomain, code: Int(EBADF)) }
         if let pos = position, lseek(fd, off_t(pos), SEEK_SET) == -1 {
             throw NSError(domain: "FileSystemManager", code: Int(errno), userInfo: [NSLocalizedDescriptionKey: String(cString: strerror(errno))])
         }

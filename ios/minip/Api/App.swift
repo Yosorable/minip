@@ -1,85 +1,41 @@
-//
-//  App.swift
-//  minip
-//
-//  Created by LZY on 2025/2/9.
-//
+import Foundation
 
 extension MinipApi {
-    func getInstalledAppList(replyHandler: @escaping (Any?, String?) -> Void) {
-        Task {
-            let appInfos = MiniAppManager.shared.getAppInfos()
-            await MainActor.run {
-                replyHandler(InteropUtils.succeedWithData(data: appInfos).toJsonString(), nil)
-            }
-        }
+    func showAppDetail(param: Parameter) throws {
+        try param.viewController.showAppDetail()
     }
 
-    func getAppInfo(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        replyHandler(InteropUtils.succeedWithData(data: vc.app).toJsonString(), nil)
+    func closeApp(param: Parameter) throws {
+        try param.viewController.close()
     }
 
-    func showAppDetail(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        vc.showAppDetail()
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
+    func installApp(param: Parameter) async throws {
+        try await installPackage(from: param.string("url"), expectedAppID: nil)
     }
 
-    func closeApp(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
-        }
-        vc.close()
-        replyHandler(InteropUtils.succeed().toJsonString(), nil)
+    func updateCurrentApp(param: Parameter) async throws {
+        try await installPackage(from: param.string("url"), expectedAppID: param.appID)
     }
 
-    func installApp(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let _ = param.webView?.holderObject as? MiniPageViewController else {
-            return
+    private func installPackage(from source: String, expectedAppID: String?) async throws {
+        guard let url = URL(string: source), ["http", "https"].contains(url.scheme?.lowercased() ?? "") else {
+            throw MinipError.invalidArgument("url")
         }
-        guard let url = (param.data as? [String: String])?["url"] else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
+        let file: URL = try await withCheckedThrowingContinuation { continuation in
+            let completion = BridgeContinuation(continuation)
+            downloadFileToTmpFolder(url) { result in completion.finish(result) }
         }
-        DownloadMiniAppPackageToTmpFolder(url, onError: { err in
-            replyHandler(InteropUtils.fail(msg: err.localizedDescription).toJsonString(), nil)
-        }, onSuccess: { pkgURL in
-            Task {
-                await InstallMiniApp(pkgFile: pkgURL, onSuccess: {
-                    replyHandler(InteropUtils.succeed().toJsonString(), nil)
-                }, onFailed: { errMsg in
-                    replyHandler(InteropUtils.fail(msg: errMsg).toJsonString(), nil)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            let completion = BridgeContinuation(continuation)
+            Task { @MainActor in
+                await InstallMiniApp(pkgFile: file, onSuccess: {
+                    completion.finish(.success(()))
+                }, onFailed: { message in
+                    completion.finish(.failure(MinipError(.ioError, message)))
+                }, validateAppInfoFunc: { info in
+                    expectedAppID == nil || info.appId == expectedAppID
                 })
             }
-        })
-    }
-
-    func updateCurrentApp(param: Parameter, replyHandler: @escaping (Any?, String?) -> Void) {
-        guard let vc = param.webView?.holderObject as? MiniPageViewController else {
-            return
         }
-        guard let url = (param.data as? [String: String])?["url"] else {
-            replyHandler(InteropUtils.fail(msg: "Error parameter").toJsonString(), nil)
-            return
-        }
-        let appID = vc.app.appId
-        DownloadMiniAppPackageToTmpFolder(url, onError: { err in
-            replyHandler(InteropUtils.fail(msg: err.localizedDescription).toJsonString(), nil)
-        }, onSuccess: { pkgURL in
-            Task {
-                await InstallMiniApp(pkgFile: pkgURL, onSuccess: {
-                    replyHandler(InteropUtils.succeed().toJsonString(), nil)
-                }, onFailed: { errMsg in
-                    replyHandler(InteropUtils.fail(msg: errMsg).toJsonString(), nil)
-                }, validateAppInfoFunc: { appInfo in
-                    return appInfo.appId == appID
-                })
-            }
-        })
     }
 }

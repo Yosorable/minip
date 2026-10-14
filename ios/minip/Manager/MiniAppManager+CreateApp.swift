@@ -75,14 +75,14 @@ extension MiniAppManager {
           <button disabled id="play-audio-btn">Play Audio</button>
           <div id="msg"></div>
           <script type="module">
-            import * as minip from "https://cdn.jsdelivr.net/npm/minip-bridge/dist/index.mjs"
+            import * as minip from "https://cdn.jsdelivr.net/npm/minip-bridge@2/dist/index.mjs"
             const msgDiv = document.querySelector("#msg")
             const btn = document.querySelector("#btn")
             const stBtn = document.querySelector("#st-btn")
             const playBtn = document.querySelector("#play-btn")
             const playAudioBtn = document.querySelector("#play-audio-btn")
             function showError(err) { 
-                let message = err ? (err.message ?? err.msg ?? err.data ?? JSON.stringify(err)) : "Unknown error"
+                let message = err instanceof minip.MinipError ? `[${err.code}] ${err.message}` : String(err)
                 msgDiv.innerText = `Some error occurs, message: ${message}` 
             }
             function click() {

@@ -4,7 +4,6 @@ export default defineConfig({
   entry: ["src/index.ts", "src/kysely/index.ts", "src/fs/index.ts", "src/path/index.ts"],
 
   format: ["esm"],
-  noExternal: ["@msgpack/msgpack"],
   dts: true,
   sourcemap: true,
   clean: true,

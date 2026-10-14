@@ -1,10 +1,6 @@
 import { Decoder, Encoder } from "@msgpack/msgpack";
-import { MinipError, MinipErrorCode } from "./error";
-
-export interface BridgeRequest {
-  api: string;
-  data?: unknown;
-}
+import { MinipError, MinipErrorCode } from "../bridge/error";
+import type { BridgeRequest } from "../bridge/runtime";
 
 const encoder = new Encoder({ useBigInt64: true, ignoreUndefined: true });
 const decoder = new Decoder({ useBigInt64: true });
@@ -69,13 +65,16 @@ function normalizeIntegers(value: unknown): unknown {
 }
 
 export function encodeRequest(request: BridgeRequest): string {
+  let api: string | undefined;
   try {
-    if (!request || typeof request.api !== "string" || request.api.length === 0) throw new Error("API name is required");
+    if (!isRecord(request)) throw new Error("A bridge request must be a plain object");
+    if (typeof request.api !== "string" || request.api.length === 0) throw new Error("API name is required");
+    api = request.api;
     if (request.data !== undefined && !isRecord(request.data)) throw new Error("API parameters must be an object");
     validate(request, new Set());
     return bytesToString(encoder.encode(request));
   } catch (cause) {
-    throw new MinipError(MinipErrorCode.INVALID_ARGUMENT, cause instanceof Error ? cause.message : "Invalid API arguments", { api: request?.api, cause });
+    throw new MinipError(MinipErrorCode.INVALID_ARGUMENT, cause instanceof Error ? cause.message : "Invalid API arguments", { api, cause });
   }
 }
 

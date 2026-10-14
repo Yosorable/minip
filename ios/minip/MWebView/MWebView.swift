@@ -164,6 +164,7 @@ public class MWebView: WKWebView {
 
         let userContentController = WKUserContentController()
         userContentController.add(LoggingMessageHandler(), name: "logging")
+        userContentController.addUserScript(BridgeRuntime.userScript())
         userContentController.addUserScript(WKUserScript(source: overrideConsole, injectionTime: .atDocumentStart, forMainFrameOnly: true))
         userContentController.addUserScript(WKUserScript(source: interceptImgSrc, injectionTime: .atDocumentStart, forMainFrameOnly: false))
         config.userContentController = userContentController

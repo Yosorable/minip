@@ -11,7 +11,8 @@ migration period; it has no date-based shutdown.
 
 - `MinipNativeInteraction` accepts old asynchronous JSON requests.
 - JSON-object prompts use the old synchronous path and its original API allowlist.
-- `MinipNativeInteractionV2` and MessagePack prompts continue to serve SDK 2.
+- `MinipNativeInteractionV2` and MessagePack prompts serve both the app's built-in
+  runtime and published SDK 2 bundles with their own codec.
 - Both paths call the current `MinipApi`, including its permissions, active-app
   checks, filesystem boundaries, and database ownership checks.
 

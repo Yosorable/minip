@@ -7,7 +7,7 @@ Minip is an app that allows you to run frontend applications on your phone, givi
 ## Project Structure
 
 - `ios/` — iOS app
-- `packages/bridge/` — JavaScript bridge SDK ([npm](https://www.npmjs.com/package/minip-bridge))
+- `packages/bridge/` — JavaScript SDK and the app's injected bridge runtime ([npm](https://www.npmjs.com/package/minip-bridge))
 - `packages/demo/` — Demo mini app
 - `packages/language-service-bundler/` — Language service for code editor
 
@@ -36,8 +36,30 @@ import { navigateTo } from "minip-bridge";
 navigateTo({ page: "index.html", title: "title" });
 ```
 
-Minip Bridge 2 requires Minip 1.0 or later. It uses MessagePack for all native calls,
-returns values directly, and throws `MinipError` for failures.
+This SDK build requires the app's built-in bridge runtime (contract version 1).
+The runtime handles MessagePack encoding and native transport; the SDK provides
+the public APIs, parameter handling, and TypeScript types. APIs return values
+directly and throw `MinipError` for failures. Previously published SDKs with their
+own MessagePack codec continue to work with the updated app.
+
+Pages can also call native APIs without importing the SDK:
+
+```javascript
+window.__minipRuntime.invoke({
+  api: "setKVStorage",
+  data: { key: "theme", value: "dark" },
+}).then(() => {
+  const theme = window.__minipRuntime.invokeSync({
+    api: "getKVStorage",
+    data: { key: "theme" },
+  });
+  console.log(theme);
+}).catch(error => console.error(error.code, error.message));
+```
+
+Raw calls use native API names and parameter objects. The app encodes requests and
+decodes results, including `Uint8Array` and 64-bit integers. SDK-specific argument
+defaults and convenience wrappers do not apply to raw calls.
 
 <!-- LEGACY_BRIDGE_COMPAT: Remove this paragraph when retiring SDK 1.x. -->
 Minip 1.0 temporarily accepts the SDK 1.x JSON bridge so existing mini apps can
@@ -45,4 +67,4 @@ continue running during migration. New projects should use SDK 2. See the
 [compatibility removal guide](packages/bridge/LEGACY_COMPATIBILITY.md).
 
 See the [Bridge 2 migration guide](packages/bridge/MIGRATION.md) for error handling,
-binary data, nullable results, and validation commands.
+the runtime contract, binary data, nullable results, and validation commands.

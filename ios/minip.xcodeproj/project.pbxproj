@@ -61,7 +61,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		48BF4BB02F3F8A6600708371 /* minip */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (48BF4C132F3F8A6600708371 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (Resources/Fonts, Resources/LanguageServiceBundles, Resources/web, ); path = minip; sourceTree = "<group>"; };
+		48BF4BB02F3F8A6600708371 /* minip */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (48BF4C132F3F8A6600708371 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (Resources/BridgeRuntime, Resources/Fonts, Resources/LanguageServiceBundles, Resources/web, ); path = minip; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */

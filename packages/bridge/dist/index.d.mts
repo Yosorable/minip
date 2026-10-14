@@ -218,6 +218,24 @@ interface AppPageHideEvent extends CustomEvent {
 declare function onAppPageShow(callback: (e: AppPageShowEvent) => void): () => void;
 declare function onAppPageHide(callback: (e: AppPageHideEvent) => void): () => void;
 
+interface BridgeRequest {
+    api: string;
+    /** A plain object containing the native API's parameters, when needed. */
+    data?: unknown;
+}
+/** Provided by the Minip app before page scripts run. */
+interface MinipRuntime {
+    readonly version: number;
+    invoke<T = void>(request: BridgeRequest): Promise<T>;
+    invokeSync<T = void>(request: BridgeRequest): T;
+}
+declare global {
+    interface Window {
+        __minipRuntime?: MinipRuntime;
+        __minipPreviewElement?: HTMLImageElement;
+    }
+}
+
 declare const MinipErrorCode: {
     readonly INVALID_ARGUMENT: "INVALID_ARGUMENT";
     readonly API_NOT_FOUND: "API_NOT_FOUND";
@@ -248,18 +266,4 @@ declare class MinipError extends Error {
     constructor(code: string, message: string, options?: MinipErrorOptions);
 }
 
-interface WebKitCallable {
-    postMessage(data: string): Promise<string>;
-}
-declare global {
-    interface Window {
-        webkit?: {
-            messageHandlers?: {
-                MinipNativeInteractionV2?: WebKitCallable;
-            };
-        };
-        __minipPreviewElement?: HTMLImageElement;
-    }
-}
-
-export { type AlertAction, type AlertConfig, type AlertInput, type AppInfo, type AppPageHideEvent, type AppPageShowEvent, type DateAndTimePickerConfig, type DeviceInfo, type HUDType, MinipError, MinipErrorCode, type MinipErrorOptions, type MultipleColumnsPickerConfig, type PageHideReason, type PageShowReason, type SQLiteExecutionResult, type SQLiteRunResult, type ShowAlertData, type ShowHUDRequest, type SingleColumnPickerConfig, clearKVStorage, clearKVStorageSync, clearMemoryStorage, closeApp, deleteKVStorage, deleteKVStorageSync, disablePullDownRefresh, enablePullDownRefresh, getAppInfo, getClipboardData, getDeviceInfo, getDeviceInfoSync, getInstalledAppList, getKVStorage, getKVStorageSync, getMemoryStorage, hideHUD, installApp, navigateBack, navigateTo, onAppPageHide, onAppPageShow, onPullDownRefresh, openSettings, openWebsite, previewImage, previewVideo, redirectTo, removeMemoryStorage, scanQRCode, setClipboardData, setKVStorage, setKVStorageSync, setMemoryStorage, setMemoryStorageIfNotExist, setNavigationBarColor, setNavigationBarTitle, showAlert, showAppDetail, showHUD, showPicker, sqliteCloseDB, sqliteCreateIterator, sqliteExecute, sqliteIteratorNext, sqliteIteratorRelease, sqliteOpenDB, sqlitePrepare, sqliteStatementAll, sqliteStatementRun, startPullDownRefresh, stopPullDownRefresh, updateCurrentApp, vibrate };
+export { type AlertAction, type AlertConfig, type AlertInput, type AppInfo, type AppPageHideEvent, type AppPageShowEvent, type BridgeRequest, type DateAndTimePickerConfig, type DeviceInfo, type HUDType, MinipError, MinipErrorCode, type MinipErrorOptions, type MinipRuntime, type MultipleColumnsPickerConfig, type PageHideReason, type PageShowReason, type SQLiteExecutionResult, type SQLiteRunResult, type ShowAlertData, type ShowHUDRequest, type SingleColumnPickerConfig, clearKVStorage, clearKVStorageSync, clearMemoryStorage, closeApp, deleteKVStorage, deleteKVStorageSync, disablePullDownRefresh, enablePullDownRefresh, getAppInfo, getClipboardData, getDeviceInfo, getDeviceInfoSync, getInstalledAppList, getKVStorage, getKVStorageSync, getMemoryStorage, hideHUD, installApp, navigateBack, navigateTo, onAppPageHide, onAppPageShow, onPullDownRefresh, openSettings, openWebsite, previewImage, previewVideo, redirectTo, removeMemoryStorage, scanQRCode, setClipboardData, setKVStorage, setKVStorageSync, setMemoryStorage, setMemoryStorageIfNotExist, setNavigationBarColor, setNavigationBarTitle, showAlert, showAppDetail, showHUD, showPicker, sqliteCloseDB, sqliteCreateIterator, sqliteExecute, sqliteIteratorNext, sqliteIteratorRelease, sqliteOpenDB, sqlitePrepare, sqliteStatementAll, sqliteStatementRun, startPullDownRefresh, stopPullDownRefresh, updateCurrentApp, vibrate };

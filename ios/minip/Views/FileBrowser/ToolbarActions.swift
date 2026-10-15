@@ -42,12 +42,12 @@ extension FileBrowserViewController {
             moreBtn.isEnabled = enableBtn
             let itemCount = dataSource.snapshot().numberOfItems
             if itemCount == 0 {
-                selectAllBtn.title = i18n("Select All")
+                selectAllBtn.title = String(localized: "Select All")
                 selectAllBtn.isEnabled = false
             } else if (tableView.indexPathsForSelectedRows?.count ?? 0) == itemCount {
-                selectAllBtn.title = i18n("Deselect All")
+                selectAllBtn.title = String(localized: "Deselect All")
             } else {
-                selectAllBtn.title = i18n("Select All")
+                selectAllBtn.title = String(localized: "Select All")
             }
             selectAllBtn.isEnabled = itemCount != 0
             navigationItem.leftBarButtonItem = selectAllBtn
@@ -82,15 +82,15 @@ extension FileBrowserViewController {
         logger.debug("[FileBrowser] to delete file: \(toDeleteURLs.map { $0.lastPathComponent })")
 
         if containsCannotDeleteItems {
-            showSimpleError(err: ErrorMsg(errorDescription: "Some files or folders cannot delete"))
+            showSimpleError(err: ErrorMsg(errorDescription: String(localized: "Some files or folders cannot be deleted")))
             return
         }
 
         let isInTrashRoot = folderURL == Global.shared.documentsTrashURL
         if toDeleteURLs.count != 0 {
-            let alertController = UIAlertController(title: i18n("Confirm"), message: i18nF("f.delete_selected_confirm_message", "\(toDeleteURLs.count)"), preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
-            alertController.addAction(UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { [weak self] _ in
+            let alertController = UIAlertController(title: String(localized: "Confirm"), message: String(localized: "Delete \(toDeleteURLs.count) selected items?"), preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel, handler: nil))
+            alertController.addAction(UIAlertAction(title: String(localized: "Delete"), style: .destructive, handler: { [weak self] _ in
                 var successCount = 0
                 do {
                     for url in toDeleteURLs {
@@ -101,7 +101,7 @@ extension FileBrowserViewController {
                         }
                         successCount += 1
                     }
-                    showSimpleSuccess(msg: i18n(isInTrashRoot ? "f.deleted_success" : "f.moved_to_trash"))
+                    showSimpleSuccess(msg: isInTrashRoot ? String(localized: "Deleted successfully") : String(localized: "Moved to trash"))
                 } catch {
                     showSimpleError(err: error)
                 }

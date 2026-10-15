@@ -27,7 +27,7 @@ class FileBrowserViewController: UITableViewController {
     }()
 
     lazy var selectAllBtn = {
-        let btn = UIBarButtonItem(title: i18n("Select All"), style: .plain, target: self, action: #selector(selectOrDeselectAll))
+        let btn = UIBarButtonItem(title: String(localized: "Select All"), style: .plain, target: self, action: #selector(selectOrDeselectAll))
         return btn
     }()
 
@@ -60,12 +60,12 @@ class FileBrowserViewController: UITableViewController {
                let utType = try? selectedFiles[0].url.resourceValues(forKeys: [.contentTypeKey]).contentType,
                utType.conforms(to: .zip)
             {
-                completion([UIAction(title: i18n("Decompress"), image: UIImage(systemName: "archivebox")) { _ in
+                completion([UIAction(title: String(localized: "Decompress"), image: UIImage(systemName: "archivebox")) { _ in
                     self.decompress(selectedFiles[0])
                     if self.tableView.isEditing { self.toggleSelectMode() }
                 }])
             } else {
-                completion([UIAction(title: i18n("Compress"), image: UIImage(systemName: "doc.zipper")) { _ in
+                completion([UIAction(title: String(localized: "Compress"), image: UIImage(systemName: "doc.zipper")) { _ in
                     self.compressSelected()
                 }])
             }
@@ -75,7 +75,7 @@ class FileBrowserViewController: UITableViewController {
     }()
 
     lazy var selectButton = {
-        let btn = UIBarButtonItem(title: i18n("Select"), style: .plain, target: self, action: #selector(toggleSelectMode))
+        let btn = UIBarButtonItem(title: String(localized: "Select"), style: .plain, target: self, action: #selector(toggleSelectMode))
         return btn
     }()
 
@@ -92,7 +92,7 @@ class FileBrowserViewController: UITableViewController {
         if isInRoot, isModal {
             title = "/"
         } else {
-            title = isInRoot ? i18n("Files") : folderURL.lastPathComponent
+            title = isInRoot ? String(localized: "Files") : folderURL.lastPathComponent
         }
     }
 
@@ -105,24 +105,24 @@ class FileBrowserViewController: UITableViewController {
         var actions = [UIMenuElement]()
         if !isModal {
             actions.append(
-                UIAction(title: i18n("f.create_file"), image: UIImage(systemName: "doc")) { [weak self] _ in
+                UIAction(title: String(localized: "Create file"), image: UIImage(systemName: "doc")) { [weak self] _ in
                     self?.createFileOrFolder(isFolder: false)
                 }
             )
         }
         actions.append(
-            UIAction(title: i18n("f.create_folder"), image: UIImage(systemName: "folder")) { [weak self] _ in
+            UIAction(title: String(localized: "Create folder"), image: UIImage(systemName: "folder")) { [weak self] _ in
                 self?.createFileOrFolder(isFolder: true)
             }
         )
         if !isModal {
-            let importFromFiles = UIAction(title: i18n("From Files"), image: UIImage(systemName: "folder")) { [weak self] _ in
+            let importFromFiles = UIAction(title: String(localized: "From Files"), image: UIImage(systemName: "folder")) { [weak self] _ in
                 self?.importFile()
             }
-            let importFromPhotos = UIAction(title: i18n("From Photos"), image: UIImage(systemName: "photo.on.rectangle")) { [weak self] _ in
+            let importFromPhotos = UIAction(title: String(localized: "From Photos"), image: UIImage(systemName: "photo.on.rectangle")) { [weak self] _ in
                 self?.importFromPhotos()
             }
-            let importMenu = UIMenu(title: i18n("f.import_file"), image: UIImage(systemName: "square.and.arrow.down"), children: [importFromFiles, importFromPhotos])
+            let importMenu = UIMenu(title: String(localized: "Import file"), image: UIImage(systemName: "square.and.arrow.down"), children: [importFromFiles, importFromPhotos])
             actions.append(importMenu)
         }
         let menu = UIMenu(children: actions)
@@ -146,7 +146,7 @@ class FileBrowserViewController: UITableViewController {
             navigationItem.leftItemsSupplementBackButton = true
 
             let modalCancelBtn = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(dismissModal))
-            let modalConfirmBtn = UIBarButtonItem(title: confirmText ?? i18n("Confirm"), style: .done, target: self, action: #selector(confirmModal))
+            let modalConfirmBtn = UIBarButtonItem(title: confirmText ?? String(localized: "Confirm"), style: .done, target: self, action: #selector(confirmModal))
             navigationItem.rightBarButtonItems = [modalConfirmBtn, createFileBtn]
             navigationItem.leftBarButtonItem = modalCancelBtn
 
@@ -233,7 +233,7 @@ class FileBrowserViewController: UITableViewController {
         let editing = tableView.isEditing
 
         tableView.setEditing(!editing, animated: true)
-        selectButton.title = i18n(editing ? "Select" : "Cancel")
+        selectButton.title = editing ? String(localized: "Select") : String(localized: "Cancel")
         updateToobarButtonStatus()
         navigationController?.setToolbarHidden(!tableView.isEditing, animated: true)
         navigationItem.hidesBackButton = !editing
@@ -301,11 +301,11 @@ extension FileBrowserViewController {
             deleteSelected()
             return
         }
-        let alertController = UIAlertController(title: i18n("Confirm"), message: i18n("f.clean_trash_confirm"), preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
+        let alertController = UIAlertController(title: String(localized: "Confirm"), message: String(localized: "Empty the trash?"), preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel, handler: nil))
         alertController.addAction(
             UIAlertAction(
-                title: i18n("f.clean_trash"), style: .destructive,
+                title: String(localized: "Empty Trash"), style: .destructive,
                 handler: { [weak self] _ in
                     cleanTrashAsync {
                         showSimpleSuccess()
@@ -320,22 +320,22 @@ extension FileBrowserViewController {
 
     func createFileOrFolder(isFolder: Bool) {
         let alertController = UIAlertController(
-            title: i18n(isFolder ? "f.create_folder" : "f.create_file"), message: i18n(isFolder ? "f.create_folder_tip" : "f.create_file_tip"), preferredStyle: .alert)
+            title: isFolder ? String(localized: "Create folder") : String(localized: "Create file"), message: isFolder ? String(localized: "Enter a folder name") : String(localized: "Enter a file name"), preferredStyle: .alert)
         var textField: UITextField?
         alertController.addTextField { tf in
-            tf.placeholder = i18n(isFolder ? "f.folder_name" : "f.file_name")
+            tf.placeholder = isFolder ? String(localized: "Folder name") : String(localized: "File name")
             textField = tf
         }
-        alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel, handler: nil))
         alertController.addAction(
             UIAlertAction(
-                title: i18n("Create"), style: .default,
+                title: String(localized: "Create"), style: .default,
                 handler: { [weak self] _ in
                     guard let fileName = textField?.text, let strongSelf = self else {
                         return
                     }
                     if fileName == "" {
-                        showSimpleError(err: ErrorMsg(errorDescription: isFolder ? "Invalid folder name" : "Invalid file name"))
+                    showSimpleError(err: ErrorMsg(errorDescription: isFolder ? String(localized: "Invalid folder name") : String(localized: "Invalid file name")))
                         return
                     }
 
@@ -349,14 +349,14 @@ extension FileBrowserViewController {
                             } else {
                                 try Data().write(to: newFileURL)
                             }
-                            showSimpleSuccess(msg: i18n("created_successfully"))
+                            showSimpleSuccess(msg: String(localized: "Created successfully."))
                             strongSelf.fetchFilesAndUpdateDataSource()
                         } catch {
                             showSimpleError(err: error)
                         }
 
                     } else {
-                        showSimpleError(err: ErrorMsg(errorDescription: isFolder ? "Folder exists" : "File exists"))
+                            showSimpleError(err: ErrorMsg(errorDescription: isFolder ? String(localized: "Folder already exists") : String(localized: "File already exists")))
                     }
                 }))
         present(alertController, animated: true)
@@ -367,12 +367,15 @@ extension FileBrowserViewController {
             return
         }
         let isInTrashRoot = folderURL == Global.shared.documentsTrashURL
+        let message = isFolder
+            ? String(localized: "Delete folder \"\(url.lastPathComponent)\"?")
+            : String(localized: "Delete file \"\(url.lastPathComponent)\"?")
         let alertController = UIAlertController(
-            title: i18n("Confirm"), message: i18nF(isFolder ? "f.delete_folder_confirm_message" : "f.delete_file_confirm_message", url.lastPathComponent), preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: { _ in onCanceled() }))
+            title: String(localized: "Confirm"), message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel, handler: { _ in onCanceled() }))
         alertController.addAction(
             UIAlertAction(
-                title: i18n("Delete"), style: .destructive,
+                title: String(localized: "Delete"), style: .destructive,
                 handler: { _ in
                     do {
                         if isInTrashRoot {
@@ -441,7 +444,7 @@ extension FileBrowserViewController: UIDocumentPickerDelegate {
         if failCount == 0 {
             showSimpleSuccess()
         } else {
-            showSimpleError(err: ErrorMsg(errorDescription: "\(successCount) succeeded, \(failCount) failed"))
+            showSimpleError(err: ErrorMsg(errorDescription: String(localized: "\(successCount) succeeded, \(failCount) failed")))
         }
     }
 }
@@ -490,7 +493,7 @@ extension FileBrowserViewController: PHPickerViewControllerDelegate {
             if failCount == 0 {
                 showSimpleSuccess()
             } else {
-                showSimpleError(err: ErrorMsg(errorDescription: "\(successCount) succeeded, \(failCount) failed"))
+                showSimpleError(err: ErrorMsg(errorDescription: String(localized: "\(successCount) succeeded, \(failCount) failed")))
             }
         }
     }

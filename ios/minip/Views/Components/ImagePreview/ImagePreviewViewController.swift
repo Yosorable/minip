@@ -67,7 +67,7 @@ class ImagePreviewViewController: UIViewController {
                     zoomableImageView.imageView.image = img
                     zoomableImageView.onSuccessLoadImage()
                 } else {
-                    zoomableImageView.showErrorMsg(err: ErrorMsg(errorDescription: "Cannot read this file."))
+                    zoomableImageView.showErrorMsg(err: ErrorMsg(errorDescription: String(localized: "Cannot read this file.")))
                 }
             } else {
                 zoomableImageView.imageView.kf.setImage(with: imageURL, completionHandler: { [weak self] result in
@@ -75,7 +75,7 @@ class ImagePreviewViewController: UIViewController {
                     case .success:
                         self?.zoomableImageView.onSuccessLoadImage()
                     case .failure:
-                        self?.zoomableImageView.showErrorMsg(err: ErrorMsg(errorDescription: "Cannot load remote resource.\nTap to dismiss."))
+                        self?.zoomableImageView.showErrorMsg(err: ErrorMsg(errorDescription: String(localized: "Cannot load remote resource.\nTap to dismiss.")))
                     }
                 })
             }
@@ -108,17 +108,17 @@ class ImagePreviewViewController: UIViewController {
         if sender.state == .began {
             shortShake()
 
-            let alertController = UIAlertController(title: "Actions", message: "Select an action", preferredStyle: .actionSheet)
-            alertController.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel, handler: nil))
-            alertController.addAction(UIAlertAction(title: "Save to album", style: .default, handler: { [weak self] _ in
+            let alertController = UIAlertController(title: String(localized: "Actions"), message: String(localized: "Select an action"), preferredStyle: .actionSheet)
+            alertController.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel, handler: nil))
+            alertController.addAction(UIAlertAction(title: String(localized: "Save to album"), style: .default, handler: { [weak self] _ in
                 guard let img = self?.zoomableImageView.imageView.image, let pngData = img.pngData() else {
-                    showSimpleError(err: ErrorMsg(errorDescription: "Error image"))
+                    showSimpleError(err: ErrorMsg(errorDescription: String(localized: "Invalid image")))
                     return
                 }
                 PHPhotoLibrary.requestAuthorization(for: .addOnly) { status in
                     guard status == .authorized || status == .limited else {
                         DispatchQueue.main.async {
-                            showSimpleError(err: ErrorMsg(errorDescription: "Cannot save to album, no permission or limitted"))
+                            showSimpleError(err: ErrorMsg(errorDescription: String(localized: "Allow photo library access in Settings to save images.")))
                         }
                         return
                     }
@@ -130,7 +130,7 @@ class ImagePreviewViewController: UIViewController {
                             if success {
                                 showSimpleSuccess()
                             } else {
-                                showSimpleError(err: ErrorMsg(errorDescription: error?.localizedDescription ?? "Cannot save to album, unknown error"))
+                                showSimpleError(err: ErrorMsg(errorDescription: error?.localizedDescription ?? String(localized: "Could not save the image")))
                             }
                         }
                     }

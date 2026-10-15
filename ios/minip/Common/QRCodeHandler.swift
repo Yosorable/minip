@@ -34,7 +34,7 @@ class QRCodeHandler {
                 actData.append((host, path.deletingPrefixSuffix("/"), trimed))
             }
             if valid {
-                let alert = UIAlertController(title: "Actions", message: "select one action to execute", preferredStyle: .alert)
+                let alert = UIAlertController(title: String(localized: "Actions"), message: String(localized: "Select an action"), preferredStyle: .alert)
                 for item in actData {
                     let action = UIAlertAction(title: "[\(item.0)] \(item.1)", style: .default) { _ in
                         do {
@@ -46,7 +46,7 @@ class QRCodeHandler {
                     alert.addAction(action)
                 }
 
-                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+                let cancelAction = UIAlertAction(title: String(localized: "Cancel"), style: .cancel, handler: nil)
                 alert.addAction(cancelAction)
                 vc.present(alert, animated: true)
                 succeed = true
@@ -55,7 +55,7 @@ class QRCodeHandler {
 
         if !succeed {
             if let vc = viewController ?? getTopViewController() {
-                let navVC = UINavigationController(rootViewController: TextDisplayViewController(text: code, title: "QRCode Result"))
+                let navVC = UINavigationController(rootViewController: TextDisplayViewController(text: code, title: String(localized: "QR Code Result")))
                 vc.present(navVC, animated: true)
             }
         }

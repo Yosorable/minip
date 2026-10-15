@@ -23,7 +23,7 @@ func InstallMiniApp(pkgFile: URL, onSuccess: (() -> Void)? = nil, onFailed: ((St
         try await archive.extract(to: unzipDirURL)
 
         guard let appJSONURL = try findAppJSON(in: unzipDirURL) else {
-            throw ErrorMsg(errorDescription: "cannot find app.json")
+            throw ErrorMsg(errorDescription: String(localized: "Could not find app.json"))
         }
         try installByAppJSON(in: appJSONURL, validateAppInfoFunc: validateAppInfoFunc)
         onSuccess?()
@@ -54,7 +54,7 @@ func downloadFileToTmpFolder(
         }
 
         guard let downloadedFileURL else {
-            completeOnMain(.failure(ErrorMsg(errorDescription: "Unknown download error")))
+            completeOnMain(.failure(ErrorMsg(errorDescription: String(localized: "Unknown download error"))))
             return
         }
 
@@ -91,7 +91,7 @@ private func safeDownloadFilename(_ proposedFilename: String) -> String {
 // download miniapp package and save to tmp folder
 func DownloadMiniAppPackageToTmpFolder(_ downURL: String, onError: @escaping (ErrorMsg) -> Void, onSuccess: @escaping (URL) -> Void) {
     guard let downurl = URL(string: downURL) else {
-        onError(ErrorMsg(errorDescription: "Error URL"))
+        onError(ErrorMsg(errorDescription: String(localized: "Invalid URL")))
         return
     }
 
@@ -123,7 +123,7 @@ private func findAppJSON(in directory: URL) throws->URL? {
         }
     } catch {
         logger.error("[findAppJSON] \(error)")
-        throw ErrorMsg(errorDescription: "[findAppJSON] \(error)")
+        throw error
     }
 
     return nil
@@ -135,12 +135,12 @@ private func installByAppJSON(in appJSONURL: URL, validateAppInfoFunc: ((AppInfo
         let data = try Data(contentsOf: appJSONURL)
         guard let newAppInfo = try? decoder.decode(AppInfo.self, from: data) else {
             logger.error("[installByAppJSON] invalid app.json")
-            throw ErrorMsg(errorDescription: "invalid app.json")
+            throw ErrorMsg(errorDescription: String(localized: "Invalid app.json"))
         }
 
         if let validateAppInfoFunc = validateAppInfoFunc {
             if !validateAppInfoFunc(newAppInfo) {
-                throw ErrorMsg(errorDescription: "invalid app, validate failed")
+                throw ErrorMsg(errorDescription: String(localized: "Project validation failed"))
             }
         }
 
@@ -152,10 +152,10 @@ private func installByAppJSON(in appJSONURL: URL, validateAppInfoFunc: ((AppInfo
         if installedMatches.count == 1 {
             targetFolderURL = installedMatches[0].rootURL
         } else if installedMatches.count > 1 {
-            throw ErrorMsg(errorDescription: "multiple installed projects share the same appId")
+            throw ErrorMsg(errorDescription: String(localized: "Multiple installed projects have the same app ID"))
         } else {
             guard !newAppInfo.name.isEmpty, !newAppInfo.name.contains("/") else {
-                throw ErrorMsg(errorDescription: "invalid app name")
+                throw ErrorMsg(errorDescription: String(localized: "Invalid project name"))
             }
             targetFolderURL = uniqueInstallDirectory(named: newAppInfo.name, in: rootDirectory)
         }
@@ -192,7 +192,7 @@ private func installByAppJSON(in appJSONURL: URL, validateAppInfoFunc: ((AppInfo
 
     } catch {
         logger.error("[installByAppJSON] \(error)")
-        throw ErrorMsg(errorDescription: "\(error)")
+        throw error
     }
 }
 

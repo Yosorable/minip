@@ -11,7 +11,7 @@ import WebKit
 extension MiniPageViewController: WKUIDelegate {
     func webView(_ webView: WKWebView, runJavaScriptAlertPanelWithMessage message: String, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping () -> Void) {
         let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+        alertController.addAction(UIAlertAction(title: String(localized: "OK"), style: .default, handler: { _ in
             completionHandler()
         }))
         alertController.view.tintColor = webView.tintColor
@@ -45,16 +45,16 @@ extension MiniPageViewController: WKNavigationDelegate {
         background.backgroundColor = .systemBackground
         background.translatesAutoresizingMaskIntoConstraints = false
         let message = UILabel()
-        message.text = i18n("dev.connection_failed") + "\n\n" + i18n("dev.connection_help") + "\n\n" + error.localizedDescription
+        message.text = String(localized: "Could not connect to the development server") + "\n\n" + String(localized: "Keep the server running, connect your phone and computer to the same network, and allow Minip to access the local network in Settings.") + "\n\n" + error.localizedDescription
         message.font = .systemFont(ofSize: 15)
         message.textColor = .secondaryLabel
         message.textAlignment = .center
         message.numberOfLines = 0
         let retry = UIButton(type: .system)
-        retry.setTitle(i18n("dev.retry"), for: .normal)
+        retry.setTitle(String(localized: "Retry"), for: .normal)
         retry.addAction(UIAction { [weak self] _ in self?.loadPage() }, for: .touchUpInside)
         let close = UIButton(type: .system)
-        close.setTitle(i18n("Close"), for: .normal)
+        close.setTitle(String(localized: "Close"), for: .normal)
         close.addAction(UIAction { [weak self] _ in self?.close() }, for: .touchUpInside)
         let stack = UIStackView(arrangedSubviews: [message, retry, close])
         stack.axis = .vertical

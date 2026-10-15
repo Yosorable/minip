@@ -40,14 +40,14 @@ struct FileImporterView: UIViewControllerRepresentable {
 
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             guard let path = urls.first?.path else {
-                ProgressHUD.failed("Path error")
+                ProgressHUD.failed(String(localized: "Invalid file path"))
                 return
             }
 
-            ProgressHUD.animate("Loading", interaction: false)
+            ProgressHUD.animate(String(localized: "Loading"), interaction: false)
             Task {
                 await InstallMiniApp(pkgFile: urls.first!, onSuccess: {
-                    ProgressHUD.succeed(i18n("project_created_successfully"))
+                    ProgressHUD.succeed(String(localized: "Project created successfully."))
                     self.parent.onSuccess?()
                 }, onFailed: { err in
                     ProgressHUD.failed(err)

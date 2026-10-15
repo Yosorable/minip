@@ -12,11 +12,11 @@ import UIKit
 import os.log
 
 func showSimpleSuccess(msg: String? = nil) {
-    ProgressHUD.succeed(msg ?? i18n("Success"))
+    ProgressHUD.succeed(msg ?? String(localized: "Success"))
 }
 
 func showSimpleError(err: Error? = nil) {
-    ProgressHUD.failed(err?.localizedDescription ?? "Error")
+    ProgressHUD.failed(err?.localizedDescription ?? String(localized: "Error"))
 }
 
 

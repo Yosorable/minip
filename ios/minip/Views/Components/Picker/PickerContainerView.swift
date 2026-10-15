@@ -54,11 +54,11 @@ class PickerContainerView: UIView {
         addSubview(toolbar)
 
         let cancelButton = UIButton(type: .system)
-        cancelButton.setTitle(i18n("Cancel"), for: .normal)
+        cancelButton.setTitle(String(localized: "Cancel"), for: .normal)
         cancelButton.addTarget(self, action: #selector(dismiss), for: .touchUpInside)
 
         let confirmButton = UIButton(type: .system)
-        confirmButton.setTitle(i18n("Confirm"), for: .normal)
+        confirmButton.setTitle(String(localized: "Confirm"), for: .normal)
         confirmButton.addTarget(self, action: #selector(confirm), for: .touchUpInside)
 
         let title = UILabel()

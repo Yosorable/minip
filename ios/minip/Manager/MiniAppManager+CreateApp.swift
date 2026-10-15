@@ -22,20 +22,20 @@ extension MiniAppManager {
             return nameRange.randomElement() ?? ""
         }()
         if name == "" || name.contains("/") {
-            throw ErrorMsg(errorDescription: "Invalid name")
+            throw ErrorMsg(errorDescription: String(localized: "Invalid project name"))
         }
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let appFolder = documentsURL.appending(path: name)
         let (exist, _) = fileOrFolderExists(path: appFolder.path)
         if exist {
-            throw ErrorMsg(errorDescription: "Invalid name")
+            throw ErrorMsg(errorDescription: String(localized: "Invalid project name"))
         }
 
         do {
             try fileManager.createDirectory(at: appFolder, withIntermediateDirectories: true, attributes: nil)
         } catch {
-            throw ErrorMsg(errorDescription: "Cannot create folder, error: \(error.localizedDescription)")
+            throw ErrorMsg(errorDescription: String(localized: "Cannot create folder, error: \(error.localizedDescription)"))
         }
 
         let htmlContent = """
@@ -128,7 +128,7 @@ extension MiniAppManager {
         do {
             try htmlContent.write(to: htmlFileURL, atomically: true, encoding: .utf8)
         } catch {
-            throw ErrorMsg(errorDescription: "Cannot create file, error: \(error.localizedDescription)")
+            throw ErrorMsg(errorDescription: String(localized: "Cannot create file, error: \(error.localizedDescription)"))
         }
 
         let appConfig = AppInfo(
@@ -148,7 +148,7 @@ extension MiniAppManager {
             appSortList.insert(appConfig.appId, at: 0)
             Preferences.appSortList = appSortList
         } catch {
-            throw ErrorMsg(errorDescription: "Cannot create file, error: \(error.localizedDescription)")
+            throw ErrorMsg(errorDescription: String(localized: "Cannot create file, error: \(error.localizedDescription)"))
         }
         return InstalledProject(appInfo: appConfig, rootURL: appFolder)
     }

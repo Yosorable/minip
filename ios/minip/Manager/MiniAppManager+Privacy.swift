@@ -18,30 +18,30 @@ enum MiniAppPermissionTypes: String, CaseIterable {
         let name = projectTitle ?? app.displayName ?? app.name
         switch self {
         case .camera:
-            return i18nF("mp.request_camera_permission", name)
+            return String(localized: "\(name) requests camera permission")
         case .clipboard:
-            return i18nF("mp.request_clipboard_permission", name)
+            return String(localized: "\(name) requests clipboard permission")
         case .installProject:
-            return i18nF("mp.request_install_project_permission", name)
+            return String(localized: "\(name) requests permission to install project")
         case .getInstalledProjectsList:
-            return i18nF("mp.request_read_projects_list_permission", name)
+            return String(localized: "\(name) requests permission to read the project list")
         case .openProject:
-            return i18nF("mp.request_open_project_permission", name)
+            return String(localized: "\(name) requests permission to open another project")
         }
     }
 
     func getTitle() -> String {
         switch self {
         case .camera:
-            i18n("mp.camera")
+            String(localized: "Camera")
         case .clipboard:
-            i18n("mp.clipboard")
+            String(localized: "Clipboard")
         case .installProject:
-            i18n("mp.install_project")
+            String(localized: "Install Project")
         case .getInstalledProjectsList:
-            i18n("mp.get_projects_list")
+            String(localized: "Get Projects List")
         case .openProject:
-            i18n("mp.open_project")
+            String(localized: "Open Project")
         }
     }
 }
@@ -62,9 +62,9 @@ extension MiniAppManager {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             let completion = BridgeContinuation(continuation)
             var decision: Result<Void, Error> = .failure(denied)
-            let alert = UIAlertController(title: i18n("Permission"), message: permission.getDescription(app: app, projectTitle: projectTitle), preferredStyle: .alert)
+            let alert = UIAlertController(title: String(localized: "Permission"), message: permission.getDescription(app: app, projectTitle: projectTitle), preferredStyle: .alert)
             for allowed in [false, true] {
-                alert.addAction(UIAlertAction(title: i18n(allowed ? "Allow" : "Deny"), style: allowed ? .default : .cancel) { [weak alert] _ in
+                alert.addAction(UIAlertAction(title: allowed ? String(localized: "Allow") : String(localized: "Deny"), style: allowed ? .default : .cancel) { [weak alert] _ in
                     do {
                         try KVStorageManager.shared.set(allowed, forKey: key, namespace: KVStorageManager.privacyNamespace)
                         decision = allowed ? .success(()) : .failure(denied)

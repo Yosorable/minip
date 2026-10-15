@@ -13,7 +13,7 @@ extension QRScannerViewController: UIImagePickerControllerDelegate, UINavigation
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         picker.dismiss(animated: true, completion: { [weak self] in
             guard let image = info[.originalImage] as? UIImage else {
-                self?.showError(message: "Cannot get image")
+                self?.showError(message: String(localized: "Cannot load image"))
                 return
             }
 
@@ -22,7 +22,7 @@ extension QRScannerViewController: UIImagePickerControllerDelegate, UINavigation
                     self?.finish(.success(qrCodeContent))
                 }
             } else {
-                self?.showError(message: "No QRCode in this image")
+                self?.showError(message: String(localized: "No QR code found in this image"))
             }
         })
     }
@@ -63,14 +63,14 @@ extension QRScannerViewController: UIImagePickerControllerDelegate, UINavigation
 
     private func showPermissionDeniedAlert() {
         let alert = UIAlertController(
-            title: "Cannot Access Photo Library",
-            message: "Please allow access to your photo library in Settings to select images.",
+            title: String(localized: "Cannot Access Photo Library"),
+            message: String(localized: "Please allow access to your photo library in Settings to select images."),
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel) { [weak self] _ in
             self?.qrScannerView.startRunning()
         })
-        alert.addAction(UIAlertAction(title: "Settings", style: .default) { _ in
+        alert.addAction(UIAlertAction(title: String(localized: "Settings"), style: .default) { _ in
             guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
             UIApplication.shared.open(settingsURL)
         })
@@ -108,11 +108,11 @@ extension QRScannerViewController: UIImagePickerControllerDelegate, UINavigation
 
     private func showError(message: String) {
         let alert = UIAlertController(
-            title: "Error",
+            title: String(localized: "Error"),
             message: message,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { [weak self] _ in
+        alert.addAction(UIAlertAction(title: String(localized: "OK"), style: .default, handler: { [weak self] _ in
             self?.qrScannerView.startRunning()
         }))
         present(alert, animated: true)

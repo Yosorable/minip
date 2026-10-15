@@ -47,13 +47,13 @@ struct DownloadProjectView: View {
                 HStack {
                     Text("URL")
                     TextField(text: $downURL) {
-                        Text("Please enter the url")
+                        Text("Enter a URL")
                     }
                     .disabled(downloading)
                 }
             } footer: {
                 HStack {
-                    Text("Only support .zip file")
+                    Text("Only ZIP files are supported.")
                         .foregroundColor(.secondary)
                 }
             }
@@ -62,15 +62,15 @@ struct DownloadProjectView: View {
                 Text("Filename")
 
                 TextField(text: $downFilename) {
-                    Text("Please enter filename (not required)")
+                    Text("File name (optional)")
                 }
                 .disabled(downloading)
             } footer: {
-                Text("The downloaded file name will use the last url component item, if some error occurs, this text will be used (if it is empty, \"default.zip\" will be used).")
+                Text("Use this file name if the server does not provide one. Leave it empty to use default.zip.")
             }
 
             Section {} footer: {
-                Text("Downloaded files are saved at tmp directory in documents. You need to delete them manually.")
+                Text("Downloaded files are saved in the .tmp folder in Documents. Delete them manually when no longer needed.")
             }
             if downloading || uncompressing {
                 Section {
@@ -92,16 +92,16 @@ struct DownloadProjectView: View {
                         if downloading {
                             Text("Downloading")
                         } else if uncompressing {
-                            Text("Uncompressing")
+                            Text("Decompressing")
                         }
-                        Text("...")
+                        Text(verbatim: "…")
                         Spacer()
                     }
                 }
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(Text("home.menu.load_from_web"))
+        .navigationTitle(Text("Load from web"))
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
@@ -122,8 +122,8 @@ struct DownloadProjectView: View {
         }
         .onChange(of: showAlert, perform: { newValue in
             if newValue {
-                let alert = UIAlertController(title: "Error", message: alertMsg, preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                let alert = UIAlertController(title: String(localized: "Error"), message: alertMsg, preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: String(localized: "OK"), style: UIAlertAction.Style.default, handler: nil))
                 getTopViewController()?.present(alert, animated: true, completion: nil)
             }
         })
@@ -131,7 +131,7 @@ struct DownloadProjectView: View {
 
     func downloadFile() {
         guard let downurl = URL(string: downURL) else {
-            alertMsg = "Error URL"
+            alertMsg = String(localized: "Invalid URL")
             showAlert = true
             return
         }
@@ -143,7 +143,7 @@ struct DownloadProjectView: View {
             switch result {
             case .success(let temporaryURL):
                 uncompressing = true
-                ProgressHUD.success("Download succeeded, uncompressing")
+                ProgressHUD.success(String(localized: "Download complete. Decompressing…"))
                 unCompress(file: temporaryURL)
                 Preferences.lastDownloadedURL = downURL
             case .failure(let error):
@@ -157,7 +157,7 @@ struct DownloadProjectView: View {
     func unCompress(file: URL) {
         Task {
             await InstallMiniApp(pkgFile: file, onSuccess: {
-                ProgressHUD.succeed(i18n("Success"))
+                ProgressHUD.succeed(String(localized: "Success"))
                 closeFunc?()
                 onSuccess?()
             }, onFailed: { err in

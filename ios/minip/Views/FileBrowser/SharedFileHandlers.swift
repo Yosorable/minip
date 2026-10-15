@@ -13,35 +13,40 @@ extension FileBrowserViewController {
     func moveOrCopyFiles(files: [FileInfo], isMove: Bool) {
         var message: String
         if files.count == 1 {
-            message = i18n(isMove ? "Move" : "Copy") + " " + files.first!.fileName
+            let name = files[0].fileName
+            message = isMove ? String(localized: "Move \(name)") : String(localized: "Copy \(name)")
         } else {
-            var fmtStr = ""
             let foldersCnt = files.filter { $0.isFolder }.count
             let filesCnt = files.count - foldersCnt
             if !isMove {
                 if foldersCnt == 0 {
-                    fmtStr = "f.copy_files_message"
+                    message = String(localized: "Copy \(files.count) files")
                 } else if filesCnt == 0 {
-                    fmtStr = "f.copy_folders_message"
+                    message = String(localized: "Copy \(files.count) folders")
                 } else {
-                    fmtStr = "f.copy_files_folders_message"
+                    message = String(localized: "Copy \(files.count) files and folders")
                 }
             } else {
                 if foldersCnt == 0 {
-                    fmtStr = "f.move_files_message"
+                    message = String(localized: "Move \(files.count) files")
                 } else if filesCnt == 0 {
-                    fmtStr = "f.move_folders_message"
+                    message = String(localized: "Move \(files.count) folders")
                 } else {
-                    fmtStr = "f.move_files_folders_message"
+                    message = String(localized: "Move \(files.count) files and folders")
                 }
             }
-            message = i18nF(fmtStr, "\(files.count)")
         }
         if isMove {
             // check if the files or folder can be moved
             for ele in files {
                 if ele.url == Global.shared.documentsTrashURL || ele.url == Global.shared.dataFolderURL {
-                    showSimpleError(err: ErrorMsg(errorDescription: files.count == 1 ? "This \(files.first!.isFolder ? "folder" : "file") cannot move" : "Some files or folders cannot move"))
+                    let errorMessage: String
+                    if files.count == 1 {
+                        errorMessage = files[0].isFolder ? String(localized: "This folder cannot be moved") : String(localized: "This file cannot be moved")
+                    } else {
+                        errorMessage = String(localized: "Some files or folders cannot be moved")
+                    }
+                    showSimpleError(err: ErrorMsg(errorDescription: errorMessage))
                     return
                 }
             }
@@ -58,7 +63,7 @@ extension FileBrowserViewController {
             for sourceURL in sourceURLs {
                 let destinationURL = destinationDirectoryURL.appendingPathComponent(sourceURL.lastPathComponent)
                 if self.isDestinationInsideSource(sourceURL: sourceURL, destinationURL: destinationURL) {
-                    showSimpleError(err: ErrorMsg(errorDescription: "Cannot \(isMove ? "move" : "copy") a folder into itself"))
+                    showSimpleError(err: ErrorMsg(errorDescription: isMove ? String(localized: "Cannot move a folder into itself") : String(localized: "Cannot copy a folder into itself")))
                     return
                 }
             }
@@ -106,21 +111,21 @@ extension FileBrowserViewController {
 
                 let names = conflicting.count <= 3
                     ? conflicting.map { $0.lastPathComponent }.joined(separator: ", ")
-                    : "\(conflicting.count) items"
+                    : String(localized: "\(conflicting.count) items")
                 let alert = UIAlertController(
-                    title: i18n("Item Already Exists"),
-                    message: i18n("\"\(names)\" already exists in this location."),
+                    title: String(localized: "Item Already Exists"),
+                    message: String(localized: "\"\(names)\" already exists in this location."),
                     preferredStyle: .alert
                 )
                 if !hasTypeMismatch {
-                    alert.addAction(UIAlertAction(title: i18n("Replace"), style: .destructive) { _ in
+                    alert.addAction(UIAlertAction(title: String(localized: "Replace"), style: .destructive) { _ in
                         self.performFileOperations(sourceURLs: sourceURLs, destinationDir: destinationDirectoryURL, isMove: isMove, conflictPolicy: .replace)
                     })
                 }
-                alert.addAction(UIAlertAction(title: i18n("Keep Both"), style: .default) { _ in
+                alert.addAction(UIAlertAction(title: String(localized: "Keep Both"), style: .default) { _ in
                     self.performFileOperations(sourceURLs: sourceURLs, destinationDir: destinationDirectoryURL, isMove: isMove, conflictPolicy: .keepBoth)
                 })
-                alert.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel))
+                alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
                 self.present(alert, animated: true)
             }
         }
@@ -137,7 +142,7 @@ extension FileBrowserViewController {
                     isModal: true,
                     modalMessage: message,
                     onConfirm: onConfirm,
-                    confirmText: i18n(isMove ? "Move" : "Copy"),
+                    confirmText: isMove ? String(localized: "Move") : String(localized: "Copy"),
                     onCancel: onCancel
                 )
                 vcs.append(vc)
@@ -184,9 +189,9 @@ extension FileBrowserViewController {
         }
 
         if failCount == 0 {
-            showSimpleSuccess(msg: i18n(isMove ? "Moved successfully" : "Copied successfully"))
+            showSimpleSuccess(msg: isMove ? String(localized: "Moved successfully") : String(localized: "Copied successfully"))
         } else {
-            showSimpleError(err: ErrorMsg(errorDescription: "\(successCount) succeeded, \(failCount) failed"))
+            showSimpleError(err: ErrorMsg(errorDescription: String(localized: "\(successCount) succeeded, \(failCount) failed")))
         }
         if navigationController?.isToolbarHidden == false {
             toggleSelectMode()
@@ -210,7 +215,7 @@ extension FileBrowserViewController {
     }
 
     func decompress(_ fileInfo: FileInfo) {
-        ProgressHUD.animate("Decompressing", interaction: false)
+        ProgressHUD.animate(String(localized: "Decompressing"), interaction: false)
         Task {
             let parentDir = fileInfo.url.deletingLastPathComponent()
             let fileManager = FileManager.default
@@ -247,7 +252,7 @@ extension FileBrowserViewController {
                     try fileManager.moveItem(at: item.source, to: parentDir.appending(path: destName))
                 }
 
-                showSimpleSuccess(msg: "Decompressed successfully")
+                showSimpleSuccess(msg: String(localized: "Decompressed successfully"))
                 self.fetchFilesAndUpdateDataSource()
             } catch {
                 showSimpleError(err: error)
@@ -258,7 +263,7 @@ extension FileBrowserViewController {
     func compress(_ files: [FileInfo]) {
         guard !files.isEmpty else { return }
 
-        ProgressHUD.animate(i18n("Compressing"), interaction: false)
+        ProgressHUD.animate(String(localized: "Compressing"), interaction: false)
         Task {
             do {
                 let baseName: String
@@ -279,7 +284,7 @@ extension FileBrowserViewController {
                 let inputs = files.map { ZipInput(sourceURL: $0.url.standardizedFileURL) }
                 try await ZipArchive.create(at: destURL, inputs: inputs)
 
-                showSimpleSuccess(msg: i18n("Compressed successfully"))
+                showSimpleSuccess(msg: String(localized: "Compressed successfully"))
                 self.fetchFilesAndUpdateDataSource()
             } catch {
                 showSimpleError(err: error)

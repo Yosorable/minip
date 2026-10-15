@@ -29,13 +29,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             {
                 let vc = UINavigationController(rootViewController: HomeViewController())
                 vc.navigationBar.prefersLargeTitles = true
-                vc.tabBarItem = UITabBarItem(title: i18n("Projects"), image: UIImage(systemName: "shippingbox.fill"), tag: 0)
+                vc.tabBarItem = UITabBarItem(title: String(localized: "Projects"), image: UIImage(systemName: "shippingbox.fill"), tag: 0)
                 return vc
             }(),
             {
                 let vc = UINavigationController()
                 vc.navigationBar.prefersLargeTitles = true
-                vc.tabBarItem = UITabBarItem(title: i18n("Files"), image: UIImage(systemName: "folder.fill"), tag: 1)
+                vc.tabBarItem = UITabBarItem(title: String(localized: "Files"), image: UIImage(systemName: "folder.fill"), tag: 1)
 
                 let lastFolder = Preferences.filebrowserLastFolder
                 var vcs: [UIViewController] = []
@@ -65,7 +65,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }(),
             {
                 let vc = UIHostingController(rootView: SettingsView())
-                vc.tabBarItem = UITabBarItem(title: i18n("Settings"), image: UIImage(systemName: "gear"), tag: 2)
+                vc.tabBarItem = UITabBarItem(title: String(localized: "Settings"), image: UIImage(systemName: "gear"), tag: 2)
                 return vc
             }(),
         ]

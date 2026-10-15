@@ -8,16 +8,16 @@
 import UIKit
 
 func ShowCreateNewProjectAlert(_ parentVC: UIViewController, onCreatedSuccess: @escaping (InstalledProject) -> Void) {
-    let alert = UIAlertController(title: i18n("cp.create_project"), message: nil, preferredStyle: .alert)
+    let alert = UIAlertController(title: String(localized: "Create Project"), message: nil, preferredStyle: .alert)
     alert.addTextField(configurationHandler: { tf in
-        tf.placeholder = i18n("cp.name")
+        tf.placeholder = String(localized: "Name")
     })
     alert.addTextField(configurationHandler: { tf in
-        tf.placeholder = i18n("cp.display_name")
+        tf.placeholder = String(localized: "Display Name")
     })
 
-    let cancelAction = UIAlertAction(title: i18n("Cancel"), style: .cancel)
-    let confirmAction = UIAlertAction(title: i18n("Create"), style: .default) { _ in
+    let cancelAction = UIAlertAction(title: String(localized: "Cancel"), style: .cancel)
+    let confirmAction = UIAlertAction(title: String(localized: "Create"), style: .default) { _ in
         let nameTF = alert.textFields?[0]
         let displayNameTF = alert.textFields?[1]
         let name = nameTF?.text
@@ -25,7 +25,7 @@ func ShowCreateNewProjectAlert(_ parentVC: UIViewController, onCreatedSuccess: @
 
         do {
             let newApp = try MiniAppManager.shared.createMiniApp(name: name, displayName: displayName)
-            showSimpleSuccess(msg: i18n("project_created_successfully"))
+            showSimpleSuccess(msg: String(localized: "Project created successfully."))
             onCreatedSuccess(newApp)
         } catch {
             showSimpleError(err: error)

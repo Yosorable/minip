@@ -44,11 +44,11 @@ struct AppDetailView: View {
                     .lineLimit(1)
                     .padding(.top)
                 Spacer()
-                Text("v" + (self.appInfo.version ?? "0.0.0"))
+                Text(verbatim: "v" + (self.appInfo.version ?? "0.0.0"))
                     .font(.system(size: 10))
                     .lineLimit(1)
                     .foregroundColor(.secondary)
-                Text("@\(self.appInfo.author ?? "no_author")")
+                Text(verbatim: "@\(self.appInfo.author ?? "no_author")")
                     .font(.system(size: 10))
                     .lineLimit(1)
                     .foregroundColor(.secondary)
@@ -61,7 +61,7 @@ struct AppDetailView: View {
             .frame(height: 60)
 
             if let serverURL = project.developmentServerURL {
-                Text(i18n("dev.mode"))
+                Text("Development Mode")
                     .font(.caption)
                     .foregroundColor(.secondary)
                 Text(serverURL.absoluteString)
@@ -131,7 +131,7 @@ struct AppDetailView: View {
                 .font(.system(size: 14))
                 .foregroundColor(.secondary)
         } else {
-            Text(self.appInfo.description ?? "No description")
+            Text(verbatim: self.appInfo.description ?? "No description")
                 .font(.system(size: 14))
                 .foregroundColor(.secondary)
         }

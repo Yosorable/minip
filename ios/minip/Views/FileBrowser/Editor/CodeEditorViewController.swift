@@ -91,7 +91,7 @@ class CodeEditorViewController: UIViewController {
 
     lazy var keyboardToolbarView = KeyboardToolbarView()
     lazy var saveButton = {
-        var btn = UIBarButtonItem(title: i18n("Save"), style: .plain, target: self, action: #selector(save))
+        var btn = UIBarButtonItem(title: String(localized: "Save"), style: .plain, target: self, action: #selector(save))
         btn.isEnabled = false
         return btn
     }()
@@ -134,7 +134,7 @@ class CodeEditorViewController: UIViewController {
                 if let tmp = String(data: fileData, encoding: .utf8) {
                     txt = tmp
                 } else {
-                    throw ErrorMsg(errorDescription: "Cannot read this file as a text file.")
+                    throw ErrorMsg(errorDescription: String(localized: "Cannot read this file as a text file."))
                 }
             } catch {
                 err = error
@@ -176,7 +176,7 @@ class CodeEditorViewController: UIViewController {
             }
         } else {
             let label = UILabel()
-            label.text = "Cannot read this file."
+            label.text = String(localized: "Cannot read this file.")
             label.textColor = .secondaryLabel
             label.font = UIFont.systemFont(ofSize: 17)
             label.textAlignment = .center
@@ -305,7 +305,7 @@ class CodeEditorViewController: UIViewController {
 
             if totalLines > 100_000 || totalChars > 3_000_000 || maxLineLength > 20_000 {
                 DispatchQueue.main.async {
-                    ProgressHUD.banner("Warning", "This file contains long lines, disable highlight.", delay: 1.5)
+                    ProgressHUD.banner(String(localized: "Warning"), String(localized: "This file contains long lines. Syntax highlighting is disabled."), delay: 1.5)
                 }
             } else {
                 let state = TextViewState(text: text, theme: self.theme, language: lang, languageProvider: LanguageProvider())

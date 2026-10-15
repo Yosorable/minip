@@ -10,24 +10,24 @@ import UIKit
 extension FileBrowserViewController {
     func rename(fileInfo: FileInfo) {
         if fileInfo.url == Global.shared.documentsTrashURL || fileInfo.url == Global.shared.dataFolderURL {
-            showSimpleError(err: ErrorMsg(errorDescription: "You cannot rename this folder"))
+            showSimpleError(err: ErrorMsg(errorDescription: String(localized: "You cannot rename this folder")))
             return
         }
 
-        let alert = UIAlertController(title: i18n("Rename"), message: i18n("f.create_file_tip"), preferredStyle: .alert)
+        let alert = UIAlertController(title: String(localized: "Rename"), message: String(localized: "Enter a file name"), preferredStyle: .alert)
         var textField: UITextField?
         alert.addTextField { tf in
-            tf.placeholder = i18n("f.file_name")
+            tf.placeholder = String(localized: "File name")
             tf.text = fileInfo.fileName
             textField = tf
         }
-        alert.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel))
-        alert.addAction(UIAlertAction(title: i18n("Confirm"), style: .default, handler: { [weak self] _ in
+        alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
+        alert.addAction(UIAlertAction(title: String(localized: "Confirm"), style: .default, handler: { [weak self] _ in
             guard let fileName = textField?.text, let strongSelf = self else {
                 return
             }
             if fileName == "" || fileName.contains("/") {
-                showSimpleError(err: ErrorMsg(errorDescription: "Invalid file name"))
+                showSimpleError(err: ErrorMsg(errorDescription: String(localized: "Invalid file name")))
                 return
             }
             let fileManager = FileManager.default
@@ -39,7 +39,7 @@ extension FileBrowserViewController {
                 if strongSelf.folderURL.standardizedFileURL == Global.shared.documentsRootURL.standardizedFileURL {
                     NotificationCenter.default.post(name: .appListUpdated, object: nil)
                 }
-                showSimpleSuccess(msg: i18n("Renamed successfully"))
+                showSimpleSuccess(msg: String(localized: "Renamed successfully"))
             } catch {
                 showSimpleError(err: error)
             }

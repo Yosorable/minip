@@ -59,7 +59,9 @@ extension FileBrowserViewController {
         dataSource.apply(snapshot, animatingDifferences: true)
 
         if files.count == 0 {
-            let messageAttributedString = NSMutableAttributedString(string: i18n("f.empty_folder_msg_p1"))
+            let iconPlaceholder = "\u{FFFC}"
+            let message = String(localized: "Tap the \(iconPlaceholder) button in the upper right corner to create new files or folders.", comment: "The placeholder is the inline add button icon.")
+            let messageAttributedString = NSMutableAttributedString(string: message)
 
             if let symbolImage = UIImage(systemName: "plus.app.fill") {
                 let attachment = NSTextAttachment()
@@ -70,12 +72,14 @@ extension FileBrowserViewController {
                 }
 
                 let imageString = NSAttributedString(attachment: attachment)
-                messageAttributedString.append(imageString)
+                let iconRange = (message as NSString).range(of: iconPlaceholder)
+                if iconRange.location != NSNotFound {
+                    messageAttributedString.replaceCharacters(in: iconRange, with: imageString)
+                }
             }
-            messageAttributedString.append(NSAttributedString(string: i18n("f.empty_folder_msg_p2")))
             tableView.setEmptyView(
-                title: NSAttributedString(string: i18n("f.empty_folder")),
-                message: isModal ? NSAttributedString() : (folderURL == Global.shared.documentsTrashURL ? NSAttributedString(string: i18n("f.empty_trash_msg")) : messageAttributedString)
+                title: NSAttributedString(string: String(localized: "Empty folder")),
+                message: isModal ? NSAttributedString() : (folderURL == Global.shared.documentsTrashURL ? NSAttributedString(string: String(localized: "Already cleaned up.")) : messageAttributedString)
             )
         } else {
             tableView.restore()
@@ -143,12 +147,12 @@ extension FileBrowserViewController {
                             player.play()
                         }
                     } else if utType.conforms(to: .zip) {
-                        let alert = UIAlertController(title: fileInfo.fileName, message: i18n(fileInfo.isFolder ? "Folder" : "File") + (fileInfo.isFolder ? "" : " (\(fileInfo.size ?? "unknown size"))"), preferredStyle: .actionSheet)
+                        let alert = UIAlertController(title: fileInfo.fileName, message: (fileInfo.isFolder ? String(localized: "Folder") : String(localized: "File")) + (fileInfo.isFolder ? "" : " (\(fileInfo.size ?? "unknown size"))"), preferredStyle: .actionSheet)
 
-                        alert.addAction(UIAlertAction(title: i18n("Decompress"), style: .default, handler: { _ in
+                        alert.addAction(UIAlertAction(title: String(localized: "Decompress"), style: .default, handler: { _ in
                             self.decompress(fileInfo)
                         }))
-                        alert.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel))
+                        alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
                         alert.popoverPresentationController?.sourceView = cell
                         alert.popoverPresentationController?.sourceRect = cell?.bounds ?? .zero
                         self.present(alert, animated: true)
@@ -160,21 +164,21 @@ extension FileBrowserViewController {
                 }
 
                 if cannotOpen {
-                    let alert = UIAlertController(title: fileInfo.fileName, message: i18n("f.select_file_type"), preferredStyle: .actionSheet)
-                    alert.addAction(UIAlertAction(title: i18n("Text"), style: .default, handler: { [weak self] _ in
+                    let alert = UIAlertController(title: fileInfo.fileName, message: String(localized: "Unknown file type, please specify the type to open it."), preferredStyle: .actionSheet)
+                    alert.addAction(UIAlertAction(title: String(localized: "Text"), style: .default, handler: { [weak self] _ in
                         let vc = CodeEditorViewController(fileInfo: fileInfo)
                         let nvc = PannableNavigationViewController(rootViewController: vc)
                         nvc.modalPresentationStyle = .fullScreen
                         self?.present(nvc, animated: true)
                     }))
-                    alert.addAction(UIAlertAction(title: i18n("Image"), style: .default, handler: { [weak self] _ in
+                    alert.addAction(UIAlertAction(title: String(localized: "Image"), style: .default, handler: { [weak self] _ in
                         let imageVC = ImagePreviewViewController(imageURL: fileInfo.url)
                         imageVC.title = fileInfo.fileName
                         let nvc = PannableNavigationViewController(rootViewController: imageVC)
                         nvc.modalPresentationStyle = .fullScreen
                         self?.present(nvc, animated: true)
                     }))
-                    alert.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel))
+                    alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
 
                     alert.popoverPresentationController?.sourceView = cell
                     alert.popoverPresentationController?.sourceRect = cell?.bounds ?? .zero
@@ -198,15 +202,15 @@ extension FileBrowserViewController {
 
         let onDeleteSuccess = { [weak self] in
             self?.fetchFilesAndUpdateDataSource()
-            showSimpleSuccess(msg: i18n(isInTrashRoot ? "f.deleted_success" : "f.moved_to_trash"))
+            showSimpleSuccess(msg: (isInTrashRoot ? String(localized: "Deleted successfully") : String(localized: "Moved to trash")))
         }
         let onDeleteError = { err in
             showSimpleError(err: err)
         }
 
-        let deleteAction = UIContextualAction(style: .destructive, title: i18n("Delete"), handler: { [weak self] _, _, completion in
+        let deleteAction = UIContextualAction(style: .destructive, title: String(localized: "Delete"), handler: { [weak self] _, _, completion in
             if cannotDelete {
-                showSimpleError(err: ErrorMsg(errorDescription: "You cannot delete this folder"))
+                showSimpleError(err: ErrorMsg(errorDescription: String(localized: "You cannot delete this folder")))
                 completion(false)
                 return
             }
@@ -220,11 +224,11 @@ extension FileBrowserViewController {
             }, onCanceled: { completion(false) })
 
         })
-        let moreAction = UIContextualAction(style: .normal, title: i18n("More"), handler: { [weak self] _, _, completion in
+        let moreAction = UIContextualAction(style: .normal, title: String(localized: "More"), handler: { [weak self] _, _, completion in
             let dateMsg = (fileInfo.lastModified != nil) ? "\n\(formatDateToLocalString(fileInfo.lastModified!))" : ""
-            let alert = UIAlertController(title: fileInfo.fileName, message: (i18n(fileInfo.isFolder ? "Folder" : "File") + (fileInfo.isFolder ? "" : " (\(fileInfo.size ?? "unknown size"))")) + dateMsg, preferredStyle: .actionSheet)
+            let alert = UIAlertController(title: fileInfo.fileName, message: ((fileInfo.isFolder ? String(localized: "Folder") : String(localized: "File")) + (fileInfo.isFolder ? "" : " (\(fileInfo.size ?? "unknown size"))")) + dateMsg, preferredStyle: .actionSheet)
 
-            alert.addAction(UIAlertAction(title: i18n("Share"), style: .default, handler: { _ in
+            alert.addAction(UIAlertAction(title: String(localized: "Share"), style: .default, handler: { _ in
                 let avc = UIActivityViewController(activityItems: [fileInfo.url], applicationActivities: nil)
 
                 avc.popoverPresentationController?.sourceView = cell
@@ -232,32 +236,32 @@ extension FileBrowserViewController {
 
                 self?.present(avc, animated: true)
             }))
-            alert.addAction(UIAlertAction(title: i18n("Copy"), style: .default, handler: { _ in
+            alert.addAction(UIAlertAction(title: String(localized: "Copy"), style: .default, handler: { _ in
                 self?.copyItem(fileInfo: fileInfo)
             }))
-            alert.addAction(UIAlertAction(title: i18n("Move"), style: .default, handler: { _ in
+            alert.addAction(UIAlertAction(title: String(localized: "Move"), style: .default, handler: { _ in
                 self?.moveItem(fileInfo: fileInfo)
             }))
-            alert.addAction(UIAlertAction(title: i18n("Rename"), style: .default, handler: { _ in
+            alert.addAction(UIAlertAction(title: String(localized: "Rename"), style: .default, handler: { _ in
                 self?.rename(fileInfo: fileInfo)
             }))
             if let utType = try? fileInfo.url.resourceValues(forKeys: [.contentTypeKey]).contentType, utType.conforms(to: .zip) {
-                alert.addAction(UIAlertAction(title: i18n("Decompress"), style: .default, handler: { _ in
+                alert.addAction(UIAlertAction(title: String(localized: "Decompress"), style: .default, handler: { _ in
                     self?.decompress(fileInfo)
                 }))
             } else {
-                alert.addAction(UIAlertAction(title: i18n("Compress"), style: .default, handler: { _ in
+                alert.addAction(UIAlertAction(title: String(localized: "Compress"), style: .default, handler: { _ in
                     self?.compress([fileInfo])
                 }))
             }
-            alert.addAction(UIAlertAction(title: i18n("Delete"), style: .destructive, handler: { _ in
+            alert.addAction(UIAlertAction(title: String(localized: "Delete"), style: .destructive, handler: { _ in
                 if cannotDelete {
-                    showSimpleError(err: ErrorMsg(errorDescription: "You cannot delete this folder"))
+                    showSimpleError(err: ErrorMsg(errorDescription: String(localized: "You cannot delete this folder")))
                     return
                 }
                 self?.deleteFileOrFolder(isFolder: fileInfo.isFolder, url: fileInfo.url, onSuccess: onDeleteSuccess, onFailed: onDeleteError, onCanceled: {})
             }))
-            alert.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel))
+            alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
             alert.popoverPresentationController?.sourceView = cell
             alert.popoverPresentationController?.sourceRect = cell?.bounds ?? .zero
             self?.present(alert, animated: true)
@@ -275,14 +279,14 @@ extension FileBrowserViewController {
 
         let onDeleteSuccess = { [weak self] in
             self?.fetchFilesAndUpdateDataSource()
-            showSimpleSuccess(msg: i18n(isInTrashRoot ? "f.deleted_success" : "f.moved_to_trash"))
+            showSimpleSuccess(msg: (isInTrashRoot ? String(localized: "Deleted successfully") : String(localized: "Moved to trash")))
         }
         let onDeleteError = { err in
             showSimpleError(err: err)
         }
 
         return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
-            let selectAction = UIAction(title: i18n("Select"), image: UIImage(systemName: "checkmark.circle")) { _ in
+            let selectAction = UIAction(title: String(localized: "Select"), image: UIImage(systemName: "checkmark.circle")) { _ in
                 if !tableView.isEditing {
                     self?.toggleSelectMode()
                 }
@@ -291,7 +295,7 @@ extension FileBrowserViewController {
             }
             let selectMenu = UIMenu(options: .displayInline, children: [selectAction])
 
-            let shareAction = UIAction(title: i18n("Share"), image: UIImage(systemName: "square.and.arrow.up")) { _ in
+            let shareAction = UIAction(title: String(localized: "Share"), image: UIImage(systemName: "square.and.arrow.up")) { _ in
                 let avc = UIActivityViewController(activityItems: [fileInfo.url], applicationActivities: nil)
                 let cell = tableView.cellForRow(at: indexPath)
                 avc.popoverPresentationController?.sourceView = cell
@@ -300,30 +304,30 @@ extension FileBrowserViewController {
             }
             let shareMenu = UIMenu(options: .displayInline, children: [shareAction])
 
-            let copyAction = UIAction(title: i18n("Copy"), image: UIImage(systemName: "doc.on.doc")) { _ in
+            let copyAction = UIAction(title: String(localized: "Copy"), image: UIImage(systemName: "doc.on.doc")) { _ in
                 self?.copyItem(fileInfo: fileInfo)
             }
-            let moveAction = UIAction(title: i18n("Move"), image: UIImage(systemName: "folder")) { _ in
+            let moveAction = UIAction(title: String(localized: "Move"), image: UIImage(systemName: "folder")) { _ in
                 self?.moveItem(fileInfo: fileInfo)
             }
-            let renameAction = UIAction(title: i18n("Rename"), image: UIImage(systemName: "pencil")) { _ in
+            let renameAction = UIAction(title: String(localized: "Rename"), image: UIImage(systemName: "pencil")) { _ in
                 self?.rename(fileInfo: fileInfo)
             }
             var editChildren: [UIAction] = [copyAction, moveAction, renameAction]
             if let utType = try? fileInfo.url.resourceValues(forKeys: [.contentTypeKey]).contentType, utType.conforms(to: .zip) {
-                editChildren.append(UIAction(title: i18n("Decompress"), image: UIImage(systemName: "archivebox")) { _ in
+                editChildren.append(UIAction(title: String(localized: "Decompress"), image: UIImage(systemName: "archivebox")) { _ in
                     self?.decompress(fileInfo)
                 })
             } else {
-                editChildren.append(UIAction(title: i18n("Compress"), image: UIImage(systemName: "doc.zipper")) { _ in
+                editChildren.append(UIAction(title: String(localized: "Compress"), image: UIImage(systemName: "doc.zipper")) { _ in
                     self?.compress([fileInfo])
                 })
             }
             let editMenu = UIMenu(options: .displayInline, children: editChildren)
 
-            let deleteAction = UIAction(title: i18n("Delete"), image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
+            let deleteAction = UIAction(title: String(localized: "Delete"), image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
                 if cannotDelete {
-                    showSimpleError(err: ErrorMsg(errorDescription: "You cannot delete this folder"))
+                    showSimpleError(err: ErrorMsg(errorDescription: String(localized: "You cannot delete this folder")))
                     return
                 }
                 self?.deleteFileOrFolder(isFolder: fileInfo.isFolder, url: fileInfo.url, onSuccess: onDeleteSuccess, onFailed: onDeleteError, onCanceled: {})

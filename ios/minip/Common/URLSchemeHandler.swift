@@ -21,7 +21,7 @@ class URLSchemeHandler {
 
     public func handle(_ urlStr: String) throws {
         guard let url = NSURLComponents(string: urlStr), url.scheme?.lowercased() == "minip", let method = Methods(rawValue: url.host ?? "") else {
-            throw ErrorMsg(errorDescription: "unsupported url scheme")
+            throw ErrorMsg(errorDescription: String(localized: "Unsupported URL scheme"))
         }
 
         if developmentTask != nil {
@@ -64,21 +64,21 @@ extension URLSchemeHandler {
                 }
                 guard let scene = self.closeOpenedAppAndGetSceneDelegate(), let parent = scene.window?.rootViewController else {
                     try? FileManager.default.removeItem(at: project.rootURL)
-                    throw ErrorMsg(errorDescription: i18n("dev.connection_failed"))
+                    throw ErrorMsg(errorDescription: String(localized: "Could not connect to the development server"))
                 }
                 MiniAppManager.shared.openMiniApp(parent: parent, project: project, animated: false)
             } catch {
                 guard !Task.isCancelled else { return }
                 logger.error("[Development] Connection failed: \(error.localizedDescription)")
                 let alert = UIAlertController(
-                    title: i18n("dev.connection_failed"),
-                    message: i18n("dev.connection_help") + "\n\n" + error.localizedDescription,
+                    title: String(localized: "Could not connect to the development server"),
+                    message: String(localized: "Keep the server running, connect your phone and computer to the same network, and allow Minip to access the local network in Settings.") + "\n\n" + error.localizedDescription,
                     preferredStyle: .alert
                 )
-                alert.addAction(UIAlertAction(title: i18n("dev.retry"), style: .default) { [weak self] _ in
+                alert.addAction(UIAlertAction(title: String(localized: "Retry"), style: .default) { [weak self] _ in
                     self?.connectToDevelopmentServer(serverURL)
                 })
-                alert.addAction(UIAlertAction(title: i18n("Cancel"), style: .cancel))
+                alert.addAction(UIAlertAction(title: String(localized: "Cancel"), style: .cancel))
                 if let parent = getTopViewController() {
                     parent.present(alert, animated: true)
                 } else {
@@ -107,7 +107,7 @@ extension URLSchemeHandler {
         }
 
         guard let sceneDelegate = closeOpenedAppAndGetSceneDelegate() else {
-            throw ErrorMsg(errorDescription: "unknown error")
+            throw ErrorMsg(errorDescription: String(localized: "Unknown error"))
         }
 
         var foundProject: InstalledProject?
@@ -120,11 +120,11 @@ extension URLSchemeHandler {
         }
 
         guard let project = foundProject else {
-            throw ErrorMsg(errorDescription: "app doesn't exist")
+            throw ErrorMsg(errorDescription: String(localized: "Project not found"))
         }
 
         guard let vc = sceneDelegate.window?.rootViewController else {
-            throw ErrorMsg(errorDescription: "unknown error")
+            throw ErrorMsg(errorDescription: String(localized: "Unknown error"))
         }
 
         MiniAppManager.shared.openMiniApp(parent: vc, project: project, animated: false)
@@ -132,7 +132,7 @@ extension URLSchemeHandler {
 
     private func install(_ urlStr: String) throws {
         guard let _ = closeOpenedAppAndGetSceneDelegate(), urlStr != "" else {
-            throw ErrorMsg(errorDescription: "unknown error")
+            throw ErrorMsg(errorDescription: String(localized: "Unknown error"))
         }
 
         DownloadMiniAppPackageToTmpFolder(urlStr, onError: { err in

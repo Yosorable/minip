@@ -113,7 +113,7 @@ func listFilesAndFolders(in directory: URL) throws -> (
             }
         } else {
             throw ErrorMsg(
-                errorDescription: "Cannot read files or folders meta data"
+                errorDescription: String(localized: "Cannot read file or folder information")
             )
         }
     }

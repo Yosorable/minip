@@ -24,7 +24,7 @@ class MiniAppSettingsViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = i18n("Settings")
+        title = String(localized: "Settings")
 
         if navigationController is BackableNavigationController {
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(closePage))
@@ -79,9 +79,9 @@ class MiniAppSettingsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return i18n("Privacy")
+            return String(localized: "Privacy")
         case 1:
-            return "URL Scheme"
+            return String(localized: "URL Scheme")
         default:
             break
         }
@@ -107,7 +107,7 @@ class MiniAppSettingsViewController: UITableViewController {
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "URLSchemeCell", for: indexPath)
             var content = cell.defaultContentConfiguration()
-            content.text = "Open"
+            content.text = String(localized: "Open")
             content.secondaryText = launchURL
             content.secondaryTextProperties.color = .secondaryLabel
             cell.contentConfiguration = content
@@ -125,7 +125,7 @@ class MiniAppSettingsViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
             UIPasteboard.general.string = launchURL
-            showSimpleSuccess(msg: "Copied to clipboard successfully.")
+            showSimpleSuccess(msg: String(localized: "Copied to clipboard"))
             tableView.deselectRow(at: indexPath, animated: true)
         }
     }

@@ -60,7 +60,7 @@ class MiniPageViewController: UIViewController {
         // TODO: Relative path like (based on previous page)
         if project.developmentServerURL != nil {
             guard let developmentURL = project.developmentURL(for: page) else {
-                showDevelopmentLoadError(ErrorMsg(errorDescription: i18n("dev.invalid_address")))
+                showDevelopmentLoadError(ErrorMsg(errorDescription: String(localized: "Invalid development server address.")))
                 return
             }
             url = developmentURL

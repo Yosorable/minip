@@ -11,13 +11,13 @@ struct DevelopmentProject: Decodable {
               let host = components.host, !host.isEmpty,
               components.user == nil, components.password == nil,
               components.query == nil, components.fragment == nil else {
-            throw ErrorMsg(errorDescription: i18n("dev.invalid_address"))
+            throw ErrorMsg(errorDescription: String(localized: "Invalid development server address."))
         }
         if !components.percentEncodedPath.hasSuffix("/") {
             components.percentEncodedPath += "/"
         }
         guard let url = components.url else {
-            throw ErrorMsg(errorDescription: i18n("dev.invalid_address"))
+            throw ErrorMsg(errorDescription: String(localized: "Invalid development server address."))
         }
         return url
     }
@@ -29,13 +29,13 @@ struct DevelopmentProject: Decodable {
         defer { session.invalidateAndCancel() }
         let (data, response) = try await session.data(for: request)
         guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            throw ErrorMsg(errorDescription: i18n("dev.invalid_manifest"))
+            throw ErrorMsg(errorDescription: String(localized: "Could not read the development app configuration. Check that Minip and vite-plugin-minip are up to date."))
         }
         let manifest: DevelopmentProject
         do {
             manifest = try JSONDecoder().decode(DevelopmentProject.self, from: data)
         } catch {
-            throw ErrorMsg(errorDescription: i18n("dev.invalid_manifest"))
+            throw ErrorMsg(errorDescription: String(localized: "Could not read the development app configuration. Check that Minip and vite-plugin-minip are up to date."))
         }
         let app = manifest.app
         // appId also names the persistent native data directory.
@@ -46,7 +46,7 @@ struct DevelopmentProject: Decodable {
               app.appId.rangeOfCharacter(from: .controlCharacters) == nil,
               !app.appId.contains("/"), !app.appId.contains("\\"),
               !app.homepage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            throw ErrorMsg(errorDescription: i18n("dev.invalid_manifest"))
+            throw ErrorMsg(errorDescription: String(localized: "Could not read the development app configuration. Check that Minip and vite-plugin-minip are up to date."))
         }
         try Task.checkCancellation()
         let rootURL = FileManager.default.temporaryDirectory.appendingPathComponent("minip-dev-\(UUID().uuidString)", isDirectory: true)

@@ -19,7 +19,7 @@ class ConsoleViewController: UIViewController {
 
     init() {
         super.init(nibName: nil, bundle: nil)
-        title = "Console"
+        title = String(localized: "Console")
     }
 
     @available(*, unavailable)

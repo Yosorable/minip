@@ -107,7 +107,7 @@ struct SettingsView: View {
                             isOn: $useCapsuleButton,
                             label: {
                                 Label {
-                                    Text(i18n("s.use_capsule_button"))
+                                    Text("Use Capsule Button")
                                 } icon: {
                                     SettingsIcon(systemName: "capsule.fill", color: .blue)
                                 }
@@ -141,7 +141,7 @@ struct SettingsView: View {
                             HStack {
                                 Text("Language")
                                 Spacer()
-                                Text(Locale.current.localizedString(forIdentifier: Locale.current.identifier)?.capitalized ?? "")
+                                Text(Locale.current.localizedString(forIdentifier: Bundle.main.preferredLocalizations.first ?? "en")?.capitalized ?? "")
                                     .foregroundColor(.secondary)
                                 Image(systemName: "chevron.right")
                                     .font(.system(size: 13, weight: .semibold))
@@ -161,11 +161,11 @@ struct SettingsView: View {
                         let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
                         let dateFrom = Date(timeIntervalSince1970: 0)
                         WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: dateFrom) {
-                            ProgressHUD.succeed(i18n("success"))
+                            ProgressHUD.succeed(String(localized: "Success"))
                         }
                     } label: {
                         Label {
-                            Text(i18n("s.clear_wkwebview_cache"))
+                            Text("Clear WKWebView Cache")
                         } icon: {
                             SettingsIcon(systemName: "safari.fill", color: .blue)
                         }
@@ -174,11 +174,11 @@ struct SettingsView: View {
                     Button {
                         KingfisherManager.shared.cache.clearDiskCache(completion: {
                             KingfisherManager.shared.cache.clearMemoryCache()
-                            ProgressHUD.succeed(i18n("success"))
+                            ProgressHUD.succeed(String(localized: "Success"))
                         })
                     } label: {
                         Label {
-                            Text(i18n("s.clear_kfimage_cache"))
+                            Text("Clear KFImage Cache")
                         } icon: {
                             SettingsIcon(systemName: "photo.fill", color: .orange)
                         }
@@ -225,7 +225,7 @@ struct SettingsView: View {
 
                     Button {
                         MiniAppManager.shared.clearAllPermissions()
-                        showSimpleSuccess(msg: "Cleared successfully.")
+                        showSimpleSuccess(msg: String(localized: "Cleared successfully"))
                     } label: {
                         Label {
                             Text("Remove All Permissions")
@@ -242,7 +242,7 @@ struct SettingsView: View {
                         HStack {
                             Text("Version")
                             Spacer()
-                            Text((Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) ?? "Unknown")
+                            Text(verbatim: (Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String) ?? "Unknown")
                                 .foregroundColor(.secondary)
                         }
                     } icon: {
@@ -252,7 +252,7 @@ struct SettingsView: View {
                         HStack {
                             Text("Build")
                             Spacer()
-                            Text((Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String) ?? "Unknown")
+                            Text(verbatim: (Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String) ?? "Unknown")
                                 .foregroundColor(.secondary)
                         }
                     } icon: {
@@ -271,10 +271,10 @@ struct SettingsView: View {
                 } header: {
                     Text("About")
                 } footer: {
-                    Text(try! AttributedString(markdown: i18n("s.documentation_source_code")))
+                    Text(AttributedString(localized: "Documentation and source code: [GitHub - Yosorable/Minip](https://github.com/yosorable/minip)"))
                 }
             }
-            .navigationTitle(Text(i18n("Settings")))
+            .navigationTitle(Text("Settings"))
         }
     }
 }

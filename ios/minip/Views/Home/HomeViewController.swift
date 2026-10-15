@@ -20,7 +20,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     lazy var addProjectBtn: UIBarButtonItem = {
         let menu = UIMenu(children: [
-            UIAction(title: i18n("home.menu.create_project"), image: UIImage(systemName: "folder.badge.plus")) { _ in
+            UIAction(title: String(localized: "Create new project"), image: UIImage(systemName: "folder.badge.plus")) { _ in
                 ShowCreateNewProjectAlert(
                     self,
                     onCreatedSuccess: { newApp in
@@ -30,13 +30,13 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.tableView.endUpdates()
                     })
             },
-            UIAction(title: i18n("home.menu.load_from_web"), image: UIImage(systemName: "network")) { _ in
+            UIAction(title: String(localized: "Load from web"), image: UIImage(systemName: "network")) { _ in
                 let vc = DownloadProjectViewController()
                 let nvc = PannableNavigationViewController(rootViewController: vc)
                 nvc.modalPresentationStyle = .fullScreen
                 self.present(nvc, animated: true)
             },
-            UIAction(title: i18n("home.menu.load_from_file"), image: UIImage(systemName: "folder")) { _ in
+            UIAction(title: String(localized: "Load from file"), image: UIImage(systemName: "folder")) { _ in
                 let vc = UIHostingController(rootView: ImportProjectFromFileView())
                 vc.modalPresentationStyle = .fullScreen
                 self.present(vc, animated: true)
@@ -67,7 +67,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = i18n("Projects")
+        title = String(localized: "Projects")
 
         apps = MiniAppManager.shared.getInstalledProjects()
         if Preferences.firstStart && apps.count == 0 {
@@ -148,10 +148,10 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     }
                 } else {
                     DispatchQueue.main.async {
-                        let alert = UIAlertController(title: "NO Permission", message: "Camera is required to use in this application", preferredStyle: .alert)
+                        let alert = UIAlertController(title: String(localized: "Camera Access Required"), message: String(localized: "Allow camera access in Settings to scan QR codes."), preferredStyle: .alert)
                         alert.addAction(
                             .init(
-                                title: "OK", style: .default,
+                                title: String(localized: "OK"), style: .default,
                                 handler: { _ in
                                     self?.dismiss(animated: false)
                                 }))
@@ -160,8 +160,8 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             }
         default:
-            let alert = UIAlertController(title: "NO Permission", message: "Camera is required to use in this application", preferredStyle: .alert)
-            alert.addAction(.init(title: "OK", style: .cancel))
+            let alert = UIAlertController(title: String(localized: "Camera Access Required"), message: String(localized: "Allow camera access in Settings to scan QR codes."), preferredStyle: .alert)
+            alert.addAction(.init(title: String(localized: "OK"), style: .cancel))
             present(alert, animated: true)
         }
     }
@@ -170,18 +170,22 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if apps.count == 0 {
-            let messageAttributedString = NSMutableAttributedString(string: i18n("home.no_project_msg_part1"))
+            let iconPlaceholder = "\u{FFFC}"
+            let message = String(localized: "Tap the \(iconPlaceholder) button in the upper right corner to create new projects.", comment: "The placeholder is the inline add button icon.")
+            let messageAttributedString = NSMutableAttributedString(string: message)
 
             if let symbolImage = UIImage(systemName: "plus.square") {
                 let attachment = NSTextAttachment()
                 attachment.image = symbolImage.withTintColor(.label)
 
                 let imageString = NSAttributedString(attachment: attachment)
-                messageAttributedString.append(imageString)
+                let iconRange = (message as NSString).range(of: iconPlaceholder)
+                if iconRange.location != NSNotFound {
+                    messageAttributedString.replaceCharacters(in: iconRange, with: imageString)
+                }
             }
-            messageAttributedString.append(NSAttributedString(string: i18n("home.no_project_msg_part2")))
             tableView.setEmptyView(
-                title: NSAttributedString(string: i18n("home.no_project")),
+                title: NSAttributedString(string: String(localized: "Nothing here")),
                 message: messageAttributedString
             )
         } else {
@@ -210,23 +214,23 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(
-            style: .destructive, title: i18n("Delete"),
+            style: .destructive, title: String(localized: "Delete"),
             handler: { _, _, completion in
                 let project = self.apps[indexPath.row]
-                let alert = UIAlertController(title: i18n("home.delete_alert_title"), message: i18nF("delete_alert_confirm_message", project.title), preferredStyle: .alert)
+                let alert = UIAlertController(title: String(localized: "Delete Project"), message: String(localized: "Delete \"\(project.title)\"?"), preferredStyle: .alert)
                 let confirm = UIAlertAction(
-                    title: i18n("Delete"), style: .destructive,
+                    title: String(localized: "Delete"), style: .destructive,
                     handler: { _ in
                         MiniAppManager.shared.deleteMiniApp(
                             project: project,
                             completion: {
                                 self.removeProjectFromList(project)
                                 completion(true)
-                                showSimpleSuccess(msg: i18n("delete_successfully"))
+                                showSimpleSuccess(msg: String(localized: "Project deleted successfully."))
                             })
                     })
                 let cancel = UIAlertAction(
-                    title: i18n("Cancel"), style: .default,
+                    title: String(localized: "Cancel"), style: .default,
                     handler: { _ in
                         completion(false)
                     })
@@ -236,7 +240,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             })
 
         let settingsAction = UIContextualAction(
-            style: .normal, title: i18n("Settings"),
+            style: .normal, title: String(localized: "Settings"),
             handler: { _, _, completion in
                 let vc = MiniAppSettingsViewController(style: .insetGrouped, app: self.apps[indexPath.row].appInfo)
                 vc.hidesBottomBarWhenPushed = true
@@ -273,30 +277,30 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let app = apps[indexPath.row]
         return UIContextMenuConfiguration(identifier: indexPath as NSCopying, previewProvider: nil) { _ in
-            let openAction = UIAction(title: i18n("Open"), image: UIImage(systemName: "arrow.up.forward.app")) { [weak self] _ in
+            let openAction = UIAction(title: String(localized: "Open"), image: UIImage(systemName: "arrow.up.forward.app")) { [weak self] _ in
                 guard let self else { return }
                 MiniAppManager.shared.openMiniApp(parent: self, project: app, completion: {})
             }
 
-            let settingsAction = UIAction(title: i18n("Settings"), image: UIImage(systemName: "gear")) { [weak self] _ in
+            let settingsAction = UIAction(title: String(localized: "Settings"), image: UIImage(systemName: "gear")) { [weak self] _ in
                 guard let self else { return }
                 let vc = MiniAppSettingsViewController(style: .insetGrouped, app: app.appInfo)
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             }
 
-            let deleteAction = UIAction(title: i18n("Delete"), image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
+            let deleteAction = UIAction(title: String(localized: "Delete"), image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
                 guard let self else { return }
-                let alert = UIAlertController(title: i18n("home.delete_alert_title"), message: i18nF("delete_alert_confirm_message", app.title), preferredStyle: .alert)
-                let confirm = UIAlertAction(title: i18n("Delete"), style: .destructive) { _ in
+                let alert = UIAlertController(title: String(localized: "Delete Project"), message: String(localized: "Delete \"\(app.title)\"?"), preferredStyle: .alert)
+                let confirm = UIAlertAction(title: String(localized: "Delete"), style: .destructive) { _ in
                     MiniAppManager.shared.deleteMiniApp(
                         project: app,
                         completion: {
                             self.removeProjectFromList(app)
-                            showSimpleSuccess(msg: i18n("delete_successfully"))
+                            showSimpleSuccess(msg: String(localized: "Project deleted successfully."))
                         })
                 }
-                let cancel = UIAlertAction(title: i18n("Cancel"), style: .default)
+                let cancel = UIAlertAction(title: String(localized: "Cancel"), style: .default)
                 alert.addAction(cancel)
                 alert.addAction(confirm)
                 self.present(alert, animated: true)

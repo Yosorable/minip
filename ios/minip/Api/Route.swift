@@ -42,7 +42,7 @@ extension MinipApi {
 
     func openSettings(param: Parameter) throws {
         let controller = try param.requirePresentation()
-        let settings = MiniAppSettingsViewController(style: .insetGrouped, app: controller.app)
+        let settings = MiniAppSettingsViewController(style: .insetGrouped, app: controller.app, launchURL: controller.project.launchURL)
         let navigation = BackableNavigationController(rootViewController: settings)
         navigation.modalPresentationStyle = .overFullScreen
         controller.present(navigation, animated: true)

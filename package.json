@@ -4,8 +4,10 @@
   "packageManager": "pnpm@10.6.5",
   "scripts": {
     "bridge:build": "pnpm --filter minip-bridge build",
-    "demo:build": "pnpm --filter minip-demo build",
-    "demo:bundle": "pnpm --filter minip-demo bundle",
+    "tooling:build": "pnpm --filter vite-plugin-minip --filter create-minip build",
+    "demo:dev": "pnpm --filter vite-plugin-minip build && pnpm --filter minip-demo dev",
+    "demo:build": "pnpm --filter vite-plugin-minip build && pnpm --filter minip-demo build",
+    "demo:bundle": "pnpm --filter vite-plugin-minip build && pnpm --filter minip-demo bundle",
     "lsp:build": "pnpm --filter language-service-bundler build",
     "bridge:publish": "pnpm --filter minip-bridge publish"
   },

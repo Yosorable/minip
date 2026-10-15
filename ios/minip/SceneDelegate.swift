@@ -101,8 +101,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             logger.debug("[enter foreground] not create server")
             return
         }
-        guard MiniAppManager.shared.openedApp != nil else {
-            logger.debug("[enter foreground] no app opened")
+        guard MiniAppManager.shared.openedApp?.webServerEnabled == true,
+              MiniAppManager.shared.openedProject?.developmentServerURL == nil else {
+            logger.debug("[enter foreground] no local server required")
             return
         }
 

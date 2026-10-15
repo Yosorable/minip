@@ -6,6 +6,14 @@
 
 */
 
+/* Development sessions */
+"dev.mode" = "Mode développement";
+"dev.connection_failed" = "Connexion au serveur de développement impossible";
+"dev.connection_help" = "Laissez le serveur en marche, connectez le téléphone et l’ordinateur au même réseau et autorisez Minip à accéder au réseau local dans Réglages.";
+"dev.retry" = "Réessayer";
+"dev.invalid_address" = "L’adresse du serveur de développement n’est pas valide.";
+"dev.invalid_manifest" = "Impossible de lire la configuration de l’app. Vérifiez que Minip et vite-plugin-minip sont à jour.";
+
 "Projects" = "Projets";
 "Files" = "Fichiers";
 "Settings" = "Réglages";

@@ -10,8 +10,10 @@ import UIKit
 
 class MiniAppSettingsViewController: UITableViewController {
     let app: AppInfo
-    init(style: UITableView.Style, app: AppInfo) {
+    let launchURL: String
+    init(style: UITableView.Style, app: AppInfo, launchURL: String? = nil) {
         self.app = app
+        self.launchURL = launchURL ?? "minip://open/\(app.appId)"
         super.init(style: style)
     }
 
@@ -106,7 +108,7 @@ class MiniAppSettingsViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "URLSchemeCell", for: indexPath)
             var content = cell.defaultContentConfiguration()
             content.text = "Open"
-            content.secondaryText = "minip://open/\(app.appId)"
+            content.secondaryText = launchURL
             content.secondaryTextProperties.color = .secondaryLabel
             cell.contentConfiguration = content
             cell.accessoryType = .none
@@ -122,7 +124,7 @@ class MiniAppSettingsViewController: UITableViewController {
     // cell tap
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
-            UIPasteboard.general.string = "minip://open/\(app.appId)"
+            UIPasteboard.general.string = launchURL
             showSimpleSuccess(msg: "Copied to clipboard successfully.")
             tableView.deselectRow(at: indexPath, animated: true)
         }

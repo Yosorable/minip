@@ -6,6 +6,14 @@
 
 */
 
+/* Development sessions */
+"dev.mode" = "Modalità sviluppo";
+"dev.connection_failed" = "Impossibile connettersi al server di sviluppo";
+"dev.connection_help" = "Mantieni il server in esecuzione, collega telefono e computer alla stessa rete e consenti a Minip di accedere alla rete locale in Impostazioni.";
+"dev.retry" = "Riprova";
+"dev.invalid_address" = "Indirizzo del server di sviluppo non valido.";
+"dev.invalid_manifest" = "Impossibile leggere la configurazione dell’app. Verifica che Minip e vite-plugin-minip siano aggiornati.";
+
 "Projects" = "Progetti";
 "Files" = "File";
 "Settings" = "Impostazioni";

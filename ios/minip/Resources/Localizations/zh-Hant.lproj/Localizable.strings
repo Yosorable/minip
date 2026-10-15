@@ -6,6 +6,14 @@
 
 */
 
+/* Development sessions */
+"dev.mode" = "開發模式";
+"dev.connection_failed" = "無法連線至開發伺服器";
+"dev.connection_help" = "請保持伺服器執行，將手機和電腦連接到同一網路，並在系統設定中允許 Minip 存取區域網路。";
+"dev.retry" = "重試";
+"dev.invalid_address" = "開發伺服器位址無效。";
+"dev.invalid_manifest" = "無法讀取開發專案設定，請檢查 Minip 和 vite-plugin-minip 是否為最新版本。";
+
 "Projects" = "專案";
 "Files" = "檔案";
 "Settings" = "設定";

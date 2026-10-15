@@ -24,6 +24,8 @@ struct AppDetailView: View {
         if let icon = project.appInfo.icon {
             if icon.starts(with: "http://") || icon.starts(with: "https://") {
                 self.iconURL = URL(string: icon)
+            } else if project.developmentServerURL != nil {
+                self.iconURL = project.developmentURL(for: icon)
             } else {
                 self.iconURL = project.rootURL.appending(path: icon)
             }
@@ -57,6 +59,17 @@ struct AppDetailView: View {
                     .padding(.bottom)
             }
             .frame(height: 60)
+
+            if let serverURL = project.developmentServerURL {
+                Text(i18n("dev.mode"))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text(serverURL.absoluteString)
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                    .lineLimit(2)
+                    .padding(.horizontal)
+            }
 
             if let website = appInfo.website, let url = URL(string: website) {
                 Link(website, destination: url)
@@ -128,7 +141,7 @@ struct AppDetailView: View {
         Button {
             self.detailVC?.dismiss(animated: true, completion: {
                 let this = self
-                let ss = MiniAppSettingsViewController(style: .insetGrouped, app: this.appInfo)
+                let ss = MiniAppSettingsViewController(style: .insetGrouped, app: this.appInfo, launchURL: this.project.launchURL)
                 let vc = BackableNavigationController(rootViewController: ss)
                 vc.modalPresentationStyle = .overFullScreen
                 this.parentVC?.present(vc, animated: true)

@@ -8,6 +8,8 @@ Minip is an app that allows you to run frontend applications on your phone, givi
 
 - `ios/` — iOS app
 - `packages/bridge/` — JavaScript SDK and the app's injected bridge runtime ([npm](https://www.npmjs.com/package/minip-bridge))
+- `packages/create-minip/` — Project creator using official Vite frontend templates
+- `packages/vite-plugin-minip/` — Vite plugin for native app development, installation ZIPs, and QR codes
 - `packages/demo/` — Demo mini app
 - `packages/language-service-bundler/` — Language service for code editor
 
@@ -22,6 +24,40 @@ Scan this QR code using the Minip App to install the demo:
 |                                |                                |                                |
 | ------------------------------ | ------------------------------ | ------------------------------ |
 | ![](assets/screenshots/01.PNG) | ![](assets/screenshots/02.PNG) | ![](assets/screenshots/03.PNG) |
+
+## Create a Mini App
+
+Use Node.js 20.19+ or 22.12+:
+
+```bash
+npm create minip@latest my-app
+cd my-app
+npm run dev
+```
+
+Choose a framework and language. The creator uses the official Vite frontend
+templates and configures the SDK, packaging plugin, and `app.json`. Dependencies
+are installed automatically; pass `--no-install` to install them yourself.
+
+Connect your phone and computer to the same network, then scan the terminal's
+QR code with a Minip app build that supports development sessions. Pages run
+inside Minip with native APIs and Vite hot updates. Keep the development server
+running while editing. Rescan after changing native settings in `app.json`.
+Development and installed apps with the same `appId` share native storage and
+permissions. Browser preview also works; native APIs require the Minip app.
+
+Use `npm run pack` to build an installation ZIP and serve it with an installation
+QR code. Keep the preview server running until the download finishes. To install
+an update, rebuild and scan again.
+
+For an existing Vite project, install
+[`vite-plugin-minip`](packages/vite-plugin-minip/README.md) alongside the SDK.
+No plugin source files or compression/QR dependencies need to be copied into
+the project. The creator handles ordinary Vite frontend projects; Minip itself
+does not restrict which frontend framework you use.
+
+See [`create-minip`](packages/create-minip/README.md) for command options and
+the initial release's package version requirements.
 
 ## Minip Bridge Quick Start
 
@@ -68,3 +104,20 @@ continue running during migration. New projects should use SDK 2. See the
 
 See the [Bridge 2 migration guide](packages/bridge/MIGRATION.md) for error handling,
 the runtime contract, binary data, nullable results, and validation commands.
+
+## Develop the JavaScript Tooling
+
+```bash
+pnpm install
+pnpm tooling:build
+pnpm bridge:build
+pnpm demo:build
+```
+
+Run the creator from source with
+`node packages/create-minip/index.js /path/to/my-app --template vanilla-ts --no-install`.
+Generated projects use npm package versions, so before the initial release use
+local tarballs of the SDK and plugin when validating dependency installation.
+The Demo uses the same plugin through a workspace dependency; `pnpm demo:dev`
+starts development with a QR code, and `pnpm demo:bundle` builds it and displays
+an installation QR code.

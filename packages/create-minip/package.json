@@ -1,0 +1,34 @@
+{
+  "name": "create-minip",
+  "version": "1.0.0",
+  "description": "Create a Vite frontend project ready to install in Minip",
+  "type": "module",
+  "license": "MIT",
+  "author": "yosorable",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yosorable/minip",
+    "directory": "packages/create-minip"
+  },
+  "bin": {
+    "create-minip": "index.js"
+  },
+  "files": ["index.js"],
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "scripts": {
+    "build": "node --check index.js",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.8.1",
+    "create-vite": "8.3.0",
+    "cross-spawn": "^7.0.6"
+  },
+  "minip": {
+    "bridgeVersion": "^2.0.0",
+    "pluginVersion": "^1.0.0"
+  },
+  "keywords": ["create", "vite", "minip"]
+}

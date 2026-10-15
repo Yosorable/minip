@@ -6,6 +6,14 @@
   
 */
 
+/* Development sessions */
+"dev.mode" = "开发模式";
+"dev.connection_failed" = "无法连接开发服务器";
+"dev.connection_help" = "请保持服务器运行，将手机和电脑连接到同一网络，并在系统设置中允许 Minip 访问本地网络。";
+"dev.retry" = "重试";
+"dev.invalid_address" = "开发服务器地址无效。";
+"dev.invalid_manifest" = "无法读取开发项目配置，请检查 Minip 和 vite-plugin-minip 是否为最新版本。";
+
 "Projects" = "项目";
 "Files" = "文件";
 "Settings" = "设置";

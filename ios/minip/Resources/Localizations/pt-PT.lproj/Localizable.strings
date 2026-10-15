@@ -6,6 +6,14 @@
 
 */
 
+/* Development sessions */
+"dev.mode" = "Modo de desenvolvimento";
+"dev.connection_failed" = "Não foi possível ligar ao servidor de desenvolvimento";
+"dev.connection_help" = "Mantenha o servidor em execução, ligue o telemóvel e o computador à mesma rede e permita o acesso do Minip à rede local nas Definições.";
+"dev.retry" = "Tentar novamente";
+"dev.invalid_address" = "O endereço do servidor de desenvolvimento é inválido.";
+"dev.invalid_manifest" = "Não foi possível ler a configuração da aplicação. Verifique se o Minip e o vite-plugin-minip estão atualizados.";
+
 "Projects" = "Projetos";
 "Files" = "Ficheiros";
 "Settings" = "Definições";

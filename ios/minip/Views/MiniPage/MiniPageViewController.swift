@@ -26,6 +26,7 @@ class MiniPageViewController: UIViewController {
     var refreshControl: UIRefreshControl?
     var initialTouchPoint: CGPoint = .init(x: 0, y: 0)
     var isRoot: Bool
+    var developmentErrorView: UIView?
 
     var capsuleMoreButton: UIView?
 
@@ -49,9 +50,22 @@ class MiniPageViewController: UIViewController {
         if let t = t {
             title = t
         }
+        loadPage()
+    }
+
+    func loadPage() {
+        developmentErrorView?.removeFromSuperview()
+        developmentErrorView = nil
         var url: URL
         // TODO: Relative path like (based on previous page)
-        if page.hasPrefix("http://") || page.hasPrefix("https://") {
+        if project.developmentServerURL != nil {
+            guard let developmentURL = project.developmentURL(for: page) else {
+                showDevelopmentLoadError(ErrorMsg(errorDescription: i18n("dev.invalid_address")))
+                return
+            }
+            url = developmentURL
+            webview.load(URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 15))
+        } else if page.hasPrefix("http://") || page.hasPrefix("https://") {
             url = URL(string: page)!
             logger.info("[webview] load remote: \(url)")
             let req = URLRequest(url: url)
@@ -169,28 +183,7 @@ class MiniPageViewController: UIViewController {
             webview.scrollView.bounces = !(scrollBarConfig.disableBounces ?? false)
         }
 
-        var url: URL
-        // TODO: Relative path like (based on previous page)
-        if page.hasPrefix("http://") || page.hasPrefix("https://") {
-            url = URL(string: page)!
-            logger.info("[webview] load remote: \(url)")
-            let req = URLRequest(url: url)
-            webview.load(req)
-        } else if app.webServerEnabled == true, let addr = MiniAppManager.shared.serverAddress {
-            if !page.starts(with: "/") {
-                page = "/" + page
-            }
-            url = URL(string: addr + "\(page)")!
-            logger.info("[webview] load localhost: \(url)")
-            let req = URLRequest(url: url)
-            webview.load(req)
-        } else {
-            let rootURL = project.rootURL
-            url = localPageURL(for: page, rootURL: rootURL)
-            logger.info("[webview] load file: \(url)")
-            webview.loadFileURL(url, allowingReadAccessTo: rootURL)
-        }
-        pageURL = url
+        loadPage()
 
         title = _title ?? project.title
 
@@ -362,7 +355,11 @@ class MiniPageViewController: UIViewController {
         let detailVC = AppDetailViewController(
             project: project,
             reloadPageFunc: { [weak self] in
-                self?.webview.reload()
+                if self?.developmentErrorView != nil {
+                    self?.loadPage()
+                } else {
+                    self?.webview.reload()
+                }
             }, parentVC: self)
 
         detailVC.modalPresentationStyle = .pageSheet

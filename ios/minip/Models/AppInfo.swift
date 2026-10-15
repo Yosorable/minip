@@ -36,19 +36,22 @@ struct AppInfo: Hashable, Codable {
     var iOS_scrollbar: ScrollbarConfig?
 }
 
-/// Runtime representation of an installed project.
+/// Runtime representation of an installed project or a development session.
 ///
 /// `AppInfo.name` belongs to the project manifest and must not be used to
 /// locate the project after installation. `rootURL` is discovered while
 /// scanning Documents and remains fixed for the lifetime of a running
-/// project session.
+/// project session. Development sessions use a temporary root and load
+/// their pages from `developmentServerURL` instead.
 struct InstalledProject: Hashable {
     let appInfo: AppInfo
     let rootURL: URL
+    let developmentServerURL: URL?
 
-    init(appInfo: AppInfo, rootURL: URL) {
+    init(appInfo: AppInfo, rootURL: URL, developmentServerURL: URL? = nil) {
         self.appInfo = appInfo
         self.rootURL = rootURL.standardizedFileURL
+        self.developmentServerURL = developmentServerURL
     }
 
     var appId: String {
@@ -59,7 +62,29 @@ struct InstalledProject: Hashable {
         if let displayName = appInfo.displayName, !displayName.isEmpty {
             return displayName
         }
-        return rootURL.lastPathComponent
+        return developmentServerURL == nil ? rootURL.lastPathComponent : appInfo.name
+    }
+
+    /// Native routes are relative to the project root, including routes starting with `/`.
+    func developmentURL(for path: String) -> URL? {
+        guard let developmentServerURL else { return nil }
+        if let url = URL(string: path), ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
+            return url
+        }
+        let relativePath = String(path.drop(while: { $0 == "/" }))
+        guard let url = URL(string: relativePath, relativeTo: developmentServerURL)?.absoluteURL,
+              ["http", "https"].contains(url.scheme?.lowercased() ?? ""), url.host != nil else { return nil }
+        return url
+    }
+
+    var launchURL: String {
+        if let developmentServerURL {
+            var allowed = CharacterSet.alphanumerics
+            allowed.insert(charactersIn: "-._~")
+            let address = developmentServerURL.absoluteString.addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
+            return "minip://dev/\(address)"
+        }
+        return "minip://open/\(appId)"
     }
 }
 

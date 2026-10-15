@@ -6,6 +6,14 @@
 
 */
 
+/* Development sessions */
+"dev.mode" = "개발 모드";
+"dev.connection_failed" = "개발 서버에 연결할 수 없습니다";
+"dev.connection_help" = "서버를 실행한 상태로 휴대폰과 컴퓨터를 같은 네트워크에 연결하고, 설정에서 Minip의 로컬 네트워크 접근을 허용하세요.";
+"dev.retry" = "다시 시도";
+"dev.invalid_address" = "개발 서버 주소가 올바르지 않습니다.";
+"dev.invalid_manifest" = "개발 앱 설정을 읽을 수 없습니다. Minip과 vite-plugin-minip이 최신 버전인지 확인하세요.";
+
 "Projects" = "프로젝트";
 "Files" = "파일";
 "Settings" = "설정";

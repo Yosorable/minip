@@ -6,6 +6,14 @@
   
 */
 
+/* Development sessions */
+"dev.mode" = "Development Mode";
+"dev.connection_failed" = "Could not connect to the development server";
+"dev.connection_help" = "Keep the server running, connect your phone and computer to the same network, and allow Minip to access the local network in Settings.";
+"dev.retry" = "Retry";
+"dev.invalid_address" = "Invalid development server address.";
+"dev.invalid_manifest" = "Could not read the development app configuration. Check that Minip and vite-plugin-minip are up to date.";
+
 "Projects" = "Projects";
 "Files" = "Files";
 "Settings" = "Settings";

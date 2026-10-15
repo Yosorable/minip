@@ -6,6 +6,14 @@
 
 */
 
+/* Development sessions */
+"dev.mode" = "開発モード";
+"dev.connection_failed" = "開発サーバーに接続できません";
+"dev.connection_help" = "サーバーを起動したまま、スマートフォンとコンピュータを同じネットワークに接続し、設定で Minip のローカルネットワークへのアクセスを許可してください。";
+"dev.retry" = "再試行";
+"dev.invalid_address" = "開発サーバーのアドレスが無効です。";
+"dev.invalid_manifest" = "開発アプリの設定を読み込めません。Minip と vite-plugin-minip が最新か確認してください。";
+
 "Projects" = "プロジェクト";
 "Files" = "ファイル";
 "Settings" = "設定";

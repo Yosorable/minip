@@ -114,6 +114,7 @@ class MiniAppManager {
     }
 
     func clearOpenedApp() {
+        let developmentRootURL = openedProject?.developmentServerURL == nil ? nil : openedProject?.rootURL
         let appId = self.openedProject?.appId
         self.openedProject = nil
         self.isClosingApp = false
@@ -128,6 +129,9 @@ class MiniAppManager {
         KingfisherManager.shared.cache.clearMemoryCache()
 
         self.fileSystemManager = nil
+        if let developmentRootURL {
+            try? FileManager.default.removeItem(at: developmentRootURL)
+        }
     }
 }
 
@@ -187,7 +191,7 @@ extension MiniAppManager {
 
         Task {
             var addr = ""
-            if app.webServerEnabled == true {
+            if project.developmentServerURL == nil && app.webServerEnabled == true {
                 var server: HTTPServer
                 if self.httpServer == nil {
                     server = HTTPServer(address: try! .inet(ip4: "127.0.0.1", port: 60008), logger: LoggerForFlyingFox())

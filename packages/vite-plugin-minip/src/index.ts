@@ -1,11 +1,11 @@
 import { randomUUID } from "node:crypto";
-import { createReadStream, createWriteStream } from "node:fs";
+import { createReadStream, createWriteStream, type ReadStream } from "node:fs";
 import { lstat, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { pipeline } from "node:stream/promises";
-import archiver from "archiver";
-import qrcode from "qrcode";
+import { finished, pipeline } from "node:stream/promises";
+import { renderUnicodeCompact } from "uqr";
 import type { Plugin, ResolvedConfig, UserConfig } from "vite";
+import { ZipFile } from "yazl";
 
 export interface MinipPluginOptions {
   /** Manifest path relative to the Vite project root. Defaults to app.json. */
@@ -141,22 +141,51 @@ async function packageApp(config: ResolvedConfig, manifestPath: string): Promise
   };
 
   const temporaryPath = path.join(outDir, `.minip-${randomUUID()}.tmp`);
-  const archive = archiver("zip", { zlib: { level: 9 } });
-  const completed = pipeline(archive, createWriteStream(temporaryPath));
-  archive.on("warning", (error) => archive.destroy(error));
+  const archive = new ZipFile();
+  const output = createWriteStream(temporaryPath);
+  const inputs = new Set<ReadStream>();
+  let failure: Error | undefined;
+  const stop = (error: Error) => {
+    if (failure) return;
+    failure = error;
+    for (const input of inputs) input.destroy();
+    output.destroy(error);
+  };
+  archive.on("error", stop);
+  const completed = pipeline(archive.outputStream, output);
+  // Handle output errors immediately, including while file metadata is loading.
+  void completed.catch(stop);
   try {
-    for (const file of files) archive.file(file.source, { name: file.name });
-    archive.append(`${JSON.stringify(packedManifest, null, 2)}\n`, { name: "app.json" });
-    await Promise.all([archive.finalize(), completed]);
+    for (const file of files) {
+      const { size, mode, mtime } = await lstat(file.source);
+      if (failure) throw failure;
+      archive.addReadStreamLazy(file.name, { size, mode, mtime, compressionLevel: 9 }, (callback) => {
+        if (failure) return;
+        // Own the lazy input streams so a failed write can close every file.
+        const input = createReadStream(file.source);
+        inputs.add(input);
+        input.on("error", stop);
+        input.once("close", () => inputs.delete(input));
+        callback(null, input);
+      });
+    }
+    archive.addBuffer(Buffer.from(`${JSON.stringify(packedManifest, null, 2)}\n`), "app.json", { compressionLevel: 9 });
+    archive.end();
+    await completed;
     await rename(temporaryPath, archivePath);
   } catch (error) {
-    archive.abort();
-    archive.destroy();
+    stop(error instanceof Error ? error : new Error(String(error)));
     await completed.catch(() => {});
     await rm(temporaryPath, { force: true });
     throw error;
+  } finally {
+    await Promise.allSettled([...inputs].map((input) => {
+      const closed = finished(input, { cleanup: true });
+      input.destroy();
+      return closed;
+    }));
   }
-  config.logger.info(`[minip] Packaged ${path.relative(config.root, archivePath)} (${(archive.pointer() / 1024).toFixed(2)} KiB)`);
+  config.logger.info(`[minip] Packaged ${path.relative(config.root, archivePath)} (${(output.bytesWritten / 1024).toFixed(2)} KiB)`);
 }
 
 export default function minip(options: MinipPluginOptions = {}): Plugin[] {
@@ -335,8 +364,11 @@ export default function minip(options: MinipPluginOptions = {}): Plugin[] {
 
 function printQRCode(config: ResolvedConfig, actions: string[]): void {
   const payload = actions.length === 1 ? actions[0] : JSON.stringify(actions);
-  void qrcode.toString(payload, { type: "terminal", small: true }).then(
-    (code) => config.logger.info(code),
-    (error: unknown) => config.logger.warn(`[minip] Could not render the QR code: ${String(error)}`),
-  );
+  try {
+    const code = renderUnicodeCompact(payload, { ecc: "M", border: 4 });
+    // Compact blocks represent white pixels; fix both colors for any terminal theme.
+    config.logger.info(code.split("\n").map((line) => `\x1b[37;40m${line}\x1b[0m`).join("\n"));
+  } catch (error) {
+    config.logger.warn(`[minip] Could not render the QR code: ${String(error)}`);
+  }
 }

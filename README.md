@@ -64,7 +64,7 @@ the initial release's package version requirements.
 Install the bridge SDK:
 
 ```bash
-npm i minip-bridge
+npm i minip-bridge@2
 ```
 
 ```javascript

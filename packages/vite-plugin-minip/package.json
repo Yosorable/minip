@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-minip",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Develop Vite apps inside Minip with native APIs and hot updates, then package and install by QR code",
   "type": "module",
   "license": "MIT",

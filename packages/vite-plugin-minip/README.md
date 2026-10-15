@@ -8,7 +8,7 @@ Requires Node.js 20.19+ or 22.12+ and Vite 6, 7, or 8.
 ## Usage
 
 ```sh
-npm install minip-bridge
+npm install minip-bridge@2
 npm install -D vite-plugin-minip
 ```
 
